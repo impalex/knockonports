@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Alexander Yaburov
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/widget_preview_background"
+        android:weightSum="1"
+        android:gravity="center_vertical|center_horizontal"
+        android:baselineAligned="false"
+        android:paddingBottom="24dp"
+        android:paddingTop="24dp">
+        <include layout="@layout/knocks_widget"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"/>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/configure"
+                style="@style/TextAppearance.AppCompat.Headline"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/text_background_color"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/color_background"
+                    android:gravity="bottom"
+                    style="@style/TextAppearance.AppCompat.Subhead"/>
+                <com.jaredrummler.android.colorpicker.ColorPanelView
+                    android:id="@+id/color_panel_background"
+                    android:layout_width="72dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="8dp"
+                    app:cpv_alphaChannelVisible="true"
+                    app:cpv_borderColor="#000"
+                    app:cpv_colorShape="square"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/text_foreground_color"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/color_text"
+                    android:gravity="bottom"
+                    style="@style/TextAppearance.AppCompat.Subhead"/>
+                <com.jaredrummler.android.colorpicker.ColorPanelView
+                    android:id="@+id/color_panel_foreground"
+                    android:layout_width="72dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="8dp"
+                    app:cpv_alphaChannelVisible="true"
+                    app:cpv_borderColor="#000"
+                    app:cpv_colorShape="square"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/text_arrows_color"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/color_arrow"
+                    android:gravity="bottom"
+                    style="@style/TextAppearance.AppCompat.Subhead"/>
+                <com.jaredrummler.android.colorpicker.ColorPanelView
+                    android:id="@+id/color_panel_arrows"
+                    android:layout_width="72dp"
+                    android:layout_height="36dp"
+                    android:layout_margin="8dp"
+                    app:cpv_alphaChannelVisible="true"
+                    app:cpv_borderColor="#000"
+                    app:cpv_colorShape="square"/>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_button"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/add_widget" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018 Alexander Yaburov
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<resources>
+    <string name="title_activity_sequence">Последовательность</string>
+    <string name="action_done">Сохранить</string>
+    <string name="hint_name">Название</string>
+    <string name="hint_host">Хост</string>
+    <string name="hint_timeout">TCP-таймаут (мс)</string>
+    <string name="hint_udp_content">Содержимое UDP пакета</string>
+    <string name="hint_delay">Задержка между пакетами (мс)</string>
+    <string name="hint_port">Порт</string>
+    <string name="hint_run_app">Запустить приложение:</string>
+    <string name="none">Нет</string>
+    <string name="action_add_port">Добавить порт</string>
+    <string name="action_knock">Постучать</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_new_sequence">Новая последовательность</string>
+    <string name="drag_item">Переместить</string>
+    <string name="empty_sequence_warning">%s: пустая последовательность!</string>
+    <string name="start_knocking">Стучу в %s</string>
+    <string name="end_knocking">Всё, постучали!</string>
+    <string name="untitled_sequence">(Без имени)</string>
+    <string name="error_invalid_port">Неверный номер порта!</string>
+    <string name="error_resolve">Невозможно определить хост \'%s\'!</string>
+    <string name="error_export">ОШИБКА: Не удалось экспортировать данные!</string>
+    <string name="error_import">ОШИБКА: Не удалось импортировать данные!</string>
+    <string name="error_base64">Предупреждение: Некорректная строка в base64!</string>
+    <string name="host_not_set">Не задан хост!</string>
+    <string name="action_export">Экспорт</string>
+    <string name="action_import">Импорт</string>
+    <string name="title_export">Экспортировать данные в…</string>
+    <string name="title_import">Импортировать данные из…</string>
+    <string name="title_settings">Настройки</string>
+    <string name="title_advanced">Дополнительно</string>
+    <string name="checkbox_base64">Содержимое пакета в кодировке Base64</string>
+    <string name="button_save">Сохранить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="title_file_name">Имя файла</string>
+    <string name="export_success">Успешно экспортировано в %s</string>
+    <string name="import_success">%d последовательностей импортировано из %s</string>
+    <string name="appwidget_text">Название последовательности</string>
+    <string name="configure">Конфигурация виджета</string>
+    <string name="add_widget">Добавить виджет</string>
+    <string name="next_sequence">Следующая последовательность</string>
+    <string name="prev_sequence">Предыдущая последовательность</string>
+    <string name="color_background">Цвет фона</string>
+    <string name="color_text">Цвет текста</string>
+    <string name="color_arrow">Цвет стрелок</string>
+    <string name="channel_name">Тук-тук</string>
+    <string name="channel_description">Кто там?</string>
+    <string name="notification_title">Тук-тук!</string>
+    <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
+</resources>

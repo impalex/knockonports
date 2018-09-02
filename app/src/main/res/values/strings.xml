@@ -1,0 +1,77 @@
+<!--
+  ~ Copyright (c) 2018 Alexander Yaburov
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<resources>
+    <string name="app_name" translatable="false">Knock on Ports</string>
+    <string name="title_activity_sequence">Sequence</string>
+    <string name="action_done">Done</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_host">Host</string>
+    <string name="hint_timeout">TCP timeout (ms)</string>
+    <string name="hint_udp_content">UDP packet content</string>
+    <string name="hint_delay">Delay between packets (ms)</string>
+    <string name="hint_port">Port</string>
+    <string name="hint_run_app">Launch application:</string>
+    <string name="udp" translatable="false">UDP</string>
+    <string name="tcp" translatable="false">TCP</string>
+    <string name="none">None</string>
+    <string name="action_add_port">Add Port</string>
+    <string name="action_knock">Knock</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_new_sequence">New Sequence</string>
+    <string name="drag_item">Reorganize</string>
+    <string name="empty_sequence_warning">%s: empty port sequence!</string>
+    <string name="start_knocking">Knock-knock-knocking on %s</string>
+    <string name="end_knocking">Knocking complete!</string>
+    <string name="untitled_sequence">(Untitled Sequence)</string>
+    <string name="error_invalid_port">Invalid port number!</string>
+    <string name="error_resolve">Unable to resolve host \'%s\'!</string>
+    <string name="error_export">ERROR: Unable to export data!</string>
+    <string name="error_import">ERROR: Unable to import data!</string>
+    <string name="error_base64">Warning: Invalid base64 string!</string>
+    <string name="host_not_set">Host is not set!</string>
+    <string name="action_export">Export</string>
+    <string name="action_import">Import</string>
+    <string name="title_export">Export data to…</string>
+    <string name="title_import">Import data from…</string>
+    <string name="title_settings">Settings</string>
+    <string name="title_advanced">Advanced</string>
+    <string name="checkbox_base64">Packet content is Base64-encoded</string>
+    <string name="button_save">Save</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="title_file_name">File Name</string>
+    <string name="export_success">Exported successfully to %s</string>
+    <string name="export_file_template" translatable="false">knocks_%s.json</string>
+    <string name="import_success">%d entries were imported from %s</string>
+    <string name="appwidget_text">Sequence Name</string>
+    <string name="configure">Configure Widget</string>
+    <string name="add_widget">Add widget</string>
+    <string name="next_sequence">Next sequence</string>
+    <string name="prev_sequence">Previous sequence</string>
+    <string name="color_background">Background color</string>
+    <string name="color_text">Text color</string>
+    <string name="color_arrow">Arrows color</string>
+    <string name="channel_name">Knock-knock</string>
+    <string name="channel_description">Who\'s there?</string>
+    <string name="notification_title">Knock-knock!</string>
+    <string name="notification_desc">Knocking on %s. Is anybody there?</string>
+</resources>
