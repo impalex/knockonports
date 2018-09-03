@@ -46,7 +46,9 @@ data class Sequence(
         @ColumnInfo(name = "_application")
         var application: String?,
         @ColumnInfo(name = "_base64")
-        var base64: Int?
+        var base64: Int?,
+        @ColumnInfo(name = "_port_string")
+        var portString: String?
 
 ){
         @Ignore

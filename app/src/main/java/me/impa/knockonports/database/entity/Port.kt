@@ -49,6 +49,15 @@ class Port(
         var type: Int
 ) {
 
+    override fun toString(): String {
+        number ?: return ""
+        return "$number:${if (type == PORT_TYPE_TCP) {
+            "TCP"
+        } else {
+            "UDP"
+        }}"
+    }
+
     companion object {
         const val PORT_TYPE_UDP = 0
         const val PORT_TYPE_TCP = 1

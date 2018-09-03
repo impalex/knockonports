@@ -84,7 +84,6 @@ class AdvancedSettingsFragment: Fragment() {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         appSpinner.adapter = adapter
-        //appSpinner.selectedItem = mainViewModel.getInstalledApps().value?.first { it.app == mainViewModel.getDirtySequence().value?.application }
         appSpinner.setSelection(mainViewModel.getInstalledApps().value?.indexOfFirst { it.app == mainViewModel.getDirtySequence().value?.application } ?: 0)
         appSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

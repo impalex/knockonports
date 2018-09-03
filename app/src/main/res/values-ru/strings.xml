@@ -71,4 +71,5 @@
     <string name="channel_description">Кто там?</string>
     <string name="notification_title">Тук-тук!</string>
     <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
+    <string name="empty_sequence">Пустая последовательность!</string>
 </resources>

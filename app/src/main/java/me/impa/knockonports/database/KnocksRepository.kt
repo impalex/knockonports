@@ -53,6 +53,7 @@ class KnocksRepository(context: Context): AnkoLogger {
     }
 
     fun saveSequence(sequence: Sequence, portList: List<Port>?) {
+        sequence.portString = portList?.filter { it.number != null }?.joinToString(", ") { it.toString() }
         if (sequence.id == null) {
             sequence.id = sequenceDao.insertSequence(sequence)
         } else {

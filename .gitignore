@@ -8,8 +8,8 @@
 /build
 /captures
 .externalNativeBuild
-.idea/caches/
+# .idea/caches/
 app/release/
-.idea/dictionaries/
+# .idea/dictionaries/
 .idea/assetWizardSettings.xml
-.idea/misc.xml
+# .idea/misc.xml

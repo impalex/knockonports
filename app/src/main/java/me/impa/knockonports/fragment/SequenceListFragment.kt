@@ -64,16 +64,16 @@ class SequenceListFragment: Fragment() {
 
         sequenceAdapter = SequenceAdapter(activity)
 
-        sequenceAdapter.onItemClicked = {
+        sequenceAdapter.onKnock = {
             mainViewModel.knock(it)
         }
 
-        sequenceAdapter.onAction = { command, sequence ->
-            when(command) {
-                R.id.action_edit -> mainViewModel.getSelectedSequence().value = sequence
-                R.id.action_knock -> mainViewModel.knock(sequence)
-                R.id.action_delete -> mainViewModel.deleteSequence(sequence)
-            }
+        sequenceAdapter.onDelete = {
+            mainViewModel.deleteSequence(it)
+        }
+
+        sequenceAdapter.onEdit = {
+            mainViewModel.getSelectedSequence().value = it
         }
 
         recycler.adapter = sequenceAdapter

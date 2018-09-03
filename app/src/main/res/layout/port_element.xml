@@ -65,9 +65,8 @@
         app:allowDeselection="false"
         app:selectedColor="?attr/colorAccent"
         app:menu="@menu/menu_protocol"
-        android:layout_toStartOf="@id/delete_port">
-
-    </com.savvyapps.togglebuttonlayout.ToggleButtonLayout>
+        android:layout_toStartOf="@id/delete_port"
+        app:customLayout="@layout/toggle_button"/>
 
     <ImageView
         android:id="@+id/delete_port"

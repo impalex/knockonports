@@ -53,8 +53,19 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     private val dirtyPorts: LiveData<MutableList<Port>?>
     private val settingsTabIndex: MutableLiveData<Int>
     private val fabVisible: MutableLiveData<Boolean>
-    private val installedApps: MutableLiveData<List<AppData>>
     private val pendingOrderChanges: MutableLiveData<List<Long>>
+    private val installedApps: MutableLiveData<List<AppData>> by lazy {
+        val apps = MutableLiveData<List<AppData>>()
+        val packages = application.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        apps.value = sequenceOf(AppData("", application.resources.getString(R.string.none)))
+                .plus(packages
+                        .filter { application.packageManager.getLaunchIntentForPackage(it.packageName) != null }
+                        .map { AppData(it.packageName, application.packageManager.getApplicationLabel(it).toString()) }
+                        .sortedBy { it.name })
+                .toList()
+        apps
+    }
 
     init {
         sequenceList = repository.getSequenceList()
@@ -65,7 +76,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         pendingOrderChanges = MutableLiveData()
         fabVisible.value = true
         dirtySequence = Transformations.map(selectedSequence) {
-            doAsyncResult {
+            doAsync {
                 savePendingData()
             }.get()
             it?.copy()
@@ -84,19 +95,10 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             }
         }
 
-        installedApps = MutableLiveData()
-        val packages = application.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        installedApps.value = sequenceOf(AppData("", application.resources.getString(R.string.none)))
-                .plus(packages
-                        .filter { application.packageManager.getLaunchIntentForPackage(it.packageName) != null }
-                        .map { AppData(it.packageName, application.packageManager.getApplicationLabel(it).toString()) }
-                        .sortedBy { it.name })
-                .toList()
     }
 
     fun getSequenceList(): LiveData<List<Sequence>> {
-        doAsyncResult { savePendingData() }.get()
+        doAsync { savePendingData() }.get()
         return sequenceList
     }
 
@@ -118,12 +120,12 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     override fun onCleared() {
         super.onCleared()
-        doAsyncResult { savePendingData() }.get()
+        doAsync { savePendingData() }.get()
     }
 
     fun deleteSequence(sequence: Sequence) {
         sequence.id ?: return
-        doAsyncResult { savePendingData() }.get()
+        doAsync { savePendingData() }.get()
         doAsync {
             repository.deleteSequence(sequence)
             uiThread {
@@ -134,7 +136,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun createEmptySequence() {
         selectedSequence.value = Sequence(null, null, null, null,
-                null, null, null, null, 0)
+                null, null, null, null, 0, null)
     }
 
     fun saveDirtyData() {
@@ -233,9 +235,6 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         val widgetManager = AppWidgetManager.getInstance(application)
         val ids = widgetManager.getAppWidgetIds(ComponentName(application, KnocksWidget::class.java))
         widgetManager.notifyAppWidgetViewDataChanged(ids, android.R.id.list)
-        info {
-            ids.joinToString()
-        }
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
         application.sendBroadcast(intent)
     }

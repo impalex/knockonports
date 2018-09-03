@@ -29,14 +29,13 @@ import me.impa.knockonports.database.entity.Sequence
 
 class SequenceAdapter(context: Context) : RecyclerAdapter<Sequence>(context) {
 
-    var onAction: ((Int, Sequence) -> Unit)? = null
-    var onItemClicked: ((Sequence) -> Unit)? = null
+    var onEdit: ((Sequence) -> Unit)? = null
+    var onDelete: ((Sequence) -> Unit)? = null
+    var onKnock: ((Sequence) -> Unit)? = null
 
     override fun onBindItemView(view: View, position: Int) {
         when (view) {
-            is SequenceView -> view.bind(items[position],
-                    onAction = { actionId, sequence -> onAction?.invoke(actionId, sequence) },
-                    onClick = { onItemClicked?.invoke(it) })
+            is SequenceView -> view.bind(items[position], onEdit, onDelete, onKnock)
         }
     }
 

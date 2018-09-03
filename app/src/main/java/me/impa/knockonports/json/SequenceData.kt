@@ -31,7 +31,8 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                         @SerialName("udp_content") var udpContent: String?,
                         var application: String?, var base64: Int?, var ports: List<PortData>) {
 
-    fun toEntity(): Sequence = Sequence(null, name, host, timeout, null, delay, udpContent, application, base64)
+    fun toEntity(): Sequence = Sequence(null, name, host, timeout, null, delay, udpContent, application, base64,
+            ports.filter { it.value != null }.joinToString(", ") { it.toString() })
 
     companion object {
         fun fromEntity(sequence: Sequence, ports: List<Port>): SequenceData =

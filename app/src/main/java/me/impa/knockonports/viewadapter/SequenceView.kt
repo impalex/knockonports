@@ -25,7 +25,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.sequence_element.view.*
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence
@@ -36,23 +35,30 @@ class SequenceView(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     }
 
     fun bind(sequence: Sequence,
-             onAction: ((actionId: Int, model: Sequence) -> Unit)? = null,
-             onClick: ((model: Sequence) -> Unit)? = null) {
-        sequence_element_root.setOnClickListener {
-            onClick?.invoke(sequence)
-        }
+             onEdit: ((model: Sequence) -> Unit)?,
+             onDelete: ((model: Sequence) -> Unit)?,
+             onKnock: ((model: Sequence) -> Unit)?) {
+
         sequence_name.text = if (sequence.name.isNullOrBlank()) { context.getString(R.string.untitled_sequence) } else { sequence.name }
-
-        sequence_element_root.isSelected = sequence.selected
-
-        sequence_more_image.setOnClickListener{ _ ->
-            val popupMenu = PopupMenu(context, sequence_more_image)
-            popupMenu.menuInflater.inflate(R.menu.menu_seq_element, popupMenu.menu)
-            popupMenu.setOnMenuItemClickListener {
-                onAction?.invoke(it.itemId, sequence)
-                true
-            }
-            popupMenu.show()
+        text_action_edit.setOnClickListener {
+            onEdit?.invoke(sequence)
         }
+        text_action_knock.setOnClickListener {
+            onKnock?.invoke(sequence)
+        }
+        delete_icon.setOnClickListener {
+            onDelete?.invoke(sequence)
+        }
+        if (sequence.host.isNullOrBlank()) {
+            text_host.text = context.getString(R.string.host_not_set)
+        } else {
+            text_host.text = sequence.host
+        }
+        if (sequence.portString.isNullOrBlank()) {
+            text_ports.text = context.getString(R.string.empty_sequence)
+        } else {
+            text_ports.text = sequence.portString
+        }
+
     }
 }

@@ -74,4 +74,5 @@
     <string name="channel_description">Who\'s there?</string>
     <string name="notification_title">Knock-knock!</string>
     <string name="notification_desc">Knocking on %s. Is anybody there?</string>
+    <string name="empty_sequence">Empty sequence!</string>
 </resources>

@@ -34,7 +34,7 @@ import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class, Port::class],
-        version = 4
+        version = 5
 )
 abstract class KnocksDatabase : RoomDatabase() {
     abstract fun sequenceDao(): SequenceDao
@@ -60,6 +60,37 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration4to5: Migration(4, 5) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_port_string` TEXT")
+            val seqCur = database.query("SELECT `_id` FROM `tbSequence`")
+            val seqList = mutableListOf<Long>()
+            if (seqCur.moveToFirst()) {
+                do {
+                    seqList.add(seqCur.getLong(0))
+                } while (seqCur.moveToNext())
+            } else return
+            seqList.forEach {
+                val portCur = database.query("SELECT `_number`, `_type` from `tbPort` WHERE `_sequence_id`=? ORDER BY `_id`", arrayOf(it))
+                val portList = mutableListOf<String>()
+                if (portCur.moveToFirst()) {
+                    do {
+                        if (!portCur.isNull(0) && !portCur.isNull(1)) {
+                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == Port.PORT_TYPE_UDP) {
+                                "UDP"
+                            } else {
+                                "TCP"
+                            }}")
+                        }
+                    } while (portCur.moveToNext())
+                }
+                if (portList.size > 0) {
+                    database.execSQL("UPDATE `tbSequence` SET `_port_string`=? WHERE `_id`=?", arrayOf(portList.joinToString(", "), it))
+                }
+            }
+        }
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -68,7 +99,7 @@ abstract class KnocksDatabase : RoomDatabase() {
                 synchronized(KnocksDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                             KnocksDatabase::class.java, "knocksdb")
-                            .addMigrations(Migration1To2(), Migration2To3(), Migration3to4())
+                            .addMigrations(Migration1To2(), Migration2To3(), Migration3to4(), Migration4to5())
                             .build()
 
                 }

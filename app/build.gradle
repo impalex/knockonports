@@ -35,8 +35,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 3
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
