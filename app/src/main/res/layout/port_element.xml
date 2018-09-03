@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/hint_port"
             android:maxLines="1"
+            android:maxLength="5"
             android:inputType="number"/>
     </android.support.design.widget.TextInputLayout>
 

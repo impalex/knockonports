@@ -27,18 +27,15 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.migration.Migration
 import android.content.Context
-import me.impa.knockonports.database.dao.PortDao
 import me.impa.knockonports.database.dao.SequenceDao
-import me.impa.knockonports.database.entity.Port
 import me.impa.knockonports.database.entity.Sequence
 
 @Database(
-        entities = [Sequence::class, Port::class],
-        version = 5
+        entities = [Sequence::class],
+        version = 6
 )
 abstract class KnocksDatabase : RoomDatabase() {
     abstract fun sequenceDao(): SequenceDao
-    abstract fun portDao(): PortDao
 
     class Migration1To2: Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
@@ -71,12 +68,12 @@ abstract class KnocksDatabase : RoomDatabase() {
                 } while (seqCur.moveToNext())
             } else return
             seqList.forEach {
-                val portCur = database.query("SELECT `_number`, `_type` from `tbPort` WHERE `_sequence_id`=? ORDER BY `_id`", arrayOf(it))
+                val portCur = database.query("SELECT `_number`, `_type` FROM `tbPort` WHERE `_sequence_id`=? ORDER BY `_id`", arrayOf(it))
                 val portList = mutableListOf<String>()
                 if (portCur.moveToFirst()) {
                     do {
                         if (!portCur.isNull(0) && !portCur.isNull(1)) {
-                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == Port.PORT_TYPE_UDP) {
+                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == Sequence.PORT_TYPE_UDP) {
                                 "UDP"
                             } else {
                                 "TCP"
@@ -91,6 +88,40 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration5to6: Migration(5, 6) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            val portMap = mutableMapOf<Long, String>()
+            val portCur = database.query("SELECT `_sequence_id`, `_number`, `_type` FROM `tbPort` ORDER BY `_id`")
+            if (portCur.moveToFirst()) {
+                do {
+                    if (portCur.isNull(0))
+                        continue
+                    val seqId = portCur.getLong(0)
+                    val str = if (portCur.isNull(1)) {
+                        ""
+                    } else {
+                        portCur.getInt(1).toString()
+                    } + Sequence.PORT_SEPARATOR +
+                            if (portCur.isNull(2)) {
+                                ""
+                            } else {
+                                portCur.getInt(2).toString()
+                            }
+                    portMap[seqId] = if (portMap.containsKey(seqId)) {
+                        portMap[seqId] + Sequence.ENTRY_SEPARATOR
+                    } else {
+                        ""
+                    } + str
+                } while (portCur.moveToNext())
+                portMap.forEach {
+                    database.execSQL("UPDATE `tbSequence` SET `_port_string`=? WHERE `_id`=?", arrayOf(it.value, it.key))
+                }
+            }
+            database.execSQL("DROP TABLE `tbPort`")
+        }
+
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -99,7 +130,9 @@ abstract class KnocksDatabase : RoomDatabase() {
                 synchronized(KnocksDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                             KnocksDatabase::class.java, "knocksdb")
-                            .addMigrations(Migration1To2(), Migration2To3(), Migration3to4(), Migration4to5())
+                            .addMigrations(Migration1To2(), Migration2To3(),
+                                    Migration3to4(), Migration4to5(),
+                                    Migration5to6())
                             .build()
 
                 }
@@ -107,6 +140,7 @@ abstract class KnocksDatabase : RoomDatabase() {
             return INSTANCE
         }
 
+        @Suppress("unused")
         fun destroyInstance() {
             synchronized(KnocksDatabase::class) {
                 INSTANCE?.close()

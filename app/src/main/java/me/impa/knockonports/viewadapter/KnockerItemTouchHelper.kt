@@ -19,11 +19,21 @@
  * under the License.
  */
 
-package me.impa.knockonports.json
+package me.impa.knockonports.viewadapter
 
-import kotlinx.serialization.Serializable
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
+import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
-@Serializable
-data class PortData(var value: Int?, var type: Int) {
+class KnockerItemTouchHelper(private val adapter: ItemTouchHelperAdapter, dragDirections: Int, swipeDirections: Int):
+        ItemTouchHelper.SimpleCallback(dragDirections, swipeDirections) {
 
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        adapter.onItemDismiss(viewHolder.layoutPosition)
+    }
+
+    override fun onMove(recyclerView: RecyclerView?, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+        adapter.onItemMove(viewHolder.layoutPosition, target.layoutPosition)
+        return true
+    }
 }

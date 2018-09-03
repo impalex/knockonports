@@ -23,10 +23,12 @@
 <resources>
     <color name="colorPrimary">#2196f3</color>
     <color name="colorPrimaryDark">#01579b</color>
-    <color name="colorAccent">#2962ff</color>
+    <color name="colorAccent">#ffa726</color>
     <color name="colorWidgetBackground">#30000000</color>
     <color name="colorWidgetForeground">#fff</color>
     <color name="colorWidgetButtons">#fff</color>
+    <color name="colorCardBackground">?android:colorBackground</color>
+    <color name="colorCardBackgroundSelected">#e8eaf6</color>
 
     <!--
     <color name="colorPrimary">#3F51B5</color>

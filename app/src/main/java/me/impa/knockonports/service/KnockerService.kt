@@ -54,8 +54,6 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
             return
         }
 
-        val ports = db.portDao().findPortsBySequenceId(seqId)
-
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
         notificationBuilder.setOngoing(true)
                 .setContentTitle(resources.getString(R.string.notification_title))
@@ -64,7 +62,7 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
 
         startForeground(FOREGROUND_ID, notificationBuilder.build())
 
-        Knocker(this, sequence, ports).execute()
+        Knocker(this, sequence).execute()
 
         stopForeground(true)
     }

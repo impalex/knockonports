@@ -31,9 +31,8 @@ import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.stephenvinouze.advancedrecyclerview.gesture.extensions.enableGestures
 import me.impa.knockonports.R
-import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
@@ -41,28 +40,23 @@ class SequenceListFragment: Fragment() {
 
     private lateinit var sequenceAdapter: SequenceAdapter
     private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         val view = inflater!!.inflate(R.layout.fragment_sequence_list, container, false)
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_sequences)
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                mainViewModel.getFabVisible().value = dy<=0
+                if (!twoPaneMode || mainViewModel.getDirtySequence().value == null)
+                    mainViewModel.getFabVisible().value = dy <= 0
             }
-        })
-
-        recycler.enableGestures(dragDirections = ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                swipeDirections = 0, onMove = { _, _ ->
-            mainViewModel.getPendingDataChanges().value = sequenceAdapter.items.filter { it.id != null }.map { it.id!! }.toList()
-            true
         })
 
         recycler.layoutManager = LinearLayoutManager(activity)
 
-        sequenceAdapter = SequenceAdapter(activity)
+        sequenceAdapter = SequenceAdapter(context)
 
         sequenceAdapter.onKnock = {
             mainViewModel.knock(it)
@@ -72,38 +66,24 @@ class SequenceListFragment: Fragment() {
             mainViewModel.deleteSequence(it)
         }
 
-        sequenceAdapter.onEdit = {
+        sequenceAdapter.onClick = {
             mainViewModel.getSelectedSequence().value = it
         }
 
+        sequenceAdapter.onMove = { _, _ ->
+            mainViewModel.getPendingDataChanges().value = sequenceAdapter.items.filter { it.id != null }.map { it.id!! }.toList()
+        }
+
         recycler.adapter = sequenceAdapter
+
+        val touchHelper = ItemTouchHelper(KnockerItemTouchHelper(sequenceAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0))
+        touchHelper.attachToRecyclerView(recycler)
 
         mainViewModel.getSequenceList().observe(this, Observer {
             sequenceAdapter.items = it?.toMutableList() ?: mutableListOf()
         })
 
-        mainViewModel.getSelectedSequence().observe(this, Observer {
-            val prevItem = mainViewModel.getPreviousSequence().value
-            if (prevItem == it)
-                return@Observer
-            selectItem(prevItem, false)
-            selectItem(it, true)
-            mainViewModel.getPreviousSequence().value = it
-        })
-
-
         return view
-    }
-
-    private fun selectItem(sequence: Sequence?, isSelected: Boolean) {
-        sequence ?: return
-        sequenceAdapter.run {
-            val idx = items.indexOf(sequence)
-            //items[idx].selected = isSelected
-            sequence.selected = isSelected
-            if (idx>=0)
-                notifyItemChanged(idx)
-        }
     }
 
 

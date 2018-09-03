@@ -20,10 +20,6 @@
   ~ under the License.
   -->
 
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-    <translate xmlns:android="http://schemas.android.com/apk/res/android"
-        android:fromXDelta="100%"
-        android:toXDelta="0"
-        android:interpolator="@android:anim/decelerate_interpolator"
-        android:duration="300"/>
-</set>
+<resources>
+    <item name="twoPaneMode" type="bool">true</item>
+</resources>

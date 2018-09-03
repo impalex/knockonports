@@ -23,7 +23,6 @@ package me.impa.knockonports.json
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import me.impa.knockonports.database.entity.Port
 import me.impa.knockonports.database.entity.Sequence
 
 @Serializable
@@ -35,8 +34,8 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
             ports.filter { it.value != null }.joinToString(", ") { it.toString() })
 
     companion object {
-        fun fromEntity(sequence: Sequence, ports: List<Port>): SequenceData =
+        fun fromEntity(sequence: Sequence): SequenceData =
                 SequenceData(sequence.name, sequence.host, sequence.timeout, sequence.delay, sequence.udpContent,
-                        sequence.application, sequence.base64, ports.map { PortData.fromEntity(it) }.toList())
+                        sequence.application, sequence.base64, sequence.getPortList())
     }
 }

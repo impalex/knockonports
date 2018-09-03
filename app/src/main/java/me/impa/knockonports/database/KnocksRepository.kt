@@ -23,22 +23,17 @@ package me.impa.knockonports.database
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
-import me.impa.knockonports.database.dao.PortDao
 import me.impa.knockonports.database.dao.SequenceDao
-import me.impa.knockonports.database.entity.Port
 import me.impa.knockonports.database.entity.Sequence
-import org.jetbrains.anko.AnkoLogger
 
-class KnocksRepository(context: Context): AnkoLogger {
+class KnocksRepository(context: Context) {
 
     private var sequenceDao: SequenceDao
-    private var portDao: PortDao
     private var sequenceList: LiveData<List<Sequence>>
 
     init {
         val db = KnocksDatabase.getInstance(context)!!
         sequenceDao = db.sequenceDao()
-        portDao = db.portDao()
         sequenceList = sequenceDao.findAllSequences()
     }
 
@@ -48,27 +43,12 @@ class KnocksRepository(context: Context): AnkoLogger {
 
     fun updateSequences(sequences: List<Sequence>) = sequenceDao.updateSequences(sequences)
 
-    fun getPortList(sequenceId: Long): List<Port> {
-        return portDao.findPortsBySequenceId(sequenceId)
-    }
-
-    fun saveSequence(sequence: Sequence, portList: List<Port>?) {
-        sequence.portString = portList?.filter { it.number != null }?.joinToString(", ") { it.toString() }
+    fun saveSequence(sequence: Sequence) {
         if (sequence.id == null) {
             sequence.id = sequenceDao.insertSequence(sequence)
         } else {
             sequenceDao.updateSequence(sequence)
         }
-        val sequenceId = sequence.id!!
-        portDao.deletePortsBySequenceId(sequenceId)
-        if (portList != null) {
-            portList.forEach {
-                it.sequenceId = sequenceId
-                it.id = null
-            }
-            portDao.insertPorts(portList)
-        }
-
     }
 
 }

@@ -19,23 +19,12 @@
  * under the License.
  */
 
-package me.impa.knockonports.database.dao
+package me.impa.knockonports.ext
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Query
-import me.impa.knockonports.database.entity.Port
+import android.support.v7.widget.RecyclerView
 
-@Dao
-interface PortDao {
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertPorts(ports: List<Port>): List<Long>
-
-    @Query("DELETE FROM tbPort WHERE _sequence_id=:sequenceId")
-    fun deletePortsBySequenceId(sequenceId: Long): Int
-
-    @Query("SELECT * FROM tbPort WHERE _sequence_id=:sequenceId ORDER BY _id")
-    fun findPortsBySequenceId(sequenceId: Long): List<Port>
+interface ItemTouchHelperAdapter {
+    var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?
+    fun onItemMove(fromPosition: Int, toPosition: Int)
+    fun onItemDismiss(position: Int)
 }

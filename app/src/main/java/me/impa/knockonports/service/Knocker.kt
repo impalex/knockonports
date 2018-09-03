@@ -23,12 +23,11 @@ package me.impa.knockonports.service
 
 import android.content.Context
 import me.impa.knockonports.R
-import me.impa.knockonports.database.entity.Port
 import me.impa.knockonports.database.entity.Sequence
 import org.jetbrains.anko.*
 import java.net.*
 
-class Knocker(val context: Context, private val sequence: Sequence, private val ports: List<Port>): AnkoLogger {
+class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger {
 
     private val _defaultTimeout = 1000
     private val _maxSleep = 15000
@@ -41,7 +40,7 @@ class Knocker(val context: Context, private val sequence: Sequence, private val 
             }
             return
         }
-        val p = ports.filter { it.number in 1..65535 }
+        val p = sequence.getPortList().filter { it.value in 1..65535 }
 
         if (p.isEmpty()) {
             warn { "Empty sequence '${sequence.name}'" }
@@ -68,7 +67,7 @@ class Knocker(val context: Context, private val sequence: Sequence, private val 
             context.toast(context.getString(R.string.start_knocking, sequence.name))
         }
         debug { "Remote address $address" }
-        val udpSocket = if (ports.any { portModel -> portModel.type == Port.PORT_TYPE_UDP }) {
+        val udpSocket = if (p.any { it.type == Sequence.PORT_TYPE_UDP }) {
             DatagramSocket()
         } else {
             null
@@ -97,11 +96,11 @@ class Knocker(val context: Context, private val sequence: Sequence, private val 
             var cnt = 0
             p.forEach {
                 info { "Knock #${++cnt}..." }
-                if (it.type == Port.PORT_TYPE_UDP) {
-                    debug { "Knock UDP ${it.number}" }
-                    udpSocket?.send(DatagramPacket(udpContent, udpContent.size, address, it.number!!))
+                if (it.type == Sequence.PORT_TYPE_UDP) {
+                    debug { "Knock UDP ${it.value}" }
+                    udpSocket?.send(DatagramPacket(udpContent, udpContent.size, address, it.value!!))
                 } else {
-                    debug { "Knock TCP ${it.number}" }
+                    debug { "Knock TCP ${it.value}" }
                     val socket = Socket()
                     try {
                         socket.tcpNoDelay = true
@@ -111,7 +110,7 @@ class Knocker(val context: Context, private val sequence: Sequence, private val 
                             timeout = _defaultTimeout
                         socket.soTimeout = timeout
                         socket.setSoLinger(true, 0)
-                        socket.connect(InetSocketAddress(sequence.host, it.number!!), timeout)
+                        socket.connect(InetSocketAddress(sequence.host, it.value!!), timeout)
                     } catch (e: SocketTimeoutException) {
                         // it's ok
                     } catch (e: Exception) {

@@ -34,10 +34,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
-import com.github.stephenvinouze.advancedrecyclerview.gesture.extensions.enableGestures
 import me.impa.knockonports.R
-import me.impa.knockonports.database.entity.Port
+import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.json.PortData
+import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.PortAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
@@ -76,15 +77,19 @@ class BasicSettingsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         portAdapter = PortAdapter(activity)
         recyclerView.adapter = portAdapter
-        recyclerView.enableGestures(dragDirections = ItemTouchHelper.UP or ItemTouchHelper.DOWN,
-                swipeDirections = 0)
+        val itemTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(portAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+        portAdapter.onStartDrag = {
+            itemTouchHelper.startDrag(it)
+        }
 
         mainViewModel.getDirtyPorts().observe(this, Observer {
             portAdapter.items = it ?: mutableListOf()
         })
         addPortButton.setOnClickListener{
-            val model = Port(null, 0, null, Port.PORT_TYPE_UDP)
-            portAdapter.addItem(model, portAdapter.itemCount)
+            val model = PortData(null, Sequence.PORT_TYPE_UDP)
+            portAdapter.addItem(model)
             scrollView.post {
                 scrollView.fullScroll(View.FOCUS_DOWN)
                 recyclerView.getChildAt(portAdapter.itemCount - 1).requestFocus()

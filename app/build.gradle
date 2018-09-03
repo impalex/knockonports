@@ -35,8 +35,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 4
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
@@ -74,15 +74,13 @@ dependencies {
     implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
 
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.android.support:design:28.0.0-rc01'
     implementation 'com.android.support:support-v4:28.0.0-rc02'
     implementation 'com.android.support:support-vector-drawable:28.0.0-rc02'
     implementation "com.github.savvyapps:ToggleButtonLayout:$togglelayoutbutton_version"
     implementation "android.arch.persistence.room:runtime:$room_version"
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
-    implementation "com.github.StephenVinouze.AdvancedRecyclerView:core:$advancedrecyclerview_version"
-    implementation "com.github.StephenVinouze.AdvancedRecyclerView:gesture:$advancedrecyclerview_version"
     implementation "com.obsez.android.lib.filechooser:filechooser:$filepicker_version"
     implementation "com.jaredrummler:colorpicker:$colorpicker_version"
     kapt "android.arch.persistence.room:compiler:$room_version"

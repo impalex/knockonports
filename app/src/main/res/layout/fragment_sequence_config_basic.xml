@@ -25,13 +25,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/basic_settings_view"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:clipToPadding="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_margin="16dp">
+        android:layout_margin="16dp"
+        android:paddingBottom="16dp">
         <android.support.design.widget.TextInputLayout
             android:id="@+id/sequence_name_wrapper"
             android:layout_width="match_parent"

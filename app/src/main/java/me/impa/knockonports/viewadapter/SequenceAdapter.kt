@@ -22,23 +22,86 @@
 package me.impa.knockonports.viewadapter
 
 import android.content.Context
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.stephenvinouze.advancedrecyclerview.core.adapters.RecyclerAdapter
+import kotlinx.android.synthetic.main.sequence_element.view.*
+import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
-class SequenceAdapter(context: Context) : RecyclerAdapter<Sequence>(context) {
+class SequenceAdapter(val context: Context): RecyclerView.Adapter<SequenceAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
-    var onEdit: ((Sequence) -> Unit)? = null
-    var onDelete: ((Sequence) -> Unit)? = null
-    var onKnock: ((Sequence) -> Unit)? = null
+    override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
 
-    override fun onBindItemView(view: View, position: Int) {
-        when (view) {
-            is SequenceView -> view.bind(items[position], onEdit, onDelete, onKnock)
+    var onDelete: ((sequence: Sequence) -> Unit)? = null
+    var onKnock: ((sequence: Sequence) -> Unit)? = null
+    var onClick: ((sequence: Sequence) -> Unit)? = null
+    var onMove: ((fromPos: Int, toPos: Int) -> Unit)? = null
+
+    var items: MutableList<Sequence> = mutableListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
+
+    override fun getItemCount() = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = ViewHolder(LayoutInflater.from(context).inflate(R.layout.sequence_element, parent, false))
+
+        view.view.setOnClickListener {
+            onClick?.invoke(items[view.layoutPosition])
+        }
+
+        return view
+
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+        val sequence = items[position]
+        holder?.sequenceName?.text = if (sequence.name.isNullOrBlank()) {
+            context.getString(R.string.untitled_sequence)
+        } else {
+            sequence.name
+        }
+        holder?.deleteIcon?.setOnClickListener {
+            onDelete?.invoke(sequence)
+        }
+        holder?.knockWrap?.setOnClickListener {
+            onKnock?.invoke(sequence)
+        }
+        holder?.textHost?.text = if (sequence.host.isNullOrBlank()) {
+            context.getString(R.string.host_not_set)
+        } else {
+            sequence.host
+        }
+        val ports = sequence.getReadablePortString()
+        holder?.textPorts?.text = if (ports.isNullOrBlank()) {
+            context.getString(R.string.empty_sequence)
+        } else {
+            sequence.getReadablePortString()
         }
     }
 
-    override fun onCreateItemView(parent: ViewGroup, viewType: Int): View  = SequenceView(context)
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        val i = items.removeAt(fromPosition)
+        items.add(toPosition, i)
+        notifyItemMoved(fromPosition, toPosition)
+        onMove?.invoke(fromPosition, toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+
+    }
+
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val sequenceName = view.sequence_name!!
+        val deleteIcon = view.delete_icon!!
+        val textHost = view.text_host!!
+        val textPorts = view.text_ports!!
+        val knockWrap = view.knock_wrap!!
+    }
 
 }

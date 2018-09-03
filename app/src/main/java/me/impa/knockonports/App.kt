@@ -28,6 +28,7 @@ import android.os.Build
 import android.support.v7.app.AppCompatDelegate
 import me.impa.knockonports.service.KnockerService
 
+@Suppress("unused")
 class App : Application() {
 
     override fun onCreate() {

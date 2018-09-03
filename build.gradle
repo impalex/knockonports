@@ -24,7 +24,6 @@
 buildscript {
     ext {
         kotlin_version = '1.2.61'
-        advancedrecyclerview_version = '2.0.3'
         room_version = '1.1.1'
         togglelayoutbutton_version = '1.2.0'
         serialization_version = '0.6.1'

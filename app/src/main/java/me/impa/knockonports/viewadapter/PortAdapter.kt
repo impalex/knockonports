@@ -21,24 +21,98 @@
 
 package me.impa.knockonports.viewadapter
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.widget.RecyclerView
+import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.github.stephenvinouze.advancedrecyclerview.core.adapters.RecyclerAdapter
-import me.impa.knockonports.database.entity.Port
+import kotlinx.android.synthetic.main.port_element.view.*
+import me.impa.knockonports.R
+import me.impa.knockonports.ext.ItemTouchHelperAdapter
+import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.json.PortData
+import me.impa.knockonports.database.entity.Sequence
 
-class PortAdapter(context: Context): RecyclerAdapter<Port>(context) {
+class PortAdapter(val context: Context): RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
-    override fun onCreateItemView(parent: ViewGroup, viewType: Int): View = PortView(context)
+    override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
 
-    override fun onBindItemView(view: View, position: Int) {
-        when(view) {
-            is PortView -> view.bind(items[position], onDelete = {
-                val idx = items.indexOf(it)
-                if (idx>=0) {
-                    removeItem(idx)
-                }
-            })
+    var items: MutableList<PortData> = mutableListOf()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
         }
+
+    fun addItem(item: PortData) {
+        items.add(item)
+        notifyItemInserted(items.size-1)
+    }
+
+    override fun getItemCount() = items.size
+
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
+            ViewHolder(LayoutInflater.from(context).inflate(R.layout.port_element, parent, false))
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+        val port = items[position]
+        holder?.editPort?.run {
+            afterTextChanged {
+                port.value = it.toIntOrNull()
+            }
+            setText(port.value?.toString())
+        }
+
+        holder?.imageDelete?.setOnClickListener {
+            val index = items.indexOf(port)
+            if (index >= 0) {
+                items.removeAt(index)
+                notifyItemRemoved(index)
+            }
+        }
+        if (port.type != Sequence.PORT_TYPE_TCP && port.type != Sequence.PORT_TYPE_UDP) {
+            port.type = Sequence.PORT_TYPE_UDP
+        }
+        holder?.groupProtocolType?.run {
+            setToggled(if (port.type == Sequence.PORT_TYPE_TCP) {
+                R.id.type_tcp
+            } else {
+                R.id.type_udp
+            }, true)
+            onToggledListener = { toggle, _ ->
+                port.type = if (toggle.id == R.id.type_tcp) {
+                    Sequence.PORT_TYPE_TCP
+                } else {
+                    Sequence.PORT_TYPE_UDP
+                }
+            }
+        }
+
+        holder?.dragHandle?.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                onStartDrag?.invoke(holder)
+            }
+            return@setOnTouchListener false
+        }
+    }
+
+    override fun onItemMove(fromPosition: Int, toPosition: Int) {
+        val i = items.removeAt(fromPosition)
+        items.add(toPosition, i)
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onItemDismiss(position: Int) {
+        items.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val dragHandle = view.drag_handle!!
+        val editPort = view.port_edit!!
+        val groupProtocolType = view.protocol_toggle_group!!
+        val imageDelete = view.delete_port!!
     }
 }

@@ -30,15 +30,16 @@ import android.arch.lifecycle.Transformations
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import kotlinx.serialization.json.JSON
 import kotlinx.serialization.list
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
 import me.impa.knockonports.database.KnocksRepository
-import me.impa.knockonports.database.entity.Port
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.json.PortData
 import me.impa.knockonports.json.SequenceData
-import me.impa.knockonports.service.Knocker
+import me.impa.knockonports.service.KnockerService
 import me.impa.knockonports.widget.KnocksWidget
 import org.jetbrains.anko.*
 import java.io.File
@@ -48,9 +49,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     private val repository: KnocksRepository = KnocksRepository(application)
     private val sequenceList: LiveData<List<Sequence>>
     private val selectedSequence: MutableLiveData<Sequence?>
-    private val previousSequence: MutableLiveData<Sequence?>
     private val dirtySequence: LiveData<Sequence?>
-    private val dirtyPorts: LiveData<MutableList<Port>?>
+    private val dirtyPorts: LiveData<MutableList<PortData>>
     private val settingsTabIndex: MutableLiveData<Int>
     private val fabVisible: MutableLiveData<Boolean>
     private val pendingOrderChanges: MutableLiveData<List<Long>>
@@ -70,7 +70,6 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     init {
         sequenceList = repository.getSequenceList()
         selectedSequence = MutableLiveData()
-        previousSequence = MutableLiveData()
         settingsTabIndex = MutableLiveData()
         fabVisible = MutableLiveData()
         pendingOrderChanges = MutableLiveData()
@@ -82,17 +81,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             it?.copy()
         }
         dirtyPorts = Transformations.map(selectedSequence) {
-            if (it == null) {
-                null
-            } else {
-                if (it.id == null) {
-                    mutableListOf()
-                } else {
-                    doAsyncResult {
-                        repository.getPortList(it.id ?: -1)
-                    }.get().toMutableList()
-                }
-            }
+            it?.getPortList()?.toMutableList() ?: mutableListOf()
         }
 
     }
@@ -104,9 +93,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun getSelectedSequence(): MutableLiveData<Sequence?> = selectedSequence
 
-    fun getPreviousSequence(): MutableLiveData<Sequence?> = previousSequence
-
-    fun getDirtyPorts(): LiveData<MutableList<Port>?> = dirtyPorts
+    fun getDirtyPorts(): LiveData<MutableList<PortData>> = dirtyPorts
 
     fun getDirtySequence(): LiveData<Sequence?> = dirtySequence
 
@@ -130,6 +117,9 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             repository.deleteSequence(sequence)
             uiThread {
                 updateWidgets()
+                if (sequence.id == selectedSequence.value?.id) {
+                    selectedSequence.value = null
+                }
             }
         }
     }
@@ -145,8 +135,9 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         if (seq.id == null) {
             seq.order = pendingOrderChanges.value?.size ?: sequenceList.value?.size ?: 0
         }
+        seq.portString = Sequence.compilePortString(dirtyPorts.value)
         doAsync {
-            repository.saveSequence(seq, dirtyPorts.value?.toList())
+            repository.saveSequence(seq)
             uiThread {
                 updateWidgets()
             }
@@ -155,9 +146,14 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun knock(sequence: Sequence) {
         val seqId = sequence.id ?: return
+
         val application = getApplication<Application>()
-        doAsync {
-            Knocker(application, sequence, repository.getPortList(seqId)).execute()
+        val intent = Intent(application, KnockerService::class.java)
+        intent.putExtra(KnockerService.SEQUENCE_ID, seqId)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            application.startForegroundService(intent)
+        } else {
+            application.startService(intent)
         }
     }
 
@@ -183,7 +179,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             try {
                 info { "Exporting data to $fileName" }
 
-                val data = sequenceList.value?.map { SequenceData.fromEntity(it, repository.getPortList(it.id!!)) }?.toList() ?: return@doAsync
+                val data = sequenceList.value?.map { SequenceData.fromEntity(it) }?.toList() ?: return@doAsync
 
                 File(fileName).writeText(JSON.stringify(SequenceData.serializer().list, data))
 
@@ -212,8 +208,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                 data.forEachIndexed { index, sequenceData ->
                     val seq = sequenceData.toEntity()
                     seq.order = order + index
-                    val ports = sequenceData.ports.map { it.toEntity() }.toList()
-                    repository.saveSequence(seq, ports)
+                    seq.portString = Sequence.compilePortString(sequenceData.ports)
+                    repository.saveSequence(seq)
                 }
                 uiThread {
                     application.toast(application.resources.getString(R.string.import_success, data.size, file.absolutePath))

@@ -19,11 +19,25 @@
  * under the License.
  */
 
-package me.impa.knockonports.json
+package me.impa.knockonports.ext
 
-import kotlinx.serialization.Serializable
+import android.app.AlertDialog
+import com.obsez.android.lib.filechooser.ChooserDialog
+import java.io.File
 
-@Serializable
-data class PortData(var value: Int?, var type: Int) {
-
+// Hackish... Whatever.
+inline fun <reified T> getHiddenField(obj: Any, field: String): T? {
+    return try {
+        val f = obj.javaClass.getDeclaredField(field)
+        f.isAccessible = true
+        val v = f.get(obj)
+        if (v is T) { v } else { null }
+    } catch (ex: Exception) {
+        ex.printStackTrace()
+        null
+    }
 }
+
+fun ChooserDialog.getCurrentDir(): File? = getHiddenField(this, "_currentDir")
+
+fun ChooserDialog.getAlertDialog(): AlertDialog? = getHiddenField(this, "_alertDialog")

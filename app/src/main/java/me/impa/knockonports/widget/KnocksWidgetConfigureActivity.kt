@@ -35,21 +35,15 @@ import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import kotlinx.android.synthetic.main.knocks_widget.*
 import kotlinx.android.synthetic.main.knocks_widget_configure.*
 import me.impa.knockonports.R
-import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
 import org.jetbrains.anko.textColor
 
-/**
- * The configuration screen for the [KnocksWidget] AppWidget.
- */
 class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogListener {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
 
-        // Set the result to CANCELED.  This will cause the widget host to cancel
-        // out of the widget placement if the user presses the back button.
         setResult(Activity.RESULT_CANCELED)
 
         setContentView(R.layout.knocks_widget_configure)
@@ -69,7 +63,6 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
             finish()
         }
 
-        // Find the widget id from the intent.
         val intent = intent
         val extras = intent.extras
         if (extras != null) {
@@ -77,7 +70,6 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
         }
 
-        // If this activity was started with an intent without an app widget ID, finish with an error.
         if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
             return

@@ -13,3 +13,4 @@ app/release/
 # .idea/dictionaries/
 .idea/assetWizardSettings.xml
 # .idea/misc.xml
+.idea/caches/build_file_checksums.ser
