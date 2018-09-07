@@ -21,9 +21,6 @@
 
 package me.impa.knockonports.json
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class PortData(var value: Int?, var type: Int) {
 
 }

@@ -29,10 +29,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import kotlinx.serialization.json.JSON
-import kotlinx.serialization.list
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
 import me.impa.knockonports.database.KnocksRepository
@@ -54,19 +51,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     private val settingsTabIndex: MutableLiveData<Int>
     private val fabVisible: MutableLiveData<Boolean>
     private val pendingOrderChanges: MutableLiveData<List<Long>>
-    private val installedApps: MutableLiveData<List<AppData>> by lazy {
-        val apps = MutableLiveData<List<AppData>>()
-        val packages = application.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        apps.value = sequenceOf(AppData("", application.resources.getString(R.string.none)))
-                .plus(packages
-                        .filter { application.packageManager.getLaunchIntentForPackage(it.packageName) != null }
-                        .map { AppData(it.packageName, application.packageManager.getApplicationLabel(it).toString()) }
-                        .sortedBy { it.name })
-                .toList()
-        apps
-    }
-
+    private val installedApps: MutableLiveData<List<AppData>?>
     init {
         sequenceList = repository.getSequenceList()
         selectedSequence = MutableLiveData()
@@ -74,6 +59,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         fabVisible = MutableLiveData()
         pendingOrderChanges = MutableLiveData()
         fabVisible.value = true
+        installedApps = MutableLiveData()
+        installedApps.value = null
         dirtySequence = Transformations.map(selectedSequence) {
             doAsync {
                 savePendingData()
@@ -101,7 +88,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun getFabVisible(): MutableLiveData<Boolean> = fabVisible
 
-    fun getInstalledApps(): LiveData<List<AppData>> = installedApps
+    fun getInstalledApps(): MutableLiveData<List<AppData>?> = installedApps
 
     fun getPendingDataChanges(): MutableLiveData<List<Long>> = pendingOrderChanges
 
@@ -181,7 +168,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
                 val data = sequenceList.value?.map { SequenceData.fromEntity(it) }?.toList() ?: return@doAsync
 
-                File(fileName).writeText(JSON.stringify(SequenceData.serializer().list, data))
+                File(fileName).writeText(SequenceData.toJson(data))
 
                 uiThread {
                     application.toast(application.resources.getString(R.string.export_success, fileName))
@@ -204,7 +191,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         doAsync {
             try {
                 val raw = file.readText()
-                val data = JSON.parse(SequenceData.serializer().list, raw)
+                val data = SequenceData.fromJson(raw)
                 data.forEachIndexed { index, sequenceData ->
                     val seq = sequenceData.toEntity()
                     seq.order = order + index

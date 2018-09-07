@@ -23,6 +23,7 @@ package me.impa.knockonports.fragment
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
@@ -34,8 +35,11 @@ import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.Spinner
 import me.impa.knockonports.R
+import me.impa.knockonports.data.AppData
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.viewmodel.MainViewModel
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class AdvancedSettingsFragment: Fragment() {
 
@@ -80,22 +84,50 @@ class AdvancedSettingsFragment: Fragment() {
             mainViewModel.getDirtySequence().value?.udpContent = it
         }
 
-        val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, mainViewModel.getInstalledApps().value ?: listOf())
+        appSpinner.visibility = View.INVISIBLE
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        appSpinner.adapter = adapter
-        appSpinner.setSelection(mainViewModel.getInstalledApps().value?.indexOfFirst { it.app == mainViewModel.getDirtySequence().value?.application } ?: 0)
-        appSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                mainViewModel.getDirtySequence().value?.application = mainViewModel.getInstalledApps().value?.get(p2)?.app
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                mainViewModel.getDirtySequence().value?.application = null
-            }
-
-        }
+        initAppSpinner()
 
         return view
+    }
+
+    private fun initAppSpinner() {
+        doAsync {
+
+            var apps = mainViewModel.getInstalledApps().value
+            if (apps == null) {
+                val packages = context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+                val appList = sequenceOf(AppData("", context.resources.getString(R.string.none)))
+                        .plus(packages
+                                .filter { context.packageManager.getLaunchIntentForPackage(it.packageName) != null }
+                                .map { AppData(it.packageName, context.packageManager.getApplicationLabel(it).toString()) }
+                                .sortedBy { it.name })
+                        .toList()
+                uiThread {
+                    mainViewModel.getInstalledApps().value = appList
+                }
+                apps = appList
+            }
+
+            val adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, apps)
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            uiThread {
+                appSpinner.adapter = adapter
+                appSpinner.setSelection(apps.indexOfFirst { a -> a.app == mainViewModel.getDirtySequence().value?.application })
+                appSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                        mainViewModel.getDirtySequence().value?.application = mainViewModel.getInstalledApps().value?.get(p2)?.app
+                    }
+
+                    override fun onNothingSelected(p0: AdapterView<*>?) {
+                        mainViewModel.getDirtySequence().value?.application = null
+                    }
+                }
+                appSpinner.visibility = View.VISIBLE
+
+            }
+        }
     }
 }
