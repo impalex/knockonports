@@ -36,7 +36,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         if (sequence.host.isNullOrBlank()) {
             warn { "Empty host '${sequence.name}'" }
             context.runOnUiThread {
-                context.toast(R.string.host_not_set)
+                toast(R.string.host_not_set)
             }
             return
         }
@@ -45,7 +45,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         if (p.isEmpty()) {
             warn { "Empty sequence '${sequence.name}'" }
             context.runOnUiThread {
-                context.toast(context.getString(R.string.empty_sequence_warning, sequence.name))
+                toast(getString(R.string.empty_sequence_warning, sequence.name))
             }
             return
         }
@@ -56,7 +56,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             InetAddress.getByName(sequence.host)
         } catch (e: UnknownHostException) {
             context.runOnUiThread {
-                context.toast(context.getString(R.string.error_resolve, sequence.host))
+                toast(getString(R.string.error_resolve, sequence.host))
             }
             return
         } catch (e: Exception) {
@@ -64,7 +64,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             return
         }
         context.runOnUiThread {
-            context.toast(context.getString(R.string.start_knocking, sequence.name))
+            toast(getString(R.string.start_knocking, sequence.name))
         }
         debug { "Remote address $address" }
         val udpSocket = if (p.any { it.type == Sequence.PORT_TYPE_UDP }) {
@@ -81,7 +81,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                 } catch (e: Exception) {
                     warn { "Unable to decode udp content string (invalid base64?)" }
                     context.runOnUiThread {
-                        context.toast(R.string.error_base64)
+                        toast(R.string.error_base64)
                     }
                     ByteArray(0)
                 }
@@ -143,7 +143,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         }
         info("Knocking complete")
         context.runOnUiThread {
-            context.toast(R.string.end_knocking)
+            toast(R.string.end_knocking)
         }
 
     }

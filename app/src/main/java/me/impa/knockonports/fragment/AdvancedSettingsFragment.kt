@@ -43,7 +43,7 @@ import org.jetbrains.anko.uiThread
 
 class AdvancedSettingsFragment: Fragment() {
 
-    private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
     private lateinit var delayEdit: TextInputEditText
     private lateinit var timeoutEdit: TextInputEditText
     private lateinit var udpContentEdit: TextInputEditText

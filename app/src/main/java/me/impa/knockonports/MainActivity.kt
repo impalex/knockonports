@@ -71,9 +71,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     private var dialogImportChooser: ChooserDialog? = null
 
 
-    private val mainViewModel: MainViewModel by lazy {
-        ViewModelProviders.of(this).get(MainViewModel::class.java)
-    }
+    private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

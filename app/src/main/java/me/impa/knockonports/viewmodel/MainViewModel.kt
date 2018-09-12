@@ -34,6 +34,7 @@ import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
 import me.impa.knockonports.database.KnocksRepository
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.ext.default
 import me.impa.knockonports.json.PortData
 import me.impa.knockonports.json.SequenceData
 import me.impa.knockonports.service.KnockerService
@@ -43,34 +44,21 @@ import java.io.File
 
 class MainViewModel(application: Application): AndroidViewModel(application), AnkoLogger {
 
-    private val repository: KnocksRepository = KnocksRepository(application)
-    private val sequenceList: LiveData<List<Sequence>>
-    private val selectedSequence: MutableLiveData<Sequence?>
-    private val dirtySequence: LiveData<Sequence?>
-    private val dirtyPorts: LiveData<MutableList<PortData>>
-    private val settingsTabIndex: MutableLiveData<Int>
-    private val fabVisible: MutableLiveData<Boolean>
-    private val pendingOrderChanges: MutableLiveData<List<Long>>
-    private val installedApps: MutableLiveData<List<AppData>?>
-    init {
-        sequenceList = repository.getSequenceList()
-        selectedSequence = MutableLiveData()
-        settingsTabIndex = MutableLiveData()
-        fabVisible = MutableLiveData()
-        pendingOrderChanges = MutableLiveData()
-        fabVisible.value = true
-        installedApps = MutableLiveData()
-        installedApps.value = null
-        dirtySequence = Transformations.map(selectedSequence) {
-            doAsync {
-                savePendingData()
-            }.get()
-            it?.copy()
-        }
-        dirtyPorts = Transformations.map(selectedSequence) {
-            it?.getPortList()?.toMutableList() ?: mutableListOf()
-        }
-
+    private val repository by lazy { KnocksRepository(application) }
+    private val sequenceList: LiveData<List<Sequence>> = repository.getSequences()
+    private val selectedSequence = MutableLiveData<Sequence?>()
+    private val settingsTabIndex = MutableLiveData<Int>()
+    private val fabVisible = MutableLiveData<Boolean>().default(true)
+    private val pendingOrderChanges: MutableLiveData<List<Long>> = MutableLiveData()
+    private val installedApps = MutableLiveData<List<AppData>?>().default(null)
+    private val dirtySequence = Transformations.map(selectedSequence) {
+        doAsync {
+            savePendingData()
+        }.get()
+        it?.copy()
+    }
+    private val dirtyPorts = Transformations.map(selectedSequence) {
+        it?.getPortList()?.toMutableList() ?: mutableListOf()
     }
 
     fun getSequenceList(): LiveData<List<Sequence>> {
@@ -148,14 +136,14 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         val data = pendingOrderChanges.value
         data ?: return
         val changes = mutableListOf<Sequence>()
-        data.forEachIndexed{ index, l ->
+        data.forEachIndexed { index, l ->
             val seq = sequenceList.value?.firstOrNull { it.id == l }
             if (seq != null && seq.order != index) {
                 seq.order = index
                 changes.add(seq)
             }
         }
-        if (changes.size>0) {
+        if (changes.size > 0) {
             repository.updateSequences(changes)
         }
     }
@@ -166,7 +154,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             try {
                 info { "Exporting data to $fileName" }
 
-                val data = sequenceList.value?.map { SequenceData.fromEntity(it) }?.toList() ?: return@doAsync
+                val data = sequenceList.value?.map { SequenceData.fromEntity(it) }?.toList()
+                        ?: return@doAsync
 
                 File(fileName).writeText(SequenceData.toJson(data))
 
@@ -175,8 +164,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                 }
                 info { "Export complete" }
 
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 warn("Unable to export data", e)
                 uiThread {
                     application.toast(R.string.error_export)
@@ -201,8 +189,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                 uiThread {
                     application.toast(application.resources.getString(R.string.import_success, data.size, file.absolutePath))
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 warn("Unable to import data", e)
                 uiThread {
                     application.toast(R.string.error_import)

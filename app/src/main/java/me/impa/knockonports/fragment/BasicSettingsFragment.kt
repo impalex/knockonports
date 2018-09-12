@@ -44,7 +44,7 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class BasicSettingsFragment : Fragment() {
 
-    private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
     private lateinit var nameEdit: TextInputEditText
     private lateinit var hostEdit: TextInputEditText
     private lateinit var portAdapter: PortAdapter

@@ -28,16 +28,14 @@ import me.impa.knockonports.database.entity.Sequence
 
 class KnocksRepository(context: Context) {
 
-    private var sequenceDao: SequenceDao
-    private var sequenceList: LiveData<List<Sequence>>
+    private val db by lazy { KnocksDatabase.getInstance(context)!! }
+    private val sequenceDao by lazy { db.sequenceDao() }
+    private val sequenceList by lazy { sequenceDao.findAllSequences() }
 
     init {
-        val db = KnocksDatabase.getInstance(context)!!
-        sequenceDao = db.sequenceDao()
-        sequenceList = sequenceDao.findAllSequences()
     }
 
-    fun getSequenceList(): LiveData<List<Sequence>> = sequenceList
+    fun getSequences(): LiveData<List<Sequence>> = sequenceList
 
     fun deleteSequence(sequence: Sequence): Int = sequenceDao.deleteSequence(sequence)
 

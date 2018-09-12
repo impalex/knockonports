@@ -27,15 +27,22 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+
+def keystoreProperties = new Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 6
-        versionName "1.0.3"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 7
+        versionName "1.0.4"
         vectorDrawables.useSupportLibrary true
         javaCompileOptions {
             annotationProcessorOptions {
@@ -43,10 +50,23 @@ android {
             }
         }
     }
+    if (!keystoreProperties.isEmpty()) {
+        signingConfigs {
+            release {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (!keystoreProperties.isEmpty()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }
@@ -72,7 +92,7 @@ dependencies {
 
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:design:28.0.0-rc01'
+    implementation 'com.android.support:design:28.0.0-rc02'
     implementation 'com.android.support:support-v4:28.0.0-rc02'
     implementation 'com.android.support:support-vector-drawable:28.0.0-rc02'
     implementation "com.github.savvyapps:ToggleButtonLayout:$togglelayoutbutton_version"
@@ -80,6 +100,7 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
     implementation "com.obsez.android.lib.filechooser:filechooser:$filepicker_version"
     implementation "com.jaredrummler:colorpicker:$colorpicker_version"
+    //implementation "com.github.hendrawd:StorageUtil:$storageutil_version"
     kapt "android.arch.persistence.room:compiler:$room_version"
     kapt "android.arch.lifecycle:compiler:$rootProject.lifecycle_version"
 }

@@ -36,7 +36,7 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class SequenceConfigFragment: Fragment() {
 
-    private val mainViewModel: MainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
