@@ -32,9 +32,11 @@ import android.content.Intent
 import android.os.Build
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.database.KnocksRepository
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.default
+import me.impa.knockonports.json.IcmpData
 import me.impa.knockonports.json.PortData
 import me.impa.knockonports.json.SequenceData
 import me.impa.knockonports.service.KnockerService
@@ -58,9 +60,11 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         it?.copy()
     }
     private val dirtyPorts = Transformations.map(selectedSequence) {
-        it?.getPortList()?.toMutableList() ?: mutableListOf()
+        it?.ports?.toMutableList() ?: mutableListOf()
     }
-
+    private val dirtyIcmp = Transformations.map(selectedSequence) {
+        it?.icmp?.toMutableList() ?: mutableListOf()
+    }
     fun getSequenceList(): LiveData<List<Sequence>> {
         doAsync { savePendingData() }.get()
         return sequenceList
@@ -69,6 +73,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     fun getSelectedSequence(): MutableLiveData<Sequence?> = selectedSequence
 
     fun getDirtyPorts(): LiveData<MutableList<PortData>> = dirtyPorts
+
+    fun getDirtyIcmp(): LiveData<MutableList<IcmpData>> = dirtyIcmp
 
     fun getDirtySequence(): LiveData<Sequence?> = dirtySequence
 
@@ -101,7 +107,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun createEmptySequence() {
         selectedSequence.value = Sequence(null, null, null, null,
-                null, null, null, null, 0, null)
+                null, 500, null, null, 0, null, null, KnockType.PORT, null)
     }
 
     fun saveDirtyData() {
@@ -110,7 +116,9 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         if (seq.id == null) {
             seq.order = pendingOrderChanges.value?.size ?: sequenceList.value?.size ?: 0
         }
-        seq.portString = Sequence.compilePortString(dirtyPorts.value)
+        seq.ports = dirtyPorts.value
+        seq.icmp = dirtyIcmp.value
+
         doAsync {
             repository.saveSequence(seq)
             uiThread {
@@ -154,7 +162,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             try {
                 info { "Exporting data to $fileName" }
 
-                val data = sequenceList.value?.map { SequenceData.fromEntity(it) }?.toList()
+                val data = sequenceList.value?.asSequence()?.map { SequenceData.fromEntity(it) }?.toList()
                         ?: return@doAsync
 
                 File(fileName).writeText(SequenceData.toJson(data))
@@ -173,21 +181,21 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         }
     }
 
-    fun importData(file: File) {
+    fun importData(fileName: String) {
         val application = getApplication<Application>()
         val order = sequenceList.value?.size ?: 0
         doAsync {
             try {
-                val raw = file.readText()
+                val raw = File(fileName).readText()
                 val data = SequenceData.fromJson(raw)
                 data.forEachIndexed { index, sequenceData ->
                     val seq = sequenceData.toEntity()
                     seq.order = order + index
-                    seq.portString = Sequence.compilePortString(sequenceData.ports)
+                    seq.ports = sequenceData.ports
                     repository.saveSequence(seq)
                 }
                 uiThread {
-                    application.toast(application.resources.getString(R.string.import_success, data.size, file.absolutePath))
+                    application.toast(application.resources.getString(R.string.import_success, data.size, fileName))
                 }
             } catch (e: Exception) {
                 warn("Unable to import data", e)

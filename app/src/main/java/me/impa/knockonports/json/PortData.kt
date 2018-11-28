@@ -21,6 +21,6 @@
 
 package me.impa.knockonports.json
 
-data class PortData(var value: Int?, var type: Int) {
+import me.impa.knockonports.data.PortType
 
-}
+data class PortData(var value: Int?, var type: PortType)

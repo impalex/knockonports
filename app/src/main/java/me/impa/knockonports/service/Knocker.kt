@@ -23,6 +23,8 @@ package me.impa.knockonports.service
 
 import android.content.Context
 import me.impa.knockonports.R
+import me.impa.knockonports.data.KnockType
+import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.entity.Sequence
 import org.jetbrains.anko.*
 import java.net.*
@@ -32,15 +34,8 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
     private val _defaultTimeout = 1000
     private val _maxSleep = 15000
 
-    fun execute() {
-        if (sequence.host.isNullOrBlank()) {
-            warn { "Empty host '${sequence.name}'" }
-            context.runOnUiThread {
-                toast(R.string.host_not_set)
-            }
-            return
-        }
-        val p = sequence.getPortList().filter { it.value in 1..65535 }
+    private fun knockPorts(address: InetAddress) {
+        val p = sequence.ports?.filter { it.value in 1..65535 } ?: listOf()
 
         if (p.isEmpty()) {
             warn { "Empty sequence '${sequence.name}'" }
@@ -52,22 +47,11 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         info { "Knocking to '${sequence.name}'" }
 
 
-        val address = try {
-            InetAddress.getByName(sequence.host)
-        } catch (e: UnknownHostException) {
-            context.runOnUiThread {
-                toast(getString(R.string.error_resolve, sequence.host))
-            }
-            return
-        } catch (e: Exception) {
-            warn("Resolve error", e)
-            return
-        }
         context.runOnUiThread {
             toast(getString(R.string.start_knocking, sequence.name))
         }
         debug { "Remote address $address" }
-        val udpSocket = if (p.any { it.type == Sequence.PORT_TYPE_UDP }) {
+        val udpSocket = if (p.any { it.type == PortType.UDP }) {
             DatagramSocket()
         } else {
             null
@@ -86,7 +70,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                     ByteArray(0)
                 }
             } else {
-                contentString?.toByteArray() ?: ByteArray(0)
+                contentString.toByteArray()
             }
         } else {
             ByteArray(0)
@@ -96,7 +80,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             var cnt = 0
             p.forEach {
                 info { "Knock #${++cnt}..." }
-                if (it.type == Sequence.PORT_TYPE_UDP) {
+                if (it.type == PortType.UDP) {
                     debug { "Knock UDP ${it.value}" }
                     udpSocket?.send(DatagramPacket(udpContent, udpContent.size, address, it.value!!))
                 } else {
@@ -131,21 +115,91 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         } finally {
             udpSocket?.close()
         }
+    }
+
+    private fun knockIcmp(address: InetAddress) {
+
+        val packets = sequence.icmp?.filter { it.size != null } ?: listOf()
+        if (packets.isEmpty()) {
+            warn { "Empty sequence '${sequence.name}'" }
+            context.runOnUiThread {
+                toast(getString(R.string.empty_sequence_warning, sequence.name))
+            }
+            return
+        }
+        info { "Knocking to '${sequence.name}'" }
+
+
+        context.runOnUiThread {
+            toast(getString(R.string.start_knocking, sequence.name))
+        }
+        debug { "Remote address $address" }
+
+        try {
+            var cnt = 0
+            packets.forEach {
+                info { "Knock #${++cnt}..." }
+                var delay = sequence.delay ?: 0
+                if (delay > 0) {
+                    delay = Math.min(delay, _maxSleep)
+                }
+                ping(address.hostAddress, it.size ?: 0, Math.max(it.count ?: 1, 1),
+                        it.encoding.decode(it.content), delay)
+            }
+        } catch (e: Exception) {
+            warn("Knocking error", e)
+        }
+    }
+
+    fun execute() {
+        if (sequence.host.isNullOrBlank()) {
+            warn { "Empty host '${sequence.name}'" }
+            context.runOnUiThread {
+                toast(R.string.host_not_set)
+            }
+            return
+        }
+
+        val address = try {
+            InetAddress.getByName(sequence.host)
+        } catch (e: UnknownHostException) {
+            context.runOnUiThread {
+                toast(getString(R.string.error_resolve, sequence.host))
+            }
+            return
+        } catch (e: Exception) {
+            warn("Resolve error", e)
+            return
+        }
+
+        when(sequence.type) {
+            KnockType.ICMP -> knockIcmp(address)
+            KnockType.PORT -> knockPorts(address)
+        }
+
         val app = sequence.application
         if (!app.isNullOrEmpty()) {
             info { "Starting $app..." }
-            val launchIntent = context.packageManager.getLaunchIntentForPackage(app ?: "")
+            val launchIntent = context.packageManager.getLaunchIntentForPackage(app)
             if (launchIntent != null) {
                 context.startActivity(launchIntent)
             } else {
                 warn { "Could not find launch intent" }
             }
         }
+
         info("Knocking complete")
         context.runOnUiThread {
             toast(R.string.end_knocking)
         }
+    }
 
+    private external fun ping(address: String, size: Int, count: Int, pattern: ByteArray, sleep: Int): Int
+
+    companion object {
+        init {
+            System.loadLibrary("icmputil")
+        }
     }
 
 }

@@ -22,7 +22,6 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/basic_settings_view"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -61,21 +60,79 @@
                 android:maxLines="1"
                 android:hint="@string/hint_host"/>
         </android.support.design.widget.TextInputLayout>
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_ports"
+        <LinearLayout
+            android:id="@+id/sequence_type_layout"
+            android:layout_below="@id/sequence_host_wrapper"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <TextView
+                android:id="@+id/sequence_type_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sequence_type"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp" />
+
+            <com.savvyapps.togglebuttonlayout.ToggleButtonLayout
+                android:id="@+id/selector_seq_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:allowDeselection="false"
+                app:selectedColor="@color/colorAccent"
+                app:menu="@menu/menu_seq_type"
+                app:customLayout="@layout/toggle_button"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/type_ports_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:layout_below="@id/sequence_type_layout"
             android:orientation="vertical"
-            android:layout_below="@id/sequence_host_wrapper"/>
-        <Button
-            android:id="@+id/button_add_port"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:text="@string/action_add_port"
-            android:layout_width="wrap_content"
+            android:visibility="gone">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_ports"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+            <Button
+                android:id="@+id/button_add_port"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="@string/action_add_port"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/type_icmp_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/recycler_ports"/>
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/sequence_type_layout"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_icmp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                />
+            <Button
+                android:id="@+id/button_add_icmp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="@string/action_add_icmp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"/>
+
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 </ScrollView>

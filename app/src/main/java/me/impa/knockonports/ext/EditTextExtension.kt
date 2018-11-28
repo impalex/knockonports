@@ -36,7 +36,7 @@ fun EditText.afterTextChanged(afterTextChanged: (text: String) -> Unit) {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            afterTextChanged.invoke(p0.toString())
+            afterTextChanged.invoke(p0?.toString() ?: "")
         }
 
     })

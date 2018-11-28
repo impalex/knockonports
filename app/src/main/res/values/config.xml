@@ -22,5 +22,4 @@
 
 <resources>
     <item name="twoPaneMode" type="bool">false</item>
-    <item name="fabPosition" type="string"></item>
 </resources>

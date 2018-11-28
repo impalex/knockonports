@@ -15,3 +15,6 @@ app/release/
 # .idea/misc.xml
 .idea/caches/build_file_checksums.ser
 keystore.properties
+publisher.properties
+.idea/kotlinc.xml
+.idea/dictionaries/impa.xml

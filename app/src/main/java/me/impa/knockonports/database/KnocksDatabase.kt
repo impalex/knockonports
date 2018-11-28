@@ -25,15 +25,20 @@ import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
+import android.arch.persistence.room.TypeConverters
 import android.arch.persistence.room.migration.Migration
 import android.content.Context
+import me.impa.knockonports.data.AppData
+import me.impa.knockonports.data.PortType
+import me.impa.knockonports.database.converter.SequenceConverters
 import me.impa.knockonports.database.dao.SequenceDao
 import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class],
-        version = 6
+        version = 8
 )
+@TypeConverters(SequenceConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
     abstract fun sequenceDao(): SequenceDao
 
@@ -51,13 +56,13 @@ abstract class KnocksDatabase : RoomDatabase() {
 
     }
 
-    class Migration3to4: Migration(3, 4) {
+    class Migration3To4: Migration(3, 4) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_base64` INTEGER")
         }
     }
 
-    class Migration4to5: Migration(4, 5) {
+    class Migration4To5: Migration(4, 5) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_port_string` TEXT")
             val seqCur = database.query("SELECT `_id` FROM `tbSequence`")
@@ -73,7 +78,7 @@ abstract class KnocksDatabase : RoomDatabase() {
                 if (portCur.moveToFirst()) {
                     do {
                         if (!portCur.isNull(0) && !portCur.isNull(1)) {
-                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == Sequence.PORT_TYPE_UDP) {
+                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == PortType.UDP.ordinal) {
                                 "UDP"
                             } else {
                                 "TCP"
@@ -88,7 +93,7 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
-    class Migration5to6: Migration(5, 6) {
+    class Migration5To6: Migration(5, 6) {
         override fun migrate(database: SupportSQLiteDatabase) {
             val portMap = mutableMapOf<Long, String>()
             val portCur = database.query("SELECT `_sequence_id`, `_number`, `_type` FROM `tbPort` ORDER BY `_id`")
@@ -101,14 +106,14 @@ abstract class KnocksDatabase : RoomDatabase() {
                         ""
                     } else {
                         portCur.getInt(1).toString()
-                    } + Sequence.PORT_SEPARATOR +
+                    } + SequenceConverters.VALUE_SEPARATOR +
                             if (portCur.isNull(2)) {
                                 ""
                             } else {
                                 portCur.getInt(2).toString()
                             }
                     portMap[seqId] = if (portMap.containsKey(seqId)) {
-                        portMap[seqId] + Sequence.ENTRY_SEPARATOR
+                        portMap[seqId] + SequenceConverters.ENTRY_SEPARATOR
                     } else {
                         ""
                     } + str
@@ -119,7 +124,38 @@ abstract class KnocksDatabase : RoomDatabase() {
             }
             database.execSQL("DROP TABLE `tbPort`")
         }
+    }
 
+    class Migration6To7(val context: Context): Migration(6, 7) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            val apps by lazy { AppData.loadInstalledApps(context) }
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_application_name` TEXT")
+            val appMap = mutableMapOf<Long, String?>()
+            val appCur = database.query("SELECT `_id`, `_application` FROM `tbSequence`")
+            if (appCur.moveToFirst()) {
+                do {
+                    if (appCur.isNull(1) || appCur.isNull(0))
+                        continue
+                    val app = appCur.getString(1)
+                    if (app.isEmpty())
+                        continue
+                    val seqId = appCur.getLong(0)
+                    val appName = apps.firstOrNull { it.app == app }?.name
+                    appMap[seqId] = appName
+                } while (appCur.moveToNext())
+                appMap.forEach {
+                    database.execSQL("UPDATE `tbSequence` SET `_application_name`=? WHERE `_id`=?", arrayOf(it.value, it.key))
+                }
+            }
+        }
+    }
+
+    class Migration7To8: Migration(7, 8) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_type` INTEGER")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_icmp_string` TEXT")
+            database.execSQL("UPDATE `tbSequence` SET `_type`=0")
+        }
     }
 
     companion object {
@@ -130,9 +166,13 @@ abstract class KnocksDatabase : RoomDatabase() {
                 synchronized(KnocksDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                             KnocksDatabase::class.java, "knocksdb")
-                            .addMigrations(Migration1To2(), Migration2To3(),
-                                    Migration3to4(), Migration4to5(),
-                                    Migration5to6())
+                            .addMigrations(Migration1To2(),
+                                    Migration2To3(),
+                                    Migration3To4(),
+                                    Migration4To5(),
+                                    Migration5To6(),
+                                    Migration6To7(context),
+                                    Migration7To8())
                             .build()
 
                 }

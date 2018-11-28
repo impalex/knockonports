@@ -38,4 +38,20 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="CustomDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
+    <style name="TextViewButton" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+    </style>
+
 </resources>

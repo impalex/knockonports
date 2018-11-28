@@ -26,6 +26,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.TextInputEditText
 import android.support.v4.app.Fragment
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -33,36 +34,52 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ScrollView
+import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import me.impa.knockonports.R
-import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.KnockType
+import me.impa.knockonports.data.PortType
 import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.json.IcmpData
 import me.impa.knockonports.json.PortData
+import me.impa.knockonports.viewadapter.IcmpAdapter
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.PortAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
+import org.jetbrains.anko.find
 
 class BasicSettingsFragment : Fragment() {
 
     private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
-    private lateinit var nameEdit: TextInputEditText
-    private lateinit var hostEdit: TextInputEditText
-    private lateinit var portAdapter: PortAdapter
-    private lateinit var addPortButton: Button
-    private lateinit var scrollView: ScrollView
-    private lateinit var recyclerView: RecyclerView
+    private val portAdapter by lazy { PortAdapter() }
+    private val icmpAdapter by lazy { IcmpAdapter(context) }
+    private val nameEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_name) }
+    private val hostEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_host) }
+    private val addPortButton by lazy { view!!.findViewById<Button>(R.id.button_add_port) }
+    private val addIcmpButton by lazy { view!!.findViewById<Button>(R.id.button_add_icmp) }
+    private val scrollView by lazy { view!!.findViewById<ScrollView>(R.id.basic_settings_view) }
+    private val recyclerPortView by lazy { view!!.findViewById<RecyclerView>(R.id.recycler_ports) }
+    private val recyclerIcmpView by lazy { view!!.findViewById<RecyclerView>(R.id.recycler_icmp) }
+    private val sequenceTypeGroup by lazy { view!!.findViewById<ToggleButtonLayout>(R.id.selector_seq_type) }
+    private val icmpLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_icmp_layout) }
+    private val portsLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_ports_layout) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_sequence_config_basic, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater!!.inflate(R.layout.fragment_sequence_config_basic, container, false)
 
-        nameEdit = view.findViewById(R.id.edit_sequence_name)
-        hostEdit = view.findViewById(R.id.edit_sequence_host)
-        addPortButton = view.findViewById(R.id.button_add_port)
-        scrollView = view.findViewById(R.id.basic_settings_view)
-
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mainViewModel.getDirtySequence().observe(this, Observer {
             nameEdit.setText(it?.name)
             hostEdit.setText(it?.host)
+            sequenceTypeGroup.setToggled(if (it?.type == KnockType.ICMP) {
+                R.id.type_icmp
+            } else {
+                R.id.type_ports
+            }, true)
+            showSequence(it?.type ?: KnockType.PORT)
         })
 
         nameEdit.afterTextChanged {
@@ -73,30 +90,74 @@ class BasicSettingsFragment : Fragment() {
             mainViewModel.getDirtySequence().value?.host = it
         }
 
-        recyclerView = view.findViewById(R.id.recycler_ports)
-        recyclerView.layoutManager = LinearLayoutManager(activity)
-        portAdapter = PortAdapter(activity)
-        recyclerView.adapter = portAdapter
-        val itemTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(portAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+        recyclerPortView.layoutManager = LinearLayoutManager(activity)
+        recyclerPortView.adapter = portAdapter
+        recyclerPortView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        val portTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(portAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
-        itemTouchHelper.attachToRecyclerView(recyclerView)
+        portTouchHelper.attachToRecyclerView(recyclerPortView)
         portAdapter.onStartDrag = {
-            itemTouchHelper.startDrag(it)
+            portTouchHelper.startDrag(it)
         }
 
         mainViewModel.getDirtyPorts().observe(this, Observer {
             portAdapter.items = it ?: mutableListOf()
         })
-        addPortButton.setOnClickListener{
-            val model = PortData(null, Sequence.PORT_TYPE_UDP)
+
+        mainViewModel.getDirtyIcmp().observe(this, Observer {
+            icmpAdapter.items = it ?: mutableListOf()
+        })
+
+        recyclerIcmpView.layoutManager = LinearLayoutManager(activity)
+        recyclerIcmpView.adapter = icmpAdapter
+        recyclerIcmpView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        val icmpTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(icmpAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
+        icmpTouchHelper.attachToRecyclerView(recyclerIcmpView)
+        icmpAdapter.onStartDrag = {
+            icmpTouchHelper.startDrag(it)
+        }
+
+        addPortButton.setOnClickListener {
+            val model = PortData(null, PortType.UDP)
             portAdapter.addItem(model)
             scrollView.post {
                 scrollView.fullScroll(View.FOCUS_DOWN)
-                recyclerView.getChildAt(portAdapter.itemCount - 1).requestFocus()
+                recyclerPortView.getChildAt(portAdapter.itemCount - 1).requestFocus()
             }
         }
 
-        return view
+        addIcmpButton.setOnClickListener {
+            val model = IcmpData(null, null, ContentEncoding.RAW, null)
+            icmpAdapter.addItem(model)
+            scrollView.post {
+                scrollView.fullScroll(View.FOCUS_DOWN)
+                recyclerIcmpView.getChildAt(icmpAdapter.itemCount - 1).requestFocus()
+            }
+        }
+
+        sequenceTypeGroup.onToggledListener = { toggle, selected ->
+            if (selected) {
+                mainViewModel.getDirtySequence().value?.type = if (toggle.id == R.id.type_icmp) {
+                    KnockType.ICMP
+                } else {
+                    KnockType.PORT
+                }
+                showSequence(mainViewModel.getDirtySequence().value?.type ?: KnockType.PORT)
+            }
+        }
+    }
+
+    private fun showSequence(type: KnockType) {
+        if (type == KnockType.ICMP) {
+            portsLayout.visibility = View.GONE
+            icmpLayout.visibility = View.VISIBLE
+        } else {
+            icmpLayout.visibility = View.GONE
+            portsLayout.visibility = View.VISIBLE
+
+        }
+
     }
 
 }

@@ -21,6 +21,7 @@
 
 package me.impa.knockonports.viewadapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -28,6 +29,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.sequence_element.view.*
 import me.impa.knockonports.R
+import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
@@ -77,12 +79,16 @@ class SequenceAdapter(val context: Context): RecyclerView.Adapter<SequenceAdapte
         } else {
             sequence.host
         }
-        val ports = sequence.getReadablePortString()
-        holder?.textPorts?.text = if (ports.isNullOrBlank()) {
+        val desc = sequence.getReadableDescription()
+        holder?.textPorts?.text = context.getString(if (sequence.type == KnockType.ICMP) {
+            R.string.desc_icmp
+        } else {
+            R.string.desc_ports
+        }, if (desc.isNullOrBlank()) {
             context.getString(R.string.empty_sequence)
         } else {
-            sequence.getReadablePortString()
-        }
+            desc
+        })
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {

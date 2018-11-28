@@ -42,8 +42,11 @@ class SequenceListFragment: Fragment() {
     private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_sequence_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater!!.inflate(R.layout.fragment_sequence_list, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_sequences)
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -71,7 +74,7 @@ class SequenceListFragment: Fragment() {
         }
 
         sequenceAdapter.onMove = { _, _ ->
-            mainViewModel.getPendingDataChanges().value = sequenceAdapter.items.filter { it.id != null }.map { it.id!! }.toList()
+            mainViewModel.getPendingDataChanges().value = sequenceAdapter.items.asSequence().filter { it.id != null }.map { it.id!! }.toList()
         }
 
         recycler.adapter = sequenceAdapter
@@ -83,8 +86,7 @@ class SequenceListFragment: Fragment() {
             sequenceAdapter.items = it?.toMutableList() ?: mutableListOf()
         })
 
-        return view
-    }
 
+    }
 
 }

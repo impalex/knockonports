@@ -27,6 +27,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.github.triplet.play'
+
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
 def keystoreProperties = new Properties()
@@ -35,19 +37,46 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
+def publisherPropertiesFile = rootProject.file("publisher.properties")
+
+def publisherProperties = new Properties()
+
+if (publisherPropertiesFile.exists()) {
+    publisherProperties.load(new FileInputStream(publisherPropertiesFile))
+}
+
 android {
     compileSdkVersion 28
+
+    if (!publisherProperties.isEmpty()) {
+        playAccountConfigs {
+            defaultAccountConfig {
+                serviceAccountEmail = publisherProperties["email"]
+                jsonFile = file(publisherProperties["key"])
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.0.4"
+        versionCode 8
+        versionName "1.0.5"
         vectorDrawables.useSupportLibrary true
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                //arguments "-DANDROID_STL=c++_shared"
+            }
+        }
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
+        }
+        if (!publisherProperties.isEmpty()) {
+            playAccountConfig = playAccountConfigs.defaultAccountConfig
         }
     }
     if (!keystoreProperties.isEmpty()) {
@@ -69,6 +98,11 @@ android {
             }
         }
     }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/CMakeLists.txt')
+        }
+    }
 }
 
 configurations.all {
@@ -84,23 +118,25 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10"
 
-    implementation "org.jetbrains.anko:anko-commons:$anko_version"
-    implementation "org.jetbrains.anko:anko-sdk25:$anko_version" // sdk15, sdk19, sdk21, sdk23 are also available
-    implementation "org.jetbrains.anko:anko-appcompat-v7:$anko_version"
+    implementation "org.jetbrains.anko:anko-commons:0.10.5"
 
-    implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:design:28.0.0-rc02'
-    implementation 'com.android.support:support-v4:28.0.0-rc02'
-    implementation 'com.android.support:support-vector-drawable:28.0.0-rc02'
-    implementation "com.github.savvyapps:ToggleButtonLayout:$togglelayoutbutton_version"
-    implementation "android.arch.persistence.room:runtime:$room_version"
-    implementation "android.arch.lifecycle:extensions:$rootProject.lifecycle_version"
-    implementation "com.obsez.android.lib.filechooser:filechooser:$filepicker_version"
-    implementation "com.jaredrummler:colorpicker:$colorpicker_version"
-    //implementation "com.github.hendrawd:StorageUtil:$storageutil_version"
-    kapt "android.arch.persistence.room:compiler:$room_version"
-    kapt "android.arch.lifecycle:compiler:$rootProject.lifecycle_version"
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.android.support:support-vector-drawable:28.0.0'
+    implementation "com.github.savvyapps:ToggleButtonLayout:1.2.0"
+    implementation "android.arch.persistence.room:runtime:1.1.1"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "com.jaredrummler:colorpicker:1.0.2"
+    implementation "com.github.hendrawd:StorageUtil:1.0.0"
+    kapt "android.arch.persistence.room:compiler:1.1.1"
+    kapt "android.arch.lifecycle:compiler:1.1.1"
+}
+
+play {
+    track = 'production'
+    //uploadImages = true
 }

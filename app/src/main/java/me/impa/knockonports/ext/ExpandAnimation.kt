@@ -26,7 +26,7 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.LinearLayout
 
-class ExpandAnimation(val layout: View, val startWeight: Float, endWeight: Float): Animation() {
+class ExpandAnimation(val layout: View, private val startWeight: Float, endWeight: Float): Animation() {
 
     private val deltaWeight = endWeight - startWeight
 

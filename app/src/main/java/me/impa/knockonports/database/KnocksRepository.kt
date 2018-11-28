@@ -23,7 +23,6 @@ package me.impa.knockonports.database
 
 import android.arch.lifecycle.LiveData
 import android.content.Context
-import me.impa.knockonports.database.dao.SequenceDao
 import me.impa.knockonports.database.entity.Sequence
 
 class KnocksRepository(context: Context) {

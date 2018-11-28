@@ -21,6 +21,10 @@
 
 package me.impa.knockonports.data
 
+import android.content.Context
+import android.content.pm.PackageManager
+import me.impa.knockonports.R
+
 data class AppData(val app: String, val name: String) {
 
     override fun toString(): String = name
@@ -33,5 +37,19 @@ data class AppData(val app: String, val name: String) {
         var result = app.hashCode()
         result = 31 * result + name.hashCode()
         return result
+    }
+
+    companion object {
+        fun loadInstalledApps(context: Context): List<AppData> =
+                sequenceOf(AppData("", context.resources.getString(R.string.none)))
+                        .plus(context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+                                .asSequence()
+                                .filter { context.packageManager.getLaunchIntentForPackage(it.packageName) != null }
+                                .map { AppData(it.packageName, context.packageManager.getApplicationLabel(it).toString()) }
+                                .sortedBy { it.name }
+                                .toList())
+                        .toList()
+
+
     }
 }

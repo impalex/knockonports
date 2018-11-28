@@ -22,7 +22,6 @@
 package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -30,12 +29,13 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.port_element.view.*
 import me.impa.knockonports.R
+import me.impa.knockonports.data.PortType
+import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.json.PortData
-import me.impa.knockonports.database.entity.Sequence
 
-class PortAdapter(val context: Context): RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+class PortAdapter: RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
     override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
 
@@ -52,8 +52,8 @@ class PortAdapter(val context: Context): RecyclerView.Adapter<PortAdapter.ViewHo
 
     override fun getItemCount() = items.size
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int) =
-            ViewHolder(LayoutInflater.from(context).inflate(R.layout.port_element, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.port_element, parent, false))
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
@@ -72,20 +72,17 @@ class PortAdapter(val context: Context): RecyclerView.Adapter<PortAdapter.ViewHo
                 notifyItemRemoved(index)
             }
         }
-        if (port.type != Sequence.PORT_TYPE_TCP && port.type != Sequence.PORT_TYPE_UDP) {
-            port.type = Sequence.PORT_TYPE_UDP
-        }
         holder?.groupProtocolType?.run {
-            setToggled(if (port.type == Sequence.PORT_TYPE_TCP) {
+            setToggled(if (port.type == PortType.TCP) {
                 R.id.type_tcp
             } else {
                 R.id.type_udp
             }, true)
             onToggledListener = { toggle, _ ->
                 port.type = if (toggle.id == R.id.type_tcp) {
-                    Sequence.PORT_TYPE_TCP
+                    PortType.TCP
                 } else {
-                    Sequence.PORT_TYPE_UDP
+                    PortType.UDP
                 }
             }
         }

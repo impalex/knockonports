@@ -72,4 +72,6 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
         const val CHANNEL_ID = "KNOCKER_CHANNEL"
         const val SEQUENCE_ID = "KNOCK_SEQUENCE_ID"
     }
+
+
 }

@@ -24,30 +24,26 @@ package me.impa.knockonports
 import android.Manifest
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.Typeface
 import android.os.Bundle
-import android.os.Environment
 import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.TextInputEditText
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.FragmentManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
-import android.text.InputType
-import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
-import com.obsez.android.lib.filechooser.ChooserDialog
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import me.impa.knockonports.ext.*
+import me.impa.knockonports.ext.expandTo
+import me.impa.knockonports.fragment.FileChooserFragment
 import me.impa.knockonports.fragment.SequenceConfigFragment
 import me.impa.knockonports.fragment.SequenceListFragment
+import me.impa.knockonports.fragment.fileChooser
 import me.impa.knockonports.viewmodel.MainViewModel
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import org.jetbrains.anko.warn
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,11 +60,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     private var menu: Menu? = null
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
-    private var dialogExportFileName: DialogInterface? = null
-    private var editExportFileName: TextInputEditText? = null
-    private var exportFileName: String? = null
-    private var dialogExportChooser: ChooserDialog? = null
-    private var dialogImportChooser: ChooserDialog? = null
+    private var fragmentExport: FileChooserFragment? = null
+    private var fragmentImport: FileChooserFragment? = null
 
 
     private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
@@ -205,26 +198,13 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (dialogExportFileName != null) {
-            outState.putString(STATE_EXPORT_FILENAME, editExportFileName?.text?.toString())
+        if (fragmentExport != null) {
+            outState.putString(STATE_EXPORT_DIR, fragmentExport?.currentDir)
+            outState.putString(STATE_EXPORT_FILENAME, fragmentExport?.fileName)
         }
-        if (dialogExportChooser != null) {
-            outState.putString(STATE_EXPORT_DIR, dialogExportChooser?.getCurrentDir()?.absolutePath)
-            outState.putString(STATE_EXPORT_FILENAME, exportFileName)
+        if (fragmentImport != null) {
+            outState.putString(STATE_IMPORT_DIR, fragmentImport?.currentDir)
         }
-        if (dialogImportChooser != null) {
-            outState.putString(STATE_IMPORT_DIR, dialogImportChooser?.getCurrentDir()?.absolutePath)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        dialogExportFileName?.dismiss()
-        dialogExportFileName = null
-        dialogExportChooser?.getAlertDialog()?.dismiss()
-        dialogExportChooser = null
-        dialogImportChooser?.getAlertDialog()?.dismiss()
-        dialogImportChooser = null
     }
 
     private fun importData(importDir: String? = null) {
@@ -232,22 +212,15 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             return
         }
 
-        dialogImportChooser = ChooserDialog()
-                .with(this)
-                .withStartFile(importDir ?: Environment.getExternalStorageDirectory().absolutePath)
-                .withResources(R.string.title_import, R.string.action_import, R.string.button_cancel)
-                .withChosenListener { _, file ->
-                    dialogImportChooser = null
-                    mainViewModel.importData(file)
-                }
-                .withNegativeButtonListener { _, _ ->
-                    dialogImportChooser = null
-                }
-                .build()
-                .show()
-        dialogImportChooser?.getAlertDialog()?.setOnDismissListener {
-            dialogImportChooser = null
+        fragmentImport = fileChooser {
+            title = this@MainActivity.getString(R.string.title_import)
+            currentDir = importDir
+            showSaveButton = false
+            showFileNameEdit = false
+            onDismiss = { fragmentImport = null }
+            onSelected = { mainViewModel.importData(it) }
         }
+
     }
 
     private fun exportData(fileName: String? = null, exportDir: String? = null) {
@@ -255,91 +228,17 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             return
         }
 
-        if (exportDir == null || fileName == null) {
-            showExportFileNameDialog(fileName ?: getString(R.string.export_file_template,
-                    SimpleDateFormat("yyyyMMdd_hhmmss", Locale.US).format(Date())))
-        } else {
-            showExportDirDialog(fileName, exportDir)
+        fragmentExport = fileChooser {
+            title = this@MainActivity.getString(R.string.title_export)
+            dirsOnly = true
+            this.fileName = fileName ?: this@MainActivity.getString(R.string.export_file_template,
+                    SimpleDateFormat("yyyyMMdd_hhmmss", Locale.US).format(Date()))
+            currentDir = exportDir
+            onDismiss = { fragmentExport = null }
+            onSelected = { mainViewModel.exportData(it) }
+
         }
     }
-
-    private fun showExportFileNameDialog(fileName: String) {
-        dialogExportFileName = alert {
-            customView {
-                verticalLayout {
-                    padding = dip(16)
-                    textView(R.string.title_export) {
-                        textSize = 24f
-                    }.lparams {
-                        bottomMargin = dip(16)
-                    }
-                    textInputLayout {
-                        hint = context.getString(R.string.title_file_name)
-                        editExportFileName = textInputEditText {
-                            this.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-                            this.setText(fileName)
-                        }
-                    }
-                    linearLayout {
-                        topPadding = dip(24)
-                        orientation = LinearLayout.HORIZONTAL
-                        horizontalGravity = Gravity.END
-
-                        textView(R.string.button_cancel) {
-                            textSize = 14f
-                            textColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
-                            isAllCaps = true
-                            typeface = Typeface.DEFAULT_BOLD
-                        }.lparams {
-                            rightMargin = dip(16)
-                        }.setOnClickListener {
-                            dialogExportFileName?.dismiss()
-                            dialogExportFileName = null
-                        }
-                        textView(R.string.button_save) {
-                            textSize = 14f
-                            isAllCaps = true
-                            typeface = Typeface.DEFAULT_BOLD
-                            textColor = ContextCompat.getColor(this@MainActivity, R.color.colorAccent)
-                        }.setOnClickListener {
-                            dialogExportFileName?.dismiss()
-                            dialogExportFileName = null
-                            val name = editExportFileName?.text?.toString()
-                            if (name != null) {
-                                exportData(name, Environment.getExternalStorageDirectory().absolutePath)
-                            }
-                        }
-
-                    }
-                }
-            }
-            onCancelled {
-                dialogExportFileName = null
-            }
-        }.show()
-
-    }
-
-    private fun showExportDirDialog(fileName: String, exportDir: String?) {
-        exportFileName = fileName
-        dialogExportChooser = ChooserDialog()
-                .with(this)
-                .withFilter(true, true)
-                .withStartFile(exportDir)
-                .withResources(R.string.title_export, R.string.button_save, R.string.button_cancel)
-                .withChosenListener { path, _ ->
-                    dialogExportChooser = null
-                    mainViewModel.exportData("$path/$fileName")
-                }.withNegativeButtonListener { _, _ ->
-                    dialogExportChooser = null
-                }
-                .build()
-                .show()
-        dialogExportChooser?.getAlertDialog()?.setOnDismissListener {
-            dialogExportChooser = null
-        }
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu

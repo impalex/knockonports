@@ -24,21 +24,27 @@ package me.impa.knockonports.json
 import android.util.JsonReader
 import android.util.JsonToken
 import android.util.JsonWriter
+import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.KnockType
+import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.entity.Sequence
 import java.io.StringReader
 import java.io.StringWriter
 
 data class SequenceData(var name: String?, var host: String?, var timeout: Int?, var delay: Int?,
                         var udpContent: String?, var application: String?, var base64: Int?,
-                        var ports: List<PortData>) {
+                        var appName: String?, var ports: List<PortData>, var type: KnockType?,
+                        var icmp: List<IcmpData>) {
 
     fun toEntity(): Sequence = Sequence(null, name, host, timeout, null, delay, udpContent, application, base64,
-            ports.filter { it.value != null }.joinToString(", ") { it.toString() })
+            ports.asSequence().filter { it.value != null }.map { PortData(it.value, it.type) }.toList(), appName,
+            type, icmp)
 
     companion object {
         fun fromEntity(sequence: Sequence): SequenceData =
                 SequenceData(sequence.name, sequence.host, sequence.timeout, sequence.delay, sequence.udpContent,
-                        sequence.application, sequence.base64, sequence.getPortList())
+                        sequence.application, sequence.base64, sequence.applicationName, sequence.ports ?: listOf(),
+                        sequence.type, sequence.icmp ?: listOf())
 
         private fun writeValue(writer: JsonWriter, name: String, value: String?) {
             if (value == null)
@@ -78,22 +84,39 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
 
                 sequenceList.forEach {
                     writer.beginObject()
+
+                    writeValue(writer, "type", it.type?.ordinal)
                     writeValue(writer, "name", it.name)
                     writeValue(writer, "host", it.host)
                     writeValue(writer, "timeout", it.timeout)
                     writeValue(writer, "delay", it.delay)
                     writeValue(writer, "udp_content", it.udpContent)
                     writeValue(writer, "application", it.application)
+                    writeValue(writer, "app_name", it.appName)
                     writeValue(writer, "base64", it.base64)
+
                     writer.name("ports")
                     writer.beginArray()
                     it.ports.forEach { p ->
                         writer.beginObject()
                         writeValue(writer, "value", p.value)
-                        writeValue(writer, "type", p.type)
+                        writeValue(writer, "type", p.type.ordinal)
                         writer.endObject()
                     }
                     writer.endArray()
+
+                    writer.name("icmp")
+                    writer.beginArray()
+                    it.icmp.forEach { i ->
+                        writer.beginObject()
+                        writeValue(writer, "size", i.size)
+                        writeValue(writer, "count", i.count)
+                        writeValue(writer, "encoding", i.encoding.ordinal)
+                        writeValue(writer, "content", i.content)
+                        writer.endObject()
+                    }
+                    writer.endArray()
+
                     writer.endObject()
                 }
 
@@ -118,8 +141,9 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                 reader.beginArray()
                 while (reader.hasNext()) {
                     reader.beginObject()
-                    val seq = SequenceData(null, null, null, null, null, null, null, listOf())
+                    val seq = SequenceData(null, null, null, null, null, null, null, null, listOf(), KnockType.PORT, listOf())
                     val ports = mutableListOf<PortData>()
+                    val icmp = mutableListOf<IcmpData>()
                     while (reader.hasNext()) {
                         val key = reader.nextName()
                         when(key) {
@@ -130,17 +154,19 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                             "udp_content" -> seq.udpContent = readString(reader)
                             "application" -> seq.application = readString(reader)
                             "base64" -> seq.base64 = readInt(reader)
+                            "app_name" -> seq.appName = readString(reader)
+                            "type" -> seq.type = KnockType.fromOrdinal(readInt(reader) ?: 0)
                             "ports" -> {
                                 reader.beginArray()
                                 while (reader.hasNext()) {
                                     reader.beginObject()
                                     while (reader.hasNext()) {
-                                        val port = PortData(null, 0)
+                                        val port = PortData(null, PortType.UDP)
                                         while (reader.hasNext()) {
                                             val portKey = reader.nextName()
                                             when(portKey) {
                                                 "value" -> port.value = readInt(reader)
-                                                "type" -> port.type = readInt(reader) ?: 0
+                                                "type" -> port.type = PortType.fromOrdinal(readInt(reader) ?: 0)
                                             }
                                         }
                                         ports.add(port)
@@ -149,9 +175,31 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                                 }
                                 reader.endArray()
                             }
+                            "icmp" -> {
+                                reader.beginArray()
+                                while (reader.hasNext()) {
+                                    reader.beginObject()
+                                    while (reader.hasNext()) {
+                                        val icmpData = IcmpData(null, null, ContentEncoding.RAW, null)
+                                        while (reader.hasNext()) {
+                                            val icmpKey = reader.nextName()
+                                            when(icmpKey) {
+                                                "size" -> icmpData.size = readInt(reader)
+                                                "encoding" -> icmpData.encoding = ContentEncoding.fromOrdinal(readInt(reader) ?: 0)
+                                                "content" -> icmpData.content = readString(reader)
+                                                "count" -> icmpData.count = readInt(reader)
+                                            }
+                                        }
+                                        icmp.add(icmpData)
+                                    }
+                                    reader.endObject()
+                                }
+                                reader.endArray()
+                            }
                         }
                     }
                     seq.ports = ports
+                    seq.icmp = icmp
                     result.add(seq)
                     reader.endObject()
                 }

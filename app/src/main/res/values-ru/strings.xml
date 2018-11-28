@@ -58,7 +58,7 @@
     <string name="button_cancel">Отмена</string>
     <string name="title_file_name">Имя файла</string>
     <string name="export_success">Успешно экспортировано в %s</string>
-    <string name="import_success">%d последовательностей импортировано из %s</string>
+    <string name="import_success">%1$d последовательностей импортировано из %2$s</string>
     <string name="appwidget_text">Название последовательности</string>
     <string name="configure">Конфигурация виджета</string>
     <string name="add_widget">Добавить виджет</string>
@@ -72,4 +72,12 @@
     <string name="notification_title">Тук-тук!</string>
     <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
     <string name="empty_sequence">Пустая последовательность!</string>
+    <string name="please_wait">Пожалуйста подождите</string>
+    <string name="loading_apps">Загрузка списка приложений…</string>
+    <string name="installed_apps">Установленные приложения</string>
+    <string name="sequence_type">Тип последовательности:</string>
+    <string name="icmp_size">Размер пакета</string>
+    <string name="icmp_count">Количество пакетов</string>
+    <string name="icmp_content">Содержимое</string>
+    <string name="action_add_icmp">Добавить пакет</string>
 </resources>

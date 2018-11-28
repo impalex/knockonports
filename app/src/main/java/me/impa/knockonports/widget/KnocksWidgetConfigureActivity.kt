@@ -36,7 +36,6 @@ import kotlinx.android.synthetic.main.knocks_widget.*
 import kotlinx.android.synthetic.main.knocks_widget_configure.*
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
-import org.jetbrains.anko.textColor
 
 class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogListener {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
@@ -108,7 +107,7 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
             }
             CHANGE_FOREGROUND_COLOR -> {
                 color_panel_foreground.color = color
-                appwidget_text.textColor = color
+                appwidget_text.setTextColor(color)
             }
             CHANGE_BUTTON_COLOR -> {
                 color_panel_arrows.color = color

@@ -39,7 +39,7 @@
     <string name="action_edit">Edit</string>
     <string name="action_new_sequence">New Sequence</string>
     <string name="drag_item">Reorganize</string>
-    <string name="empty_sequence_warning">%s: empty port sequence!</string>
+    <string name="empty_sequence_warning">%s: empty sequence!</string>
     <string name="start_knocking">Knock-knock-knocking on %s</string>
     <string name="end_knocking">Knocking complete!</string>
     <string name="untitled_sequence">(Untitled Sequence)</string>
@@ -61,7 +61,7 @@
     <string name="title_file_name">File Name</string>
     <string name="export_success">Exported successfully to %s</string>
     <string name="export_file_template" translatable="false">knocks_%s.json</string>
-    <string name="import_success">%d entries were imported from %s</string>
+    <string name="import_success">%1$d entries were imported from %2$s</string>
     <string name="appwidget_text">Sequence Name</string>
     <string name="configure">Configure Widget</string>
     <string name="add_widget">Add widget</string>
@@ -75,4 +75,19 @@
     <string name="notification_title">Knock-knock!</string>
     <string name="notification_desc">Knocking on %s. Is anybody there?</string>
     <string name="empty_sequence">Empty sequence!</string>
+    <string name="please_wait">Please wait</string>
+    <string name="loading_apps">Loading apps list…</string>
+    <string name="installed_apps">Installed applications</string>
+    <string name="sequence_type">Sequence type:</string>
+    <string name="icmp_size">Packet size</string>
+    <string name="icmp_count">Packet count</string>
+    <string name="icmp_content">Pattern</string>
+    <string name="type_ports" translatable="false">Ports</string>
+    <string name="type_icmp" translatable="false">ICMP</string>
+    <string name="action_add_icmp">Add Packet</string>
+    <string name="desc_icmp" translatable="false">ICMP: %s</string>
+    <string name="desc_ports" translatable="false">Ports: %s</string>
+    <string name="encoding_raw" translatable="false">Raw</string>
+    <string name="encoding_hex" translatable="false">Hex</string>
+    <string name="encoding_base64" translatable="false">Base64</string>
 </resources>

@@ -38,9 +38,12 @@ class SequenceConfigFragment: Fragment() {
 
     private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater!!.inflate(R.layout.fragment_sequence_config, container, false)
 
-        val view = inflater!!.inflate(R.layout.fragment_sequence_config, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         view.visibility = if (mainViewModel.getDirtySequence().value == null) {
             View.INVISIBLE
         } else {
@@ -80,8 +83,6 @@ class SequenceConfigFragment: Fragment() {
                 View.VISIBLE
             }
         })
-
-        return view
     }
 
 }

@@ -64,7 +64,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         app:allowDeselection="false"
-        app:selectedColor="?attr/colorAccent"
+        app:selectedColor="@color/colorAccent"
         app:menu="@menu/menu_protocol"
         android:layout_toStartOf="@id/delete_port"
         app:customLayout="@layout/toggle_button"/>
@@ -74,8 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/lv_side_margin"
-        android:layout_marginEnd="@dimen/lv_side_margin"
         android:layout_centerVertical="true"
         app:srcCompat="@drawable/ic_delete_black_24dp"
         android:layout_alignParentEnd="true"

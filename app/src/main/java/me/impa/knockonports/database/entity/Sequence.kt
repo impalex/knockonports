@@ -21,10 +21,9 @@
 
 package me.impa.knockonports.database.entity
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.*
+import me.impa.knockonports.data.KnockType
+import me.impa.knockonports.json.IcmpData
 import me.impa.knockonports.json.PortData
 
 @Entity(tableName = "tbSequence")
@@ -49,55 +48,30 @@ data class Sequence(
         @ColumnInfo(name = "_base64")
         var base64: Int?,
         @ColumnInfo(name = "_port_string")
-        var portString: String?
-
+        var ports: List<PortData>?,
+        @ColumnInfo(name = "_application_name")
+        var applicationName: String?,
+        @ColumnInfo(name = "_type")
+        var type: KnockType?,
+        @ColumnInfo(name = "_icmp_string")
+        var icmp: List<IcmpData>?
 ) {
-    @Ignore
-    var selected: Boolean = false
 
-    fun getPortList(): List<PortData> {
-        return portString?.split(ENTRY_SEPARATOR)?.map {
-            val p = it.split(PORT_SEPARATOR)
-            PortData(if (p.isNotEmpty()) {
-                p[0].toIntOrNull()
-            } else {
-                null
-            },
-                    if (p.size > 1) {
-                        p[1].toIntOrNull() ?: PORT_TYPE_UDP
-                    } else {
-                        PORT_TYPE_UDP
-                    })
-        }?.toList() ?: listOf()
+    fun getReadableDescription(): String? = when (type) {
+        KnockType.PORT -> getReadablePortString()
+        KnockType.ICMP -> getReadableIcmpString()
+        else -> null
     }
 
-    fun getReadablePortString(): String? {
-        return portString?.split(ENTRY_SEPARATOR)?.map {
-            val p = it.split(PORT_SEPARATOR)
-            if (p.isNotEmpty()) {
-                if (p[0].isNullOrEmpty()){
-                    return@map null
-                }
-                p[0]
-            } else {
-                return@map null
-            } + ":" + if (p.size > 1 && p[1].toIntOrNull() == PORT_TYPE_TCP) {
-                "TCP"
-            } else {
-                "UDP"
-            }
-        }?.filter { it != null }?.joinToString(", ")
-    }
+
+    private fun getReadablePortString(): String? =
+            ports?.filter { it.value != null }?.joinToString(", ") { it.value.toString() + ":" + it.type.name }
+
+    private fun getReadableIcmpString(): String? =
+            icmp?.filter { it.size != null }?.joinToString(", ") { it.size.toString() + "x" + Math.max(1, it.count ?: 0).toString()  }
 
     companion object {
         const val INVALID_SEQ_ID = -100500L
-        const val PORT_TYPE_UDP = 0
-        const val PORT_TYPE_TCP = 1
-        const val ENTRY_SEPARATOR = '|'
-        const val PORT_SEPARATOR = ':'
 
-        fun compilePortString(portList: List<PortData>?): String? {
-            return portList?.joinToString(ENTRY_SEPARATOR.toString()) { (it.value?.toString() ?: "") + PORT_SEPARATOR + it.type }
-        }
     }
 }
