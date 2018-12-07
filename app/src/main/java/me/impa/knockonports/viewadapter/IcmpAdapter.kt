@@ -23,7 +23,7 @@ package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -37,12 +37,12 @@ import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.json.IcmpData
 
-class IcmpAdapter(val context: Context): RecyclerView.Adapter<IcmpAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+class IcmpAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<IcmpAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
     val encodingArray = arrayOf(context.getString(R.string.encoding_raw),
             context.getString(R.string.encoding_base64), context.getString(R.string.encoding_hex))
 
-    override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
+    override var onStartDrag: ((androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit)? = null
 
     var items: MutableList<IcmpData> = mutableListOf()
         set(value) {
@@ -61,41 +61,41 @@ class IcmpAdapter(val context: Context): RecyclerView.Adapter<IcmpAdapter.ViewHo
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.icmp_element, parent, false))
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = items[position]
 
-        holder?.dragHandle?.setOnTouchListener { _, event ->
+        holder.dragHandle.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 onStartDrag?.invoke(holder)
             }
             return@setOnTouchListener false
         }
-        holder?.imageDelete?.setOnClickListener {
+        holder.imageDelete.setOnClickListener {
             val index = items.indexOf(data)
             if (index >= 0) {
                 items.removeAt(index)
                 notifyItemRemoved(index)
             }
         }
-        holder?.sizeEdit?.run {
+        holder.sizeEdit.run {
             afterTextChanged {
                 data.size = it.toIntOrNull()
             }
             setText(data.size?.toString())
         }
-        holder?.countEdit?.run {
+        holder.countEdit.run {
             afterTextChanged {
                 data.count = it.toIntOrNull()
             }
             setText(data.count?.toString())
         }
-        holder?.contentEdit?.run {
+        holder.contentEdit.run {
             afterTextChanged {
                 data.content = it
             }
             setText(data.content)
         }
-        holder?.encodingSpinner?.run {
+        holder.encodingSpinner.run {
             val encodingAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, encodingArray)
             encodingAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             adapter = encodingAdapter
@@ -123,7 +123,7 @@ class IcmpAdapter(val context: Context): RecyclerView.Adapter<IcmpAdapter.ViewHo
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val dragHandle = view.drag_handle!!
         val imageDelete = view.delete_icmp!!
         val sizeEdit = view.icmp_edit!!

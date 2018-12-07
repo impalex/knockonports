@@ -22,9 +22,9 @@
 package me.impa.knockonports.fragment
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,8 +41,8 @@ class AppChooserFragment: DialogFragment() {
 
     var onSelected: ((AppData) -> Unit)? = null
 
-    private val appAdapter by lazy { AppListAdapter(context).apply { onSelected = this@AppChooserFragment.onSelected } }
-    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val appAdapter by lazy { AppListAdapter(context!!).apply { onSelected = this@AppChooserFragment.onSelected } }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
     private val progressBar by lazy { view!!.findViewById<ProgressBar>(R.id.progress_loading) }
     private val listView by lazy { view!!.findViewById<ListView>(R.id.list_apps) }
 
@@ -64,7 +64,7 @@ class AppChooserFragment: DialogFragment() {
         if (apps == null) {
             listView.visibility = View.GONE
             doAsync {
-                val appList = AppData.loadInstalledApps(activity)
+                val appList = AppData.loadInstalledApps(activity!!)
                 uiThread {
                     mainViewModel.getInstalledApps().value = appList
                     appAdapter.apps = appList

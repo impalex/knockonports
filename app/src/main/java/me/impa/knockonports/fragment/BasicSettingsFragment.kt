@@ -21,15 +21,15 @@
 
 package me.impa.knockonports.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import com.google.android.material.textfield.TextInputEditText
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,13 +48,12 @@ import me.impa.knockonports.viewadapter.IcmpAdapter
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.PortAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
-import org.jetbrains.anko.find
 
 class BasicSettingsFragment : Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
     private val portAdapter by lazy { PortAdapter() }
-    private val icmpAdapter by lazy { IcmpAdapter(context) }
+    private val icmpAdapter by lazy { IcmpAdapter(context!!) }
     private val nameEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_name) }
     private val hostEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_host) }
     private val addPortButton by lazy { view!!.findViewById<Button>(R.id.button_add_port) }
@@ -66,10 +65,10 @@ class BasicSettingsFragment : Fragment() {
     private val icmpLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_icmp_layout) }
     private val portsLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_ports_layout) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater!!.inflate(R.layout.fragment_sequence_config_basic, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_sequence_config_basic, container, false)
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.getDirtySequence().observe(this, Observer {
             nameEdit.setText(it?.name)
@@ -92,7 +91,7 @@ class BasicSettingsFragment : Fragment() {
 
         recyclerPortView.layoutManager = LinearLayoutManager(activity)
         recyclerPortView.adapter = portAdapter
-        recyclerPortView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerPortView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         val portTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(portAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
         portTouchHelper.attachToRecyclerView(recyclerPortView)
@@ -110,7 +109,7 @@ class BasicSettingsFragment : Fragment() {
 
         recyclerIcmpView.layoutManager = LinearLayoutManager(activity)
         recyclerIcmpView.adapter = icmpAdapter
-        recyclerIcmpView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recyclerIcmpView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         val icmpTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(icmpAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
         icmpTouchHelper.attachToRecyclerView(recyclerIcmpView)

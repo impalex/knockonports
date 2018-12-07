@@ -21,7 +21,7 @@
 
 package me.impa.knockonports.database.entity
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.json.IcmpData
 import me.impa.knockonports.json.PortData

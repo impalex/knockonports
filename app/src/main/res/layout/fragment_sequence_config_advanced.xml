@@ -35,43 +35,43 @@
         android:layout_margin="16dp"
         android:paddingBottom="16dp">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sequence_delay_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/hint_delay"
             android:layout_marginTop="10dp">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_sequence_delay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_delay"
                 android:maxLines="1"
                 android:inputType="number"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sequence_timeout_wrapper"
+            android:hint="@string/hint_timeout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_sequence_timeout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_timeout"
                 android:maxLines="1"
                 android:inputType="number"/>
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sequence_udpcontent_wrapper"
+            android:hint="@string/hint_udp_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_udpcontent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_udp_content"
                 android:maxLines="1"
                 android:inputType="textNoSuggestions"/>
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
         <CheckBox
             android:id="@+id/checkbox_base64"
             android:layout_width="wrap_content"

@@ -21,12 +21,12 @@
 
 package me.impa.knockonports.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.Fragment
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,10 +36,10 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class SequenceConfigFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater!!.inflate(R.layout.fragment_sequence_config, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_sequence_config, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +51,7 @@ class SequenceConfigFragment: Fragment() {
         }
         val adapter = SettingsPagerAdapter(childFragmentManager,
                 arrayOf(BasicSettingsFragment(), AdvancedSettingsFragment()),
-                arrayOf(activity.getString(R.string.title_settings), activity.getString(R.string.title_advanced)))
+                arrayOf(activity!!.getString(R.string.title_settings), activity!!.getString(R.string.title_advanced)))
 
         val viewPager = view.findViewById<ViewPager>(R.id.viewpager_settings)
         viewPager!!.adapter = adapter

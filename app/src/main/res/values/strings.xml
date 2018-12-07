@@ -21,7 +21,6 @@
 
 <resources>
     <string name="app_name" translatable="false">Knock on Ports</string>
-    <string name="title_activity_sequence">Sequence</string>
     <string name="action_done">Done</string>
     <string name="hint_name">Name</string>
     <string name="hint_host">Host</string>
@@ -36,14 +35,12 @@
     <string name="action_add_port">Add Port</string>
     <string name="action_knock">Knock</string>
     <string name="action_delete">Delete</string>
-    <string name="action_edit">Edit</string>
     <string name="action_new_sequence">New Sequence</string>
     <string name="drag_item">Reorganize</string>
     <string name="empty_sequence_warning">%s: empty sequence!</string>
     <string name="start_knocking">Knock-knock-knocking on %s</string>
     <string name="end_knocking">Knocking complete!</string>
     <string name="untitled_sequence">(Untitled Sequence)</string>
-    <string name="error_invalid_port">Invalid port number!</string>
     <string name="error_resolve">Unable to resolve host \'%s\'!</string>
     <string name="error_export">ERROR: Unable to export data!</string>
     <string name="error_import">ERROR: Unable to import data!</string>
@@ -75,8 +72,6 @@
     <string name="notification_title">Knock-knock!</string>
     <string name="notification_desc">Knocking on %s. Is anybody there?</string>
     <string name="empty_sequence">Empty sequence!</string>
-    <string name="please_wait">Please wait</string>
-    <string name="loading_apps">Loading apps list…</string>
     <string name="installed_apps">Installed applications</string>
     <string name="sequence_type">Sequence type:</string>
     <string name="icmp_size">Packet size</string>

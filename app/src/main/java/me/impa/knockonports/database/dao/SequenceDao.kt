@@ -21,8 +21,8 @@
 
 package me.impa.knockonports.database.dao
 
-import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.*
+import androidx.lifecycle.LiveData
+import androidx.room.*
 import me.impa.knockonports.database.entity.Sequence
 
 @Dao

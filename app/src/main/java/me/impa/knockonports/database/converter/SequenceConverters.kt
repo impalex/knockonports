@@ -21,7 +21,7 @@
 
 package me.impa.knockonports.database.converter
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 import android.util.Base64
 import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.KnockType

@@ -21,7 +21,6 @@
   -->
 
 <resources>
-    <string name="title_activity_sequence">Последовательность</string>
     <string name="action_done">Сохранить</string>
     <string name="hint_name">Название</string>
     <string name="hint_host">Хост</string>
@@ -34,14 +33,12 @@
     <string name="action_add_port">Добавить порт</string>
     <string name="action_knock">Постучать</string>
     <string name="action_delete">Удалить</string>
-    <string name="action_edit">Редактировать</string>
     <string name="action_new_sequence">Новая последовательность</string>
     <string name="drag_item">Переместить</string>
     <string name="empty_sequence_warning">%s: пустая последовательность!</string>
     <string name="start_knocking">Стучу в %s</string>
     <string name="end_knocking">Всё, постучали!</string>
     <string name="untitled_sequence">(Без имени)</string>
-    <string name="error_invalid_port">Неверный номер порта!</string>
     <string name="error_resolve">Невозможно определить хост \'%s\'!</string>
     <string name="error_export">ОШИБКА: Не удалось экспортировать данные!</string>
     <string name="error_import">ОШИБКА: Не удалось импортировать данные!</string>
@@ -72,8 +69,6 @@
     <string name="notification_title">Тук-тук!</string>
     <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
     <string name="empty_sequence">Пустая последовательность!</string>
-    <string name="please_wait">Пожалуйста подождите</string>
-    <string name="loading_apps">Загрузка списка приложений…</string>
     <string name="installed_apps">Установленные приложения</string>
     <string name="sequence_type">Тип последовательности:</string>
     <string name="icmp_size">Размер пакета</string>

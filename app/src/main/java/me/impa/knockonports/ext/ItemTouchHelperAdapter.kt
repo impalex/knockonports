@@ -21,7 +21,7 @@
 
 package me.impa.knockonports.ext
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 interface ItemTouchHelperAdapter {
     var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)?

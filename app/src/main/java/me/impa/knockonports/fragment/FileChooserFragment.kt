@@ -23,10 +23,8 @@ package me.impa.knockonports.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +37,7 @@ import java.io.File
 
 class FileChooserFragment: DialogFragment() {
 
-    private val fileItemAdapter by lazy { FileItemAdapter(context) }
+    private val fileItemAdapter by lazy { FileItemAdapter(context!!) }
     private val storageList by lazy { StorageUtil.getStorageDirectories(context) }
     private val textStorage by lazy { view!!.findViewById<TextView>(R.id.text_storage) }
     var onSelected: ((String) -> Unit)? = null
@@ -53,11 +51,11 @@ class FileChooserFragment: DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog)
+        setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL, R.style.CustomDialog)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater!!.inflate(R.layout.fragment_file_chooser, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
+            = inflater.inflate(R.layout.fragment_file_chooser, container)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -108,7 +106,7 @@ class FileChooserFragment: DialogFragment() {
         val cancelButton = view.findViewById<TextView>(R.id.text_cancel)
         cancelButton.setOnClickListener { dismiss() }
 
-        navigateTo(currentDir ?: storageList.firstOrNull() ?: context.filesDir.canonicalPath)
+        navigateTo(currentDir ?: storageList.firstOrNull() ?: context!!.filesDir.canonicalPath)
 
     }
 

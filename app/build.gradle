@@ -61,8 +61,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.0.5"
+        versionCode 9
+        versionName "1.0.6"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -118,22 +118,22 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11"
 
     implementation "org.jetbrains.anko:anko-commons:0.10.5"
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:support-vector-drawable:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'com.google.android.material:material:1.1.0-alpha01'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation "com.github.savvyapps:ToggleButtonLayout:1.2.0"
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "androidx.room:room-runtime:2.1.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "com.jaredrummler:colorpicker:1.0.2"
     implementation "com.github.hendrawd:StorageUtil:1.0.0"
-    kapt "android.arch.persistence.room:compiler:1.1.1"
-    kapt "android.arch.lifecycle:compiler:1.1.1"
+    kapt "androidx.room:room-compiler:2.1.0-alpha02"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 }
 
 play {

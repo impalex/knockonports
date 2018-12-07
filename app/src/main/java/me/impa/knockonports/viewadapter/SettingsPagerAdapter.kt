@@ -21,14 +21,14 @@
 
 package me.impa.knockonports.viewadapter
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-class SettingsPagerAdapter(fragmentManager: FragmentManager, private val fragments: Array<Fragment>, private val titles: Array<String>):
-        FragmentPagerAdapter(fragmentManager) {
+class SettingsPagerAdapter(fragmentManager: androidx.fragment.app.FragmentManager, private val fragments: Array<androidx.fragment.app.Fragment>, private val titles: Array<String>):
+        androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
 
-    override fun getItem(position: Int): Fragment = fragments[position]
+    override fun getItem(position: Int): androidx.fragment.app.Fragment = fragments[position]
 
     override fun getCount(): Int = fragments.size
 

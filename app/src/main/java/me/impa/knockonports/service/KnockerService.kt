@@ -23,7 +23,7 @@ package me.impa.knockonports.service
 
 import android.app.IntentService
 import android.content.Intent
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import me.impa.knockonports.R
 import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence

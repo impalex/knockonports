@@ -27,9 +27,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.widget.ImageViewCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
+import androidx.appcompat.app.AppCompatActivity
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import kotlinx.android.synthetic.main.knocks_widget.*

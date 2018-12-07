@@ -37,23 +37,23 @@
         android:contentDescription="@string/drag_item"
         android:layout_alignParentStart="true" />
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/port_wrapper"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="@string/hint_port"
         android:layout_toLeftOf="@id/protocol_toggle_group"
         android:layout_toRightOf="@id/drag_handle"
         android:layout_toEndOf="@id/drag_handle"
         android:layout_toStartOf="@id/protocol_toggle_group">
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/port_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_port"
             android:maxLines="1"
             android:maxLength="5"
             android:inputType="number"/>
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.savvyapps.togglebuttonlayout.ToggleButtonLayout
         android:id="@+id/protocol_toggle_group"

@@ -23,10 +23,10 @@ package me.impa.knockonports.viewmodel
 
 import android.app.Application
 import android.appwidget.AppWidgetManager
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Build

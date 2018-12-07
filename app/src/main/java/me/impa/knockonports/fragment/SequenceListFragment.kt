@@ -21,13 +21,13 @@
 
 package me.impa.knockonports.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,30 +36,28 @@ import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
-class SequenceListFragment: Fragment() {
+class SequenceListFragment: androidx.fragment.app.Fragment() {
 
-    private lateinit var sequenceAdapter: SequenceAdapter
-    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
+    private val sequenceAdapter by lazy { SequenceAdapter(context!!) }
+    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater!!.inflate(R.layout.fragment_sequence_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_sequence_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_sequences)
+        val recycler = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_sequences)
 
-        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+        recycler.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (!twoPaneMode || mainViewModel.getDirtySequence().value == null)
                     mainViewModel.getFabVisible().value = dy <= 0
             }
         })
 
-        recycler.layoutManager = LinearLayoutManager(activity)
-
-        sequenceAdapter = SequenceAdapter(context)
+        recycler.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(activity)
 
         sequenceAdapter.onKnock = {
             mainViewModel.knock(it)

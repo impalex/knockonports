@@ -21,11 +21,11 @@
 
 package me.impa.knockonports.fragment
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.TextInputEditText
-import android.support.v4.app.Fragment
+import com.google.android.material.textfield.TextInputEditText
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,24 +38,19 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class AdvancedSettingsFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity).get(MainViewModel::class.java) }
-    private lateinit var delayEdit: TextInputEditText
-    private lateinit var timeoutEdit: TextInputEditText
-    private lateinit var udpContentEdit: TextInputEditText
-    private lateinit var base64CheckBox: CheckBox
-    private lateinit var downArrow: ImageView
-    private lateinit var appNameText: TextView
+    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
+    private val delayEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_delay) }
+    private val timeoutEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_timeout) }
+    private val udpContentEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_udpcontent) }
+    private val base64CheckBox by lazy { view!!.findViewById<CheckBox>(R.id.checkbox_base64) }
+    private val appNameText by lazy { view!!.findViewById<TextView>(R.id.text_app_name) }
+    private val downArrow by lazy { view!!.findViewById<ImageView>(R.id.image_app_down) }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view =  inflater!!.inflate(R.layout.fragment_sequence_config_advanced, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_sequence_config_advanced, container, false)
 
-        delayEdit = view.findViewById(R.id.edit_sequence_delay)
-        timeoutEdit = view.findViewById(R.id.edit_sequence_timeout)
-        udpContentEdit = view.findViewById(R.id.edit_udpcontent)
-        base64CheckBox = view.findViewById(R.id.checkbox_base64)
-        appNameText = view.findViewById(R.id.text_app_name)
-        downArrow = view.findViewById(R.id.image_app_down)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mainViewModel.getDirtySequence().observe(this, Observer {
             delayEdit.setText(it?.delay?.toString())
             timeoutEdit.setText(it?.timeout?.toString())
@@ -80,8 +75,6 @@ class AdvancedSettingsFragment: Fragment() {
         udpContentEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.udpContent = it
         }
-
-        return view
     }
 
     private fun showAppName(appId: String?, defaultName: String? = null) {
@@ -107,29 +100,6 @@ class AdvancedSettingsFragment: Fragment() {
                 dismiss()
             }
         }.show(childFragmentManager, AppChooserFragment.FRAGMENT_APP_CHOOSER)
-        /*
-        val apps = mainViewModel.getInstalledApps().value
-        if (apps == null) {
-            // not loaded yet
-            loadingDialog?.dismiss()
-            //loadingDialog = indeterminateProgressDialog(R.string.loading_apps, R.string.please_wait)
-            //loadingDialog = ProgressDialog(this)
-            doAsync {
-                val appList = AppData.loadInstalledApps(context)
-                uiThread {
-                    mainViewModel.getInstalledApps().value = appList
-                    loadingDialog?.dismiss()
-                    loadingDialog = null
-                    showAppChooser()
-                }
-            }
-            return
-        }
-        activity.selector(title = getString(R.string.installed_apps), items = apps.map { it.name }, onClick = { _, i ->
-            mainViewModel.getDirtySequence().value?.application = apps[i].app
-            mainViewModel.getDirtySequence().value?.applicationName = apps[i].name
-            showAppName(apps[i].app)
-        })*/
     }
 
 }

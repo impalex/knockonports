@@ -31,13 +31,13 @@
     android:layout_marginEnd="@dimen/cfg_side_margin">
 
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabMode="fixed" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

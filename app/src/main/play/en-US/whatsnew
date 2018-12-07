@@ -1,4 +1,1 @@
-NEW: ICMP sequences!
-Updated import/export interface
-Updated app selection interface
-Minor bugfixes
+Fixed rare crashes on some Android Oreo devices

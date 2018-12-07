@@ -25,7 +25,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 import me.impa.knockonports.service.KnockerService
 
 @Suppress("unused")

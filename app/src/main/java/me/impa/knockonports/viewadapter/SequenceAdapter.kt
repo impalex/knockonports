@@ -21,9 +21,7 @@
 
 package me.impa.knockonports.viewadapter
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,9 +31,9 @@ import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
-class SequenceAdapter(val context: Context): RecyclerView.Adapter<SequenceAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+class SequenceAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<SequenceAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
-    override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
+    override var onStartDrag: ((androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit)? = null
 
     var onDelete: ((sequence: Sequence) -> Unit)? = null
     var onKnock: ((sequence: Sequence) -> Unit)? = null
@@ -61,26 +59,26 @@ class SequenceAdapter(val context: Context): RecyclerView.Adapter<SequenceAdapte
 
     }
 
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sequence = items[position]
-        holder?.sequenceName?.text = if (sequence.name.isNullOrBlank()) {
+        holder.sequenceName.text = if (sequence.name.isNullOrBlank()) {
             context.getString(R.string.untitled_sequence)
         } else {
             sequence.name
         }
-        holder?.deleteIcon?.setOnClickListener {
+        holder.deleteIcon.setOnClickListener {
             onDelete?.invoke(sequence)
         }
-        holder?.knockWrap?.setOnClickListener {
+        holder.knockWrap.setOnClickListener {
             onKnock?.invoke(sequence)
         }
-        holder?.textHost?.text = if (sequence.host.isNullOrBlank()) {
+        holder.textHost.text = if (sequence.host.isNullOrBlank()) {
             context.getString(R.string.host_not_set)
         } else {
             sequence.host
         }
         val desc = sequence.getReadableDescription()
-        holder?.textPorts?.text = context.getString(if (sequence.type == KnockType.ICMP) {
+        holder.textPorts.text = context.getString(if (sequence.type == KnockType.ICMP) {
             R.string.desc_icmp
         } else {
             R.string.desc_ports
@@ -102,7 +100,7 @@ class SequenceAdapter(val context: Context): RecyclerView.Adapter<SequenceAdapte
 
     }
 
-    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val sequenceName = view.sequence_name!!
         val deleteIcon = view.delete_icon!!
         val textHost = view.text_host!!

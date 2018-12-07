@@ -22,7 +22,7 @@
 package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -35,9 +35,9 @@ import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.json.PortData
 
-class PortAdapter: RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+class PortAdapter: androidx.recyclerview.widget.RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
-    override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
+    override var onStartDrag: ((androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit)? = null
 
     var items: MutableList<PortData> = mutableListOf()
         set(value) {
@@ -56,23 +56,23 @@ class PortAdapter: RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelp
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.port_element, parent, false))
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onBindViewHolder(holder: ViewHolder?, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val port = items[position]
-        holder?.editPort?.run {
+        holder.editPort.run {
             afterTextChanged {
                 port.value = it.toIntOrNull()
             }
             setText(port.value?.toString())
         }
 
-        holder?.imageDelete?.setOnClickListener {
+        holder.imageDelete.setOnClickListener {
             val index = items.indexOf(port)
             if (index >= 0) {
                 items.removeAt(index)
                 notifyItemRemoved(index)
             }
         }
-        holder?.groupProtocolType?.run {
+        holder.groupProtocolType.run {
             setToggled(if (port.type == PortType.TCP) {
                 R.id.type_tcp
             } else {
@@ -87,7 +87,7 @@ class PortAdapter: RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelp
             }
         }
 
-        holder?.dragHandle?.setOnTouchListener { _, event ->
+        holder.dragHandle.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 onStartDrag?.invoke(holder)
             }
@@ -106,7 +106,7 @@ class PortAdapter: RecyclerView.Adapter<PortAdapter.ViewHolder>(), ItemTouchHelp
         notifyItemRemoved(position)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val dragHandle = view.drag_handle!!
         val editPort = view.port_edit!!
         val groupProtocolType = view.protocol_toggle_group!!
