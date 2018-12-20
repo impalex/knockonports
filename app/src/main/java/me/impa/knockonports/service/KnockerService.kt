@@ -32,9 +32,24 @@ import org.jetbrains.anko.warn
 
 class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger {
 
+    private fun dummyServiceStart() {
+        val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
+        notificationBuilder.setOngoing(true)
+                .setContentTitle(resources.getString(R.string.notification_title))
+                .setSmallIcon(R.drawable.ic_knock_notif)
+
+        startForeground(FOREGROUND_ID, notificationBuilder.build())
+
+        stopForeground(true)
+
+    }
+
     override fun onHandleIntent(intent: Intent?) {
 
-        intent ?: return
+        if (intent == null) {
+            dummyServiceStart()
+            return
+        }
 
         val seqId = intent.getLongExtra(SEQUENCE_ID, Sequence.INVALID_SEQ_ID)
 
@@ -42,6 +57,7 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
             warn {
                 "Invalid sequence ID!"
             }
+            dummyServiceStart()
             return
         }
 
@@ -51,6 +67,7 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
             warn {
                 "Couldn't find sequence ID $seqId"
             }
+            dummyServiceStart()
             return
         }
 

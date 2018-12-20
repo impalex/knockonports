@@ -41,11 +41,6 @@ class AppChooserFragment: DialogFragment() {
 
     var onSelected: ((AppData) -> Unit)? = null
 
-    private val appAdapter by lazy { AppListAdapter(context!!).apply { onSelected = this@AppChooserFragment.onSelected } }
-    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
-    private val progressBar by lazy { view!!.findViewById<ProgressBar>(R.id.progress_loading) }
-    private val listView by lazy { view!!.findViewById<ListView>(R.id.list_apps) }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog)
@@ -57,9 +52,14 @@ class AppChooserFragment: DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val appAdapter = AppListAdapter(context!!).apply { onSelected = this@AppChooserFragment.onSelected }
+        val mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        val listView = view.findViewById<ListView>(R.id.list_apps)
+
         listView.adapter = appAdapter
 
         val apps = mainViewModel.getInstalledApps().value
+        val progressBar = view.findViewById<ProgressBar>(R.id.progress_loading)
 
         if (apps == null) {
             listView.visibility = View.GONE
