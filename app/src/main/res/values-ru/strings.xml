@@ -32,6 +32,7 @@
     <string name="none">Нет</string>
     <string name="action_add_port">Добавить порт</string>
     <string name="action_knock">Постучать</string>
+    <string name="action_edit">Редактировать</string>
     <string name="action_delete">Удалить</string>
     <string name="action_new_sequence">Новая последовательность</string>
     <string name="drag_item">Переместить</string>

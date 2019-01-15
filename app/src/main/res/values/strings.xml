@@ -35,6 +35,7 @@
     <string name="action_add_port">Add Port</string>
     <string name="action_knock">Knock</string>
     <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
     <string name="action_new_sequence">New Sequence</string>
     <string name="drag_item">Reorganize</string>
     <string name="empty_sequence_warning">%s: empty sequence!</string>

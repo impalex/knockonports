@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+  ~ Copyright (c) 2019 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -20,17 +20,8 @@
   ~ under the License.
   -->
 
-<resources>
-    <color name="colorPrimary">#2196f3</color>
-    <color name="colorPrimaryDark">#01579b</color>
-    <color name="colorAccent">#ffa726</color>
-    <color name="colorWidgetBackground">#30000000</color>
-    <color name="colorWidgetForeground">#fff</color>
-    <color name="colorWidgetButtons">#fff</color>
-
-    <!--
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    -->
-</resources>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_menu_knock" android:title="@string/action_knock"/>
+    <item android:id="@+id/action_menu_edit" android:title="@string/action_edit"/>
+    <item android:id="@+id/action_menu_delete" android:title="@string/action_delete"/>
+</menu>

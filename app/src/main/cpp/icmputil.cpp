@@ -15,6 +15,7 @@
 #include <cstring>
 #include <algorithm>
 #include <unistd.h>
+#include <fcntl.h>
 
 int ping(const char *host, const int size, const int count, jbyte* pattern, jsize pattern_len, const int sleep) {
 
@@ -24,7 +25,7 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
     if (packet_size < sizeof(icmp_header))
         packet_size = sizeof(icmp_header);
 
-    __android_log_print(ANDROID_LOG_INFO, "ICMP", "host %s", host);
+    __android_log_print(ANDROID_LOG_INFO, "ICMP", "hitting %s", host);
 
     char packet_data[packet_size];
 
@@ -86,6 +87,38 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
     return EXIT_SUCCESS;
 }
 
+int send_tcp_packet(const char *host, const int port) {
+    struct sockaddr_in addr;
+    int flags;
+
+    __android_log_print(ANDROID_LOG_INFO, "TCP", "hitting %s:%d", host, port);
+
+    memset(&addr, 0, sizeof(addr));
+
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(port);
+
+    if (inet_pton(AF_INET, host, &(addr.sin_addr)) < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, "TCP", "inet_pton errono %d %s\n", errno,
+                            strerror(errno));
+        return EXIT_FAILURE;
+    }
+
+    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        __android_log_print(ANDROID_LOG_ERROR, "TCP", "socket errorno %d %s\n", errno,
+                            strerror(errno));
+        return EXIT_FAILURE;
+    }
+    flags = fcntl(sock, F_GETFL, 0);
+    fcntl(sock, F_SETFL, flags | O_NONBLOCK);
+
+    connect(sock, (struct sockaddr*)&addr, sizeof(struct sockaddr));
+    close(sock);
+
+    return EXIT_SUCCESS;
+}
+
 jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject thiz, jstring address, jint size, jint count, jbyteArray pattern, jint sleep) {
     const char *n_address = env->GetStringUTFChars(address, 0);
 
@@ -96,6 +129,16 @@ jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject thiz, j
 
     (*env).ReleaseStringUTFChars(address, n_address);
     (*env).ReleaseByteArrayElements(pattern, n_pattern, JNI_ABORT);
+
+    return result;
+}
+
+jint Java_me_impa_knockonports_service_Knocker_sendtcp(JNIEnv *env, jobject thiz, jstring host, jint port) {
+    const char *n_host = env->GetStringUTFChars(host, 0);
+
+    int result = send_tcp_packet(n_host, port);
+
+    (*env).ReleaseStringUTFChars(host, n_host);
 
     return result;
 }

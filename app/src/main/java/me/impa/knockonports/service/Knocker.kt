@@ -85,22 +85,10 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                     udpSocket?.send(DatagramPacket(udpContent, udpContent.size, address, it.value!!))
                 } else {
                     debug { "Knock TCP ${it.value}" }
-                    val socket = Socket()
                     try {
-                        socket.tcpNoDelay = true
-                        socket.keepAlive = false
-                        var timeout = sequence.timeout ?: _defaultTimeout
-                        if (timeout <= 0)
-                            timeout = _defaultTimeout
-                        socket.soTimeout = timeout
-                        socket.setSoLinger(true, 0)
-                        socket.connect(InetSocketAddress(sequence.host, it.value!!), timeout)
-                    } catch (e: SocketTimeoutException) {
-                        // it's ok
+                        sendtcp(address.hostAddress, it.value!!)
                     } catch (e: Exception) {
                         warn("Error while sending TCP knock", e)
-                    } finally {
-                        socket.close()
                     }
                 }
                 val delay = sequence.delay ?: 0
@@ -195,6 +183,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
     }
 
     private external fun ping(address: String, size: Int, count: Int, pattern: ByteArray, sleep: Int): Int
+    private external fun sendtcp(host: String, port: Int): Int
 
     companion object {
         init {

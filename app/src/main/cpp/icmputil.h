@@ -11,4 +11,8 @@ extern "C"
 JNIEXPORT jint JNICALL Java_me_impa_knockonports_service_Knocker_ping(
         JNIEnv *, jobject, jstring, jint, jint, jbyteArray, jint);
 
+extern "C"
+JNIEXPORT jint JNICALL Java_me_impa_knockonports_service_Knocker_sendtcp(
+        JNIEnv *, jobject, jstring, jint);
+
 #endif //KNOCKONPORTS_ICMPUTIL_H

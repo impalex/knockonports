@@ -25,6 +25,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.sequence_element.view.*
 import me.impa.knockonports.R
 import me.impa.knockonports.data.KnockType
@@ -66,10 +67,29 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
         } else {
             sequence.name
         }
-        holder.deleteIcon.setOnClickListener {
-            onDelete?.invoke(sequence)
+        holder.moreIcon.setOnClickListener {
+            var popupMenu = PopupMenu(context, holder.moreIcon)
+            popupMenu.inflate(R.menu.menu_sequence)
+            popupMenu.setOnMenuItemClickListener { item ->
+                when(item.itemId) {
+                    R.id.action_menu_knock -> {
+                        onKnock?.invoke(sequence)
+                        true
+                    }
+                    R.id.action_menu_delete -> {
+                        onDelete?.invoke(sequence)
+                        true
+                    }
+                    R.id.action_menu_edit -> {
+                        onClick?.invoke(sequence)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
         }
-        holder.knockWrap.setOnClickListener {
+        holder.knockButton.setOnClickListener {
             onKnock?.invoke(sequence)
         }
         holder.textHost.text = if (sequence.host.isNullOrBlank()) {
@@ -102,10 +122,10 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
 
     class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         val sequenceName = view.sequence_name!!
-        val deleteIcon = view.delete_icon!!
+        val moreIcon = view.more_icon!!
         val textHost = view.text_host!!
         val textPorts = view.text_ports!!
-        val knockWrap = view.knock_wrap!!
+        val knockButton = view.knock_button!!
     }
 
 }
