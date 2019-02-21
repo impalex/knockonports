@@ -1,4 +1,3 @@
-![Knock on Ports](app/src/main/play/en-US/listing/featureGraphic/feature.png)
 ## Description
 "Knock on Ports" is a port knocking client compatible with knockd, icmpKNOCK and other port knocking servers.
 
