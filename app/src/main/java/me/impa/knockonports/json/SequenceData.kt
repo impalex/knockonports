@@ -25,6 +25,7 @@ import android.util.JsonReader
 import android.util.JsonToken
 import android.util.JsonWriter
 import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.entity.Sequence
@@ -34,17 +35,17 @@ import java.io.StringWriter
 data class SequenceData(var name: String?, var host: String?, var timeout: Int?, var delay: Int?,
                         var udpContent: String?, var application: String?, var base64: Int?,
                         var appName: String?, var ports: List<PortData>, var type: KnockType?,
-                        var icmp: List<IcmpData>) {
+                        var icmp: List<IcmpData>, var icmpType: IcmpType?) {
 
     fun toEntity(): Sequence = Sequence(null, name, host, timeout, null, delay, udpContent, application, base64,
             ports.asSequence().filter { it.value != null }.map { PortData(it.value, it.type) }.toList(), appName,
-            type, icmp)
+            type, icmp, icmpType)
 
     companion object {
         fun fromEntity(sequence: Sequence): SequenceData =
                 SequenceData(sequence.name, sequence.host, sequence.timeout, sequence.delay, sequence.udpContent,
                         sequence.application, sequence.base64, sequence.applicationName, sequence.ports ?: listOf(),
-                        sequence.type, sequence.icmp ?: listOf())
+                        sequence.type, sequence.icmp ?: listOf(), sequence.icmpType)
 
         private fun writeValue(writer: JsonWriter, name: String, value: String?) {
             if (value == null)
@@ -105,6 +106,8 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                     }
                     writer.endArray()
 
+                    writeValue(writer, "icmp_type", it.icmpType?.ordinal)
+
                     writer.name("icmp")
                     writer.beginArray()
                     it.icmp.forEach { i ->
@@ -141,7 +144,7 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                 reader.beginArray()
                 while (reader.hasNext()) {
                     reader.beginObject()
-                    val seq = SequenceData(null, null, null, null, null, null, null, null, listOf(), KnockType.PORT, listOf())
+                    val seq = SequenceData(null, null, null, null, null, null, null, null, listOf(), KnockType.PORT, listOf(), IcmpType.WITH_ICMP_HEADER)
                     val ports = mutableListOf<PortData>()
                     val icmp = mutableListOf<IcmpData>()
                     while (reader.hasNext()) {
@@ -156,6 +159,7 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                             "base64" -> seq.base64 = readInt(reader)
                             "app_name" -> seq.appName = readString(reader)
                             "type" -> seq.type = KnockType.fromOrdinal(readInt(reader) ?: 0)
+                            "icmp_type" -> seq.icmpType = IcmpType.fromOrdinal(readInt(reader) ?: 1)
                             "ports" -> {
                                 reader.beginArray()
                                 while (reader.hasNext()) {

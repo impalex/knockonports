@@ -36,7 +36,7 @@ import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class],
-        version = 8
+        version = 9
 )
 @TypeConverters(SequenceConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
@@ -158,6 +158,13 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration8To9: Migration(8, 9) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_icmp_type` INTEGER")
+            database.execSQL("UPDATE `tbSequence` SET `_icmp_type`=1")
+        }
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -172,7 +179,8 @@ abstract class KnocksDatabase : RoomDatabase() {
                                     Migration4To5(),
                                     Migration5To6(),
                                     Migration6To7(context),
-                                    Migration7To8())
+                                    Migration7To8(),
+                                    Migration8To9())
                             .build()
 
                 }

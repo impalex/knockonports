@@ -19,15 +19,13 @@
  * under the License.
  */
 
-apply plugin: 'com.android.application'
-
-apply plugin: 'kotlin-android'
-
-apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'kotlin-kapt'
-
-apply plugin: 'com.github.triplet.play'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("com.github.triplet.play") version "2.1.0" apply false
+}
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 
@@ -48,21 +46,12 @@ if (publisherPropertiesFile.exists()) {
 android {
     compileSdkVersion 28
 
-    if (!publisherProperties.isEmpty()) {
-        playAccountConfigs {
-            defaultAccountConfig {
-                serviceAccountEmail = publisherProperties["email"]
-                jsonFile = file(publisherProperties["key"])
-            }
-        }
-    }
-
     defaultConfig {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.0.8"
+        versionCode 12
+        versionName "1.0.9"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -74,9 +63,6 @@ android {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
-        }
-        if (!publisherProperties.isEmpty()) {
-            playAccountConfig = playAccountConfigs.defaultAccountConfig
         }
     }
     if (!keystoreProperties.isEmpty()) {
@@ -118,25 +104,30 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.20"
 
     implementation "org.jetbrains.anko:anko-commons:0.10.5"
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'com.google.android.material:material:1.1.0-alpha02'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation 'com.google.android.material:material:1.1.0-alpha03'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation "com.github.savvyapps:ToggleButtonLayout:1.2.0"
-    implementation "androidx.room:room-runtime:2.1.0-alpha03"
+    implementation "androidx.room:room-runtime:2.1.0-alpha04"
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "com.jaredrummler:colorpicker:1.0.2"
     implementation "com.github.hendrawd:StorageUtil:1.0.0"
-    kapt "androidx.room:room-compiler:2.1.0-alpha03"
+    kapt "androidx.room:room-compiler:2.1.0-alpha04"
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 }
 
-play {
-    track = 'production'
-    //uploadImages = true
+if (!publisherProperties.isEmpty()) {
+    apply plugin: 'com.github.triplet.play'
+    play {
+        //serviceAccountEmail = publisherProperties["email"]
+        serviceAccountCredentials = file(publisherProperties["key"])
+        track = 'production'
+        //uploadImages = true
+    }
 }

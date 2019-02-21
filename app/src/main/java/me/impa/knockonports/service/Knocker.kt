@@ -23,6 +23,7 @@ package me.impa.knockonports.service
 
 import android.content.Context
 import me.impa.knockonports.R
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.entity.Sequence
@@ -31,7 +32,6 @@ import java.net.*
 
 class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger {
 
-    private val _defaultTimeout = 1000
     private val _maxSleep = 15000
 
     private fun knockPorts(address: InetAddress) {
@@ -117,6 +117,11 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         }
         info { "Knocking to '${sequence.name}'" }
 
+        val packetSizeOffset = when (sequence.icmpType) {
+            IcmpType.WITH_IP_AND_ICMP_HEADERS -> -20
+            IcmpType.WITHOUT_HEADERS -> 8
+            else -> 0
+        }
 
         context.runOnUiThread {
             toast(getString(R.string.start_knocking, sequence.name))
@@ -131,7 +136,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                 if (delay > 0) {
                     delay = Math.min(delay, _maxSleep)
                 }
-                ping(address.hostAddress, it.size ?: 0, Math.max(it.count ?: 1, 1),
+                ping(address.hostAddress, Math.max((it.size ?: 0) + packetSizeOffset, 0), Math.max(it.count ?: 1, 1),
                         it.encoding.decode(it.content), delay)
             }
         } catch (e: Exception) {

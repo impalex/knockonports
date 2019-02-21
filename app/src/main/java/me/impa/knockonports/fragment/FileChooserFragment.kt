@@ -112,7 +112,7 @@ class FileChooserFragment: DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?) = super.onCreateDialog(savedInstanceState).apply { window?.setTitle(title) }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         onDismiss?.invoke()
     }

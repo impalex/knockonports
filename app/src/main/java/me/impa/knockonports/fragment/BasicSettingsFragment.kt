@@ -33,12 +33,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.*
 import com.savvyapps.togglebuttonlayout.ToggleButtonLayout
 import me.impa.knockonports.R
 import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.data.PortType
 import me.impa.knockonports.ext.afterTextChanged
@@ -64,15 +63,37 @@ class BasicSettingsFragment : Fragment() {
     private val sequenceTypeGroup by lazy { view!!.findViewById<ToggleButtonLayout>(R.id.selector_seq_type) }
     private val icmpLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_icmp_layout) }
     private val portsLayout by lazy { view!!.findViewById<LinearLayout>(R.id.type_ports_layout) }
+    private val icmpTypeSpinner by lazy { view!!.findViewById<Spinner>(R.id.icmp_type_spinner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_sequence_config_basic, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        icmpTypeSpinner.run {
+            val icmpTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, arrayOf(
+                    context.getString(R.string.icmp_type_without_headers),
+                    context.getString(R.string.icmp_type_with_icmp_header),
+                    context.getString(R.string.icmp_type_full)
+            ))
+            icmpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter = icmpTypeAdapter
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    mainViewModel.getDirtySequence().value?.icmpType = IcmpType.fromOrdinal(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
+        }
+
         mainViewModel.getDirtySequence().observe(this, Observer {
             nameEdit.setText(it?.name)
             hostEdit.setText(it?.host)
+            icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
             sequenceTypeGroup.setToggled(if (it?.type == KnockType.ICMP) {
                 R.id.type_icmp
             } else {

@@ -23,7 +23,6 @@ package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -39,7 +38,7 @@ import me.impa.knockonports.json.IcmpData
 
 class IcmpAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<IcmpAdapter.ViewHolder>(), ItemTouchHelperAdapter {
 
-    val encodingArray = arrayOf(context.getString(R.string.encoding_raw),
+    private val encodingArray = arrayOf(context.getString(R.string.encoding_raw),
             context.getString(R.string.encoding_base64), context.getString(R.string.encoding_hex))
 
     override var onStartDrag: ((androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit)? = null

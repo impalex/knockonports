@@ -21,10 +21,6 @@
 
 package me.impa.knockonports.viewadapter
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
-
 class SettingsPagerAdapter(fragmentManager: androidx.fragment.app.FragmentManager, private val fragments: Array<androidx.fragment.app.Fragment>, private val titles: Array<String>):
         androidx.fragment.app.FragmentPagerAdapter(fragmentManager) {
 

@@ -115,7 +115,24 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/sequence_type_layout"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/icmp_type_header"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="5dp"/>
+                <Spinner
+                    android:id="@+id/icmp_type_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="true" />
+            </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_icmp"
                 android:layout_width="match_parent"

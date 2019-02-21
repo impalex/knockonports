@@ -24,6 +24,7 @@ package me.impa.knockonports.database.converter
 import androidx.room.TypeConverter
 import android.util.Base64
 import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.data.PortType
 import me.impa.knockonports.json.IcmpData
@@ -59,6 +60,12 @@ class SequenceConverters {
 
     @TypeConverter
     fun knockTypeToInt(data: KnockType): Int = data.ordinal
+
+    @TypeConverter
+    fun intToIcmpType(data: Int?): IcmpType = IcmpType.fromOrdinal(data ?: 1)
+
+    @TypeConverter
+    fun icmpTypeToInt(data: IcmpType): Int = data.ordinal
 
     @TypeConverter
     fun stringToIcmpDataList(data: String?): List<IcmpData> {

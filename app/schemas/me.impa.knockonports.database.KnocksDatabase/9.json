@@ -1,0 +1,112 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 9,
+    "identityHash": "f591371e102add665fc214c9188c2062",
+    "entities": [
+      {
+        "tableName": "tbSequence",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `_name` TEXT, `_host` TEXT, `_timeout` INTEGER, `_order` INTEGER, `_delay` INTEGER, `_udp_content` TEXT, `_application` TEXT, `_base64` INTEGER, `_port_string` TEXT, `_application_name` TEXT, `_type` INTEGER, `_icmp_string` TEXT, `_icmp_type` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "host",
+            "columnName": "_host",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeout",
+            "columnName": "_timeout",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "_order",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "delay",
+            "columnName": "_delay",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "udpContent",
+            "columnName": "_udp_content",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "application",
+            "columnName": "_application",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "base64",
+            "columnName": "_base64",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ports",
+            "columnName": "_port_string",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "applicationName",
+            "columnName": "_application_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "_type",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "icmp",
+            "columnName": "_icmp_string",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "icmpType",
+            "columnName": "_icmp_type",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f591371e102add665fc214c9188c2062\")"
+    ]
+  }
+}

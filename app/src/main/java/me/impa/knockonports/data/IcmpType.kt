@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2019 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,29 +19,14 @@
  * under the License.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package me.impa.knockonports.data
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.20"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+enum class IcmpType {
+    WITHOUT_HEADERS, WITH_ICMP_HEADER, WITH_IP_AND_ICMP_HEADERS;
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
+    companion object {
+        val values = IcmpType.values()
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+        fun fromOrdinal(ordinal: Int): IcmpType = if (ordinal in 0 until values.size) values[ordinal] else WITH_ICMP_HEADER
+    }
 }

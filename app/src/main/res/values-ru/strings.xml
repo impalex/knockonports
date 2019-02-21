@@ -76,4 +76,8 @@
     <string name="icmp_count">Количество пакетов</string>
     <string name="icmp_content">Содержимое</string>
     <string name="action_add_icmp">Добавить пакет</string>
+    <string name="icmp_type_without_headers">без заголовков</string>
+    <string name="icmp_type_with_icmp_header">с ICMP заголовком</string>
+    <string name="icmp_type_full">с ICMP и IP заголовками</string>
+    <string name="icmp_type_header">Размер пакета:</string>
 </resources>

@@ -68,7 +68,7 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
             sequence.name
         }
         holder.moreIcon.setOnClickListener {
-            var popupMenu = PopupMenu(context, holder.moreIcon)
+            val popupMenu = PopupMenu(context, holder.moreIcon)
             popupMenu.inflate(R.menu.menu_sequence)
             popupMenu.setOnMenuItemClickListener { item ->
                 when(item.itemId) {

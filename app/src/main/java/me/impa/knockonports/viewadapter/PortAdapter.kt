@@ -22,7 +22,6 @@
 package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -30,7 +29,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.port_element.view.*
 import me.impa.knockonports.R
 import me.impa.knockonports.data.PortType
-import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.json.PortData

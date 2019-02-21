@@ -22,17 +22,18 @@
 package me.impa.knockonports
 
 import android.Manifest
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.core.app.ActivityCompat
-import androidx.fragment.app.FragmentManager
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import me.impa.knockonports.ext.expandTo
@@ -55,6 +56,8 @@ private const val STATE_EXPORT_FILENAME = "STATE_EXPORT_FILENAME"
 private const val STATE_EXPORT_DIR = "STATE_EXPORT_DIR"
 private const val STATE_IMPORT_DIR = "STATE_IMPORT_DIR"
 private const val EXPAND_DURATION = 300L
+private const val APP_PREFS = "me.impa.knockonports.app"
+private const val KEY_FIRST_LAUNCH = "CFG_FIRST_LAUNCH"
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
 
@@ -62,12 +65,18 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
     private var fragmentExport: FileChooserFragment? = null
     private var fragmentImport: FileChooserFragment? = null
-
+    private val sharedPrefs by lazy { getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE) }
 
     private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val firstLaunch = sharedPrefs.getLong(KEY_FIRST_LAUNCH, 0L)
+        if (firstLaunch == 0L) {
+            sharedPrefs.edit().putLong(KEY_FIRST_LAUNCH, System.currentTimeMillis()).apply()
+        }
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         val fab = findViewById<FloatingActionButton>(R.id.fab)

@@ -32,6 +32,7 @@ import android.content.Intent
 import android.os.Build
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.database.KnocksRepository
 import me.impa.knockonports.database.entity.Sequence
@@ -107,7 +108,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun createEmptySequence() {
         selectedSequence.value = Sequence(null, null, null, null,
-                null, 500, null, null, 0, null, null, KnockType.PORT, null)
+                null, 500, null, null, 0, null, null, KnockType.PORT, null, IcmpType.WITHOUT_HEADERS)
     }
 
     fun saveDirtyData() {

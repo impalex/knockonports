@@ -86,4 +86,8 @@
     <string name="encoding_raw" translatable="false">Raw</string>
     <string name="encoding_hex" translatable="false">Hex</string>
     <string name="encoding_base64" translatable="false">Base64</string>
+    <string name="icmp_type_without_headers">without headers</string>
+    <string name="icmp_type_with_icmp_header">with ICMP header</string>
+    <string name="icmp_type_full">with ICMP and IP headers</string>
+    <string name="icmp_type_header">Packet size:</string>
 </resources>

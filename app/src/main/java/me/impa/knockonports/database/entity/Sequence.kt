@@ -22,6 +22,7 @@
 package me.impa.knockonports.database.entity
 
 import androidx.room.*
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.json.IcmpData
 import me.impa.knockonports.json.PortData
@@ -54,7 +55,9 @@ data class Sequence(
         @ColumnInfo(name = "_type")
         var type: KnockType?,
         @ColumnInfo(name = "_icmp_string")
-        var icmp: List<IcmpData>?
+        var icmp: List<IcmpData>?,
+        @ColumnInfo(name = "_icmp_type")
+        var icmpType: IcmpType?
 ) {
 
     fun getReadableDescription(): String? = when (type) {
