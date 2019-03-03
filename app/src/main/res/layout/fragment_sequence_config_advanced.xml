@@ -49,18 +49,6 @@
                 android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sequence_timeout_wrapper"
-            android:hint="@string/hint_timeout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_sequence_timeout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="number"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sequence_udpcontent_wrapper"
             android:hint="@string/hint_udp_content"
             android:layout_width="match_parent"

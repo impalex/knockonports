@@ -27,6 +27,7 @@ import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.fragment.RateAppFragment
 import org.jetbrains.anko.*
 import java.net.*
 
@@ -46,6 +47,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         }
         info { "Knocking to '${sequence.name}'" }
 
+        RateAppFragment.incKnockCount(context)
 
         context.runOnUiThread {
             toast(getString(R.string.start_knocking, sequence.name))
@@ -116,6 +118,8 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             return
         }
         info { "Knocking to '${sequence.name}'" }
+
+        RateAppFragment.incKnockCount(context)
 
         val packetSizeOffset = when (sequence.icmpType) {
             IcmpType.WITH_IP_AND_ICMP_HEADERS -> -20

@@ -51,6 +51,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".StartKnockActivity"
+            android:theme="@style/AppTheme.Transparent"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
         <receiver android:name=".widget.KnocksWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

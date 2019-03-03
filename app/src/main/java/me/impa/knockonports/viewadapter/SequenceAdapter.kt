@@ -22,6 +22,8 @@
 package me.impa.knockonports.viewadapter
 
 import android.content.Context
+import android.content.pm.ShortcutManager
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +38,7 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
 
     override var onStartDrag: ((androidx.recyclerview.widget.RecyclerView.ViewHolder) -> Unit)? = null
 
+    var onCreateShortcut: ((sequence: Sequence) -> Unit)? = null
     var onDelete: ((sequence: Sequence) -> Unit)? = null
     var onKnock: ((sequence: Sequence) -> Unit)? = null
     var onClick: ((sequence: Sequence) -> Unit)? = null
@@ -70,6 +73,9 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
         holder.moreIcon.setOnClickListener {
             val popupMenu = PopupMenu(context, holder.moreIcon)
             popupMenu.inflate(R.menu.menu_sequence)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !context.getSystemService(ShortcutManager::class.java).isRequestPinShortcutSupported) {
+                popupMenu.menu.setGroupVisible(R.id.group_shortcut, false)
+            }
             popupMenu.setOnMenuItemClickListener { item ->
                 when(item.itemId) {
                     R.id.action_menu_knock -> {
@@ -82,6 +88,10 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
                     }
                     R.id.action_menu_edit -> {
                         onClick?.invoke(sequence)
+                        true
+                    }
+                    R.id.action_menu_shortcut -> {
+                        onCreateShortcut?.invoke(sequence)
                         true
                     }
                     else -> false

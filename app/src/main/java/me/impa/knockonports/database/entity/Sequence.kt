@@ -21,7 +21,16 @@
 
 package me.impa.knockonports.database.entity
 
+import android.content.Context
+import android.content.Intent
+import android.content.pm.ShortcutInfo
+import android.graphics.drawable.Icon
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.*
+import me.impa.knockonports.EXTRA_SEQ_ID
+import me.impa.knockonports.R
+import me.impa.knockonports.StartKnockActivity
 import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.json.IcmpData
@@ -36,8 +45,6 @@ data class Sequence(
         var name: String?,
         @ColumnInfo(name = "_host")
         var host: String?,
-        @ColumnInfo(name = "_timeout")
-        var timeout: Int?,
         @ColumnInfo(name = "_order")
         var order: Int?,
         @ColumnInfo(name = "_delay")
@@ -76,5 +83,17 @@ data class Sequence(
     companion object {
         const val INVALID_SEQ_ID = -100500L
 
+        fun shortcutId(id: Long, isAuto: Boolean = false) = "KnockShortcut$id${if (!isAuto) "MANUAL" else ""}"
+
+        @RequiresApi(Build.VERSION_CODES.N_MR1)
+        fun getShortcutInfo(context: Context, sequence: Sequence, isAuto: Boolean = false, iconResource: Int = R.drawable.ic_play_arrow_24dp): ShortcutInfo =
+                ShortcutInfo.Builder(context, Sequence.shortcutId(sequence.id!!, isAuto))
+                        .setShortLabel(sequence.name!!)
+                        .setLongLabel(sequence.name!!)
+                        .setIcon(Icon.createWithResource(context, iconResource))
+                        .setIntent(Intent(context, StartKnockActivity::class.java).apply {
+                            putExtra(EXTRA_SEQ_ID, sequence.id!!)
+                            action = Intent.ACTION_VIEW
+                        }).build()
     }
 }

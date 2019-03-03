@@ -36,7 +36,7 @@ import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class],
-        version = 9
+        version = 10
 )
 @TypeConverters(SequenceConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
@@ -165,6 +165,24 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration9To10: Migration(9, 10) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE `tbSequence_new` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "`_name` TEXT, `_host` TEXT, `_order` INTEGER, `_delay` INTEGER, `_udp_content` TEXT, " +
+                    "`_application` TEXT, `_base64` INTEGER, `_port_string` TEXT, `_application_name` TEXT, " +
+                    "`_type` INTEGER, `_icmp_string` TEXT, `_icmp_type` INTEGER)")
+            database.execSQL("INSERT INTO `tbSequence_new` (`_id`, " +
+                    "`_name`, `_host`, `_order`, `_delay`, `_udp_content`, " +
+                    "`_application`, `_base64`, `_port_string`, `_application_name`, " +
+                    "`_type`, `_icmp_string`, `_icmp_type`) SELECT `_id`, " +
+                    "`_name`, `_host`, `_order`, `_delay`, `_udp_content`, " +
+                    "`_application`, `_base64`, `_port_string`, `_application_name`, " +
+                    "`_type`, `_icmp_string`, `_icmp_type` from `tbSequence`")
+            database.execSQL("DROP TABLE `tbSequence`")
+            database.execSQL("ALTER TABLE `tbSequence_new` RENAME TO `tbSequence`")
+        }
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -180,7 +198,8 @@ abstract class KnocksDatabase : RoomDatabase() {
                                     Migration5To6(),
                                     Migration6To7(context),
                                     Migration7To8(),
-                                    Migration8To9())
+                                    Migration8To9(),
+                                    Migration9To10())
                             .build()
 
                 }

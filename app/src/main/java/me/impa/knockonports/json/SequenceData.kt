@@ -32,18 +32,19 @@ import me.impa.knockonports.database.entity.Sequence
 import java.io.StringReader
 import java.io.StringWriter
 
-data class SequenceData(var name: String?, var host: String?, var timeout: Int?, var delay: Int?,
+data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                         var udpContent: String?, var application: String?, var base64: Int?,
                         var appName: String?, var ports: List<PortData>, var type: KnockType?,
                         var icmp: List<IcmpData>, var icmpType: IcmpType?) {
 
-    fun toEntity(): Sequence = Sequence(null, name, host, timeout, null, delay, udpContent, application, base64,
+    fun toEntity(): Sequence = Sequence(null, name, host,null, delay, udpContent, application, base64,
             ports.asSequence().filter { it.value != null }.map { PortData(it.value, it.type) }.toList(), appName,
             type, icmp, icmpType)
 
     companion object {
+
         fun fromEntity(sequence: Sequence): SequenceData =
-                SequenceData(sequence.name, sequence.host, sequence.timeout, sequence.delay, sequence.udpContent,
+                SequenceData(sequence.name, sequence.host, sequence.delay, sequence.udpContent,
                         sequence.application, sequence.base64, sequence.applicationName, sequence.ports ?: listOf(),
                         sequence.type, sequence.icmp ?: listOf(), sequence.icmpType)
 
@@ -89,7 +90,6 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                     writeValue(writer, "type", it.type?.ordinal)
                     writeValue(writer, "name", it.name)
                     writeValue(writer, "host", it.host)
-                    writeValue(writer, "timeout", it.timeout)
                     writeValue(writer, "delay", it.delay)
                     writeValue(writer, "udp_content", it.udpContent)
                     writeValue(writer, "application", it.application)
@@ -144,7 +144,7 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                 reader.beginArray()
                 while (reader.hasNext()) {
                     reader.beginObject()
-                    val seq = SequenceData(null, null, null, null, null, null, null, null, listOf(), KnockType.PORT, listOf(), IcmpType.WITH_ICMP_HEADER)
+                    val seq = SequenceData(null, null,null, null, null, null, null, listOf(), KnockType.PORT, listOf(), IcmpType.WITH_ICMP_HEADER)
                     val ports = mutableListOf<PortData>()
                     val icmp = mutableListOf<IcmpData>()
                     while (reader.hasNext()) {
@@ -152,7 +152,7 @@ data class SequenceData(var name: String?, var host: String?, var timeout: Int?,
                         when(key) {
                             "name" -> seq.name = readString(reader)
                             "host" -> seq.host = readString(reader)
-                            "timeout" -> seq.timeout = readInt(reader)
+                            "timeout" -> readInt(reader) // Deprecated. Just read and ignore.
                             "delay" -> seq.delay = readInt(reader)
                             "udp_content" -> seq.udpContent = readString(reader)
                             "application" -> seq.application = readString(reader)

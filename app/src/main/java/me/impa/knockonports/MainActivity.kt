@@ -22,8 +22,11 @@
 package me.impa.knockonports
 
 import android.Manifest
-import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ShortcutManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -36,13 +39,12 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.expandTo
-import me.impa.knockonports.fragment.FileChooserFragment
-import me.impa.knockonports.fragment.SequenceConfigFragment
-import me.impa.knockonports.fragment.SequenceListFragment
-import me.impa.knockonports.fragment.fileChooser
+import me.impa.knockonports.fragment.*
 import me.impa.knockonports.viewmodel.MainViewModel
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.error
 import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
 import java.text.SimpleDateFormat
@@ -55,9 +57,8 @@ private const val FRAGMENT_SEQ_CFG = "SEQUENCE_CONFIG"
 private const val STATE_EXPORT_FILENAME = "STATE_EXPORT_FILENAME"
 private const val STATE_EXPORT_DIR = "STATE_EXPORT_DIR"
 private const val STATE_IMPORT_DIR = "STATE_IMPORT_DIR"
+const val EXTRA_SEQ_ID = "EXTRA_SEQ_ID"
 private const val EXPAND_DURATION = 300L
-private const val APP_PREFS = "me.impa.knockonports.app"
-private const val KEY_FIRST_LAUNCH = "CFG_FIRST_LAUNCH"
 
 class MainActivity : AppCompatActivity(), AnkoLogger {
 
@@ -65,17 +66,19 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
     private var fragmentExport: FileChooserFragment? = null
     private var fragmentImport: FileChooserFragment? = null
-    private val sharedPrefs by lazy { getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE) }
+    private var fragmentRateApp: RateAppFragment? = null
+    private val isInstalledFromPlayStore by lazy {
+        arrayOf("com.android.vending", "com.google.android.feedback").contains(packageManager.getInstallerPackageName(packageName))
+    }
 
     private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val firstLaunch = sharedPrefs.getLong(KEY_FIRST_LAUNCH, 0L)
-        if (firstLaunch == 0L) {
-            sharedPrefs.edit().putLong(KEY_FIRST_LAUNCH, System.currentTimeMillis()).apply()
-        }
+        RateAppFragment.checkFirstLaunch(this)
+
+        installShortcutWatcher()
 
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -86,11 +89,15 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         mainViewModel.getSelectedSequence().observe(this, Observer {
             if (it == null) {
                 menu?.setGroupVisible(R.id.group_settings, false)
-                if (!twoPaneMode)
+                if (!twoPaneMode) {
                     menu?.setGroupVisible(R.id.group_main, true)
+                    menu?.setGroupVisible(R.id.group_rate, isInstalledFromPlayStore)
+                }
             } else {
-                if (!twoPaneMode)
+                if (!twoPaneMode) {
                     menu?.setGroupVisible(R.id.group_main, false)
+                    menu?.setGroupVisible(R.id.group_rate, false)
+                }
                 menu?.setGroupVisible(R.id.group_settings, true)
             }
         })
@@ -168,10 +175,12 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                     .commit()
         }
 
+        if (isInstalledFromPlayStore && RateAppFragment.isTimeToAskForReview(this))
+            askForReview()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+        when (item?.itemId) {
             android.R.id.home -> mainViewModel.getSelectedSequence().value = null
             R.id.action_done -> {
                 mainViewModel.saveDirtyData()
@@ -180,6 +189,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             R.id.action_new_sequence -> mainViewModel.createEmptySequence()
             R.id.action_export -> exportData()
             R.id.action_import -> importData()
+            R.id.action_rate -> RateAppFragment.openPlayMarket(this)
         }
         return true
     }
@@ -255,6 +265,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         val selectedSequenceState = mainViewModel.getSelectedSequence().value == null
         menu.setGroupVisible(R.id.group_settings, !selectedSequenceState)
         menu.setGroupVisible(R.id.group_main, selectedSequenceState)
+        menu.setGroupVisible(R.id.group_rate, selectedSequenceState && isInstalledFromPlayStore)
         return true
     }
 
@@ -279,10 +290,59 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (permissions.size == grantResults.size && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            when(requestCode) {
+            when (requestCode) {
                 REQUEST_EXPORT -> exportData()
                 REQUEST_IMPORT -> importData()
             }
+        }
+    }
+
+    private fun installShortcutWatcher() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            mainViewModel.getSequenceList().observe(this, Observer { sequences ->
+                if (sequences == null)
+                    return@Observer
+                val shortcutManager = getSystemService(ShortcutManager::class.java)
+                if (sequences.count() == 0) {
+                    shortcutManager.removeAllDynamicShortcuts()
+                } else {
+                    shortcutManager.dynamicShortcuts = sequences.filter { !it.name.isNullOrBlank() }
+                            .take(shortcutManager.maxShortcutCountPerActivity).map { Sequence.getShortcutInfo(this, it) }
+                }
+                // Let's check pinned shortcuts
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && shortcutManager.isRequestPinShortcutSupported) {
+                    val pinnedShortcuts = shortcutManager.pinnedShortcuts
+                    val enableShortcuts = mutableListOf<String>()
+                    val disableShortcuts = mutableListOf<String>()
+                    for (s in pinnedShortcuts) {
+                        val id = s?.intent?.getLongExtra(EXTRA_SEQ_ID, 0) ?: continue
+                        if (sequences.any { it.id == id }) {
+                            if (!s.isEnabled)
+                                enableShortcuts.add(s.id)
+                        }
+                        else {
+                            if (s.isEnabled)
+                                disableShortcuts.add(s.id)
+                        }
+                    }
+                    if (enableShortcuts.any())
+                        shortcutManager.enableShortcuts(enableShortcuts)
+                    if (disableShortcuts.any())
+                        shortcutManager.disableShortcuts(disableShortcuts)
+                }
+            })
+        }
+    }
+
+    private fun askForReview() {
+        fragmentRateApp = RateAppFragment().apply {
+            onDismiss = { fragmentRateApp = null }
+            val ft = supportFragmentManager.beginTransaction()
+            val prev = supportFragmentManager.findFragmentByTag(RateAppFragment.FRAGMENT_ASK_REVIEW)
+            if (prev != null)
+                ft.remove(prev)
+            ft.commit()
+            show(supportFragmentManager, RateAppFragment.FRAGMENT_ASK_REVIEW)
         }
     }
 

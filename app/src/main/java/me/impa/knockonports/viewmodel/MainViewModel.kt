@@ -87,6 +87,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun getPendingDataChanges(): MutableLiveData<List<Long>> = pendingOrderChanges
 
+    fun findSequence(id: Long): Sequence? = doAsyncResult { repository.findSequence(id) }.get()
+
     override fun onCleared() {
         super.onCleared()
         doAsync { savePendingData() }.get()
@@ -107,7 +109,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     }
 
     fun createEmptySequence() {
-        selectedSequence.value = Sequence(null, null, null, null,
+        selectedSequence.value = Sequence(null, null, null,
                 null, 500, null, null, 0, null, null, KnockType.PORT, null, IcmpType.WITHOUT_HEADERS)
     }
 

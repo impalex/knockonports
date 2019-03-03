@@ -80,4 +80,12 @@
     <string name="icmp_type_with_icmp_header">с ICMP заголовком</string>
     <string name="icmp_type_full">с ICMP и IP заголовками</string>
     <string name="icmp_type_header">Размер пакета:</string>
+    <string name="action_rate_app">Оценить приложение…</string>
+    <string name="action_create_shortcut">Создать ярлык</string>
+    <string name="text_ask_review">Если Вам нравится это приложение, пожалуйста, оцените его. Это займет не более минуты. Огромное спасибо за поддержку!</string>
+    <string name="action_rate_now">Оценить сейчас</string>
+    <string name="action_rate_later">Напомнить позднее</string>
+    <string name="action_rate_disable">Нет, спасибо</string>
+    <string name="title_ask_review">Нравится приложение?</string>
+    <string name="error_play_store">Не удалось открыть Play Store</string>
 </resources>

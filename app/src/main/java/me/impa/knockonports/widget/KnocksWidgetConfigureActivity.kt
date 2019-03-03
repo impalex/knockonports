@@ -146,76 +146,76 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
         private const val PREF_PREFIX_KEY_SEQUENCE = PREF_PREFIX_KEY + "seq_"
 
         internal fun saveBackgroundPref(context: Context, appWidgetId: Int, color: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .putInt(PREF_PREFIX_KEY_BACKGROUND + appWidgetId, color)
                     .apply()
         }
 
         internal fun loadBackgroundPref(context: Context, appWidgetId: Int): Int {
-            return context.getSharedPreferences(PREFS_NAME, 0)
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .getInt(PREF_PREFIX_KEY_BACKGROUND + appWidgetId, ContextCompat.getColor(context, R.color.colorWidgetBackground))
         }
 
         internal fun deleteBackgroundPref(context: Context, appWidgetId: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .remove(PREF_PREFIX_KEY_BACKGROUND + appWidgetId)
                     .apply()
         }
 
         internal fun saveForegroundPref(context: Context, appWidgetId: Int, color: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .putInt(PREF_PREFIX_KEY_FOREGROUND + appWidgetId, color)
                     .apply()
         }
 
         internal fun loadForegroundPref(context: Context, appWidgetId: Int): Int {
-            return context.getSharedPreferences(PREFS_NAME, 0)
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .getInt(PREF_PREFIX_KEY_FOREGROUND + appWidgetId, ContextCompat.getColor(context, R.color.colorWidgetForeground))
         }
 
         internal fun deleteForegroundPref(context: Context, appWidgetId: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .remove(PREF_PREFIX_KEY_FOREGROUND + appWidgetId)
                     .apply()
         }
 
         internal fun saveButtonsPref(context: Context, appWidgetId: Int, color: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .putInt(PREF_PREFIX_KEY_BUTTONS + appWidgetId, color)
                     .apply()
         }
 
         internal fun loadButtonsPref(context: Context, appWidgetId: Int): Int {
-            return context.getSharedPreferences(PREFS_NAME, 0)
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .getInt(PREF_PREFIX_KEY_BUTTONS + appWidgetId, ContextCompat.getColor(context, R.color.colorWidgetButtons))
         }
 
         internal fun deleteButtonsPref(context: Context, appWidgetId: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .remove(PREF_PREFIX_KEY_BUTTONS + appWidgetId)
                     .apply()
         }
 
         internal fun saveSeqPref(context: Context, appWidgetId: Int, seq: Long) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .putLong(PREF_PREFIX_KEY_SEQUENCE + appWidgetId, seq)
                     .apply()
         }
 
         internal fun loadSeqPref(context: Context, appWidgetId: Int): Long {
-            return context.getSharedPreferences(PREFS_NAME, 0)
+            return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .getLong(PREF_PREFIX_KEY_SEQUENCE + appWidgetId, INVALID_SEQ_ID)
         }
 
         internal fun deleteSeqPref(context: Context, appWidgetId: Int) {
-            context.getSharedPreferences(PREFS_NAME, 0)
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                     .edit()
                     .remove(PREF_PREFIX_KEY_SEQUENCE + appWidgetId)
                     .apply()

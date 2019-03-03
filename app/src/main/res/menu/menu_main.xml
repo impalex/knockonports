@@ -41,6 +41,12 @@
             android:title="@string/action_import"
             app:showAsAction="never"/>
     </group>
+    <group android:id="@+id/group_rate">
+        <item android:id="@+id/action_rate"
+            android:orderInCategory="3500"
+            android:title="@string/action_rate_app"
+            app:showAsAction="never"/>
+    </group>
     <group
         android:id="@+id/group_settings">
         <item

@@ -95,7 +95,7 @@ class FileChooserFragment: DialogFragment() {
         editFileName.setText(fileName)
         editFileName.afterTextChanged { fileName = it }
 
-        val saveButton = view.findViewById<TextView>(R.id.text_save)
+        val saveButton = view.findViewById<TextView>(R.id.button_save)
         if (!showSaveButton)
             saveButton.visibility = View.GONE
         saveButton.setOnClickListener {
@@ -103,7 +103,7 @@ class FileChooserFragment: DialogFragment() {
             dismiss()
         }
 
-        val cancelButton = view.findViewById<TextView>(R.id.text_cancel)
+        val cancelButton = view.findViewById<TextView>(R.id.button_cancel)
         cancelButton.setOnClickListener { dismiss() }
 
         navigateTo(currentDir ?: storageList.firstOrNull() ?: context!!.filesDir.canonicalPath)

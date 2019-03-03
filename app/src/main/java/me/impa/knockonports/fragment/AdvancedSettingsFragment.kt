@@ -40,7 +40,6 @@ class AdvancedSettingsFragment: Fragment() {
 
     private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
     private val delayEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_delay) }
-    private val timeoutEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_timeout) }
     private val udpContentEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_udpcontent) }
     private val base64CheckBox by lazy { view!!.findViewById<CheckBox>(R.id.checkbox_base64) }
     private val appNameText by lazy { view!!.findViewById<TextView>(R.id.text_app_name) }
@@ -53,7 +52,6 @@ class AdvancedSettingsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel.getDirtySequence().observe(this, Observer {
             delayEdit.setText(it?.delay?.toString())
-            timeoutEdit.setText(it?.timeout?.toString())
             udpContentEdit.setText(it?.udpContent)
             base64CheckBox.isChecked = it?.base64 == 1
             showAppName(it?.application, it?.applicationName)
@@ -68,9 +66,6 @@ class AdvancedSettingsFragment: Fragment() {
 
         delayEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.delay = it.toIntOrNull()
-        }
-        timeoutEdit.afterTextChanged {
-            mainViewModel.getDirtySequence().value?.timeout = it.toIntOrNull()
         }
         udpContentEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.udpContent = it

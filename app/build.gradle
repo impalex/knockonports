@@ -50,8 +50,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 12
-        versionName "1.0.9"
+        versionCode 14
+        versionName "1.0.10"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -110,7 +110,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
-    implementation 'com.google.android.material:material:1.1.0-alpha03'
+    implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation "com.github.savvyapps:ToggleButtonLayout:1.2.0"

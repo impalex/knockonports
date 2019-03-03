@@ -21,15 +21,20 @@
 
 package me.impa.knockonports.fragment
 
+import android.content.pm.ShortcutManager
+import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import me.impa.knockonports.R
+import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
@@ -67,6 +72,15 @@ class SequenceListFragment: androidx.fragment.app.Fragment() {
 
         sequenceAdapter.onClick = {
             mainViewModel.getSelectedSequence().value = it
+        }
+
+        sequenceAdapter.onCreateShortcut = {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val shortcutManager = context?.getSystemService(ShortcutManager::class.java)
+                if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported) {
+                    shortcutManager.requestPinShortcut(Sequence.getShortcutInfo(context!!, it, false), null)
+                }
+            }
         }
 
         sequenceAdapter.onMove = { _, _ ->

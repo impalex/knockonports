@@ -36,6 +36,8 @@ class KnocksRepository(context: Context) {
 
     fun getSequences(): LiveData<List<Sequence>> = sequenceList
 
+    fun findSequence(id: Long): Sequence? = sequenceDao.findSequenceById(id)
+
     fun deleteSequence(sequence: Sequence): Int = sequenceDao.deleteSequence(sequence)
 
     fun updateSequences(sequences: List<Sequence>) = sequenceDao.updateSequences(sequences)

@@ -27,6 +27,7 @@
     <color name="colorWidgetBackground">#30000000</color>
     <color name="colorWidgetForeground">#fff</color>
     <color name="colorWidgetButtons">#fff</color>
+    <color name="colorTransparent">#00000000</color>
 
     <!--
     <color name="colorPrimary">#3F51B5</color>
