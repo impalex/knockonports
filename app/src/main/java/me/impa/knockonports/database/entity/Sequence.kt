@@ -32,9 +32,8 @@ import me.impa.knockonports.EXTRA_SEQ_ID
 import me.impa.knockonports.R
 import me.impa.knockonports.StartKnockActivity
 import me.impa.knockonports.data.IcmpType
-import me.impa.knockonports.data.KnockType
-import me.impa.knockonports.json.IcmpData
-import me.impa.knockonports.json.PortData
+import me.impa.knockonports.data.SequenceStepType
+import me.impa.knockonports.json.SequenceStep
 
 @Entity(tableName = "tbSequence")
 data class Sequence(
@@ -49,36 +48,24 @@ data class Sequence(
         var order: Int?,
         @ColumnInfo(name = "_delay")
         var delay: Int?,
-        @ColumnInfo(name = "_udp_content")
-        var udpContent: String?,
         @ColumnInfo(name = "_application")
         var application: String?,
-        @ColumnInfo(name = "_base64")
-        var base64: Int?,
-        @ColumnInfo(name = "_port_string")
-        var ports: List<PortData>?,
         @ColumnInfo(name = "_application_name")
         var applicationName: String?,
-        @ColumnInfo(name = "_type")
-        var type: KnockType?,
-        @ColumnInfo(name = "_icmp_string")
-        var icmp: List<IcmpData>?,
         @ColumnInfo(name = "_icmp_type")
-        var icmpType: IcmpType?
+        var icmpType: IcmpType?,
+        @ColumnInfo(name = "_steps")
+        var steps: List<SequenceStep>?
 ) {
 
-    fun getReadableDescription(): String? = when (type) {
-        KnockType.PORT -> getReadablePortString()
-        KnockType.ICMP -> getReadableIcmpString()
-        else -> null
+    fun getReadableDescription(): String? = steps?.filter { it.isValid()  }?.joinToString {
+        when (it.type) {
+            SequenceStepType.UDP -> "${it.port?:0}:UDP"
+            SequenceStepType.TCP -> "${it.port?:0}:TCP"
+            SequenceStepType.ICMP -> "${it.icmpSize}x${it.icmpCount}:ICMP"
+            else -> ""
+        }
     }
-
-
-    private fun getReadablePortString(): String? =
-            ports?.filter { it.value != null }?.joinToString(", ") { it.value.toString() + ":" + it.type.name }
-
-    private fun getReadableIcmpString(): String? =
-            icmp?.filter { it.size != null }?.joinToString(", ") { it.size.toString() + "x" + Math.max(1, it.count ?: 0).toString()  }
 
     companion object {
         const val INVALID_SEQ_ID = -100500L

@@ -21,6 +21,7 @@
 
 package me.impa.knockonports
 
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -30,6 +31,8 @@ import me.impa.knockonports.service.KnockerService
 
 @Suppress("unused")
 class App : Application() {
+
+    var currentActivity: Activity? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -47,6 +50,8 @@ class App : Application() {
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
         }
     }
+
+
 
 
 }

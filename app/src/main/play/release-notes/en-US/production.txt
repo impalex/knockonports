@@ -1,4 +1,4 @@
-New: Sequence shortcuts (Android 7.1 and above)
-New: Pinned shortcuts (Android 8 and above)
-Removed TCP timeout configuration (not required anymore)
-Minor interface fixes
+Major update - new sequences!
+You can mix TCP/UDP and ICMP packets altogether in the same sequence.
+You can change the contents of each UDP packet.
+...and killed a few little nasty bugs.

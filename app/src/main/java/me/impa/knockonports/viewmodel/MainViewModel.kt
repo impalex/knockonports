@@ -32,14 +32,15 @@ import android.content.Intent
 import android.os.Build
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.IcmpType
-import me.impa.knockonports.data.KnockType
+import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.database.KnocksRepository
+import me.impa.knockonports.database.converter.SequenceConverters
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.default
-import me.impa.knockonports.json.IcmpData
-import me.impa.knockonports.json.PortData
 import me.impa.knockonports.json.SequenceData
+import me.impa.knockonports.json.SequenceStep
 import me.impa.knockonports.service.KnockerService
 import me.impa.knockonports.widget.KnocksWidget
 import org.jetbrains.anko.*
@@ -60,11 +61,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         }.get()
         it?.copy()
     }
-    private val dirtyPorts = Transformations.map(selectedSequence) {
-        it?.ports?.toMutableList() ?: mutableListOf()
-    }
-    private val dirtyIcmp = Transformations.map(selectedSequence) {
-        it?.icmp?.toMutableList() ?: mutableListOf()
+    private val dirtySteps = Transformations.map(selectedSequence) {
+        it?.steps?.toMutableList() ?: mutableListOf()
     }
     fun getSequenceList(): LiveData<List<Sequence>> {
         doAsync { savePendingData() }.get()
@@ -73,9 +71,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun getSelectedSequence(): MutableLiveData<Sequence?> = selectedSequence
 
-    fun getDirtyPorts(): LiveData<MutableList<PortData>> = dirtyPorts
-
-    fun getDirtyIcmp(): LiveData<MutableList<IcmpData>> = dirtyIcmp
+    fun getDirtySteps(): LiveData<MutableList<SequenceStep>> = dirtySteps
 
     fun getDirtySequence(): LiveData<Sequence?> = dirtySequence
 
@@ -110,7 +106,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun createEmptySequence() {
         selectedSequence.value = Sequence(null, null, null,
-                null, 500, null, null, 0, null, null, KnockType.PORT, null, IcmpType.WITHOUT_HEADERS)
+                null, 500, null, null, IcmpType.WITHOUT_HEADERS,
+                listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW)))
     }
 
     fun saveDirtyData() {
@@ -119,8 +116,10 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         if (seq.id == null) {
             seq.order = pendingOrderChanges.value?.size ?: sequenceList.value?.size ?: 0
         }
-        seq.ports = dirtyPorts.value
-        seq.icmp = dirtyIcmp.value
+        seq.steps = dirtySteps.value
+        info {
+            SequenceConverters().sequenceStepToString(seq.steps)
+        }
 
         doAsync {
             repository.saveSequence(seq)
@@ -194,7 +193,6 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                 data.forEachIndexed { index, sequenceData ->
                     val seq = sequenceData.toEntity()
                     seq.order = order + index
-                    seq.ports = sequenceData.ports
                     repository.saveSequence(seq)
                 }
                 uiThread {

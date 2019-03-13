@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+  ~ Copyright (c) 2019 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -20,7 +20,8 @@
   ~ under the License.
   -->
 
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="?android:textColorPrimaryInverse" android:state_selected="true"/>
-    <item android:color="?android:textColorPrimary"/>
-</selector>
+<resources>
+    <declare-styleable name="DataEditor">
+        <attr name="text_hint" format="reference"/>
+    </declare-styleable>
+</resources>

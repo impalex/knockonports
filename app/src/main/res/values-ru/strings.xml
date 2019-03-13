@@ -24,13 +24,10 @@
     <string name="action_done">Сохранить</string>
     <string name="hint_name">Название</string>
     <string name="hint_host">Хост</string>
-    <string name="hint_timeout">TCP-таймаут (мс)</string>
-    <string name="hint_udp_content">Содержимое UDP пакета</string>
     <string name="hint_delay">Задержка между пакетами (мс)</string>
     <string name="hint_port">Порт</string>
     <string name="hint_run_app">Запустить приложение:</string>
     <string name="none">Нет</string>
-    <string name="action_add_port">Добавить порт</string>
     <string name="action_knock">Постучать</string>
     <string name="action_edit">Редактировать</string>
     <string name="action_delete">Удалить</string>
@@ -43,7 +40,6 @@
     <string name="error_resolve">Невозможно определить хост \'%s\'!</string>
     <string name="error_export">ОШИБКА: Не удалось экспортировать данные!</string>
     <string name="error_import">ОШИБКА: Не удалось импортировать данные!</string>
-    <string name="error_base64">Предупреждение: Некорректная строка в base64!</string>
     <string name="host_not_set">Не задан хост!</string>
     <string name="action_export">Экспорт</string>
     <string name="action_import">Импорт</string>
@@ -51,7 +47,6 @@
     <string name="title_import">Импортировать данные из…</string>
     <string name="title_settings">Настройки</string>
     <string name="title_advanced">Дополнительно</string>
-    <string name="checkbox_base64">Содержимое пакета в кодировке Base64</string>
     <string name="button_save">Сохранить</string>
     <string name="button_cancel">Отмена</string>
     <string name="title_file_name">Имя файла</string>
@@ -69,17 +64,13 @@
     <string name="channel_description">Кто там?</string>
     <string name="notification_title">Тук-тук!</string>
     <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
-    <string name="empty_sequence">Пустая последовательность!</string>
     <string name="installed_apps">Установленные приложения</string>
-    <string name="sequence_type">Тип последовательности:</string>
-    <string name="icmp_size">Размер пакета</string>
-    <string name="icmp_count">Количество пакетов</string>
-    <string name="icmp_content">Содержимое</string>
-    <string name="action_add_icmp">Добавить пакет</string>
+    <string name="icmp_size">Размер</string>
+    <string name="icmp_count">Количество</string>
     <string name="icmp_type_without_headers">без заголовков</string>
     <string name="icmp_type_with_icmp_header">с ICMP заголовком</string>
     <string name="icmp_type_full">с ICMP и IP заголовками</string>
-    <string name="icmp_type_header">Размер пакета:</string>
+    <string name="icmp_type_header">Размер ICMP пакета:</string>
     <string name="action_rate_app">Оценить приложение…</string>
     <string name="action_create_shortcut">Создать ярлык</string>
     <string name="text_ask_review">Если Вам нравится это приложение, пожалуйста, оцените его. Это займет не более минуты. Огромное спасибо за поддержку!</string>
@@ -88,4 +79,9 @@
     <string name="action_rate_disable">Нет, спасибо</string>
     <string name="title_ask_review">Нравится приложение?</string>
     <string name="error_play_store">Не удалось открыть Play Store</string>
+    <string name="data_editor_default_hint">Данные</string>
+    <string name="hint_delete_step">Вы можете удалить элемент проведя его в сторону.</string>
+    <string name="hint_icmp_size">Проверьте размер пакета ICMP в расширенных настройках.</string>
+    <string name="error_app_launch">Не удалось запустить приложение «%s»!</string>
+    <string name="action_add_step">Добавить</string>
 </resources>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+  ~ Copyright (c) 2019 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -20,10 +20,8 @@
   ~ under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/type_udp"
-        android:title="@string/udp"/>
-    <item android:id="@+id/type_tcp"
-        android:title="@string/tcp"/>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-</menu>
+    <item android:state_checked="true" android:drawable="@drawable/shape_more_checked"/>
+    <item android:state_checked="false" android:drawable="@drawable/shape_more_unckecked"/>
+</selector>

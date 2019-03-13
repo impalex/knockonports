@@ -61,91 +61,25 @@
                 android:maxLines="1"/>
         </com.google.android.material.textfield.TextInputLayout>
         <LinearLayout
-            android:id="@+id/sequence_type_layout"
-            android:layout_below="@id/sequence_host_wrapper"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-            <TextView
-                android:id="@+id/sequence_type_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sequence_type"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp" />
-
-            <com.savvyapps.togglebuttonlayout.ToggleButtonLayout
-                android:id="@+id/selector_seq_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:allowDeselection="false"
-                app:selectedColor="@color/colorAccent"
-                app:menu="@menu/menu_seq_type"
-                app:customLayout="@layout/toggle_button"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/type_ports_layout"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/sequence_type_layout"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_below="@id/sequence_host_wrapper">
+
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_ports"
+                android:id="@+id/recycler_steps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 />
             <Button
-                android:id="@+id/button_add_port"
+                android:id="@+id/button_add_step"
                 style="@style/Widget.AppCompat.Button.Colored"
-                android:text="@string/action_add_port"
+                android:text="@string/action_add_step"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"/>
-        </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/type_icmp_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/sequence_type_layout"
-            android:orientation="vertical"
-            android:visibility="visible">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="5dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/icmp_type_header"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginEnd="5dp"/>
-                <Spinner
-                    android:id="@+id/icmp_type_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawSelectorOnTop="true" />
-            </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_icmp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                />
-            <Button
-                android:id="@+id/button_add_icmp"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:text="@string/action_add_icmp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"/>
         </LinearLayout>
     </RelativeLayout>
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2019 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -21,11 +21,11 @@
 
 package me.impa.knockonports.data
 
-enum class KnockType {
-    PORT, ICMP;
+enum class SequenceStepType {
+    UDP, TCP, ICMP;
     companion object {
-        val values = KnockType.values()
+        val values = SequenceStepType.values()
 
-        fun fromOrdinal(ordinal: Int): KnockType = if (ordinal in 0 until values.size) values[ordinal] else PORT
+        fun fromOrdinal(ordinal: Int) = if (ordinal in 0 until values.size) values[ordinal] else UDP
     }
 }

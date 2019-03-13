@@ -2,11 +2,11 @@
 // Created by impa on 07.11.2018.
 //
 
-#include "icmputil.h"
+#include "netutil.h"
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
+#include <cstdlib>
+#include <cstdio>
+#include <cerrno>
 #include <linux/icmp.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
@@ -15,12 +15,11 @@
 #include <cstring>
 #include <algorithm>
 #include <unistd.h>
-#include <fcntl.h>
 
 int ping(const char *host, const int size, const int count, jbyte* pattern, jsize pattern_len, const int sleep) {
 
-    struct sockaddr_in addr;
-    struct icmphdr icmp_header;
+    struct sockaddr_in addr{};
+    struct icmphdr icmp_header{};
     int packet_size = size;
     if (packet_size < sizeof(icmp_header))
         packet_size = sizeof(icmp_header);
@@ -48,7 +47,7 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
         return EXIT_FAILURE;
     }
 
-    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP);
+    int sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_ICMP); // NOLINT(android-cloexec-socket)
 
     if (sock < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "ICMP", "socket errorno %d %s\n", errno,
@@ -71,13 +70,11 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
         }
         fd_set read_set;
         int rc;
-        struct timeval tout = { 2, 0 };
+        struct timeval tout = { 0, 0 };
         memset(&read_set, 0, sizeof(read_set));
         FD_SET(sock, &read_set);
-        rc = select(sock+1, &read_set, NULL, NULL, &tout);
-        if (rc == 0) {
-            __android_log_print(ANDROID_LOG_WARN, "ICMP", "no reply in 2 secs\n");
-        } else if (rc<0) {
+        rc = select(sock+1, &read_set, nullptr, nullptr, &tout);
+        if (rc<0) {
             __android_log_print(ANDROID_LOG_ERROR, "ICMP", "select errno %d %s\n", errno, strerror(errno));
         }
         usleep(static_cast<useconds_t>(sleep * 1000));
@@ -88,8 +85,7 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
 }
 
 int send_tcp_packet(const char *host, const int port) {
-    struct sockaddr_in addr;
-    int flags;
+    struct sockaddr_in addr{};
 
     __android_log_print(ANDROID_LOG_INFO, "TCP", "hitting %s:%d", host, port);
 
@@ -104,14 +100,12 @@ int send_tcp_packet(const char *host, const int port) {
         return EXIT_FAILURE;
     }
 
-    int sock = socket(PF_INET, SOCK_STREAM, 0);
+    int sock = socket(PF_INET, SOCK_STREAM | SOCK_NONBLOCK, 0); // NOLINT(android-cloexec-socket,hicpp-signed-bitwise)
     if (sock < 0) {
         __android_log_print(ANDROID_LOG_ERROR, "TCP", "socket errorno %d %s\n", errno,
                             strerror(errno));
         return EXIT_FAILURE;
     }
-    flags = fcntl(sock, F_GETFL, 0);
-    fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 
     connect(sock, (struct sockaddr*)&addr, sizeof(struct sockaddr));
     close(sock);
@@ -119,10 +113,10 @@ int send_tcp_packet(const char *host, const int port) {
     return EXIT_SUCCESS;
 }
 
-jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject thiz, jstring address, jint size, jint count, jbyteArray pattern, jint sleep) {
-    const char *n_address = env->GetStringUTFChars(address, 0);
+extern "C" jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject  __unused thiz, jstring address, jint size, jint count, jbyteArray pattern, jint sleep) {
+    const char *n_address = env->GetStringUTFChars(address, nullptr);
 
-    jbyte *const n_pattern = env->GetByteArrayElements(pattern, 0);
+    jbyte *const n_pattern = env->GetByteArrayElements(pattern, nullptr);
     const jsize patLen = env->GetArrayLength(pattern);
 
     int result = ping(n_address, size, count, n_pattern, patLen, sleep);
@@ -133,8 +127,8 @@ jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject thiz, j
     return result;
 }
 
-jint Java_me_impa_knockonports_service_Knocker_sendtcp(JNIEnv *env, jobject thiz, jstring host, jint port) {
-    const char *n_host = env->GetStringUTFChars(host, 0);
+extern "C" jint Java_me_impa_knockonports_service_Knocker_sendtcp(JNIEnv *env, jobject  __unused thiz, jstring host, jint port) {
+    const char *n_host = env->GetStringUTFChars(host, nullptr);
 
     int result = send_tcp_packet(n_host, port);
 

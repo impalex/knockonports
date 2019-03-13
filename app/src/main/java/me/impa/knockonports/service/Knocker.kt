@@ -24,8 +24,7 @@ package me.impa.knockonports.service
 import android.content.Context
 import me.impa.knockonports.R
 import me.impa.knockonports.data.IcmpType
-import me.impa.knockonports.data.KnockType
-import me.impa.knockonports.data.PortType
+import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.fragment.RateAppFragment
 import org.jetbrains.anko.*
@@ -34,119 +33,6 @@ import java.net.*
 class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger {
 
     private val _maxSleep = 15000
-
-    private fun knockPorts(address: InetAddress) {
-        val p = sequence.ports?.filter { it.value in 1..65535 } ?: listOf()
-
-        if (p.isEmpty()) {
-            warn { "Empty sequence '${sequence.name}'" }
-            context.runOnUiThread {
-                toast(getString(R.string.empty_sequence_warning, sequence.name))
-            }
-            return
-        }
-        info { "Knocking to '${sequence.name}'" }
-
-        RateAppFragment.incKnockCount(context)
-
-        context.runOnUiThread {
-            toast(getString(R.string.start_knocking, sequence.name))
-        }
-        debug { "Remote address $address" }
-        val udpSocket = if (p.any { it.type == PortType.UDP }) {
-            DatagramSocket()
-        } else {
-            null
-        }
-        val contentString = sequence.udpContent
-        val udpContent = if (!contentString.isNullOrEmpty()) {
-            if (sequence.base64 == 1) {
-                // decode base64
-                try {
-                    android.util.Base64.decode(contentString, android.util.Base64.DEFAULT)
-                } catch (e: Exception) {
-                    warn { "Unable to decode udp content string (invalid base64?)" }
-                    context.runOnUiThread {
-                        toast(R.string.error_base64)
-                    }
-                    ByteArray(0)
-                }
-            } else {
-                contentString.toByteArray()
-            }
-        } else {
-            ByteArray(0)
-        }
-
-        try {
-            var cnt = 0
-            p.forEach {
-                info { "Knock #${++cnt}..." }
-                if (it.type == PortType.UDP) {
-                    debug { "Knock UDP ${it.value}" }
-                    udpSocket?.send(DatagramPacket(udpContent, udpContent.size, address, it.value!!))
-                } else {
-                    debug { "Knock TCP ${it.value}" }
-                    try {
-                        sendtcp(address.hostAddress, it.value!!)
-                    } catch (e: Exception) {
-                        warn("Error while sending TCP knock", e)
-                    }
-                }
-                val delay = sequence.delay ?: 0
-                if (delay > 0) {
-                    val sleepMs = Math.min(delay, _maxSleep).toLong()
-                    debug { "Sleep for ${sleepMs}ms" }
-                    Thread.sleep(sleepMs)
-                }
-            }
-        } catch (e: Exception) {
-            warn("Knocking error", e)
-        } finally {
-            udpSocket?.close()
-        }
-    }
-
-    private fun knockIcmp(address: InetAddress) {
-
-        val packets = sequence.icmp?.filter { it.size != null } ?: listOf()
-        if (packets.isEmpty()) {
-            warn { "Empty sequence '${sequence.name}'" }
-            context.runOnUiThread {
-                toast(getString(R.string.empty_sequence_warning, sequence.name))
-            }
-            return
-        }
-        info { "Knocking to '${sequence.name}'" }
-
-        RateAppFragment.incKnockCount(context)
-
-        val packetSizeOffset = when (sequence.icmpType) {
-            IcmpType.WITH_IP_AND_ICMP_HEADERS -> -20
-            IcmpType.WITHOUT_HEADERS -> 8
-            else -> 0
-        }
-
-        context.runOnUiThread {
-            toast(getString(R.string.start_knocking, sequence.name))
-        }
-        debug { "Remote address $address" }
-
-        try {
-            var cnt = 0
-            packets.forEach {
-                info { "Knock #${++cnt}..." }
-                var delay = sequence.delay ?: 0
-                if (delay > 0) {
-                    delay = Math.min(delay, _maxSleep)
-                }
-                ping(address.hostAddress, Math.max((it.size ?: 0) + packetSizeOffset, 0), Math.max(it.count ?: 1, 1),
-                        it.encoding.decode(it.content), delay)
-            }
-        } catch (e: Exception) {
-            warn("Knocking error", e)
-        }
-    }
 
     fun execute() {
         if (sequence.host.isNullOrBlank()) {
@@ -169,9 +55,79 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             return
         }
 
-        when(sequence.type) {
-            KnockType.ICMP -> knockIcmp(address)
-            KnockType.PORT -> knockPorts(address)
+        val steps = sequence.steps?.filter {
+            ((it.type == SequenceStepType.UDP || it.type == SequenceStepType.TCP) && it.port in 1..65535) || it.type == SequenceStepType.ICMP
+        }
+
+        if (steps == null || steps.isEmpty()) {
+            warn { "Empty sequence '${sequence.name}'" }
+            context.runOnUiThread {
+                toast(getString(R.string.empty_sequence_warning, sequence.name))
+            }
+            return
+        }
+
+        val icmpSizeOffset = when (sequence.icmpType) {
+            IcmpType.WITH_IP_AND_ICMP_HEADERS -> -20
+            IcmpType.WITHOUT_HEADERS -> 8
+            else -> 0
+        }
+
+        info { "Knocking to '${sequence.name}'" }
+        RateAppFragment.incKnockCount(context)
+
+        context.runOnUiThread {
+            toast(getString(R.string.start_knocking, sequence.name))
+        }
+        debug { "Remote address $address" }
+
+        val udpSocket = if (steps.any{it.type == SequenceStepType.UDP}) DatagramSocket() else null
+        val delay = Math.min(Math.max(sequence.delay ?: 0, 0), _maxSleep).toLong()
+
+        try {
+            var cnt = 0
+            steps.forEach {
+                info { "Knock #${++cnt}" }
+                val packet = if (it.type == SequenceStepType.TCP || it.content.isNullOrBlank()) {
+                    ByteArray(0)
+                } else  {
+                    it.encoding?.decode(it.content) ?: ByteArray(0)
+                }
+                try {
+                    when (it.type) {
+                        SequenceStepType.UDP -> {
+                            debug("Knock UDP ${it.port}")
+                            udpSocket?.send(DatagramPacket(packet, packet.size, address, it.port!!))
+                            if (delay > 0)
+                                Thread.sleep(delay)
+                        }
+                        SequenceStepType.TCP -> {
+                            debug("Knock TCP ${it.port}")
+                            sendtcp(address.hostAddress, it.port!!)
+                            if (delay > 0)
+                                Thread.sleep(delay)
+                        }
+                        SequenceStepType.ICMP -> {
+                            debug("Knock ICMP")
+                            ping(address.hostAddress, Math.max((it.icmpSize
+                                    ?: 0) + icmpSizeOffset, 0), Math.max(it.icmpCount
+                                    ?: 1, 1), packet, delay.toInt())
+                        }
+                    }
+                } catch (e: Exception) {
+                    warn("Error while sending knock", e)
+                }
+            }
+        } catch (e: Exception) {
+            warn("Knocking error", e)
+        }
+        finally {
+            udpSocket?.close()
+        }
+
+        info("Knocking complete")
+        context.runOnUiThread {
+            toast(R.string.end_knocking)
         }
 
         val app = sequence.application
@@ -182,12 +138,10 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                 context.startActivity(launchIntent)
             } else {
                 warn { "Could not find launch intent" }
+                context.runOnUiThread {
+                    toast(context.getString(R.string.error_app_launch, sequence.applicationName))
+                }
             }
-        }
-
-        info("Knocking complete")
-        context.runOnUiThread {
-            toast(R.string.end_knocking)
         }
     }
 
@@ -196,7 +150,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
 
     companion object {
         init {
-            System.loadLibrary("icmputil")
+            System.loadLibrary("netutil")
         }
     }
 

@@ -1,5 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+  ~ Copyright (c) 2019 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -19,13 +20,15 @@
   ~ under the License.
   -->
 
-<resources>
-    <dimen name="cfg_side_margin">0dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+    <shape
+        android:shape="rectangle">
+        <solid android:color="@color/colorAccent"/>
 
-    <!--
-Refer to App Widget Documentation for margin information
-http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
-    -->
-    <dimen name="widget_margin">8dp</dimen>
-</resources>
+    </shape>
+    </item>
+    <item android:drawable="@drawable/ic_more_horiz_black_24dp"/>
+
+</layer-list>
+

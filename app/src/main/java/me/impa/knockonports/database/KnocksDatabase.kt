@@ -28,15 +28,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import android.content.Context
+import android.util.Base64
 import me.impa.knockonports.data.AppData
-import me.impa.knockonports.data.PortType
 import me.impa.knockonports.database.converter.SequenceConverters
 import me.impa.knockonports.database.dao.SequenceDao
 import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class],
-        version = 10
+        version = 11
 )
 @TypeConverters(SequenceConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
@@ -78,7 +78,7 @@ abstract class KnocksDatabase : RoomDatabase() {
                 if (portCur.moveToFirst()) {
                     do {
                         if (!portCur.isNull(0) && !portCur.isNull(1)) {
-                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == PortType.UDP.ordinal) {
+                            portList.add("${portCur.getInt(0)}:${if (portCur.getInt(1) == 0) {
                                 "UDP"
                             } else {
                                 "TCP"
@@ -183,6 +183,53 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration10To11: Migration(10, 11) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE `tbSequence_new` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "`_name` TEXT, `_host` TEXT, `_order` INTEGER, `_delay` INTEGER, `_application` TEXT, " +
+                    "`_application_name` TEXT, `_icmp_type` INTEGER, `_steps` TEXT)")
+            database.execSQL("INSERT INTO `tbSequence_new` (`_id`, `_name`, `_host`, `_order`, `_delay`, " +
+                    "`_application`, `_application_name`, `_icmp_type`) SELECT " +
+                    "`_id`, `_name`, `_host`, `_order`, `_delay`, `_application`, `_application_name`, " +
+                    "`_icmp_type` from `tbSequence`")
+
+            val seqMap = mutableMapOf<Long, String?>()
+            val seqCur = database.query("SELECT `_id`, `_type`, `_udp_content`, `_base64`, `_port_string`, `_icmp_string` FROM `tbSequence`")
+            if (seqCur.moveToFirst()) {
+                do {
+                    if (seqCur.isNull(0) || seqCur.isNull(1))
+                        continue
+                    val id = seqCur.getLong(0)
+                    val type = seqCur.getLong(1)
+                    if (type == 0L) {
+                        val portString = if (seqCur.isNull(4)) "" else seqCur.getString(4)
+                        if (portString.isBlank())
+                            continue
+                        val content = if (seqCur.isNull(2)) "" else Base64.encodeToString(seqCur.getString(2).toByteArray(), Base64.NO_PADDING or Base64.NO_WRAP)
+                        val base64 = if (seqCur.isNull(3)) 0 else seqCur.getLong(3)
+                        seqMap[id] = portString.split('|').joinToString("|") {
+                            val portData = it.split(":")
+                            "${portData[1]}:${portData[0]}:::$content:${if (base64 == 0L || base64 == 1L) base64 else 0}"
+                        }
+                    } else if (type == 1L) {
+                        val icmpString = if (seqCur.isNull(5)) "" else seqCur.getString(5)
+                        if (icmpString.isBlank())
+                            continue
+                        seqMap[id] = icmpString.split("|").joinToString("|") {
+                            val icmpData = it.split(":")
+                            "2::${icmpData[0]}:${icmpData[1]}:${icmpData[3]}:${icmpData[2]}"
+                        }
+                    }
+                } while (seqCur.moveToNext())
+                seqMap.forEach{
+                    database.execSQL("UPDATE `tbSequence_new` SET `_steps`=? WHERE `_id`=?", arrayOf(it.value, it.key))
+                }
+            }
+            database.execSQL("DROP TABLE `tbSequence`")
+            database.execSQL("ALTER TABLE `tbSequence_new` RENAME TO `tbSequence`")
+        }
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -199,7 +246,8 @@ abstract class KnocksDatabase : RoomDatabase() {
                                     Migration6To7(context),
                                     Migration7To8(),
                                     Migration8To9(),
-                                    Migration9To10())
+                                    Migration9To10(),
+                                    Migration10To11())
                             .build()
 
                 }

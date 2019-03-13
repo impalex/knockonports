@@ -30,7 +30,6 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.sequence_element.view.*
 import me.impa.knockonports.R
-import me.impa.knockonports.data.KnockType
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
@@ -107,16 +106,7 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
         } else {
             sequence.host
         }
-        val desc = sequence.getReadableDescription()
-        holder.textPorts.text = context.getString(if (sequence.type == KnockType.ICMP) {
-            R.string.desc_icmp
-        } else {
-            R.string.desc_ports
-        }, if (desc.isNullOrBlank()) {
-            context.getString(R.string.empty_sequence)
-        } else {
-            desc
-        })
+        holder.textPorts.text = sequence.getReadableDescription()
     }
 
     override fun onItemMove(fromPosition: Int, toPosition: Int) {

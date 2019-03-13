@@ -21,16 +21,16 @@
 
 package me.impa.knockonports.fragment
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.tabs.TabLayout
 import me.impa.knockonports.R
+import me.impa.knockonports.component.HackyViewPager
 import me.impa.knockonports.viewadapter.SettingsPagerAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
@@ -53,7 +53,7 @@ class SequenceConfigFragment: Fragment() {
                 arrayOf(BasicSettingsFragment(), AdvancedSettingsFragment()),
                 arrayOf(activity!!.getString(R.string.title_settings), activity!!.getString(R.string.title_advanced)))
 
-        val viewPager = view.findViewById<ViewPager>(R.id.viewpager_settings)
+        val viewPager = view.findViewById<HackyViewPager>(R.id.viewpager_settings)
         viewPager!!.adapter = adapter
 
 

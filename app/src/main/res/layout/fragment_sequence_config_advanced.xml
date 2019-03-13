@@ -48,23 +48,24 @@
                 android:maxLines="1"
                 android:inputType="number"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sequence_udpcontent_wrapper"
-            android:hint="@string/hint_udp_content"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_udpcontent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:inputType="textNoSuggestions"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <CheckBox
-            android:id="@+id/checkbox_base64"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/checkbox_base64"/>
+            android:gravity="center_vertical"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icmp_type_header"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"/>
+            <Spinner
+                android:id="@+id/icmp_type_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true" />
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

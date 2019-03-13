@@ -48,10 +48,10 @@ android {
 
     defaultConfig {
         applicationId "me.impa.knockonports"
-        minSdkVersion 16
+        minSdkVersion 15
         targetSdkVersion 28
-        versionCode 14
-        versionName "1.0.10"
+        versionCode 17
+        versionName "1.1"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -104,7 +104,7 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.21"
 
     implementation "org.jetbrains.anko:anko-commons:0.10.5"
 
@@ -113,7 +113,6 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
-    implementation "com.github.savvyapps:ToggleButtonLayout:1.2.0"
     implementation "androidx.room:room-runtime:2.1.0-alpha04"
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "com.jaredrummler:colorpicker:1.0.2"

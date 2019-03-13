@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2019 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -22,5 +22,15 @@
 package me.impa.knockonports.json
 
 import me.impa.knockonports.data.ContentEncoding
+import me.impa.knockonports.data.SequenceStepType
 
-data class IcmpData(var size: Int?, var count: Int?, var encoding: ContentEncoding, var content: String?)
+data class SequenceStep(var type: SequenceStepType?, var port: Int?, var icmpSize: Int?, var icmpCount: Int?, var content: String?, var encoding: ContentEncoding?) {
+
+    var isExpanded = !content.isNullOrBlank() && type != SequenceStepType.TCP
+
+    fun isValid() = when (type) {
+        SequenceStepType.ICMP -> icmpSize != null
+        SequenceStepType.TCP, SequenceStepType.UDP -> port != null
+        else -> false
+    }
+}

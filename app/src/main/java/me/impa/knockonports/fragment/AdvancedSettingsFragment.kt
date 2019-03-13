@@ -29,10 +29,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import me.impa.knockonports.R
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.viewmodel.MainViewModel
 
@@ -40,35 +39,46 @@ class AdvancedSettingsFragment: Fragment() {
 
     private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
     private val delayEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_delay) }
-    private val udpContentEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_udpcontent) }
-    private val base64CheckBox by lazy { view!!.findViewById<CheckBox>(R.id.checkbox_base64) }
     private val appNameText by lazy { view!!.findViewById<TextView>(R.id.text_app_name) }
     private val downArrow by lazy { view!!.findViewById<ImageView>(R.id.image_app_down) }
+    private val icmpTypeSpinner by lazy { view!!.findViewById<Spinner>(R.id.icmp_type_spinner) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_sequence_config_advanced, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        icmpTypeSpinner.run {
+            val icmpTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, arrayOf(
+                    context.getString(R.string.icmp_type_without_headers),
+                    context.getString(R.string.icmp_type_with_icmp_header),
+                    context.getString(R.string.icmp_type_full)
+            ))
+            icmpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter = icmpTypeAdapter
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    mainViewModel.getDirtySequence().value?.icmpType = IcmpType.fromOrdinal(position)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+            }
+        }
+
         mainViewModel.getDirtySequence().observe(this, Observer {
             delayEdit.setText(it?.delay?.toString())
-            udpContentEdit.setText(it?.udpContent)
-            base64CheckBox.isChecked = it?.base64 == 1
+            icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
             showAppName(it?.application, it?.applicationName)
         })
 
         appNameText.setOnClickListener { showAppChooser() }
         downArrow.setOnClickListener { showAppChooser() }
 
-        base64CheckBox.setOnCheckedChangeListener { _, b ->
-            mainViewModel.getDirtySequence().value?.base64 = if (b) 1 else 0
-        }
-
         delayEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.delay = it.toIntOrNull()
-        }
-        udpContentEdit.afterTextChanged {
-            mainViewModel.getDirtySequence().value?.udpContent = it
         }
     }
 

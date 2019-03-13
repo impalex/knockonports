@@ -22,10 +22,8 @@
 package me.impa.knockonports
 
 import android.Manifest
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -44,7 +42,6 @@ import me.impa.knockonports.ext.expandTo
 import me.impa.knockonports.fragment.*
 import me.impa.knockonports.viewmodel.MainViewModel
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 import org.jetbrains.anko.info
 import org.jetbrains.anko.warn
 import java.text.SimpleDateFormat
@@ -224,6 +221,21 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         if (fragmentImport != null) {
             outState.putString(STATE_IMPORT_DIR, fragmentImport?.currentDir)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (application as App).currentActivity = this
+    }
+
+    override fun onPause() {
+        (application as App).currentActivity = null
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        (application as App).currentActivity = null
+        super.onDestroy()
     }
 
     private fun importData(importDir: String? = null) {

@@ -22,13 +22,11 @@
 package me.impa.knockonports.fragment
 
 import android.content.pm.ShortcutManager
-import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper

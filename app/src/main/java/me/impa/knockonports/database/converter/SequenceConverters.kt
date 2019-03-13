@@ -23,87 +23,41 @@ package me.impa.knockonports.database.converter
 
 import androidx.room.TypeConverter
 import android.util.Base64
-import me.impa.knockonports.data.ContentEncoding
-import me.impa.knockonports.data.IcmpType
-import me.impa.knockonports.data.KnockType
-import me.impa.knockonports.data.PortType
-import me.impa.knockonports.json.IcmpData
-import me.impa.knockonports.json.PortData
+import me.impa.knockonports.data.*
+import me.impa.knockonports.json.SequenceStep
 
 @Suppress("unused")
 class SequenceConverters {
 
     @TypeConverter
-    fun stringToPortDataList(data: String?): List<PortData> =
-            data?.split(ENTRY_SEPARATOR)?.map {
-                val p = it.split(VALUE_SEPARATOR)
-                PortData(if (p.isNotEmpty()) {
-                    p[0].toIntOrNull()
-                } else {
-                    null
-                },
-                        if (p.size > 1) {
-                            PortType.fromOrdinal(p[1].toIntOrNull() ?: PortType.UDP.ordinal)
-                        } else {
-                            PortType.UDP
-                        })
-            }?.toList() ?: listOf()
-
-    @TypeConverter
-    fun portDataListToString(data: List<PortData>?): String? =
+    fun sequenceStepToString(data: List<SequenceStep>?): String? =
             data?.joinToString(ENTRY_SEPARATOR.toString()) {
-                (it.value?.toString() ?: "") + VALUE_SEPARATOR + it.type.ordinal
+                (it.type?.ordinal?.toString() ?: "0") + VALUE_SEPARATOR +
+                        (it.port?.toString() ?: "") + VALUE_SEPARATOR +
+                        (it.icmpSize?.toString() ?: "") + VALUE_SEPARATOR +
+                        (it.icmpCount?.toString() ?: "") + VALUE_SEPARATOR +
+                        Base64.encodeToString(it.content?.toByteArray()
+                                ?: byteArrayOf(), Base64.NO_PADDING or Base64.NO_WRAP) + VALUE_SEPARATOR +
+                        (it.encoding?.ordinal?.toString() ?: "")
             }
 
     @TypeConverter
-    fun intToKnockType(data: Int?): KnockType = KnockType.fromOrdinal(data ?: 0)
-
-    @TypeConverter
-    fun knockTypeToInt(data: KnockType): Int = data.ordinal
+    fun stringToSequenceStep(data: String?): List<SequenceStep>? =
+            data?.split(ENTRY_SEPARATOR)?.map {
+                val s = it.split(VALUE_SEPARATOR)
+                SequenceStep(if (s.isNotEmpty()) SequenceStepType.fromOrdinal(s[0].toIntOrNull() ?: SequenceStepType.UDP.ordinal) else null,
+                        if (s.size>1) s[1].toIntOrNull() else null,
+                        if (s.size>2) s[2].toIntOrNull() else null,
+                        if (s.size>3) s[3].toIntOrNull() else null,
+                        if (s.size>4) String(Base64.decode(s[4], Base64.NO_WRAP or Base64.NO_PADDING), Charsets.UTF_8) else null,
+                        if (s.size>5) ContentEncoding.fromOrdinal(s[5].toIntOrNull() ?: ContentEncoding.RAW.ordinal) else ContentEncoding.RAW)
+            }?.toList() ?: listOf()
 
     @TypeConverter
     fun intToIcmpType(data: Int?): IcmpType = IcmpType.fromOrdinal(data ?: 1)
 
     @TypeConverter
     fun icmpTypeToInt(data: IcmpType): Int = data.ordinal
-
-    @TypeConverter
-    fun stringToIcmpDataList(data: String?): List<IcmpData> {
-        return data?.split(ENTRY_SEPARATOR)?.map {
-            val p = it.split(VALUE_SEPARATOR)
-            IcmpData(if (p.isNotEmpty()) {
-                p[0].toIntOrNull()
-            } else {
-                null
-            },
-                    if (p.size > 1) {
-                        p[1].toIntOrNull()
-                    } else {
-                        null
-                    },
-                    if (p.size > 2) {
-                        ContentEncoding.fromOrdinal(p[2].toIntOrNull()
-                                ?: ContentEncoding.RAW.ordinal)
-                    } else {
-                        ContentEncoding.RAW
-                    },
-                    if (p.size > 3) {
-                        String(Base64.decode(p[3], Base64.NO_WRAP or Base64.NO_PADDING), Charsets.UTF_8)
-                    } else {
-                        null
-                    })
-        }?.toList() ?: listOf()
-    }
-
-    @TypeConverter
-    fun icmpDataListToString(data: List<IcmpData>?): String? =
-            data?.joinToString(ENTRY_SEPARATOR.toString()) {
-                (it.size?.toString() ?: "") + VALUE_SEPARATOR +
-                        (it.count?.toString() ?: "") + VALUE_SEPARATOR +
-                        it.encoding.ordinal + VALUE_SEPARATOR +
-                        Base64.encodeToString(it.content?.toByteArray()
-                                ?: byteArrayOf(), Base64.NO_PADDING or Base64.NO_WRAP)
-            }
 
     companion object {
         const val VALUE_SEPARATOR = ':'
