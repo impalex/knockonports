@@ -2,6 +2,11 @@
 // Created by impa on 07.11.2018.
 //
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-member-init"
+#pragma ide diagnostic ignored "cppcoreguidelines-pro-type-member-init"
+#pragma ide diagnostic ignored "modernize-use-nullptr"
+
 #include "netutil.h"
 
 #include <cstdlib>
@@ -18,8 +23,8 @@
 
 int ping(const char *host, const int size, const int count, jbyte* pattern, jsize pattern_len, const int sleep) {
 
-    struct sockaddr_in addr{};
-    struct icmphdr icmp_header{};
+    struct sockaddr_in addr;
+    struct icmphdr icmp_header;
     int packet_size = size;
     if (packet_size < sizeof(icmp_header))
         packet_size = sizeof(icmp_header);
@@ -73,7 +78,7 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
         struct timeval tout = { 0, 0 };
         memset(&read_set, 0, sizeof(read_set));
         FD_SET(sock, &read_set);
-        rc = select(sock+1, &read_set, nullptr, nullptr, &tout);
+        rc = select(sock+1, &read_set, NULL, NULL, &tout);
         if (rc<0) {
             __android_log_print(ANDROID_LOG_ERROR, "ICMP", "select errno %d %s\n", errno, strerror(errno));
         }
@@ -85,7 +90,7 @@ int ping(const char *host, const int size, const int count, jbyte* pattern, jsiz
 }
 
 int send_tcp_packet(const char *host, const int port) {
-    struct sockaddr_in addr{};
+    struct sockaddr_in addr;
 
     __android_log_print(ANDROID_LOG_INFO, "TCP", "hitting %s:%d", host, port);
 
@@ -114,9 +119,9 @@ int send_tcp_packet(const char *host, const int port) {
 }
 
 extern "C" jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobject  __unused thiz, jstring address, jint size, jint count, jbyteArray pattern, jint sleep) {
-    const char *n_address = env->GetStringUTFChars(address, nullptr);
+    const char *n_address = env->GetStringUTFChars(address, NULL);
 
-    jbyte *const n_pattern = env->GetByteArrayElements(pattern, nullptr);
+    jbyte *const n_pattern = env->GetByteArrayElements(pattern, NULL);
     const jsize patLen = env->GetArrayLength(pattern);
 
     int result = ping(n_address, size, count, n_pattern, patLen, sleep);
@@ -128,7 +133,7 @@ extern "C" jint Java_me_impa_knockonports_service_Knocker_ping(JNIEnv *env, jobj
 }
 
 extern "C" jint Java_me_impa_knockonports_service_Knocker_sendtcp(JNIEnv *env, jobject  __unused thiz, jstring host, jint port) {
-    const char *n_host = env->GetStringUTFChars(host, nullptr);
+    const char *n_host = env->GetStringUTFChars(host, NULL);
 
     int result = send_tcp_packet(n_host, port);
 
@@ -136,3 +141,4 @@ extern "C" jint Java_me_impa_knockonports_service_Knocker_sendtcp(JNIEnv *env, j
 
     return result;
 }
+#pragma clang diagnostic pop

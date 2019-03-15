@@ -1,4 +1,0 @@
-Major update - new sequences!
-You can mix TCP/UDP and ICMP packets altogether in the same sequence.
-You can change the contents of each UDP packet.
-...and killed a few little nasty bugs.

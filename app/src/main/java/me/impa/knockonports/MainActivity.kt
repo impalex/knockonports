@@ -23,6 +23,7 @@ package me.impa.knockonports
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
@@ -326,17 +327,27 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                     val pinnedShortcuts = shortcutManager.pinnedShortcuts
                     val enableShortcuts = mutableListOf<String>()
                     val disableShortcuts = mutableListOf<String>()
+                    val updateShortcuts = mutableListOf<ShortcutInfo>()
                     for (s in pinnedShortcuts) {
                         val id = s?.intent?.getLongExtra(EXTRA_SEQ_ID, 0) ?: continue
-                        if (sequences.any { it.id == id }) {
-                            if (!s.isEnabled)
+                        val shortcut = sequences.firstOrNull { it.id == id }
+                        if (shortcut != null) {
+                            if (!s.isEnabled && !shortcut.name.isNullOrEmpty())
                                 enableShortcuts.add(s.id)
+                            if (shortcut.name != s.shortLabel) {
+                                if (shortcut.name.isNullOrEmpty())
+                                    disableShortcuts.add(s.id)
+                                else if (s.isPinned)
+                                    updateShortcuts.add(Sequence.getShortcutInfo(this, shortcut, false))
+                            }
                         }
                         else {
                             if (s.isEnabled)
                                 disableShortcuts.add(s.id)
                         }
                     }
+                    if (updateShortcuts.any())
+                        shortcutManager.updateShortcuts(updateShortcuts)
                     if (enableShortcuts.any())
                         shortcutManager.enableShortcuts(enableShortcuts)
                     if (disableShortcuts.any())

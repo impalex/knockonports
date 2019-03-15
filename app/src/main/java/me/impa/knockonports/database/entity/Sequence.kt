@@ -70,7 +70,7 @@ data class Sequence(
     companion object {
         const val INVALID_SEQ_ID = -100500L
 
-        fun shortcutId(id: Long, isAuto: Boolean = false) = "KnockShortcut$id${if (!isAuto) "MANUAL" else ""}"
+        fun shortcutId(id: Long, isAuto: Boolean = true) = "KnockShortcut$id${if (!isAuto) "MANUAL" else ""}"
 
         @RequiresApi(Build.VERSION_CODES.N_MR1)
         fun getShortcutInfo(context: Context, sequence: Sequence, isAuto: Boolean = false, iconResource: Int = R.drawable.ic_play_arrow_24dp): ShortcutInfo =

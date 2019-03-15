@@ -80,7 +80,7 @@
     <string name="icmp_type_header">ICMP packet size:</string>
     <string name="action_rate_app">Rate this app…</string>
     <string name="action_create_shortcut">Create shortcut</string>
-    <string name="text_ask_review">If you like this app, please take a moment to rate this app. It won\'t take more than a minute. Thank you for your support!</string>
+    <string name="text_ask_review">If you like this app, please take a moment to rate it. It won\'t take more than a minute. Thank you for your support!</string>
     <string name="action_rate_now">Rate now</string>
     <string name="action_rate_later">Remind later</string>
     <string name="action_rate_disable">No, thanks</string>
