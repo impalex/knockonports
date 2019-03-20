@@ -24,14 +24,54 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="cardStyle">@style/CardViewStyle</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorPrimary">@color/colorTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorTextSecondary</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:itemBackground">@color/colorItemBackground</item>
+        <item name="android:popupBackground">@color/colorItemBackground</item>
+        <item name="dialogBackground">@color/colorBackground</item>
+        <item name="dialogAccent">@color/colorAccent</item>
+        <item name="dialogTextHint">@color/colorTextHint</item>
+        <item name="dialogTextColor">@color/colorText</item>
+        <item name="imageTint">@color/colorImageTint</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorNightPrimary</item>
+        <item name="colorPrimaryDark">@color/colorNightPrimaryDark</item>
+        <item name="colorAccent">@color/colorNightAccent</item>
+        <item name="android:windowBackground">@color/colorNightBackground</item>
+        <item name="cardStyle">@style/CardViewStyle.Dark</item>
+        <item name="android:textColor">@color/colorNightText</item>
+        <item name="android:textColorPrimary">@color/colorNightTextPrimary</item>
+        <item name="android:textColorSecondary">@color/colorNightTextSecondary</item>
+        <item name="android:textColorHint">@color/colorNightTextHint</item>
+        <item name="android:itemBackground">@color/colorNightItemBackground</item>
+        <item name="android:popupBackground">@color/colorNightItemBackground</item>
+        <item name="dialogBackground">@color/colorNightBackground</item>
+        <item name="dialogAccent">@color/colorNightAccent</item>
+        <item name="dialogTextHint">@color/colorNightTextHint</item>
+        <item name="dialogTextColor">@color/colorNightText</item>
+        <item name="imageTint">@color/colorNightImageTint</item>
+    </style>
+
+    <style name="CardViewStyle" parent="CardView">
+        <item name="cardBackgroundColor">@color/colorCardBackground</item>
+    </style>
+
+    <style name="CardViewStyle.Dark" parent="CardView">
+        <item name="cardBackgroundColor">@color/colorNightCardBackground</item>
     </style>
 
     <style name="AppTheme.Transparent" parent="android:Theme">
@@ -53,6 +93,10 @@
         <item name="windowNoTitle">false</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">false</item>
+        <item name="android:windowBackground">?attr/dialogBackground</item>
+        <item name="colorAccent">?attr/dialogAccent</item>
+        <item name="android:textColorHint">?attr/dialogTextHint</item>
+        <item name="android:textColorPrimary">?attr/dialogTextColor</item>
     </style>
 
 </resources>

@@ -39,6 +39,7 @@ import me.impa.knockonports.R
 import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.ext.validate
 import me.impa.knockonports.json.SequenceStep
 import me.impa.knockonports.util.HintManager
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
@@ -83,7 +84,9 @@ class BasicSettingsFragment : Fragment() {
         }*/
 
         addStepsButton.setOnClickListener {
-            val model = SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW)
+            val model = SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
+                icmpSizeOffset = mainViewModel.getDirtySequence().value?.icmpType?.offset ?: 0
+            }
             stepsAdapter.addItem(model)
             scrollView.post {
                 scrollView.fullScroll(View.FOCUS_DOWN)
@@ -99,8 +102,16 @@ class BasicSettingsFragment : Fragment() {
             mainViewModel.getDirtySequence().value?.name = it
         }
 
+        nameEdit.validate {
+            if (it.isEmpty()) getString(R.string.error_empty_sequence_name) else null
+        }
+
         hostEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.host = it
+        }
+
+        hostEdit.validate {
+            if (it.isEmpty()) getString(R.string.error_empty_host) else null
         }
 
     }

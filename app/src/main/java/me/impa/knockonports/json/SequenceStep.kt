@@ -23,10 +23,20 @@ package me.impa.knockonports.json
 
 import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.SequenceStepType
+import kotlin.properties.Delegates
 
 data class SequenceStep(var type: SequenceStepType?, var port: Int?, var icmpSize: Int?, var icmpCount: Int?, var content: String?, var encoding: ContentEncoding?) {
 
+    var onIcmpSizeOffsetChanged: ((Int, Int) -> Unit)? = null
+
     var isExpanded = !content.isNullOrBlank() && type != SequenceStepType.TCP
+
+    private var _icmpSizeOffset: Int = 0
+
+    var icmpSizeOffset: Int by Delegates.observable(_icmpSizeOffset) { _, old, new ->
+        if (old != new)
+            onIcmpSizeOffsetChanged?.invoke(old, new)
+    }
 
     fun isValid() = when (type) {
         SequenceStepType.ICMP -> icmpSize != null

@@ -42,8 +42,7 @@
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -69,7 +68,8 @@
                 android:resource="@xml/knocks_widget_info" />
         </receiver>
 
-        <activity android:name=".widget.KnocksWidgetConfigureActivity">
+        <activity android:name=".widget.KnocksWidgetConfigureActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

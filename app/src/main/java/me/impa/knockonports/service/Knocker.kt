@@ -23,16 +23,19 @@ package me.impa.knockonports.service
 
 import android.content.Context
 import me.impa.knockonports.R
-import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.database.entity.Sequence
-import me.impa.knockonports.fragment.RateAppFragment
+import me.impa.knockonports.util.AppPrefs
 import org.jetbrains.anko.*
-import java.net.*
+import java.net.DatagramPacket
+import java.net.DatagramSocket
+import java.net.InetAddress
+import java.net.UnknownHostException
 
 class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger {
 
     private val _maxSleep = 15000
+    private val _maxIcmpSize = 65515
 
     fun execute() {
         if (sequence.host.isNullOrBlank()) {
@@ -67,14 +70,10 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             return
         }
 
-        val icmpSizeOffset = when (sequence.icmpType) {
-            IcmpType.WITH_IP_AND_ICMP_HEADERS -> -20
-            IcmpType.WITHOUT_HEADERS -> 8
-            else -> 0
-        }
+        val icmpSizeOffset = sequence.icmpType?.offset ?: 0
 
         info { "Knocking to '${sequence.name}'" }
-        RateAppFragment.incKnockCount(context)
+        AppPrefs.incKnockCount(context)
 
         context.runOnUiThread {
             toast(getString(R.string.start_knocking, sequence.name))
@@ -109,8 +108,8 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                         }
                         SequenceStepType.ICMP -> {
                             debug("Knock ICMP")
-                            ping(address.hostAddress, Math.max((it.icmpSize
-                                    ?: 0) + icmpSizeOffset, 0), Math.max(it.icmpCount
+                            ping(address.hostAddress, Math.min(Math.max((it.icmpSize
+                                    ?: 0) + icmpSizeOffset, 0), _maxIcmpSize), Math.max(it.icmpCount
                                     ?: 1, 1), packet, delay.toInt())
                         }
                     }

@@ -41,3 +41,18 @@ fun EditText.afterTextChanged(afterTextChanged: (text: String) -> Unit) {
 
     })
 }
+
+fun EditText.validate(validator: (text: String) -> String?) {
+    this.addTextChangedListener(object : TextWatcher {
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        }
+
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+            this@validate.error = validator.invoke(s?.toString() ?: "")
+        }
+    })
+    this.error = validator.invoke(this.text.toString())
+}

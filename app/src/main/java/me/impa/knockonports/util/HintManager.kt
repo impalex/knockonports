@@ -23,8 +23,6 @@ package me.impa.knockonports.util
 
 import android.content.Context
 import android.os.Handler
-import android.view.View
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.snackbar.Snackbar
 import me.impa.knockonports.App
 import me.impa.knockonports.R
@@ -37,27 +35,21 @@ object HintManager {
         CHECK_ICMP_SIZE
     }
 
-    private const val HINT_PREFS = "me.impa.knockonports.hint"
-
     private var HintMap = Hint.values().associate { it to null as Boolean? }.toMutableMap()
     private val HintResources = mapOf(
             Hint.DELETE_ROW to R.string.hint_delete_step,
             Hint.CHECK_ICMP_SIZE to R.string.hint_icmp_size
     )
 
-    private fun Context.hintPrefs() = this.getSharedPreferences(HINT_PREFS, Context.MODE_PRIVATE)
 
     private fun loadHintState(context: Context, hint: Hint): Boolean {
-        val state = context.hintPrefs().getBoolean(hint.name, false)
+        val state = AppPrefs.getHintState(context, hint)
         HintMap[hint] = state
         return state
     }
 
     private fun isHintShown(context: Context, hint: Hint): Boolean =
             HintMap[hint] ?: loadHintState(context, hint)
-
-    private fun markHintAsShown(context: Context, hint: Hint) =
-        context.hintPrefs().edit().putBoolean(hint.name, true).apply()
 
     fun showHint(context: Context, hint: Hint) {
         if (!HintResources.containsKey(hint) || isHintShown(context, hint))
@@ -69,7 +61,7 @@ object HintManager {
         Handler().postDelayed(Runnable {
             Snackbar.make(view, HintResources[hint]!!, Snackbar.LENGTH_LONG)
                     .setAction(R.string.got_it) {
-                        markHintAsShown(context, hint)
+                        AppPrefs.markHintAsShown(context, hint)
                     }.show()
         }, 500)
     }

@@ -33,6 +33,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import me.impa.knockonports.R
+import me.impa.knockonports.util.AppPrefs
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.toast
 
@@ -57,12 +58,12 @@ class RateAppFragment: DialogFragment(), AnkoLogger {
         }
 
         view.findViewById<Button>(R.id.button_rate_disable).setOnClickListener {
-            turnOffAskReviewDialog(context!!)
+            AppPrefs.turnOffAskReviewDialog(context!!)
             dismiss()
         }
 
         view.findViewById<Button>(R.id.button_rate_later).setOnClickListener {
-            postponeReviewDialog(context!!, POSTPONE_TIME)
+            AppPrefs.postponeReviewDialog(context!!, AppPrefs.POSTPONE_TIME)
             dismiss()
         }
     }
@@ -71,7 +72,7 @@ class RateAppFragment: DialogFragment(), AnkoLogger {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        postponeReviewDialog(this@RateAppFragment.context!!, POSTPONE_TIME_CANCEL)
+        AppPrefs.postponeReviewDialog(this@RateAppFragment.context!!, AppPrefs.POSTPONE_TIME_CANCEL)
     }
 
     override fun onDismiss(dialog: DialogInterface) {
@@ -81,57 +82,19 @@ class RateAppFragment: DialogFragment(), AnkoLogger {
 
     companion object {
         const val FRAGMENT_ASK_REVIEW = "FRAGMENT_ASK_REVIEW"
-        private const val APP_PREFS = "me.impa.knockonports.app"
-        private const val KEY_FIRST_LAUNCH = "CFG_FIRST_LAUNCH"
-        private const val KEY_KNOCK_COUNT = "CFG_KNOCK_COUNT"
-        private const val KEY_DO_NOT_ASK_FOR_REVIEW = "CFG_DO_NOT_ASK_REVIEW"
-        private const val KEY_DO_NOT_ASK_BEFORE = "CFG_DO_NOT_ASK_BEFORE"
-        private const val POSTPONE_TIME = 5*24*60*60*1000L
-        private const val POSTPONE_TIME_START = 7*24*60*60*1000L
-        private const val POSTPONE_TIME_CANCEL = 1*24*60*60*1000L
         private const val KNOCKS_REQUIRED = 20L
-
-        private fun Context.appPrefs() = this.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
-
-        fun checkFirstLaunch(context: Context) {
-            val sharedPrefs = context.appPrefs()
-            val firstLaunch = sharedPrefs.getLong(KEY_FIRST_LAUNCH, 0L)
-            if (firstLaunch == 0L) {
-                sharedPrefs.edit().putLong(KEY_FIRST_LAUNCH, System.currentTimeMillis()).apply()
-                postponeReviewDialog(context, POSTPONE_TIME_START)
-            }
-        }
-        fun incKnockCount(context: Context) {
-            val sharedPrefs = context.appPrefs()
-            val knockCount = sharedPrefs.getLong(KEY_KNOCK_COUNT, 0L)
-            sharedPrefs.edit().putLong(KEY_KNOCK_COUNT, knockCount+1).apply()
-        }
-
-        private fun getKnockCount(context: Context): Long = context.appPrefs().getLong(KEY_KNOCK_COUNT, 0L)
-
-        private fun isAskReviewDialogTurnedOff(context: Context): Boolean = context.appPrefs().getBoolean(KEY_DO_NOT_ASK_FOR_REVIEW, false)
-
-        private fun getAskReviewTime(context: Context): Long = context.appPrefs().getLong(KEY_DO_NOT_ASK_BEFORE, 0L)
-
-        fun turnOffAskReviewDialog(context: Context) {
-            context.appPrefs().edit().putBoolean(KEY_DO_NOT_ASK_FOR_REVIEW, true).apply()
-        }
-
-        fun postponeReviewDialog(context: Context, timeMs: Long) {
-            context.appPrefs().edit().putLong(KEY_DO_NOT_ASK_BEFORE, System.currentTimeMillis() + timeMs).apply()
-        }
 
         fun openPlayMarket(context: Context) {
             try {
                 context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}")))
-                turnOffAskReviewDialog(context)
+                AppPrefs.turnOffAskReviewDialog(context)
             } catch (_: Exception) {
                 context.toast(R.string.error_play_store)
             }
         }
 
-        fun isTimeToAskForReview(context: Context) = !isAskReviewDialogTurnedOff(context)
-                && getKnockCount(context) >= KNOCKS_REQUIRED
-                && System.currentTimeMillis() > getAskReviewTime(context)
+        fun isTimeToAskForReview(context: Context) = !AppPrefs.isAskReviewDialogTurnedOff(context)
+                && AppPrefs.getKnockCount(context) >= KNOCKS_REQUIRED
+                && System.currentTimeMillis() > AppPrefs.getAskReviewTime(context)
     }
 }

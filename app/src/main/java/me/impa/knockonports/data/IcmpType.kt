@@ -22,7 +22,20 @@
 package me.impa.knockonports.data
 
 enum class IcmpType {
-    WITHOUT_HEADERS, WITH_ICMP_HEADER, WITH_IP_AND_ICMP_HEADERS;
+    WITHOUT_HEADERS {
+        override val offset: Int
+            get() = 8
+    },
+    WITH_ICMP_HEADER {
+        override val offset: Int
+            get() = 0
+    },
+    WITH_IP_AND_ICMP_HEADERS {
+        override val offset: Int
+            get() = -20
+    };
+
+    abstract val offset: Int
 
     companion object {
         val values = IcmpType.values()

@@ -24,4 +24,12 @@
     <declare-styleable name="DataEditor">
         <attr name="text_hint" format="reference"/>
     </declare-styleable>
+
+    <attr name="cardStyle" format="reference"/>
+    <attr name="toolbarColor" format="reference"/>
+    <attr name="dialogBackground" format="reference"/>
+    <attr name="dialogAccent" format="reference"/>
+    <attr name="dialogTextHint" format="reference"/>
+    <attr name="dialogTextColor" format="reference"/>
+    <attr name="imageTint" format="reference"/>
 </resources>

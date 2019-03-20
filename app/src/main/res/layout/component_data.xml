@@ -41,7 +41,8 @@
         android:id="@+id/encoding_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"/>
+        android:drawSelectorOnTop="true"
+        android:popupBackground="?android:attr/popupBackground"/>
 
 </merge>
 

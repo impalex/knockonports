@@ -47,6 +47,7 @@
         android:textColor="@color/colorWidgetForeground"
         android:textSize="24sp"
         android:textAlignment="center"
+        android:gravity="center"
         android:textStyle="normal"/>
     <ImageView
         android:id="@+id/widget_right_arrow"

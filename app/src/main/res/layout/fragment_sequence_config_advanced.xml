@@ -63,7 +63,8 @@
                 android:id="@+id/icmp_type_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawSelectorOnTop="true" />
+                android:drawSelectorOnTop="true"
+                android:popupBackground="?android:attr/popupBackground"/>
         </LinearLayout>
 
         <LinearLayout
@@ -91,7 +92,8 @@
                 android:layout_height="wrap_content"
                 android:padding="4dp"
                 app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                android:tint="?attr/imageTint"/>
 
         </LinearLayout>
 

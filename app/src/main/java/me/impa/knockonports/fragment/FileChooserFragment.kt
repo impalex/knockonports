@@ -29,9 +29,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import hendrawd.storageutil.library.StorageUtil
 import me.impa.knockonports.R
 import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.ext.validate
 import me.impa.knockonports.viewadapter.FileItemAdapter
 import java.io.File
 
@@ -72,8 +75,9 @@ class FileChooserFragment: DialogFragment() {
             }
         }
 
+        val storageSelector = view.findViewById<View>(R.id.layout_cur_dir)
         val storageImage = view.findViewById<ImageView>(R.id.image_storage_down)
-        storageImage.setOnClickListener {
+        storageSelector.setOnClickListener {
             if (storageList.isEmpty())
                 return@setOnClickListener
             val menu = PopupMenu(activity, storageImage)
@@ -89,13 +93,22 @@ class FileChooserFragment: DialogFragment() {
             menu.show()
         }
 
-        val editFileName = view.findViewById<EditText>(R.id.edit_file_name)
+        val saveButton = view.findViewById<TextView>(R.id.button_save)
+        val editFileName = view.findViewById<TextInputEditText>(R.id.edit_file_name)
         if (!showFileNameEdit)
-            editFileName.visibility = View.GONE
+            view.findViewById<TextInputLayout>(R.id.edit_file_name_wrapper)?.visibility = View.GONE
         editFileName.setText(fileName)
         editFileName.afterTextChanged { fileName = it }
+        editFileName.validate {
+            if (it.isBlank()) {
+                saveButton.isEnabled = false
+                getString(R.string.error_empty_file_name)
+            } else {
+                saveButton.isEnabled = true
+                null
+            }
+        }
 
-        val saveButton = view.findViewById<TextView>(R.id.button_save)
         if (!showSaveButton)
             saveButton.visibility = View.GONE
         saveButton.setOnClickListener {

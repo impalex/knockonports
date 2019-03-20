@@ -62,7 +62,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         it?.copy()
     }
     private val dirtySteps = Transformations.map(selectedSequence) {
-        it?.steps?.toMutableList() ?: mutableListOf()
+        it?.steps?.onEach { e -> e.icmpSizeOffset = it.icmpType?.offset ?: 0 }?.toMutableList() ?: mutableListOf()
     }
     fun getSequenceList(): LiveData<List<Sequence>> {
         doAsync { savePendingData() }.get()
@@ -107,7 +107,9 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     fun createEmptySequence() {
         selectedSequence.value = Sequence(null, null, null,
                 null, 500, null, null, IcmpType.WITHOUT_HEADERS,
-                listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW)))
+                listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
+                    icmpSizeOffset = IcmpType.WITHOUT_HEADERS.offset
+                }))
     }
 
     fun saveDirtyData() {

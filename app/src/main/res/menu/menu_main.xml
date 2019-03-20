@@ -40,6 +40,11 @@
             android:orderInCategory="3000"
             android:title="@string/action_import"
             app:showAsAction="never"/>
+        <item android:id="@+id/action_theme"
+            android:orderInCategory="3300"
+            android:title="@string/action_dark_theme"
+            android:checkable="true"
+            app:showAsAction="never"/>
     </group>
     <group android:id="@+id/group_rate">
         <item android:id="@+id/action_rate"

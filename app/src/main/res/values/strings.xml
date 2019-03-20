@@ -35,6 +35,7 @@
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
     <string name="action_new_sequence">New Sequence</string>
+    <string name="action_dark_theme">Dark Theme</string>
     <string name="drag_item">Reorganize</string>
     <string name="empty_sequence_warning">%s: empty sequence!</string>
     <string name="start_knocking">Knock-knock-knocking on %s</string>
@@ -92,4 +93,11 @@
     <string name="hint_icmp_size">Сheck «ICMP packet size» in the advanced settings.</string>
     <string name="error_app_launch">Could not launch application «%s»!</string>
     <string name="action_add_step">Add</string>
+    <string name="error_empty_port">Port number cannot be empty</string>
+    <string name="error_invalid_port">Invalid port number</string>
+    <string name="error_empty_sequence_name">Empty sequence name</string>
+    <string name="error_empty_host">Empty hostname or IP address</string>
+    <string name="error_min_icmp_size">Min packet size: %d</string>
+    <string name="error_max_icmp_size">Max packet size: %d</string>
+    <string name="error_empty_file_name">File name cannot be empty</string>
 </resources>

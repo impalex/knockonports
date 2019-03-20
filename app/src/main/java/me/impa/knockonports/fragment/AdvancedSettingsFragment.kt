@@ -59,7 +59,9 @@ class AdvancedSettingsFragment: Fragment() {
             adapter = icmpTypeAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    mainViewModel.getDirtySequence().value?.icmpType = IcmpType.fromOrdinal(position)
+                    val icmpType = IcmpType.fromOrdinal(position)
+                    mainViewModel.getDirtySequence().value?.icmpType = icmpType
+                    mainViewModel.getDirtySteps().value?.forEach { it.icmpSizeOffset = icmpType.offset }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {

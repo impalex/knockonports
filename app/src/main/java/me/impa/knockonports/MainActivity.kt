@@ -41,6 +41,7 @@ import kotlinx.android.synthetic.main.content_main.*
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.expandTo
 import me.impa.knockonports.fragment.*
+import me.impa.knockonports.util.AppPrefs
 import me.impa.knockonports.viewmodel.MainViewModel
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -68,13 +69,19 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     private val isInstalledFromPlayStore by lazy {
         arrayOf("com.android.vending", "com.google.android.feedback").contains(packageManager.getInstallerPackageName(packageName))
     }
+    private val currentTheme by lazy { AppPrefs.getCurrentTheme(this) }
 
     private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        RateAppFragment.checkFirstLaunch(this)
+        when(currentTheme) {
+            AppPrefs.THEME_DARK -> setTheme(R.style.AppTheme_Dark)
+            else -> setTheme(R.style.AppTheme)
+        }
+
+        AppPrefs.checkFirstLaunch(this)
 
         installShortcutWatcher()
 
@@ -188,6 +195,12 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             R.id.action_export -> exportData()
             R.id.action_import -> importData()
             R.id.action_rate -> RateAppFragment.openPlayMarket(this)
+            R.id.action_theme -> {
+                AppPrefs.saveCurrentTheme(this, if (currentTheme == AppPrefs.THEME_DARK) AppPrefs.THEME_DEFAULT else AppPrefs.THEME_DARK)
+                finish()
+                startActivity(intent)
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+            }
         }
         return true
     }
@@ -275,6 +288,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
+        menu.findItem(R.id.action_theme).isChecked = currentTheme == AppPrefs.THEME_DARK
         val selectedSequenceState = mainViewModel.getSelectedSequence().value == null
         menu.setGroupVisible(R.id.group_settings, !selectedSequenceState)
         menu.setGroupVisible(R.id.group_main, selectedSequenceState)

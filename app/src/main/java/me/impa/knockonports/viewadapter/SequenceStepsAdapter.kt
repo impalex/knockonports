@@ -39,6 +39,7 @@ import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
+import me.impa.knockonports.ext.validate
 import me.impa.knockonports.json.SequenceStep
 import me.impa.knockonports.util.HintManager
 import org.jetbrains.anko.AnkoLogger
@@ -141,9 +142,35 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         holder.portEdit.afterTextChanged {
             items[holder.adapterPosition].port = it.toIntOrNull()
         }
+        if (step.type != SequenceStepType.ICMP) {
+            holder.portEdit.validate {
+                when (it.toIntOrNull()) {
+                    null -> context.getString(R.string.error_empty_port)
+                    in 1..65535 -> null
+                    else -> context.getString(R.string.error_invalid_port)
+                }
+            }
+        } else holder.portEdit.error = null
         holder.icmpSizeEdit.afterTextChanged {
             items[holder.adapterPosition].icmpSize = it.toIntOrNull()
         }
+        if (step.type == SequenceStepType.ICMP) {
+            holder.icmpSizeEdit.validate {
+                val offset = items[holder.adapterPosition].icmpSizeOffset
+                val size = (it.toIntOrNull() ?: 0) + offset - 8
+                if (size < 0)
+                    context.getString(R.string.error_min_icmp_size, 8 - offset)
+                else if (size > 65507)
+                    context.getString(R.string.error_max_icmp_size, 65507 + 8 - offset)
+                else
+                    null
+
+            }
+        } else holder.icmpSizeEdit.error = null
+        step.onIcmpSizeOffsetChanged = if (step.type == SequenceStepType.ICMP) { _, _ ->
+            notifyItemChanged(holder.adapterPosition)
+        } else null
+
         holder.icmpCountEdit.afterTextChanged {
             items[holder.adapterPosition].icmpCount = it.toIntOrNull()
         }

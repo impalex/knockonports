@@ -84,4 +84,12 @@
     <string name="hint_icmp_size">Проверьте размер пакета ICMP в расширенных настройках.</string>
     <string name="error_app_launch">Не удалось запустить приложение «%s»!</string>
     <string name="action_add_step">Добавить</string>
+    <string name="error_empty_port">Не указан номер порта</string>
+    <string name="error_invalid_port">Некорректный номер порта</string>
+    <string name="error_empty_sequence_name">Введите название последовательности</string>
+    <string name="error_empty_host">Введите имя хоста или его IP</string>
+    <string name="error_min_icmp_size">Минимальный размер: %d</string>
+    <string name="error_max_icmp_size">Максимальный размер: %d</string>
+    <string name="error_empty_file_name">Имя файла не может быть пустым</string>
+    <string name="action_dark_theme">Тёмная тема</string>
 </resources>
