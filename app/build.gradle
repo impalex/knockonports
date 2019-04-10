@@ -50,8 +50,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 18
-        versionName "1.1.1"
+        versionCode 19
+        versionName "1.1.2"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -109,15 +109,16 @@ dependencies {
     implementation "org.jetbrains.anko:anko-commons:0.10.5"
 
     implementation 'androidx.appcompat:appcompat:1.0.2'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
-    implementation 'com.google.android.material:material:1.1.0-alpha04'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha4'
+    implementation 'com.google.android.material:material:1.1.0-alpha05'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
-    implementation "androidx.room:room-runtime:2.1.0-alpha04"
+    implementation "androidx.room:room-runtime:2.1.0-alpha06"
     implementation "androidx.lifecycle:lifecycle-extensions:2.0.0"
     implementation "com.jaredrummler:colorpicker:1.0.2"
     implementation "com.github.hendrawd:StorageUtil:1.0.0"
-    kapt "androidx.room:room-compiler:2.1.0-alpha04"
+    implementation "com.twofortyfouram:android-plugin-client-sdk-for-locale:4.0.3"
+    kapt "androidx.room:room-compiler:2.1.0-alpha06"
     kapt "androidx.lifecycle:lifecycle-compiler:2.0.0"
 }
 

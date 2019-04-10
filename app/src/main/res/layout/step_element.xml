@@ -55,7 +55,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:popupBackground="?android:attr/popupBackground"/>
+            android:popupBackground="?attr/popupBackground"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/port_wrapper"

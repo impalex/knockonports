@@ -104,7 +104,7 @@
                 android:layout_below="@id/text_host"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="@style/ColoredButton"
                 android:text="@string/action_knock"/>
 
         </RelativeLayout>

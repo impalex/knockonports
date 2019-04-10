@@ -36,12 +36,13 @@
         <item name="android:textColorSecondary">@color/colorTextSecondary</item>
         <item name="android:textColorHint">@color/colorTextHint</item>
         <item name="android:itemBackground">@color/colorItemBackground</item>
-        <item name="android:popupBackground">@color/colorItemBackground</item>
+        <item name="popupBackground">@color/colorItemBackground</item>
         <item name="dialogBackground">@color/colorBackground</item>
         <item name="dialogAccent">@color/colorAccent</item>
         <item name="dialogTextHint">@color/colorTextHint</item>
         <item name="dialogTextColor">@color/colorText</item>
         <item name="imageTint">@color/colorImageTint</item>
+        <item name="buttonTextColor">@color/colorButtonText</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -58,12 +59,23 @@
         <item name="android:textColorSecondary">@color/colorNightTextSecondary</item>
         <item name="android:textColorHint">@color/colorNightTextHint</item>
         <item name="android:itemBackground">@color/colorNightItemBackground</item>
-        <item name="android:popupBackground">@color/colorNightItemBackground</item>
+        <item name="popupBackground">@color/colorNightItemBackground</item>
         <item name="dialogBackground">@color/colorNightBackground</item>
         <item name="dialogAccent">@color/colorNightAccent</item>
         <item name="dialogTextHint">@color/colorNightTextHint</item>
         <item name="dialogTextColor">@color/colorNightText</item>
         <item name="imageTint">@color/colorNightImageTint</item>
+        <item name="buttonTextColor">@color/colorNightButtonText</item>
+    </style>
+
+    <style name="AppTheme.Tasker" parent="AppTheme">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
+    </style>
+
+    <style name="AppTheme.Tasker.Dark" parent="AppTheme.Dark">
+        <item name="windowActionBar">true</item>
+        <item name="windowNoTitle">false</item>
     </style>
 
     <style name="CardViewStyle" parent="CardView">
@@ -97,6 +109,10 @@
         <item name="colorAccent">?attr/dialogAccent</item>
         <item name="android:textColorHint">?attr/dialogTextHint</item>
         <item name="android:textColorPrimary">?attr/dialogTextColor</item>
+    </style>
+
+    <style name="ColoredButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:textColor">?attr/buttonTextColor</item>
     </style>
 
 </resources>

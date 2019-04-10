@@ -23,13 +23,12 @@ package me.impa.knockonports.viewmodel
 
 import android.app.Application
 import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import android.content.ComponentName
-import android.content.Intent
-import android.os.Build
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
 import me.impa.knockonports.data.ContentEncoding
@@ -39,9 +38,9 @@ import me.impa.knockonports.database.KnocksRepository
 import me.impa.knockonports.database.converter.SequenceConverters
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.default
+import me.impa.knockonports.ext.startSequence
 import me.impa.knockonports.json.SequenceData
 import me.impa.knockonports.json.SequenceStep
-import me.impa.knockonports.service.KnockerService
 import me.impa.knockonports.widget.KnocksWidget
 import org.jetbrains.anko.*
 import java.io.File
@@ -133,15 +132,8 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
 
     fun knock(sequence: Sequence) {
         val seqId = sequence.id ?: return
-
         val application = getApplication<Application>()
-        val intent = Intent(application, KnockerService::class.java)
-        intent.putExtra(KnockerService.SEQUENCE_ID, seqId)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            application.startForegroundService(intent)
-        } else {
-            application.startService(intent)
-        }
+        application.startSequence(seqId)
     }
 
     private fun savePendingData() {

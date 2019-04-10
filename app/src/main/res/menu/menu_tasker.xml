@@ -20,18 +20,12 @@
   ~ under the License.
   -->
 
-<resources>
-    <declare-styleable name="DataEditor">
-        <attr name="text_hint" format="reference"/>
-    </declare-styleable>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <attr name="cardStyle" format="reference"/>
-    <attr name="toolbarColor" format="reference"/>
-    <attr name="dialogBackground" format="reference"/>
-    <attr name="dialogAccent" format="reference"/>
-    <attr name="dialogTextHint" format="reference"/>
-    <attr name="dialogTextColor" format="reference"/>
-    <attr name="imageTint" format="reference"/>
-    <attr name="popupBackground" format="reference"/>
-    <attr name="buttonTextColor" format="reference"/>
-</resources>
+    <item
+        android:id="@+id/tasker_cancel"
+        app:showAsAction="always"
+        android:title="@string/button_cancel"/>
+
+</menu>

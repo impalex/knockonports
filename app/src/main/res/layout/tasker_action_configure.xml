@@ -20,32 +20,30 @@
   ~ under the License.
   -->
 
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/data_content_wrapper"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/data_content_edit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxLines="1"
-            android:inputType="textNoSuggestions"/>
-    </com.google.android.material.textfield.TextInputLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <Spinner
-        android:id="@+id/encoding_spinner"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:popupBackground="?attr/popupBackground"/>
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        tools:ignore="UselessParent">
 
-</merge>
+        <TextView
+            android:id="@+id/knock_on_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/knock_on"/>
 
+        <Spinner
+            android:id="@+id/knock_on_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:popupBackground="?attr/popupBackground"/>
 
+    </LinearLayout>
 
-
+</LinearLayout>

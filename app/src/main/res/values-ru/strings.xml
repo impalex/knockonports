@@ -80,7 +80,7 @@
     <string name="title_ask_review">Нравится приложение?</string>
     <string name="error_play_store">Не удалось открыть Play Store</string>
     <string name="data_editor_default_hint">Данные</string>
-    <string name="hint_delete_step">Вы можете удалить элемент проведя его в сторону.</string>
+    <string name="hint_delete_step">Вы можете удалить элемент свайпом его в сторону.</string>
     <string name="hint_icmp_size">Проверьте размер пакета ICMP в расширенных настройках.</string>
     <string name="error_app_launch">Не удалось запустить приложение «%s»!</string>
     <string name="action_add_step">Добавить</string>
@@ -92,4 +92,7 @@
     <string name="error_max_icmp_size">Максимальный размер: %d</string>
     <string name="error_empty_file_name">Имя файла не может быть пустым</string>
     <string name="action_dark_theme">Тёмная тема</string>
+    <string name="knock_on">Постучать в:</string>
+    <string name="tasker_action_blurb">Постучать в «%s»</string>
+    <string name="unknown_sequence">Неизвестная последовательность</string>
 </resources>

@@ -1,3 +1,2 @@
-New: Dark theme
-Sequence validation
-Bug fixes
+New: Tasker integration - automate your knocks!
+Minor bug fixes

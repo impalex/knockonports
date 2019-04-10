@@ -33,6 +33,7 @@ import me.impa.knockonports.R
 import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
+import me.impa.knockonports.ext.startSequence
 import me.impa.knockonports.service.KnockerService
 import org.jetbrains.anko.doAsyncResult
 
@@ -98,14 +99,8 @@ class KnocksWidget : AppWidgetProvider() {
     }
 
     private fun knockOn(context: Context, widgetId: Int) {
-        val intent = Intent(context, KnockerService::class.java)
         val sequenceId = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
-        intent.putExtra(KnockerService.SEQUENCE_ID, sequenceId)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent)
-        } else {
-            context.startService(intent)
-        }
+        context.startSequence(sequenceId)
     }
 
     companion object {

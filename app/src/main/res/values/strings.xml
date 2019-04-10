@@ -100,4 +100,7 @@
     <string name="error_min_icmp_size">Min packet size: %d</string>
     <string name="error_max_icmp_size">Max packet size: %d</string>
     <string name="error_empty_file_name">File name cannot be empty</string>
+    <string name="knock_on">Knock on:</string>
+    <string name="tasker_action_blurb">Knock on «%s»</string>
+    <string name="unknown_sequence">Unknown sequence</string>
 </resources>

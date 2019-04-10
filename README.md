@@ -3,12 +3,13 @@
 
 Features:
 * UDP/TCP/ICMP sequences
-* interpacket delays
+* customizable content of UDP and ICMP packets
 * ability to start another application after a knock
+* Tasker integration
+* interpacket delays
+* sequence shortcuts
 * customizable widget
 * data export/import
-* customizable content of UDP and ICMP packets
-* sequence shortcuts
 * free, no ads, open source
 
 <a href="https://play.google.com/store/apps/details?id=me.impa.knockonports&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" target="_blank">
