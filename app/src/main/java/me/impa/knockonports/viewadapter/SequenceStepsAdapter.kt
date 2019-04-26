@@ -64,9 +64,15 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.step_element, parent, false))
 
+    fun ViewHolder.selectedItem(): SequenceStep? = try {
+        items[this.adapterPosition]
+    } catch (_: ArrayIndexOutOfBoundsException) {
+        null
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val step = items[holder.adapterPosition]
+        val step = holder.selectedItem() ?: return
         holder.dragHandle.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) onStartDrag?.invoke(holder)
             return@setOnTouchListener false
@@ -83,8 +89,9 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                     val type = SequenceStepType.fromOrdinal(pos)
-                    if (items[holder.adapterPosition].type != type) {
-                        items[holder.adapterPosition].type = type
+                    val selectedItem = holder.selectedItem() ?: return
+                    if (selectedItem.type != type) {
+                        selectedItem.type = type
                         notifyItemChanged(holder.adapterPosition)
                         if (type == SequenceStepType.ICMP)
                             HintManager.showHint(context, HintManager.Hint.CHECK_ICMP_SIZE)
@@ -116,10 +123,13 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         if (holder.stepDataButton.isEnabled) {
             holder.stepDataButton.isChecked = step.isExpanded
             holder.stepDataButton.setOnCheckedChangeListener { _, isChecked ->
-                if (items[holder.adapterPosition].isExpanded != isChecked) {
-                    items[holder.adapterPosition].isExpanded = isChecked
-                    Handler().post {
-                        notifyItemChanged(holder.adapterPosition)
+                run {
+                    val selectedItem = holder.selectedItem() ?: return@run
+                    if (selectedItem.isExpanded != isChecked) {
+                        selectedItem.isExpanded = isChecked
+                        Handler().post {
+                            notifyItemChanged(holder.adapterPosition)
+                        }
                     }
                 }
             }
@@ -134,13 +144,13 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         holder.icmpSizeEdit.setText(step.icmpSize?.toString())
 
         holder.dataEdit.onEncodingSelected = {
-            items[holder.adapterPosition].encoding = it
+            holder.selectedItem()?.encoding = it
         }
         holder.dataEdit.onTextChanged = {
-            items[holder.adapterPosition].content = it
+            holder.selectedItem()?.content = it
         }
         holder.portEdit.afterTextChanged {
-            items[holder.adapterPosition].port = it.toIntOrNull()
+            holder.selectedItem()?.port = it.toIntOrNull()
         }
         if (step.type != SequenceStepType.ICMP) {
             holder.portEdit.validate {
@@ -152,11 +162,11 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
             }
         } else holder.portEdit.error = null
         holder.icmpSizeEdit.afterTextChanged {
-            items[holder.adapterPosition].icmpSize = it.toIntOrNull()
+            holder.selectedItem()?.icmpSize = it.toIntOrNull()
         }
         if (step.type == SequenceStepType.ICMP) {
             holder.icmpSizeEdit.validate {
-                val offset = items[holder.adapterPosition].icmpSizeOffset
+                val offset = holder.selectedItem()?.icmpSizeOffset ?: return@validate null
                 val size = (it.toIntOrNull() ?: 0) + offset - 8
                 if (size < 0)
                     context.getString(R.string.error_min_icmp_size, 8 - offset)
@@ -172,7 +182,7 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         } else null
 
         holder.icmpCountEdit.afterTextChanged {
-            items[holder.adapterPosition].icmpCount = it.toIntOrNull()
+            holder.selectedItem()?.icmpCount = it.toIntOrNull()
         }
     }
 

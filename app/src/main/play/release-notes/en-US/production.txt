@@ -1,2 +1,1 @@
-New: Tasker integration - automate your knocks!
 Minor bug fixes

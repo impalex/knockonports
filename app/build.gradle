@@ -50,8 +50,8 @@ android {
         applicationId "me.impa.knockonports"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 19
-        versionName "1.1.2"
+        versionCode 20
+        versionName "1.1.2a"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {

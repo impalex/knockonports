@@ -23,6 +23,8 @@ package me.impa.knockonports.util
 
 import android.content.Context
 import android.os.Handler
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import me.impa.knockonports.App
 import me.impa.knockonports.R
@@ -58,10 +60,12 @@ object HintManager {
         val view = (context.applicationContext as App).currentActivity?.contentView ?: return
 
         HintMap[hint] = true
-        Handler().postDelayed(Runnable {
-            Snackbar.make(view, HintResources[hint]!!, Snackbar.LENGTH_LONG)
+        Handler().postDelayed({
+            Snackbar.make(view, HintResources.getValue(hint), Snackbar.LENGTH_LONG)
                     .setAction(R.string.got_it) {
                         AppPrefs.markHintAsShown(context, hint)
+                    }.apply {
+                        getView().findViewById<TextView>(R.id.snackbar_text)?.setTextColor(ContextCompat.getColor(context, R.color.colorSnackbarText))
                     }.show()
         }, 500)
     }
