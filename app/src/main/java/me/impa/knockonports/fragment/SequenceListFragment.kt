@@ -27,6 +27,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -37,7 +38,7 @@ import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
-class SequenceListFragment: androidx.fragment.app.Fragment() {
+class SequenceListFragment: Fragment() {
 
     private val sequenceAdapter by lazy { SequenceAdapter(context!!) }
     private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
@@ -48,13 +49,13 @@ class SequenceListFragment: androidx.fragment.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recycler = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recycler_view_sequences)
+        val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_sequences)
 
-        recycler.addOnScrollListener(object : androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (!twoPaneMode || mainViewModel.getDirtySequence().value == null)
-                    mainViewModel.getFabVisible().value = dy <= 0
+                    mainViewModel.setFabVisible(dy <= 0)
             }
         })
 
@@ -69,7 +70,7 @@ class SequenceListFragment: androidx.fragment.app.Fragment() {
         }
 
         sequenceAdapter.onClick = {
-            mainViewModel.getSelectedSequence().value = it
+            mainViewModel.setSelectedSequence(it)
         }
 
         sequenceAdapter.onCreateShortcut = {
@@ -82,7 +83,7 @@ class SequenceListFragment: androidx.fragment.app.Fragment() {
         }
 
         sequenceAdapter.onMove = { _, _ ->
-            mainViewModel.getPendingDataChanges().value = sequenceAdapter.items.asSequence().filter { it.id != null }.map { it.id!! }.toList()
+            mainViewModel.setPendingDataChanges(sequenceAdapter.items.asSequence().filter { it.id != null }.map { it.id!! }.toList())
         }
 
         recycler.adapter = sequenceAdapter
@@ -90,7 +91,7 @@ class SequenceListFragment: androidx.fragment.app.Fragment() {
         val touchHelper = ItemTouchHelper(KnockerItemTouchHelper(sequenceAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0))
         touchHelper.attachToRecyclerView(recycler)
 
-        mainViewModel.getSequenceList().observe(this, Observer {
+        mainViewModel.getSequenceList().observe(viewLifecycleOwner, Observer {
             sequenceAdapter.items = it?.toMutableList() ?: mutableListOf()
         })
 

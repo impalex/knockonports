@@ -21,9 +21,7 @@
 
 package me.impa.knockonports.component
 
-import android.annotation.TargetApi
 import android.content.Context
-import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -32,13 +30,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import androidx.annotation.StyleRes
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import me.impa.knockonports.R
 import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.ext.afterTextChanged
-import org.jetbrains.anko.attr
 
 class DataEditor @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
 

@@ -24,11 +24,9 @@ package me.impa.knockonports
 import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
-import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import me.impa.knockonports.database.entity.Sequence
-import me.impa.knockonports.json.SequenceData
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class StartKnockActivity : AppCompatActivity() {
@@ -43,7 +41,7 @@ class StartKnockActivity : AppCompatActivity() {
             mainViewModel.knock(seq)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 val shortcutManager = getSystemService(ShortcutManager::class.java)
-                shortcutManager.reportShortcutUsed(Sequence.shortcutId(seqId))
+                shortcutManager?.reportShortcutUsed(Sequence.shortcutId(seqId))
             }
         }
         finish()

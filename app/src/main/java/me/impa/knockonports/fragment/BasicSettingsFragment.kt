@@ -63,18 +63,18 @@ class BasicSettingsFragment : Fragment() {
 
         val stepsAdapter = SequenceStepsAdapter(context!!)
 
-        mainViewModel.getDirtySequence().observe(this, Observer {
+        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
             nameEdit.setText(it?.name)
             hostEdit.setText(it?.host)
         })
 
-        mainViewModel.getDirtySteps().observe(this, Observer {
+        mainViewModel.getDirtySteps().observe(viewLifecycleOwner, Observer {
             stepsAdapter.items = it ?: mutableListOf()
         })
 
         stepsRecyclerView.layoutManager = LinearLayoutManager(activity)
         stepsRecyclerView.adapter = stepsAdapter
-        stepsRecyclerView.addItemDecoration(androidx.recyclerview.widget.DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        stepsRecyclerView.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         val icmpTouchHelper = ItemTouchHelper(KnockerItemTouchHelper(stepsAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT))
         icmpTouchHelper.attachToRecyclerView(stepsRecyclerView)

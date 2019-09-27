@@ -42,9 +42,6 @@ interface SequenceDao {
     @Query("SELECT * FROM tbSequence ORDER BY _order")
     fun findAllSequences(): LiveData<List<Sequence>>
 
-    @Query("SELECT * FROM tbSequence ORDER BY _order")
-    fun getSequenceList(): List<Sequence>
-
     @Query("SELECT * FROM tbSequence WHERE (_order > (SELECT _order FROM tbSequence WHERE _id=:id)) ORDER BY _order ASC LIMIT 1")
     fun getNextSequence(id: Long): Sequence?
 

@@ -23,7 +23,6 @@ package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -31,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.step_element.view.*
 import me.impa.knockonports.R
@@ -43,7 +41,6 @@ import me.impa.knockonports.ext.validate
 import me.impa.knockonports.json.SequenceStep
 import me.impa.knockonports.util.HintManager
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 
 class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceStepsAdapter.ViewHolder>(), ItemTouchHelperAdapter, AnkoLogger {
     override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
@@ -168,12 +165,11 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
             holder.icmpSizeEdit.validate {
                 val offset = holder.selectedItem()?.icmpSizeOffset ?: return@validate null
                 val size = (it.toIntOrNull() ?: 0) + offset - 8
-                if (size < 0)
-                    context.getString(R.string.error_min_icmp_size, 8 - offset)
-                else if (size > 65507)
-                    context.getString(R.string.error_max_icmp_size, 65507 + 8 - offset)
-                else
-                    null
+                when {
+                    size < 0 -> context.getString(R.string.error_min_icmp_size, 8 - offset)
+                    size > 65507 -> context.getString(R.string.error_max_icmp_size, 65507 + 8 - offset)
+                    else -> null
+                }
 
             }
         } else holder.icmpSizeEdit.error = null

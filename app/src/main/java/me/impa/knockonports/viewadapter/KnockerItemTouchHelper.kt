@@ -28,7 +28,7 @@ import me.impa.knockonports.ext.ItemTouchHelperAdapter
 class KnockerItemTouchHelper(private val adapter: ItemTouchHelperAdapter, dragDirections: Int, swipeDirections: Int):
         ItemTouchHelper.SimpleCallback(dragDirections, swipeDirections) {
 
-    override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         adapter.onItemDismiss(viewHolder.layoutPosition)
     }
 

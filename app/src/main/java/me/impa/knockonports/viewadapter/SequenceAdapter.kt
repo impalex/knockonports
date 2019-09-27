@@ -72,7 +72,7 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
         holder.moreIcon.setOnClickListener {
             val popupMenu = PopupMenu(context, holder.moreIcon)
             popupMenu.inflate(R.menu.menu_sequence)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !context.getSystemService(ShortcutManager::class.java).isRequestPinShortcutSupported ||
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || context.getSystemService(ShortcutManager::class.java)?.isRequestPinShortcutSupported != true ||
                     sequence.name.isNullOrEmpty()) {
                 popupMenu.menu.setGroupVisible(R.id.group_shortcut, false)
             }

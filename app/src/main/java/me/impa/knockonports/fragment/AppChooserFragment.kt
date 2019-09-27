@@ -43,7 +43,7 @@ class AppChooserFragment: DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog)
+        setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -66,7 +66,7 @@ class AppChooserFragment: DialogFragment() {
             doAsync {
                 val appList = AppData.loadInstalledApps(activity!!)
                 uiThread {
-                    mainViewModel.getInstalledApps().value = appList
+                    mainViewModel.setInstalledApps(appList)
                     appAdapter.apps = appList
                     progressBar.visibility = View.GONE
                     listView.visibility = View.VISIBLE

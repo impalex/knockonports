@@ -66,7 +66,7 @@ class SequenceConfigFragment: Fragment() {
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                mainViewModel.getSettingsTabIndex().value = tabLayout.selectedTabPosition
+                mainViewModel.setSettingsTabIndex(tabLayout.selectedTabPosition)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -76,7 +76,7 @@ class SequenceConfigFragment: Fragment() {
             }
         })
 
-        mainViewModel.getDirtySequence().observe(this, Observer {
+        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
             view.visibility = if (it == null) {
                 View.INVISIBLE
             } else {

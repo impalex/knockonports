@@ -22,6 +22,7 @@
 package me.impa.knockonports.service
 
 import android.content.Context
+import android.net.ConnectivityManager
 import me.impa.knockonports.R
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.database.entity.Sequence
@@ -38,6 +39,14 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
     private val _maxIcmpSize = 65515
 
     fun execute() {
+        if (!isNetworkAvailable()) {
+            warn { "Network not available" }
+            context.runOnUiThread {
+                toast(R.string.error_network_not_avail)
+            }
+            return
+        }
+
         if (sequence.host.isNullOrBlank()) {
             warn { "Empty host '${sequence.name}'" }
             context.runOnUiThread {
@@ -80,8 +89,8 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
         }
         debug { "Remote address $address" }
 
-        val udpSocket = if (steps.any{it.type == SequenceStepType.UDP}) DatagramSocket() else null
-        val delay = Math.min(Math.max(sequence.delay ?: 0, 0), _maxSleep).toLong()
+        val udpSocket = if (steps.any { it.type == SequenceStepType.UDP }) DatagramSocket() else null
+        val delay = (sequence.delay ?: 0).coerceAtLeast(0).coerceAtMost(_maxSleep).toLong()
 
         try {
             var cnt = 0
@@ -89,7 +98,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                 info { "Knock #${++cnt}" }
                 val packet = if (it.type == SequenceStepType.TCP || it.content.isNullOrBlank()) {
                     ByteArray(0)
-                } else  {
+                } else {
                     it.encoding?.decode(it.content) ?: ByteArray(0)
                 }
                 try {
@@ -108,9 +117,10 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                         }
                         SequenceStepType.ICMP -> {
                             debug("Knock ICMP")
-                            ping(address.hostAddress, Math.min(Math.max((it.icmpSize
-                                    ?: 0) + icmpSizeOffset, 0), _maxIcmpSize), Math.max(it.icmpCount
-                                    ?: 1, 1), packet, delay.toInt())
+                            ping(address.hostAddress,
+                                    ((it.icmpSize
+                                            ?: 0) + icmpSizeOffset).coerceAtLeast(0).coerceAtMost(_maxIcmpSize),
+                                    (it.icmpCount ?: 1).coerceAtLeast(1), packet, delay.toInt())
                         }
                     }
                 } catch (e: Exception) {
@@ -119,8 +129,7 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
             }
         } catch (e: Exception) {
             warn("Knocking error", e)
-        }
-        finally {
+        } finally {
             udpSocket?.close()
         }
 
@@ -142,6 +151,12 @@ class Knocker(val context: Context, private val sequence: Sequence): AnkoLogger 
                 }
             }
         }
+    }
+
+    private fun isNetworkAvailable() = try {
+        (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetworkInfo?.isConnected == true
+    } catch (_: Exception) {
+        false
     }
 
     private external fun ping(address: String, size: Int, count: Int, pattern: ByteArray, sleep: Int): Int

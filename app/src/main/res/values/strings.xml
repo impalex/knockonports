@@ -44,6 +44,7 @@
     <string name="error_resolve">Unable to resolve host \'%s\'!</string>
     <string name="error_export">ERROR: Unable to export data!</string>
     <string name="error_import">ERROR: Unable to import data!</string>
+    <string name="error_network_not_avail">ERROR: Network connection not available!</string>
     <string name="host_not_set">Host is not set!</string>
     <string name="action_export">Export</string>
     <string name="action_import">Import</string>
@@ -56,7 +57,6 @@
     <string name="title_file_name">File Name</string>
     <string name="export_success">Exported successfully to %s</string>
     <string name="export_file_template" translatable="false">knocks_%s.json</string>
-    <string name="import_success">%1$d entries were imported from %2$s</string>
     <string name="appwidget_text">Sequence Name</string>
     <string name="configure">Configure Widget</string>
     <string name="add_widget">Add widget</string>
@@ -103,4 +103,8 @@
     <string name="knock_on">Knock on:</string>
     <string name="tasker_action_blurb">Knock on «%s»</string>
     <string name="unknown_sequence">Unknown sequence</string>
+    <plurals name="import_success">
+        <item quantity="one">%1$d entry was imported from %2$s</item>
+        <item quantity="other">%1$d entries were imported from %2$s</item>
+    </plurals>
 </resources>

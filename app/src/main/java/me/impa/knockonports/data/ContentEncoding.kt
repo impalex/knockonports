@@ -36,6 +36,7 @@ enum class ContentEncoding {
                     byteArrayOf()
                 }
     },
+    @Suppress("unused")
     HEX {
         override fun decode(data: String?): ByteArray =
                 try {
@@ -52,8 +53,8 @@ enum class ContentEncoding {
     abstract fun decode(data: String?): ByteArray
 
     companion object {
-        val values = ContentEncoding.values()
+        val values = values()
 
-        fun fromOrdinal(ordinal: Int): ContentEncoding = if (ordinal in 0 until values.size) values[ordinal] else RAW
+        fun fromOrdinal(ordinal: Int): ContentEncoding = if (ordinal in values.indices) values[ordinal] else RAW
     }
 }

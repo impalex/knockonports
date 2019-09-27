@@ -134,8 +134,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                     val oldPorts = mutableListOf<SequenceStep>()
                     val oldIcmp = mutableListOf<SequenceStep>()
                     while (reader.hasNext()) {
-                        val key = reader.nextName()
-                        when(key) {
+                        when(reader.nextName()) {
                             "name" -> seq.name = readString(reader)
                             "host" -> seq.host = readString(reader)
                             "timeout" -> readInt(reader) // Deprecated. Just read and ignore.
@@ -154,8 +153,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                     while (reader.hasNext()) {
                                         val port = SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW)
                                         while (reader.hasNext()) {
-                                            val portKey = reader.nextName()
-                                            when(portKey) {
+                                            when(reader.nextName()) {
                                                 "value" -> port.port = readInt(reader)
                                                 "type" -> port.type = SequenceStepType.fromOrdinal(readInt(reader) ?: 0)
                                             }
@@ -174,8 +172,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                     while (reader.hasNext()) {
                                         val icmpData = SequenceStep(SequenceStepType.ICMP, null, null, null, null, ContentEncoding.RAW)
                                         while (reader.hasNext()) {
-                                            val icmpKey = reader.nextName()
-                                            when(icmpKey) {
+                                            when(reader.nextName()) {
                                                 "size" -> icmpData.icmpSize = readInt(reader)
                                                 "encoding" -> icmpData.encoding = ContentEncoding.fromOrdinal(readInt(reader) ?: 0)
                                                 "content" -> icmpData.content = readString(reader)
@@ -196,8 +193,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                     while (reader.hasNext()) {
                                         val step = SequenceStep(SequenceStepType.UDP, null, null, null, null, null)
                                         while (reader.hasNext()) {
-                                            val stepKey = reader.nextName()
-                                            when (stepKey) {
+                                            when (reader.nextName()) {
                                                 "type" -> step.type = SequenceStepType.fromOrdinal(readInt(reader) ?: 0)
                                                 "port" -> step.port = readInt(reader)
                                                 "icmp_size" -> step.icmpSize = readInt(reader)

@@ -1,1 +1,2 @@
+Network connectivity check
 Minor bug fixes

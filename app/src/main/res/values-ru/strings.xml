@@ -51,7 +51,6 @@
     <string name="button_cancel">Отмена</string>
     <string name="title_file_name">Имя файла</string>
     <string name="export_success">Успешно экспортировано в %s</string>
-    <string name="import_success">%1$d последовательностей импортировано из %2$s</string>
     <string name="appwidget_text">Название последовательности</string>
     <string name="configure">Конфигурация виджета</string>
     <string name="add_widget">Добавить виджет</string>
@@ -95,4 +94,11 @@
     <string name="knock_on">Постучать в:</string>
     <string name="tasker_action_blurb">Постучать в «%s»</string>
     <string name="unknown_sequence">Неизвестная последовательность</string>
+    <plurals name="import_success">
+        <item quantity="one">%1$d последовательность импортирована из %2$s</item>
+        <item quantity="few">%1$d последовательности импортированы из %2$s</item>
+        <item quantity="many">%1$d последовательностей импортировано из %2$s</item>
+        <item quantity="other">%1$d последовательностей импортировано из %2$s</item>
+    </plurals>
+    <string name="error_network_not_avail">ОШИБКА: Недоступно сетевое подключение!</string>
 </resources>

@@ -30,6 +30,7 @@ enum class IcmpType {
         override val offset: Int
             get() = 0
     },
+    @Suppress("unused")
     WITH_IP_AND_ICMP_HEADERS {
         override val offset: Int
             get() = -20
@@ -38,8 +39,8 @@ enum class IcmpType {
     abstract val offset: Int
 
     companion object {
-        val values = IcmpType.values()
+        val values = values()
 
-        fun fromOrdinal(ordinal: Int): IcmpType = if (ordinal in 0 until values.size) values[ordinal] else WITH_ICMP_HEADER
+        fun fromOrdinal(ordinal: Int): IcmpType = if (ordinal in values.indices) values[ordinal] else WITH_ICMP_HEADER
     }
 }

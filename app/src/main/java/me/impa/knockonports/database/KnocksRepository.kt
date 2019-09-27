@@ -31,9 +31,6 @@ class KnocksRepository(context: Context) {
     private val sequenceDao by lazy { db.sequenceDao() }
     private val sequenceList by lazy { sequenceDao.findAllSequences() }
 
-    init {
-    }
-
     fun getSequences(): LiveData<List<Sequence>> = sequenceList
 
     fun findSequence(id: Long): Sequence? = sequenceDao.findSequenceById(id)

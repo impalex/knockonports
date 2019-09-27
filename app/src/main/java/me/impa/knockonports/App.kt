@@ -47,7 +47,7 @@ class App : Application() {
             val importance = NotificationManager.IMPORTANCE_LOW
             val channel = NotificationChannel(KnockerService.CHANNEL_ID, name, importance)
             channel.description = description
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
+            getSystemService(NotificationManager::class.java)?.createNotificationChannel(channel)
         }
     }
 

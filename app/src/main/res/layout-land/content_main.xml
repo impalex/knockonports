@@ -27,23 +27,25 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main"
     android:orientation="horizontal"
-    android:baselineAligned="false"
-    android:id="@+id/land_layout_root">
+    android:baselineAligned="false">
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/scroll_seq_list">
+        android:id="@+id/scroll_seq_list"
+        tools:ignore="InconsistentLayout">
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/fragment_seq_list" />
+            android:id="@+id/fragment_seq_list"
+            tools:ignore="InconsistentLayout" />
 
     </ScrollView>
     <FrameLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="0"
-        android:id="@+id/fragment_seq_config" />
+        android:id="@+id/fragment_seq_config"
+        tools:ignore="InconsistentLayout" />
 </LinearLayout>

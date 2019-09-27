@@ -47,7 +47,7 @@
             android:id="@+id/image_storage_down"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
+            app:srcCompat="@drawable/id_down_arrow"
             tools:ignore="ContentDescription"
             android:tint="?attr/imageTint"/>
     </LinearLayout>

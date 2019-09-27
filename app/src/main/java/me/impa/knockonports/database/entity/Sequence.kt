@@ -74,7 +74,7 @@ data class Sequence(
 
         @RequiresApi(Build.VERSION_CODES.N_MR1)
         fun getShortcutInfo(context: Context, sequence: Sequence, isAuto: Boolean = false, iconResource: Int = R.drawable.ic_play_arrow_24dp): ShortcutInfo =
-                ShortcutInfo.Builder(context, Sequence.shortcutId(sequence.id!!, isAuto))
+                ShortcutInfo.Builder(context, shortcutId(sequence.id!!, isAuto))
                         .setShortLabel(sequence.name!!)
                         .setLongLabel(sequence.name!!)
                         .setIcon(Icon.createWithResource(context, iconResource))

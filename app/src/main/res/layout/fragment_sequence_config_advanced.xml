@@ -36,7 +36,6 @@
         android:paddingBottom="16dp">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/sequence_delay_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_delay"
@@ -91,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="4dp"
-                app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
+                app:srcCompat="@drawable/id_down_arrow"
                 tools:ignore="ContentDescription"
                 android:tint="?attr/imageTint"/>
 

@@ -24,8 +24,8 @@ package me.impa.knockonports.data
 enum class SequenceStepType {
     UDP, TCP, ICMP;
     companion object {
-        val values = SequenceStepType.values()
+        val values = values()
 
-        fun fromOrdinal(ordinal: Int) = if (ordinal in 0 until values.size) values[ordinal] else UDP
+        fun fromOrdinal(ordinal: Int) = if (ordinal in values.indices) values[ordinal] else UDP
     }
 }

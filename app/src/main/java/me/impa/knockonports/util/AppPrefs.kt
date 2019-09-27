@@ -38,7 +38,7 @@ object AppPrefs {
 
     const val THEME_DEFAULT = "DEFAULT"
     const val THEME_DARK = "DARK"
-    const val KEY_APP_THEME = "CFG_APP_THEME"
+    private const val KEY_APP_THEME = "CFG_APP_THEME"
 
     private fun Context.appPrefs() = this.getSharedPreferences(APP_PREFS, Context.MODE_PRIVATE)
     private fun Context.hintPrefs() = this.getSharedPreferences(HINT_PREFS, Context.MODE_PRIVATE)

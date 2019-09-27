@@ -68,19 +68,37 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         return sequenceList
     }
 
-    fun getSelectedSequence(): MutableLiveData<Sequence?> = selectedSequence
+    fun getSelectedSequence(): LiveData<Sequence?> = selectedSequence
+
+    fun setSelectedSequence(sequence: Sequence?) {
+        selectedSequence.value = sequence
+    }
 
     fun getDirtySteps(): LiveData<MutableList<SequenceStep>> = dirtySteps
 
     fun getDirtySequence(): LiveData<Sequence?> = dirtySequence
 
-    fun getSettingsTabIndex(): MutableLiveData<Int> = settingsTabIndex
+    fun getSettingsTabIndex(): LiveData<Int> = settingsTabIndex
 
-    fun getFabVisible(): MutableLiveData<Boolean> = fabVisible
+    fun setSettingsTabIndex(index: Int) {
+        settingsTabIndex.value = index
+    }
 
-    fun getInstalledApps(): MutableLiveData<List<AppData>?> = installedApps
+    fun getFabVisible(): LiveData<Boolean> = fabVisible
 
-    fun getPendingDataChanges(): MutableLiveData<List<Long>> = pendingOrderChanges
+    fun setFabVisible(isVisible: Boolean) {
+        fabVisible.value = isVisible
+    }
+
+    fun getInstalledApps(): LiveData<List<AppData>?> = installedApps
+
+    fun setInstalledApps(appList: List<AppData>?) {
+        installedApps.value = appList
+    }
+
+    fun setPendingDataChanges(changes: List<Long>) {
+        pendingOrderChanges.value = changes
+    }
 
     fun findSequence(id: Long): Sequence? = doAsyncResult { repository.findSequence(id) }.get()
 
@@ -104,11 +122,11 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     }
 
     fun createEmptySequence() {
-        selectedSequence.value = Sequence(null, null, null,
+        setSelectedSequence(Sequence(null, null, null,
                 null, 500, null, null, IcmpType.WITHOUT_HEADERS,
                 listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
                     icmpSizeOffset = IcmpType.WITHOUT_HEADERS.offset
-                }))
+                })))
     }
 
     fun saveDirtyData() {
@@ -190,7 +208,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                     repository.saveSequence(seq)
                 }
                 uiThread {
-                    application.toast(application.resources.getString(R.string.import_success, data.size, fileName))
+                    application.toast(application.resources.getQuantityString(R.plurals.import_success, data.size, data.size, fileName))
                 }
             } catch (e: Exception) {
                 warn("Unable to import data", e)

@@ -34,7 +34,6 @@ import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
 import me.impa.knockonports.ext.startSequence
-import me.impa.knockonports.service.KnockerService
 import org.jetbrains.anko.doAsyncResult
 
 class KnocksWidget : AppWidgetProvider() {
@@ -135,8 +134,8 @@ class KnocksWidget : AppWidgetProvider() {
 
             val buttonColor = KnocksWidgetConfigureActivity.loadButtonsPref(context, appWidgetId)
 
-            updateImage(context, views, R.id.widget_right_arrow, R.drawable.ic_keyboard_arrow_right_black_24dp, R.mipmap.ic_right_arrow, buttonColor)
-            updateImage(context, views, R.id.widget_left_arrow, R.drawable.ic_keyboard_arrow_left_black_24dp, R.mipmap.ic_left_arrow, buttonColor)
+            updateImage(context, views, R.id.widget_right_arrow, R.drawable.ic_right_arrow_x, R.mipmap.ic_right_arrow, buttonColor)
+            updateImage(context, views, R.id.widget_left_arrow, R.drawable.ic_left_arrow_x, R.mipmap.ic_left_arrow, buttonColor)
 
             views.setOnClickPendingIntent(R.id.widget_left_arrow, getPendingIntent(context, ACTION_PREV_SEQ, appWidgetId))
             views.setOnClickPendingIntent(R.id.widget_right_arrow, getPendingIntent(context, ACTION_NEXT_SEQ, appWidgetId))

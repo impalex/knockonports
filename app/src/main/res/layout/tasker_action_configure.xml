@@ -33,7 +33,6 @@
         tools:ignore="UselessParent">
 
         <TextView
-            android:id="@+id/knock_on_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/knock_on"/>

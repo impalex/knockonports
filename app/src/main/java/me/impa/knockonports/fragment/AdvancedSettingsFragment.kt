@@ -70,7 +70,7 @@ class AdvancedSettingsFragment: Fragment() {
             }
         }
 
-        mainViewModel.getDirtySequence().observe(this, Observer {
+        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
             delayEdit.setText(it?.delay?.toString())
             icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
             showAppName(it?.application, it?.applicationName)

@@ -129,11 +129,11 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                 if (twoPaneMode) {
                     fragment_seq_config?.expandTo(0f, EXPAND_DURATION)
                     scroll_seq_list?.expandTo(1f, EXPAND_DURATION)
-                    mainViewModel.getFabVisible().value = true
+                    mainViewModel.setFabVisible(true)
                 } else {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 }
-                mainViewModel.getSettingsTabIndex().value = 0
+                mainViewModel.setSettingsTabIndex(0)
             } else {
                 if (twoPaneMode) {
                     if (it.id == null) {
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                         fragment_seq_config?.expandTo(2f, EXPAND_DURATION)
                         scroll_seq_list?.expandTo(1f, EXPAND_DURATION)
                     }
-                    mainViewModel.getFabVisible().value = false
+                    mainViewModel.setFabVisible(false)
                 } else {
                     supportFragmentManager.beginTransaction()
                             .setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right, R.anim.slide_in_right, R.anim.slide_out_left)
@@ -160,13 +160,13 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             supportFragmentManager.addOnBackStackChangedListener {
                 when (supportFragmentManager.findFragmentByTag(FRAGMENT_SEQ_LIST)?.isVisible) {
                     true -> {
-                        mainViewModel.getSelectedSequence().value = null
-                        mainViewModel.getFabVisible().value = true
+                        mainViewModel.setSelectedSequence(null)
+                        mainViewModel.setFabVisible(true)
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
                         supportActionBar?.setTitle(R.string.app_name)
                     }
                     else -> {
-                        mainViewModel.getFabVisible().value = false
+                        mainViewModel.setFabVisible(false)
                         supportActionBar?.setDisplayHomeAsUpEnabled(true)
                         supportActionBar?.title = null
                     }
@@ -186,10 +186,10 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            android.R.id.home -> mainViewModel.getSelectedSequence().value = null
+            android.R.id.home -> mainViewModel.setSelectedSequence(null)
             R.id.action_done -> {
                 mainViewModel.saveDirtyData()
-                mainViewModel.getSelectedSequence().value = null
+                mainViewModel.setSelectedSequence(null)
             }
             R.id.action_new_sequence -> mainViewModel.createEmptySequence()
             R.id.action_export -> exportData()
@@ -207,7 +207,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onBackPressed() {
         if (twoPaneMode && mainViewModel.getSelectedSequence().value != null) {
-            mainViewModel.getSelectedSequence().value = null
+            mainViewModel.setSelectedSequence(null)
         } else
             super.onBackPressed()
     }
@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             mainViewModel.getSequenceList().observe(this, Observer { sequences ->
                 if (sequences == null)
                     return@Observer
-                val shortcutManager = getSystemService(ShortcutManager::class.java)
+                val shortcutManager = getSystemService(ShortcutManager::class.java) ?: return@Observer
                 if (sequences.count() == 0) {
                     shortcutManager.removeAllDynamicShortcuts()
                 } else {

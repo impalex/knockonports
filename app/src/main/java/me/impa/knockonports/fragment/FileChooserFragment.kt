@@ -54,7 +54,7 @@ class FileChooserFragment: DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(androidx.fragment.app.DialogFragment.STYLE_NORMAL, R.style.CustomDialog)
+        setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -66,7 +66,7 @@ class FileChooserFragment: DialogFragment() {
         listFiles.adapter = fileItemAdapter
         fileItemAdapter.onSelected = {
             when {
-                it.name == ".." -> navigateTo(File(currentDir).parent)
+                it.name == ".." -> navigateTo(File(currentDir!!).parent)
                 it.isDirectory -> navigateTo(it.canonicalPath)
                 else -> {
                     onSelected?.invoke(it.canonicalPath)
@@ -131,7 +131,7 @@ class FileChooserFragment: DialogFragment() {
     }
 
     private fun navigateTo(dir: String) {
-        val directory = (if (dir == "..") File(currentDir).parentFile else File(dir))
+        val directory = (if (dir == "..") File(currentDir!!).parentFile else File(dir))
         if (!directory.canRead())
             return
         currentDir = directory.canonicalPath
@@ -162,7 +162,7 @@ fun FragmentActivity.fileChooser(init: FileChooserFragment.() -> Unit): FileChoo
             if (prev != null) {
                 ft.remove(prev)
             }
-            ft.commit()
+            ft.commitAllowingStateLoss()
             show(this@fileChooser.supportFragmentManager, FileChooserFragment.FRAGMENT_FILE_CHOOSER)
         }
 
