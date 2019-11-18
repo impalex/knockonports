@@ -27,6 +27,7 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -317,10 +318,13 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         if (permissions.size == grantResults.size && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
-            when (requestCode) {
-                REQUEST_EXPORT -> exportData()
-                REQUEST_IMPORT -> importData()
-            }
+            // Delayed coz of android 6 bug - https://issuetracker.google.com/issues/37067655
+            Handler().postDelayed({
+                when (requestCode) {
+                    REQUEST_EXPORT -> exportData()
+                    REQUEST_IMPORT -> importData()
+                }
+            }, 100);
         }
     }
 
