@@ -107,4 +107,19 @@
         <item quantity="one">%1$d entry was imported from %2$s</item>
         <item quantity="other">%1$d entries were imported from %2$s</item>
     </plurals>
+    <string name="hide_details">Hide details in the sequence list</string>
+    <string name="action_log">Log</string>
+    <string name="log_unknown">Unknown event</string>
+    <string name="log_knock">Knock \'%1$s\' [%2$s] (%3$s→%4$s)</string>
+    <string name="log_error_network">Network connection not available</string>
+    <string name="log_error_invalid_host">Sequence \'%s\': invalid host</string>
+    <string name="log_error_resolve_host">%2$s</string>
+    <string name="log_error_empty_sequence">Empty sequence \'%s\'</string>
+    <string name="log_error_unknown">Unknown error: %s</string>
+    <string name="log_sequence_saved">Saved sequence \'%s\'</string>
+    <string name="log_sequence_deleted">Deleted sequence \'%s\'</string>
+    <string name="log_export">Export to %1$s (%2$s sequences)</string>
+    <string name="log_import">Import from %1$s (%2$s sequences)</string>
+    <string name="log_error_export">Export to %1$s: %2$s</string>
+    <string name="log_error_import">Import from %1$s: %2$s</string>
 </resources>

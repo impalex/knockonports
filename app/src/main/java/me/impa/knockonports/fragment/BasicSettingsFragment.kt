@@ -29,7 +29,7 @@ import android.widget.Button
 import android.widget.ScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,7 +48,7 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class BasicSettingsFragment : Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
     private val nameEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_name) }
     private val hostEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_host) }
     private val scrollView by lazy { view!!.findViewById<ScrollView>(R.id.basic_settings_view) }
@@ -84,7 +84,9 @@ class BasicSettingsFragment : Fragment() {
         }*/
 
         addStepsButton.setOnClickListener {
-            val model = SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
+            val lastStepType = stepsAdapter.items.lastOrNull()?.type ?: SequenceStepType.UDP
+
+            val model = SequenceStep(lastStepType, null, null, null, null, ContentEncoding.RAW).apply {
                 icmpSizeOffset = mainViewModel.getDirtySequence().value?.icmpType?.offset ?: 0
             }
             stepsAdapter.addItem(model)

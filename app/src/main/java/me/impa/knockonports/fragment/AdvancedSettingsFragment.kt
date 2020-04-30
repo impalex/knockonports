@@ -22,7 +22,6 @@
 package me.impa.knockonports.fragment
 
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import com.google.android.material.textfield.TextInputEditText
 import androidx.fragment.app.Fragment
@@ -30,18 +29,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
 import me.impa.knockonports.R
+import me.impa.knockonports.data.DescriptionType
 import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class AdvancedSettingsFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
     private val delayEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_delay) }
     private val appNameText by lazy { view!!.findViewById<TextView>(R.id.text_app_name) }
     private val downArrow by lazy { view!!.findViewById<ImageView>(R.id.image_app_down) }
     private val icmpTypeSpinner by lazy { view!!.findViewById<Spinner>(R.id.icmp_type_spinner) }
+    private val hideDetailsCheckBox by lazy { view!!.findViewById<CheckBox>(R.id.checkbox_hide_details) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_sequence_config_advanced, container, false)
@@ -73,6 +75,8 @@ class AdvancedSettingsFragment: Fragment() {
         mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
             delayEdit.setText(it?.delay?.toString())
             icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
+            hideDetailsCheckBox.isChecked = (it?.descriptionType == DescriptionType.HIDE)
+            view.jumpDrawablesToCurrentState()
             showAppName(it?.application, it?.applicationName)
         })
 
@@ -81,6 +85,10 @@ class AdvancedSettingsFragment: Fragment() {
 
         delayEdit.afterTextChanged {
             mainViewModel.getDirtySequence().value?.delay = it.toIntOrNull()
+        }
+
+        hideDetailsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            mainViewModel.getDirtySequence().value?.descriptionType = if (isChecked) DescriptionType.HIDE else DescriptionType.DEFAULT
         }
     }
 

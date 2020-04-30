@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019 Alexander Yaburov
+  ~ Copyright (c) 2020 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -20,19 +20,25 @@
   ~ under the License.
   -->
 
-<resources>
-    <declare-styleable name="DataEditor">
-        <attr name="text_hint" format="reference"/>
-    </declare-styleable>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <attr name="dividerColor" format="reference"/>
-    <attr name="cardStyle" format="reference"/>
-    <attr name="toolbarColor" format="reference"/>
-    <attr name="dialogBackground" format="reference"/>
-    <attr name="dialogAccent" format="reference"/>
-    <attr name="dialogTextHint" format="reference"/>
-    <attr name="dialogTextColor" format="reference"/>
-    <attr name="imageTint" format="reference"/>
-    <attr name="popupBackground" format="reference"/>
-    <attr name="buttonTextColor" format="reference"/>
-</resources>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_sequences"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="96dp"
+        />
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0"
+        android:id="@+id/fragment_seq_config"
+        tools:ignore="InconsistentLayout" />
+
+</LinearLayout>

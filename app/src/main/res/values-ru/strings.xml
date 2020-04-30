@@ -101,4 +101,19 @@
         <item quantity="other">%1$d последовательностей импортировано из %2$s</item>
     </plurals>
     <string name="error_network_not_avail">ОШИБКА: Недоступно сетевое подключение!</string>
+    <string name="hide_details">Скрывать подробное описание в списке последовательностей</string>
+    <string name="action_log">Журнал</string>
+    <string name="log_unknown">Неизвестное событие</string>
+    <string name="log_knock">Стук \'%1$s\' [%2$s] (%3$s→%4$s)</string>
+    <string name="log_error_network">Сетевое подключение недоступно</string>
+    <string name="log_error_invalid_host">Последовательность \'%s\': неверное имя хоста</string>
+    <string name="log_error_resolve_host">%2$s</string>
+    <string name="log_error_empty_sequence">Пустая последовательность \'%s\'</string>
+    <string name="log_error_unknown">Неизвестная ошибка: %s</string>
+    <string name="log_sequence_saved">Сохранена последовательность \'%s\'</string>
+    <string name="log_sequence_deleted">Удалена последовательность \'%s\'</string>
+    <string name="log_export">Экспорт в %1$s (%2$s последовательностей)</string>
+    <string name="log_import">Импорт из %1$s (%2$s последовательностей)</string>
+    <string name="log_error_export">Экспорт в %1$s: %2$s</string>
+    <string name="log_error_import">Импорт из %1$s: %2$s</string>
 </resources>

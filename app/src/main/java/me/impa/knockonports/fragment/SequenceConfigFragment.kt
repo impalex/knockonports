@@ -27,7 +27,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import me.impa.knockonports.R
 import me.impa.knockonports.component.HackyViewPager
@@ -36,7 +36,7 @@ import me.impa.knockonports.viewmodel.MainViewModel
 
 class SequenceConfigFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_sequence_config, container, false)

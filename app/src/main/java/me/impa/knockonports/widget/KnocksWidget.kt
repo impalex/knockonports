@@ -29,12 +29,12 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.widget.RemoteViews
+import kotlinx.coroutines.runBlocking
 import me.impa.knockonports.R
 import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
 import me.impa.knockonports.ext.startSequence
-import org.jetbrains.anko.doAsyncResult
 
 class KnocksWidget : AppWidgetProvider() {
 
@@ -79,9 +79,9 @@ class KnocksWidget : AppWidgetProvider() {
         val curSeq = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
         val db = KnocksDatabase.getInstance(context)
         val sequence = if (curSeq == INVALID_SEQ_ID) {
-            doAsyncResult { db?.sequenceDao()?.getFirstSequence() }.get()
+            runBlocking { db?.sequenceDao()?.getFirstSequence() }
         } else {
-            doAsyncResult { db?.sequenceDao()?.getNextSequence(curSeq) ?: db?.sequenceDao()?.getFirstSequence() }.get()
+            runBlocking { db?.sequenceDao()?.getNextSequence(curSeq) ?: db?.sequenceDao()?.getFirstSequence() }
         } ?: return
         KnocksWidgetConfigureActivity.saveSeqPref(context, widgetId, sequence.id!!)
     }
@@ -90,9 +90,9 @@ class KnocksWidget : AppWidgetProvider() {
         val curSeq = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
         val db = KnocksDatabase.getInstance(context)
         val sequence = if (curSeq == INVALID_SEQ_ID) {
-            doAsyncResult { db?.sequenceDao()?.getFirstSequence() }.get()
+            runBlocking { db?.sequenceDao()?.getFirstSequence() }
         } else {
-            doAsyncResult { db?.sequenceDao()?.getPrevSequence(curSeq) ?: db?.sequenceDao()?.getLastSequence() }.get()
+            runBlocking { db?.sequenceDao()?.getPrevSequence(curSeq) ?: db?.sequenceDao()?.getLastSequence() }
         } ?: return
         KnocksWidgetConfigureActivity.saveSeqPref(context, widgetId, sequence.id!!)
     }
@@ -118,10 +118,10 @@ class KnocksWidget : AppWidgetProvider() {
             val seqId = KnocksWidgetConfigureActivity.loadSeqPref(context, appWidgetId)
             var sequence: Sequence? = null
             if (seqId != INVALID_SEQ_ID) {
-                sequence = doAsyncResult { db?.sequenceDao()?.findSequenceById(seqId) }.get()
+                sequence = runBlocking { db?.sequenceDao()?.findSequenceById(seqId) }
             }
             if (sequence == null) {
-                sequence = doAsyncResult { db?.sequenceDao()?.getFirstSequence() }.get()
+                sequence = runBlocking { db?.sequenceDao()?.getFirstSequence() }
                 if (sequence != null)
                     KnocksWidgetConfigureActivity.saveSeqPref(context, appWidgetId, sequence.id!!)
             }

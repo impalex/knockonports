@@ -25,13 +25,13 @@ import android.content.Context
 import android.os.Bundle
 import com.twofortyfouram.assertion.BundleAssertions
 import com.twofortyfouram.spackle.AppBuildInfo
+import me.impa.knockonports.util.Logging
+import me.impa.knockonports.util.error
 import net.jcip.annotations.ThreadSafe
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 import java.lang.AssertionError
 
 @ThreadSafe
-object KnockerBundleValues: AnkoLogger {
+object KnockerBundleValues: Logging {
     private const val BUNDLE_EXTRA_LONG_SEQUENCE_ID = "me.impa.knockonports.setting.sequence.extra.LONG_IDENTIFIER"
 
     private const val BUNDLE_EXTRA_INT_VERSION_CODE = "me.impa.knockonports.setting.sequence.extra.INT_VERSION_CODE"

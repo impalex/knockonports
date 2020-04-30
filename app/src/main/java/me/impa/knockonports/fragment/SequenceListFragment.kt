@@ -27,21 +27,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.ext.expandTo
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
+private const val EXPAND_DURATION = 300L
+
 class SequenceListFragment: Fragment() {
 
     private val sequenceAdapter by lazy { SequenceAdapter(context!!) }
-    private val mainViewModel by lazy { ViewModelProviders.of(activity!!).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -94,6 +98,27 @@ class SequenceListFragment: Fragment() {
         mainViewModel.getSequenceList().observe(viewLifecycleOwner, Observer {
             sequenceAdapter.items = it?.toMutableList() ?: mutableListOf()
         })
+
+        if (twoPaneMode) {
+            childFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_seq_config, SequenceConfigFragment())
+                    .commit()
+            val detailsFrame = view.findViewById<FrameLayout>(R.id.fragment_seq_config)
+            mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
+                if (it==null) {
+                    detailsFrame?.expandTo(0f, EXPAND_DURATION)
+                    recycler.expandTo(1f, EXPAND_DURATION)
+                } else {
+                    if (it.id == null) {
+                        detailsFrame?.expandTo(1f, EXPAND_DURATION)
+                        recycler?.expandTo(0f, EXPAND_DURATION)
+                    } else {
+                        detailsFrame?.expandTo(2f, EXPAND_DURATION)
+                        recycler?.expandTo(1f, EXPAND_DURATION)
+                    }
+                }
+            })
+        }
 
 
     }

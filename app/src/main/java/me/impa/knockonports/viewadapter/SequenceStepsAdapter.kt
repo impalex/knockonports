@@ -40,9 +40,8 @@ import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.ext.validate
 import me.impa.knockonports.json.SequenceStep
 import me.impa.knockonports.util.HintManager
-import org.jetbrains.anko.AnkoLogger
 
-class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceStepsAdapter.ViewHolder>(), ItemTouchHelperAdapter, AnkoLogger {
+class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceStepsAdapter.ViewHolder>(), ItemTouchHelperAdapter {
     override var onStartDrag: ((RecyclerView.ViewHolder) -> Unit)? = null
 
     var items: MutableList<SequenceStep> = mutableListOf()

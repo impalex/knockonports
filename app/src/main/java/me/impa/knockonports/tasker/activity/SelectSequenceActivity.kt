@@ -28,20 +28,20 @@ import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.twofortyfouram.locale.sdk.client.ui.activity.AbstractAppCompatPluginActivity
 import me.impa.knockonports.R
 import me.impa.knockonports.tasker.bundle.KnockerBundleValues
 import me.impa.knockonports.util.AppPrefs
+import me.impa.knockonports.util.Logging
+import me.impa.knockonports.util.error
 import me.impa.knockonports.viewmodel.MainViewModel
 import net.jcip.annotations.NotThreadSafe
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.error
 
 @NotThreadSafe
-class SelectSequenceActivity : AbstractAppCompatPluginActivity(), AnkoLogger {
+class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     private val sequenceSpinner by lazy { findViewById<Spinner>(R.id.knock_on_spinner) }
 

@@ -22,20 +22,19 @@
 package me.impa.knockonports.fragment
 
 import android.app.Dialog
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.ProgressBar
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.*
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
 import me.impa.knockonports.viewadapter.AppListAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 class AppChooserFragment: DialogFragment() {
 
@@ -53,7 +52,7 @@ class AppChooserFragment: DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val appAdapter = AppListAdapter(context!!).apply { onSelected = this@AppChooserFragment.onSelected }
-        val mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        val mainViewModel = ViewModelProvider(activity!!).get(MainViewModel::class.java)
         val listView = view.findViewById<ListView>(R.id.list_apps)
 
         listView.adapter = appAdapter
@@ -63,14 +62,14 @@ class AppChooserFragment: DialogFragment() {
 
         if (apps == null) {
             listView.visibility = View.GONE
-            doAsync {
-                val appList = AppData.loadInstalledApps(activity!!)
-                uiThread {
-                    mainViewModel.setInstalledApps(appList)
-                    appAdapter.apps = appList
-                    progressBar.visibility = View.GONE
-                    listView.visibility = View.VISIBLE
+            CoroutineScope(Dispatchers.Main).launch {
+                val appList = withContext(Dispatchers.Default) {
+                    AppData.loadInstalledApps(activity!!)
                 }
+                mainViewModel.setInstalledApps(appList)
+                appAdapter.apps = appList
+                progressBar.visibility = View.GONE
+                listView.visibility = View.VISIBLE
             }
         } else {
             progressBar.visibility = View.GONE

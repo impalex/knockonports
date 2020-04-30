@@ -35,18 +35,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.content_main.*
 import me.impa.knockonports.database.entity.Sequence
-import me.impa.knockonports.ext.expandTo
 import me.impa.knockonports.fragment.*
 import me.impa.knockonports.util.AppPrefs
+import me.impa.knockonports.util.Logging
+import me.impa.knockonports.util.info
+import me.impa.knockonports.util.warn
 import me.impa.knockonports.viewmodel.MainViewModel
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.warn
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -54,13 +52,13 @@ private const val REQUEST_EXPORT = 2000
 private const val REQUEST_IMPORT = 3000
 private const val FRAGMENT_SEQ_LIST = "SEQUENCE_LIST"
 private const val FRAGMENT_SEQ_CFG = "SEQUENCE_CONFIG"
+private const val FRAGMENT_LOG = "LOG"
 private const val STATE_EXPORT_FILENAME = "STATE_EXPORT_FILENAME"
 private const val STATE_EXPORT_DIR = "STATE_EXPORT_DIR"
 private const val STATE_IMPORT_DIR = "STATE_IMPORT_DIR"
 const val EXTRA_SEQ_ID = "EXTRA_SEQ_ID"
-private const val EXPAND_DURATION = 300L
 
-class MainActivity : AppCompatActivity(), AnkoLogger {
+class MainActivity : AppCompatActivity(), Logging {
 
     private var menu: Menu? = null
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
@@ -72,7 +70,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     }
     private val currentTheme by lazy { AppPrefs.getCurrentTheme(this) }
 
-    private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +91,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             mainViewModel.createEmptySequence()
         }
         mainViewModel.getSelectedSequence().observe(this, Observer {
+            checkMenuGroups(noSelectedSeq = it == null)
+            /*
             if (it == null) {
                 menu?.setGroupVisible(R.id.group_settings, false)
                 if (!twoPaneMode) {
@@ -105,12 +105,12 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                     menu?.setGroupVisible(R.id.group_rate, false)
                 }
                 menu?.setGroupVisible(R.id.group_settings, true)
-            }
+            }*/
         })
 
         supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
 
-        if (!twoPaneMode && savedInstanceState != null) {
+        if (savedInstanceState != null) {
             supportFragmentManager.executePendingTransactions()
             val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
             if (fragment != null)
@@ -128,8 +128,6 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         mainViewModel.getDirtySequence().observe(this, Observer {
             if (it == null) {
                 if (twoPaneMode) {
-                    fragment_seq_config?.expandTo(0f, EXPAND_DURATION)
-                    scroll_seq_list?.expandTo(1f, EXPAND_DURATION)
                     mainViewModel.setFabVisible(true)
                 } else {
                     supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -137,13 +135,6 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                 mainViewModel.setSettingsTabIndex(0)
             } else {
                 if (twoPaneMode) {
-                    if (it.id == null) {
-                        fragment_seq_config?.expandTo(1f, EXPAND_DURATION)
-                        scroll_seq_list?.expandTo(0f, EXPAND_DURATION)
-                    } else {
-                        fragment_seq_config?.expandTo(2f, EXPAND_DURATION)
-                        scroll_seq_list?.expandTo(1f, EXPAND_DURATION)
-                    }
                     mainViewModel.setFabVisible(false)
                 } else {
                     supportFragmentManager.beginTransaction()
@@ -155,14 +146,25 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             }
         })
 
+        mainViewModel.getLogVisible().observe(this, Observer {
+            checkMenuGroups(logVisibility = it)
+            if (it) {
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, LogFragment())
+                        .addToBackStack(FRAGMENT_LOG)
+                        .commit()
+            }
+        })
+
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SequenceListFragment(), FRAGMENT_SEQ_LIST).commit()
         if (!twoPaneMode) {
-            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SequenceListFragment(), FRAGMENT_SEQ_LIST).commit()
 
             supportFragmentManager.addOnBackStackChangedListener {
                 when (supportFragmentManager.findFragmentByTag(FRAGMENT_SEQ_LIST)?.isVisible) {
                     true -> {
                         mainViewModel.setSelectedSequence(null)
                         mainViewModel.setFabVisible(true)
+                        mainViewModel.setLogVisible(false)
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
                         supportActionBar?.setTitle(R.string.app_name)
                     }
@@ -174,11 +176,6 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                 }
             }
 
-        } else {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_seq_list, SequenceListFragment())
-                    .replace(R.id.fragment_seq_config, SequenceConfigFragment())
-                    .commit()
         }
 
         if (isInstalledFromPlayStore && RateAppFragment.isTimeToAskForReview(this))
@@ -202,15 +199,20 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                 startActivity(intent)
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
             }
+            R.id.action_log -> mainViewModel.setLogVisible(true)
         }
         return true
     }
 
     override fun onBackPressed() {
-        if (twoPaneMode && mainViewModel.getSelectedSequence().value != null) {
-            mainViewModel.setSelectedSequence(null)
-        } else
-            super.onBackPressed()
+        when {
+            mainViewModel.getLogVisible().value == true -> {
+                mainViewModel.setLogVisible(false)
+                super.onBackPressed()
+            }
+            twoPaneMode && mainViewModel.getSelectedSequence().value != null -> mainViewModel.setSelectedSequence(null)
+            else -> super.onBackPressed()
+        }
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -290,11 +292,20 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         menu.findItem(R.id.action_theme).isChecked = currentTheme == AppPrefs.THEME_DARK
+        checkMenuGroups()
+        /*
         val selectedSequenceState = mainViewModel.getSelectedSequence().value == null
         menu.setGroupVisible(R.id.group_settings, !selectedSequenceState)
         menu.setGroupVisible(R.id.group_main, selectedSequenceState)
-        menu.setGroupVisible(R.id.group_rate, selectedSequenceState && isInstalledFromPlayStore)
+        menu.setGroupVisible(R.id.group_rate, selectedSequenceState && isInstalledFromPlayStore)*/
         return true
+    }
+
+    private fun checkMenuGroups(noSelectedSeq: Boolean = mainViewModel.getSelectedSequence().value == null,
+                                logVisibility: Boolean = mainViewModel.getLogVisible().value == true) {
+        menu?.setGroupVisible(R.id.group_settings, !noSelectedSeq && !logVisibility)
+        menu?.setGroupVisible(R.id.group_main, (noSelectedSeq || twoPaneMode) && !logVisibility)
+        menu?.setGroupVisible(R.id.group_rate, (noSelectedSeq || twoPaneMode) && !logVisibility && isInstalledFromPlayStore)
     }
 
     private fun checkPermissions(action: Int, vararg perms: String): Boolean {
@@ -324,7 +335,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
                     REQUEST_EXPORT -> exportData()
                     REQUEST_IMPORT -> importData()
                 }
-            }, 100);
+            }, 100)
         }
     }
 

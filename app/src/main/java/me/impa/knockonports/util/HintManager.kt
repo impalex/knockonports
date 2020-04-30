@@ -23,12 +23,13 @@ package me.impa.knockonports.util
 
 import android.content.Context
 import android.os.Handler
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import me.impa.knockonports.App
 import me.impa.knockonports.R
-import org.jetbrains.anko.contentView
 
 object HintManager {
 
@@ -57,7 +58,8 @@ object HintManager {
         if (!HintResources.containsKey(hint) || isHintShown(context, hint))
             return
 
-        val view = (context.applicationContext as App).currentActivity?.contentView ?: return
+        val view = ((context.applicationContext as App).currentActivity?.findViewById(android.R.id.content) as? ViewGroup)?.getChildAt(0)
+                ?: return
 
         HintMap[hint] = true
         Handler().postDelayed({

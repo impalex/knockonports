@@ -45,6 +45,10 @@
             android:title="@string/action_dark_theme"
             android:checkable="true"
             app:showAsAction="never"/>
+        <item android:id="@+id/action_log"
+            android:orderInCategory="3400"
+            android:title="@string/action_log"
+            app:showAsAction="never"/>
     </group>
     <group android:id="@+id/group_rate">
         <item android:id="@+id/action_rate"

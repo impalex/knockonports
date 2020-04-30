@@ -25,13 +25,13 @@ import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class StartKnockActivity : AppCompatActivity() {
 
-    private val mainViewModel by lazy { ViewModelProviders.of(this).get(MainViewModel::class.java) }
+    private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

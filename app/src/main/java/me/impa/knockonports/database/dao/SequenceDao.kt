@@ -28,32 +28,32 @@ import me.impa.knockonports.database.entity.Sequence
 @Dao
 interface SequenceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertSequence(sequence: Sequence): Long
+    suspend fun insertSequence(sequence: Sequence): Long
 
     @Update
-    fun updateSequences(sequences: List<Sequence>)
+    suspend fun updateSequences(sequences: List<Sequence>)
 
     @Update
-    fun updateSequence(sequence: Sequence): Int
+    suspend fun updateSequence(sequence: Sequence): Int
 
     @Delete
-    fun deleteSequence(sequence: Sequence): Int
+    suspend fun deleteSequence(sequence: Sequence): Int
 
     @Query("SELECT * FROM tbSequence ORDER BY _order")
     fun findAllSequences(): LiveData<List<Sequence>>
 
     @Query("SELECT * FROM tbSequence WHERE (_order > (SELECT _order FROM tbSequence WHERE _id=:id)) ORDER BY _order ASC LIMIT 1")
-    fun getNextSequence(id: Long): Sequence?
+    suspend fun getNextSequence(id: Long): Sequence?
 
     @Query("SELECT * FROM tbSequence WHERE (_order < (SELECT _order FROM tbSequence WHERE _id=:id)) ORDER BY _order DESC LIMIT 1")
-    fun getPrevSequence(id: Long): Sequence?
+    suspend fun getPrevSequence(id: Long): Sequence?
 
     @Query("SELECT * FROM tbSequence ORDER BY _order ASC LIMIT 1")
-    fun getFirstSequence(): Sequence?
+    suspend fun getFirstSequence(): Sequence?
 
     @Query("SELECT * FROM tbSequence ORDER BY _order DESC LIMIT 1")
-    fun getLastSequence(): Sequence?
+    suspend fun getLastSequence(): Sequence?
 
     @Query("SELECT * FROM tbSequence WHERE _id=:id")
-    fun findSequenceById(id: Long): Sequence?
+    suspend fun findSequenceById(id: Long): Sequence?
 }

@@ -21,13 +21,21 @@
 
 package me.impa.knockonports.database.converter
 
+import android.annotation.SuppressLint
+import android.provider.SyncStateContract
 import androidx.room.TypeConverter
 import android.util.Base64
 import me.impa.knockonports.data.*
 import me.impa.knockonports.json.SequenceStep
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Suppress("unused")
-class SequenceConverters {
+class DataConverters {
 
     @TypeConverter
     fun sequenceStepToString(data: List<SequenceStep>?): String? =
@@ -54,13 +62,34 @@ class SequenceConverters {
             }?.toList() ?: listOf()
 
     @TypeConverter
+    fun listToString(data: List<String?>?): String? =
+            data?.joinToString(DATA_SEPARATOR.toString()) { URLEncoder.encode(it ?: "", "utf-8") }
+
+    @TypeConverter
+    fun stringToList(data: String?): List<String?>? =
+            data?.split(DATA_SEPARATOR)?.map { URLDecoder.decode(it, "utf-8") }?.toList()
+
+    @TypeConverter
     fun intToIcmpType(data: Int?): IcmpType = IcmpType.fromOrdinal(data ?: 1)
 
     @TypeConverter
     fun icmpTypeToInt(data: IcmpType): Int = data.ordinal
 
+    @TypeConverter
+    fun intToDescriptionType(data: Int?): DescriptionType = DescriptionType.fromOrdinal(data ?: 0)
+
+    @TypeConverter
+    fun descriptionTypeToInt(data: DescriptionType?): Int = data?.ordinal ?: 0
+
+    @TypeConverter
+    fun intToEventType(data: Int?): EventType = EventType.fromOrdinal(data ?: 0)
+
+    @TypeConverter
+    fun eventTypeToInt(data: EventType): Int = data.ordinal
+
     companion object {
         const val VALUE_SEPARATOR = ':'
         const val ENTRY_SEPARATOR = '|'
+        const val DATA_SEPARATOR = '\n'
     }
 }

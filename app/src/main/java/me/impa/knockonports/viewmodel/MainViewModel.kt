@@ -25,47 +25,64 @@ import android.app.Application
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
+import androidx.paging.PagedList
+import androidx.paging.toLiveData
+import kotlinx.coroutines.*
 import me.impa.knockonports.R
-import me.impa.knockonports.data.AppData
-import me.impa.knockonports.data.ContentEncoding
-import me.impa.knockonports.data.IcmpType
-import me.impa.knockonports.data.SequenceStepType
+import me.impa.knockonports.data.*
 import me.impa.knockonports.database.KnocksRepository
-import me.impa.knockonports.database.converter.SequenceConverters
+import me.impa.knockonports.database.entity.LogEntry
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.ext.default
 import me.impa.knockonports.ext.startSequence
 import me.impa.knockonports.json.SequenceData
 import me.impa.knockonports.json.SequenceStep
+import me.impa.knockonports.util.Logging
+import me.impa.knockonports.util.info
+import me.impa.knockonports.util.toast
+import me.impa.knockonports.util.warn
 import me.impa.knockonports.widget.KnocksWidget
-import org.jetbrains.anko.*
 import java.io.File
 
-class MainViewModel(application: Application): AndroidViewModel(application), AnkoLogger {
+class MainViewModel(application: Application): AndroidViewModel(application), Logging {
 
     private val repository by lazy { KnocksRepository(application) }
-    private val sequenceList: LiveData<List<Sequence>> = repository.getSequences()
+    private lateinit var sequenceList: LiveData<List<Sequence>>
+    private lateinit var log: LiveData<PagedList<LogEntry>>
     private val selectedSequence = MutableLiveData<Sequence?>()
     private val settingsTabIndex = MutableLiveData<Int>()
     private val fabVisible = MutableLiveData<Boolean>().default(true)
+    private val logVisible = MutableLiveData<Boolean>().default(false)
     private val pendingOrderChanges: MutableLiveData<List<Long>> = MutableLiveData()
     private val installedApps = MutableLiveData<List<AppData>?>().default(null)
     private val dirtySequence = Transformations.map(selectedSequence) {
-        doAsync {
+        runBlocking {
             savePendingData()
-        }.get()
+        }
         it?.copy()
     }
     private val dirtySteps = Transformations.map(selectedSequence) {
         it?.steps?.onEach { e -> e.icmpSizeOffset = it.icmpType?.offset ?: 0 }?.toMutableList() ?: mutableListOf()
     }
     fun getSequenceList(): LiveData<List<Sequence>> {
-        doAsync { savePendingData() }.get()
+        runBlocking { savePendingData() }
+        if (!::sequenceList.isInitialized) {
+            runBlocking {
+                sequenceList = repository.getSequences()
+            }
+        }
         return sequenceList
+    }
+
+    fun getLog(): LiveData<PagedList<LogEntry>> {
+        if (!::log.isInitialized) {
+            runBlocking {
+                //repository.getLogEntries().toLiveData
+                log = repository.getLogEntries().toLiveData(pageSize = 50)
+            }
+        }
+        return log
     }
 
     fun getSelectedSequence(): LiveData<Sequence?> = selectedSequence
@@ -90,6 +107,12 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         fabVisible.value = isVisible
     }
 
+    fun getLogVisible(): LiveData<Boolean> = logVisible
+
+    fun setLogVisible(isVisible: Boolean) {
+        logVisible.value = isVisible
+    }
+
     fun getInstalledApps(): LiveData<List<AppData>?> = installedApps
 
     fun setInstalledApps(appList: List<AppData>?) {
@@ -100,19 +123,20 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         pendingOrderChanges.value = changes
     }
 
-    fun findSequence(id: Long): Sequence? = doAsyncResult { repository.findSequence(id) }.get()
+    fun findSequence(id: Long): Sequence? = runBlocking { repository.findSequence(id) }
 
     override fun onCleared() {
         super.onCleared()
-        doAsync { savePendingData() }.get()
+        runBlocking { savePendingData() }
     }
 
     fun deleteSequence(sequence: Sequence) {
         sequence.id ?: return
-        doAsync { savePendingData() }.get()
-        doAsync {
+        runBlocking {
+            savePendingData()
             repository.deleteSequence(sequence)
-            uiThread {
+            addToLog(EventType.SEQUENCE_DELETED, data = listOf(sequence.name))
+            viewModelScope.launch {
                 updateWidgets()
                 if (sequence.id == selectedSequence.value?.id) {
                     selectedSequence.value = null
@@ -121,12 +145,18 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
         }
     }
 
+    fun addToLog(event: EventType, date: Long = System.currentTimeMillis(), data: List<String?>? = null) {
+        runBlocking {
+            repository.saveLogEntry(LogEntry(null, date, event, data))
+        }
+    }
+
     fun createEmptySequence() {
         setSelectedSequence(Sequence(null, null, null,
                 null, 500, null, null, IcmpType.WITHOUT_HEADERS,
                 listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
                     icmpSizeOffset = IcmpType.WITHOUT_HEADERS.offset
-                })))
+                }), DescriptionType.DEFAULT, null))
     }
 
     fun saveDirtyData() {
@@ -136,13 +166,11 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             seq.order = pendingOrderChanges.value?.size ?: sequenceList.value?.size ?: 0
         }
         seq.steps = dirtySteps.value
-        info {
-            SequenceConverters().sequenceStepToString(seq.steps)
-        }
 
-        doAsync {
+        runBlocking {
             repository.saveSequence(seq)
-            uiThread {
+            addToLog(EventType.SEQUENCE_SAVED, data = listOf(seq.name))
+            viewModelScope.launch {
                 updateWidgets()
             }
         }
@@ -166,29 +194,34 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
             }
         }
         if (changes.size > 0) {
-            repository.updateSequences(changes)
+            runBlocking {
+                repository.updateSequences(changes)
+            }
         }
     }
 
     fun exportData(fileName: String) {
         val application = getApplication<Application>()
-        doAsync {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 info { "Exporting data to $fileName" }
 
                 val data = sequenceList.value?.asSequence()?.map { SequenceData.fromEntity(it) }?.toList()
-                        ?: return@doAsync
+                        ?: return@launch
 
                 File(fileName).writeText(SequenceData.toJson(data))
 
-                uiThread {
+                addToLog(EventType.EXPORT, data = listOf(fileName, data.size.toString()))
+
+                viewModelScope.launch {
                     application.toast(application.resources.getString(R.string.export_success, fileName))
                 }
                 info { "Export complete" }
 
             } catch (e: Exception) {
                 warn("Unable to export data", e)
-                uiThread {
+                addToLog(EventType.ERROR_EXPORT, data = listOf(fileName, e.message))
+                viewModelScope.launch {
                     application.toast(R.string.error_export)
                 }
             }
@@ -198,7 +231,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
     fun importData(fileName: String) {
         val application = getApplication<Application>()
         val order = sequenceList.value?.size ?: 0
-        doAsync {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
                 val raw = File(fileName).readText()
                 val data = SequenceData.fromJson(raw)
@@ -207,12 +240,14 @@ class MainViewModel(application: Application): AndroidViewModel(application), An
                     seq.order = order + index
                     repository.saveSequence(seq)
                 }
-                uiThread {
+                addToLog(EventType.IMPORT, data = listOf(fileName, data.size.toString()))
+                viewModelScope.launch {
                     application.toast(application.resources.getQuantityString(R.plurals.import_success, data.size, data.size, fileName))
                 }
             } catch (e: Exception) {
                 warn("Unable to import data", e)
-                uiThread {
+                addToLog(EventType.ERROR_IMPORT, data = listOf(fileName, e.message))
+                viewModelScope.launch {
                     application.toast(R.string.error_import)
                 }
             }

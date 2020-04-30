@@ -30,17 +30,20 @@ import androidx.room.migration.Migration
 import android.content.Context
 import android.util.Base64
 import me.impa.knockonports.data.AppData
-import me.impa.knockonports.database.converter.SequenceConverters
+import me.impa.knockonports.database.converter.DataConverters
+import me.impa.knockonports.database.dao.LogEntryDao
 import me.impa.knockonports.database.dao.SequenceDao
+import me.impa.knockonports.database.entity.LogEntry
 import me.impa.knockonports.database.entity.Sequence
 
 @Database(
-        entities = [Sequence::class],
-        version = 11
+        entities = [Sequence::class, LogEntry::class],
+        version = 14
 )
-@TypeConverters(SequenceConverters::class)
+@TypeConverters(DataConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
     abstract fun sequenceDao(): SequenceDao
+    abstract fun logEntryDao(): LogEntryDao
 
     class Migration1To2: Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
@@ -106,14 +109,14 @@ abstract class KnocksDatabase : RoomDatabase() {
                         ""
                     } else {
                         portCur.getInt(1).toString()
-                    } + SequenceConverters.VALUE_SEPARATOR +
+                    } + DataConverters.VALUE_SEPARATOR +
                             if (portCur.isNull(2)) {
                                 ""
                             } else {
                                 portCur.getInt(2).toString()
                             }
                     portMap[seqId] = if (portMap.containsKey(seqId)) {
-                        portMap[seqId] + SequenceConverters.ENTRY_SEPARATOR
+                        portMap[seqId] + DataConverters.ENTRY_SEPARATOR
                     } else {
                         ""
                     } + str
@@ -230,6 +233,26 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration11To12: Migration(11, 12) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_descriptionType` INTEGER")
+            database.execSQL("UPDATE `tbSequence` SET `_descriptionType`=0")
+        }
+    }
+
+    class Migration12To13: Migration(12, 13) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_pin` TEXT")
+        }
+    }
+
+    class Migration13To14: Migration(13, 14) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE `tbLog` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "`_dt` INTEGER, `_event` INTEGER, `_data` TEXT)")
+        }
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
@@ -237,7 +260,7 @@ abstract class KnocksDatabase : RoomDatabase() {
             if (INSTANCE == null) {
                 synchronized(KnocksDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
-                            KnocksDatabase::class.java, "knocksdb")
+                                    KnocksDatabase::class.java, "knocksdb")
                             .addMigrations(Migration1To2(),
                                     Migration2To3(),
                                     Migration3To4(),
@@ -247,9 +270,11 @@ abstract class KnocksDatabase : RoomDatabase() {
                                     Migration7To8(),
                                     Migration8To9(),
                                     Migration9To10(),
-                                    Migration10To11())
+                                    Migration10To11(),
+                                    Migration11To12(),
+                                    Migration12To13(),
+                                    Migration13To14())
                             .build()
-
                 }
             }
             return INSTANCE

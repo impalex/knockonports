@@ -31,6 +31,7 @@ import androidx.room.*
 import me.impa.knockonports.EXTRA_SEQ_ID
 import me.impa.knockonports.R
 import me.impa.knockonports.StartKnockActivity
+import me.impa.knockonports.data.DescriptionType
 import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.json.SequenceStep
@@ -55,15 +56,22 @@ data class Sequence(
         @ColumnInfo(name = "_icmp_type")
         var icmpType: IcmpType?,
         @ColumnInfo(name = "_steps")
-        var steps: List<SequenceStep>?
+        var steps: List<SequenceStep>?,
+        @ColumnInfo(name = "_descriptionType")
+        var descriptionType: DescriptionType?,
+        @ColumnInfo(name = "_pin")
+        var pin: String?
 ) {
 
-    fun getReadableDescription(): String? = steps?.filter { it.isValid()  }?.joinToString {
-        when (it.type) {
-            SequenceStepType.UDP -> "${it.port?:0}:UDP"
-            SequenceStepType.TCP -> "${it.port?:0}:TCP"
-            SequenceStepType.ICMP -> "${it.icmpSize}x${it.icmpCount}:ICMP"
-            else -> ""
+    fun getReadableDescription(): String? = when(descriptionType) {
+        DescriptionType.HIDE -> null
+        else -> steps?.filter { it.isValid() }?.joinToString {
+            when (it.type) {
+                SequenceStepType.UDP -> "${it.port ?: 0}:UDP"
+                SequenceStepType.TCP -> "${it.port ?: 0}:TCP"
+                SequenceStepType.ICMP -> "${it.icmpSize}x${it.icmpCount}:ICMP"
+                else -> ""
+            }
         }
     }
 

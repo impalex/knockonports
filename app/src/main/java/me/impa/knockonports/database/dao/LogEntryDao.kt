@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2020 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,29 +19,20 @@
  * under the License.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package me.impa.knockonports.database.dao
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+import androidx.paging.DataSource
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import me.impa.knockonports.database.entity.LogEntry
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
+@Dao
+interface LogEntryDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLogEntry(logEntry: LogEntry): Long
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    @Query("SELECT * FROM tbLog ORDER BY _id DESC")
+    fun logEntriesById(): DataSource.Factory<Int, LogEntry>
 }

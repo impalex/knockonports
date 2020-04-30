@@ -43,6 +43,9 @@
         <item name="dialogTextColor">@color/colorText</item>
         <item name="imageTint">@color/colorImageTint</item>
         <item name="buttonTextColor">@color/colorButtonText</item>
+        <item name="android:checkboxStyle">@style/CheckBoxStyle</item>
+        <item name="android:listDivider">@drawable/shape_divider</item>
+        <item name="dividerColor">@color/colorDivider</item>
     </style>
 
     <style name="AppTheme.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -66,6 +69,9 @@
         <item name="dialogTextColor">@color/colorNightText</item>
         <item name="imageTint">@color/colorNightImageTint</item>
         <item name="buttonTextColor">@color/colorNightButtonText</item>
+        <item name="android:checkboxStyle">@style/CheckBoxStyle.Dark</item>
+        <item name="android:listDivider">@drawable/shape_divider</item>
+        <item name="dividerColor">@color/colorNightDivider</item>
     </style>
 
     <style name="AppTheme.Tasker" parent="AppTheme">
@@ -94,6 +100,14 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="CheckBoxStyle" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="CheckBoxStyle.Dark" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/colorNightText</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

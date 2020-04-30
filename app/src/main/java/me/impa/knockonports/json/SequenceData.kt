@@ -31,17 +31,18 @@ import java.io.StringWriter
 
 data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                         var application: String?, var appName: String?, var icmpType: IcmpType?,
-                        var steps: List<SequenceStep>) {
+                        var steps: List<SequenceStep>, var descriptionType: DescriptionType?,
+                        var pin: String?) {
 
     fun toEntity(): Sequence = Sequence(null, name, host,null, delay, application,
-            appName, icmpType, steps.filter { it.isValid() })
+            appName, icmpType, steps.filter { it.isValid() }, descriptionType, pin)
 
     companion object {
 
         fun fromEntity(sequence: Sequence): SequenceData =
                 SequenceData(sequence.name, sequence.host, sequence.delay,
                         sequence.application, sequence.applicationName, sequence.icmpType,
-                        sequence.steps ?: listOf())
+                        sequence.steps ?: listOf(), sequence.descriptionType, sequence.pin)
 
         private fun writeValue(writer: JsonWriter, name: String, value: String?) {
             if (value == null)
@@ -88,6 +89,8 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                     writeValue(writer, "application", it.application)
                     writeValue(writer, "app_name", it.appName)
                     writeValue(writer, "icmp_type", it.icmpType?.ordinal)
+                    writeValue(writer, "description", it.descriptionType?.ordinal)
+                    writeValue(writer, "pin", it.pin)
 
                     writer.name("steps")
                     writer.beginArray()
@@ -127,7 +130,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                 reader.beginArray()
                 while (reader.hasNext()) {
                     reader.beginObject()
-                    val seq = SequenceData(null, null,null, null, null, null, listOf())
+                    val seq = SequenceData(null, null,null, null, null, null, listOf(), null, null)
                     var oldUdpContent : String? = null
                     var oldBase64 : Int? = null
                     var oldType: Int? = null
@@ -145,6 +148,8 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                             "app_name" -> seq.appName = readString(reader)
                             "type" -> oldType = readInt(reader) // Deprecated
                             "icmp_type" -> seq.icmpType = IcmpType.fromOrdinal(readInt(reader) ?: 1)
+                            "description" -> seq.descriptionType = DescriptionType.fromOrdinal(readInt(reader) ?: 0)
+                            "pin" -> seq.pin = readString(reader)
                             "ports" -> {
                                 // Deprecated stuff
                                 reader.beginArray()

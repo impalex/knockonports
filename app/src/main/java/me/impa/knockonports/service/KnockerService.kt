@@ -24,13 +24,14 @@ package me.impa.knockonports.service
 import android.app.IntentService
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import kotlinx.coroutines.runBlocking
 import me.impa.knockonports.R
 import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.warn
+import me.impa.knockonports.util.Logging
+import me.impa.knockonports.util.warn
 
-class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger {
+class KnockerService: IntentService(KnockerService::class.java.name), Logging {
 
     private fun dummyServiceStart() {
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -62,7 +63,7 @@ class KnockerService: IntentService(KnockerService::class.java.name), AnkoLogger
         }
 
         val db = KnocksDatabase.getInstance(this)
-        val sequence = db?.sequenceDao()?.findSequenceById(seqId)
+        val sequence = runBlocking { db?.sequenceDao()?.findSequenceById(seqId) }
         if (sequence == null) {
             warn {
                 "Couldn't find sequence ID $seqId"

@@ -23,28 +23,33 @@ package me.impa.knockonports.database
 
 import androidx.lifecycle.LiveData
 import android.content.Context
+import me.impa.knockonports.database.entity.LogEntry
 import me.impa.knockonports.database.entity.Sequence
 
 class KnocksRepository(context: Context) {
 
     private val db by lazy { KnocksDatabase.getInstance(context)!! }
     private val sequenceDao by lazy { db.sequenceDao() }
-    private val sequenceList by lazy { sequenceDao.findAllSequences() }
+    private val logEntryDao by lazy { db.logEntryDao() }
 
-    fun getSequences(): LiveData<List<Sequence>> = sequenceList
+    fun getSequences(): LiveData<List<Sequence>> = sequenceDao.findAllSequences()
 
-    fun findSequence(id: Long): Sequence? = sequenceDao.findSequenceById(id)
+    suspend fun findSequence(id: Long): Sequence? = sequenceDao.findSequenceById(id)
 
-    fun deleteSequence(sequence: Sequence): Int = sequenceDao.deleteSequence(sequence)
+    suspend fun deleteSequence(sequence: Sequence): Int = sequenceDao.deleteSequence(sequence)
 
-    fun updateSequences(sequences: List<Sequence>) = sequenceDao.updateSequences(sequences)
+    suspend fun updateSequences(sequences: List<Sequence>) = sequenceDao.updateSequences(sequences)
 
-    fun saveSequence(sequence: Sequence) {
+    suspend fun saveSequence(sequence: Sequence) {
         if (sequence.id == null) {
             sequence.id = sequenceDao.insertSequence(sequence)
         } else {
             sequenceDao.updateSequence(sequence)
         }
     }
+
+    suspend fun saveLogEntry(logEntry: LogEntry) = logEntryDao.insertLogEntry(logEntry)
+
+    fun getLogEntries() = logEntryDao.logEntriesById()
 
 }

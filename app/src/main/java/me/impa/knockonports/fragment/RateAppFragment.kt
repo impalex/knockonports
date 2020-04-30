@@ -34,10 +34,9 @@ import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import me.impa.knockonports.R
 import me.impa.knockonports.util.AppPrefs
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.toast
+import me.impa.knockonports.util.toast
 
-class RateAppFragment: DialogFragment(), AnkoLogger {
+class RateAppFragment: DialogFragment() {
 
     var onDismiss: (() -> Unit)? = null
 
