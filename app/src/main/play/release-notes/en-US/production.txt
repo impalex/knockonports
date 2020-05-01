@@ -1,3 +1,4 @@
 New: option to hide sequence details in the sequence list
 New: event log
 Bug fixes
+Fixed compatibility with pre-Lollipop devices

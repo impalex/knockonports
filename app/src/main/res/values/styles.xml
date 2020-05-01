@@ -44,7 +44,6 @@
         <item name="imageTint">@color/colorImageTint</item>
         <item name="buttonTextColor">@color/colorButtonText</item>
         <item name="android:checkboxStyle">@style/CheckBoxStyle</item>
-        <item name="android:listDivider">@drawable/shape_divider</item>
         <item name="dividerColor">@color/colorDivider</item>
     </style>
 
@@ -70,7 +69,6 @@
         <item name="imageTint">@color/colorNightImageTint</item>
         <item name="buttonTextColor">@color/colorNightButtonText</item>
         <item name="android:checkboxStyle">@style/CheckBoxStyle.Dark</item>
-        <item name="android:listDivider">@drawable/shape_divider</item>
         <item name="dividerColor">@color/colorNightDivider</item>
     </style>
 

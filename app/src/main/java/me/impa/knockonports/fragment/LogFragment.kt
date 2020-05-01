@@ -21,10 +21,12 @@
 
 package me.impa.knockonports.fragment
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -51,7 +53,10 @@ class LogFragment: Fragment() {
 
         val recycler = view.findViewById<RecyclerView>(R.id.recycler_log_entries)
         recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                setDrawable(ContextCompat.getDrawable(context!!, R.drawable.shape_divider)!!)
+        })
         recycler.adapter = adapter
 
         mainViewModel.getLog().observe(viewLifecycleOwner, Observer {
