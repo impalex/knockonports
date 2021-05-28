@@ -1,4 +1,4 @@
-New: option to hide sequence details in the sequence list
-New: event log
-Bug fixes
-Fixed compatibility with pre-Lollipop devices
+New: Full IPv6 support
+Widget: Optional confirmation before knocking
+Improved Android 4.0.3 compatibility
+Bugfixes

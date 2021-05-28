@@ -22,9 +22,8 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-android-extensions")
     id("kotlin-kapt")
-    id("com.github.triplet.play") version "2.5.0" apply false
+    id("com.github.triplet.play") version "3.4.0-agp4.2" apply false
 }
 
 def keystorePropertiesFile = rootProject.file("keystore.properties")
@@ -44,14 +43,14 @@ if (publisherPropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
     defaultConfig {
         applicationId "me.impa.knockonports"
         minSdkVersion 15
-        targetSdkVersion 28
-        versionCode 26
-        versionName "1.1.5a"
+        targetSdkVersion 30
+        versionCode 44
+        versionName "1.1.6"
         vectorDrawables.useSupportLibrary true
         externalNativeBuild {
             cmake {
@@ -78,6 +77,10 @@ android {
             }
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -86,6 +89,9 @@ android {
                 signingConfig signingConfigs.release
             }
         }
+    }
+    buildFeatures {
+        viewBinding true
     }
     externalNativeBuild {
         cmake {
@@ -107,27 +113,30 @@ configurations.all {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.72"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3"
 
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta4'
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'com.google.android.material:material:1.4.0-beta01'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
-    implementation "androidx.room:room-ktx:2.2.5"
-    implementation "androidx.room:room-runtime:2.2.5"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+    implementation "androidx.room:room-ktx:2.3.0"
+    implementation "androidx.room:room-runtime:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
-    implementation "androidx.paging:paging-runtime-ktx:2.1.2"
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
+    implementation "androidx.paging:paging-runtime-ktx:3.0.0"
+    implementation "androidx.fragment:fragment-ktx:1.3.4"
+    implementation "androidx.preference:preference-ktx:1.1.1"
     implementation "com.jaredrummler:colorpicker:1.0.2"
     implementation "com.github.hendrawd:StorageUtil:1.0.0"
     implementation "com.twofortyfouram:android-plugin-client-sdk-for-locale:4.0.3"
 
-    kapt "androidx.room:room-compiler:2.2.5"
-    kapt "android.arch.persistence.room:compiler:2.2.1"
-    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
+
+    kapt "androidx.room:room-compiler:2.3.0"
 }
 
 if (!publisherProperties.isEmpty()) {

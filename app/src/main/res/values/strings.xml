@@ -21,6 +21,7 @@
 
 <resources>
     <string name="app_name" translatable="false">Knock on Ports</string>
+    <string name="author_contact" translatable="false">dev@impa.me</string>
     <string name="action_done">Done</string>
     <string name="hint_name">Name</string>
     <string name="hint_host">Host</string>
@@ -35,10 +36,9 @@
     <string name="action_delete">Delete</string>
     <string name="action_edit">Edit</string>
     <string name="action_new_sequence">New Sequence</string>
-    <string name="action_dark_theme">Dark Theme</string>
     <string name="drag_item">Reorganize</string>
     <string name="empty_sequence_warning">%s: empty sequence!</string>
-    <string name="start_knocking">Knock-knock-knocking on %s</string>
+    <string name="start_knocking">Knock-knock-knockin\' on %s</string>
     <string name="end_knocking">Knocking complete!</string>
     <string name="untitled_sequence">(Untitled Sequence)</string>
     <string name="error_resolve">Unable to resolve host \'%s\'!</string>
@@ -66,7 +66,7 @@
     <string name="color_text">Text color</string>
     <string name="color_arrow">Arrows color</string>
     <string name="channel_name">Knock-knock</string>
-    <string name="channel_description">Who\'s there?</string>
+    <string name="channel_description">Who\'s there? \u1F632</string>
     <string name="notification_title">Knock-knock!</string>
     <string name="notification_desc">Knocking on %s. Is anybody there?</string>
     <string name="installed_apps">Installed applications</string>
@@ -77,7 +77,6 @@
     <string name="encoding_base64" translatable="false">Base64</string>
     <string name="icmp_type_without_headers">without headers</string>
     <string name="icmp_type_with_icmp_header">with ICMP header</string>
-    <string name="icmp_type_full">with ICMP and IP headers</string>
     <string name="icmp_type_header">ICMP packet size:</string>
     <string name="action_rate_app">Rate this app…</string>
     <string name="action_create_shortcut">Create shortcut</string>
@@ -97,8 +96,6 @@
     <string name="error_invalid_port">Invalid port number</string>
     <string name="error_empty_sequence_name">Empty sequence name</string>
     <string name="error_empty_host">Empty hostname or IP address</string>
-    <string name="error_min_icmp_size">Min packet size: %d</string>
-    <string name="error_max_icmp_size">Max packet size: %d</string>
     <string name="error_empty_file_name">File name cannot be empty</string>
     <string name="knock_on">Knock on:</string>
     <string name="tasker_action_blurb">Knock on «%s»</string>
@@ -107,13 +104,14 @@
         <item quantity="one">%1$d entry was imported from %2$s</item>
         <item quantity="other">%1$d entries were imported from %2$s</item>
     </plurals>
+    <string name="lil_easter">Who\'s there? 😲</string>
     <string name="hide_details">Hide details in the sequence list</string>
     <string name="action_log">Log</string>
     <string name="log_unknown">Unknown event</string>
     <string name="log_knock">Knock \'%1$s\' [%2$s] (%3$s→%4$s)</string>
     <string name="log_error_network">Network connection not available</string>
     <string name="log_error_invalid_host">Sequence \'%s\': invalid host</string>
-    <string name="log_error_resolve_host">%2$s</string>
+    <string name="log_error_resolve_host">Unable to resolve %1$s: %2$s</string>
     <string name="log_error_empty_sequence">Empty sequence \'%s\'</string>
     <string name="log_error_unknown">Unknown error: %s</string>
     <string name="log_sequence_saved">Saved sequence \'%s\'</string>
@@ -122,4 +120,41 @@
     <string name="log_import">Import from %1$s (%2$s sequences)</string>
     <string name="log_error_export">Export to %1$s: %2$s</string>
     <string name="log_error_import">Import from %1$s: %2$s</string>
+    <string name="ip_version">IP version:</string>
+    <string name="ip_prefer_ipv4">prefer IPv4</string>
+    <string name="ip_prefer_ipv6">prefer IPv6</string>
+    <string name="ip_only_ipv4">only IPv4</string>
+    <string name="ip_only_ipv6">only IPv6</string>
+    <string name="ip_both">both IPv4 and IPv6</string>
+    <string name="action_clear_log">Clear Log</string>
+    <string name="text_confirm_clear_log">Are you sure you want to clear the log?\nPlease note that this action cannot be undone.</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="title_clear_log">Clear Log</string>
+    <string name="option_theme_dark">Dark</string>
+    <string name="option_theme_light">Light</string>
+    <string name="pref_title_theme">Theme</string>
+    <string name="action_preferences">Preferences</string>
+    <string name="pref_title_group_general">General</string>
+    <string name="pref_title_group_about">About</string>
+    <string name="pref_title_ask_confirm_widget">Widget: ask for confirmation</string>
+    <string name="pref_summary_ask_confirm_widget_on">Ask for confirmation to knock after tapping on the widget.</string>
+    <string name="pref_summary_ask_confirm_widget_off">Knock without confirmation after tapping on the widget.</string>
+    <string name="title_confirm_knock">Knock-knock!</string>
+    <string name="message_confirm_knock">Do you want to execute sequence «%s»?</string>
+    <string name="option_disable">Disable</string>
+    <string name="option_wtfismyip" translatable="false">wtfismyip.com</string>
+    <string name="option_ipify" translatable="false">ipify.org</string>
+    <string name="option_icanhazip" translatable="false">icanhazip.com</string>
+    <string name="option_custom">Custom</string>
+    <string name="pref_title_ip4_service">IPv4 public address API</string>
+    <string name="pref_title_ip6_service">IPv6 public address API</string>
+    <string name="pref_title_ip4_custom_service">Custom IPv4 public address API</string>
+    <string name="pref_title_ip6_custom_service">Custom IPv6 public address API</string>
+    <string name="pref_title_app_version">Version</string>
+    <string name="pref_title_app_source">Source code</string>
+    <string name="pref_title_contact">Contact author</string>
+    <string name="pref_title_report_issue">Report issue</string>
+    <string name="pref_summary_ip4_custom_service">URL that returns PLAIN IPv4 address</string>
+    <string name="pref_summary_ip6_custom_service">URL that returns PLAIN IPv6 address</string>
 </resources>

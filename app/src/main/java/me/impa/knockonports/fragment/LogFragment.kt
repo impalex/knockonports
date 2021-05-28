@@ -28,39 +28,50 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import me.impa.knockonports.R
-import me.impa.knockonports.util.Logging
-import me.impa.knockonports.util.warn
+import me.impa.knockonports.databinding.FragmentLogBinding
 import me.impa.knockonports.viewadapter.LogEntryAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class LogFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
+    private var _binding: FragmentLogBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_log, container, false)
+    private val mainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View{
+        _binding = FragmentLogBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = LogEntryAdapter(context!!)
+        val adapter = LogEntryAdapter(requireContext())
 
-        val recycler = view.findViewById<RecyclerView>(R.id.recycler_log_entries)
+        val recycler = binding.recyclerLogEntries
         recycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
         recycler.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                setDrawable(ContextCompat.getDrawable(context!!, R.drawable.shape_divider)!!)
+                setDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.shape_divider)!!)
         })
         recycler.adapter = adapter
 
-        mainViewModel.getLog().observe(viewLifecycleOwner, Observer {
-            adapter.submitList(it)
-        })
+        viewLifecycleOwner.lifecycleScope.launch {
+            mainViewModel.getLog().collectLatest { adapter.submitData(it) }
+        }
     }
 }

@@ -23,16 +23,15 @@ package me.impa.knockonports.fragment
 
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.google.android.material.textfield.TextInputEditText
-import com.google.android.material.textfield.TextInputLayout
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import hendrawd.storageutil.library.StorageUtil
 import me.impa.knockonports.R
+import me.impa.knockonports.databinding.FragmentFileChooserBinding
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.ext.validate
 import me.impa.knockonports.viewadapter.FileItemAdapter
@@ -40,9 +39,11 @@ import java.io.File
 
 class FileChooserFragment: DialogFragment() {
 
-    private val fileItemAdapter by lazy { FileItemAdapter(context!!) }
+    private var _binding: FragmentFileChooserBinding? = null
+    private val binding get() = _binding!!
+
+    private val fileItemAdapter by lazy { FileItemAdapter(requireContext()) }
     private val storageList by lazy { StorageUtil.getStorageDirectories(context) }
-    private val textStorage by lazy { view!!.findViewById<TextView>(R.id.text_storage) }
     var onSelected: ((String) -> Unit)? = null
     var onDismiss: (() -> Unit)? = null
     var currentDir: String? = null
@@ -57,16 +58,22 @@ class FileChooserFragment: DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater.inflate(R.layout.fragment_file_chooser, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentFileChooserBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
-        val listFiles = view.findViewById<ListView>(R.id.list_files)
-        listFiles.adapter = fileItemAdapter
+        binding.listFiles.adapter = fileItemAdapter
         fileItemAdapter.onSelected = {
             when {
-                it.name == ".." -> navigateTo(File(currentDir!!).parent)
+                it.name == ".." -> navigateTo(File(currentDir!!).parent!!)
                 it.isDirectory -> navigateTo(it.canonicalPath)
                 else -> {
                     onSelected?.invoke(it.canonicalPath)
@@ -75,12 +82,11 @@ class FileChooserFragment: DialogFragment() {
             }
         }
 
-        val storageSelector = view.findViewById<View>(R.id.layout_cur_dir)
-        val storageImage = view.findViewById<ImageView>(R.id.image_storage_down)
-        storageSelector.setOnClickListener {
+
+        binding.layoutCurDir.setOnClickListener {
             if (storageList.isEmpty())
                 return@setOnClickListener
-            val menu = PopupMenu(activity, storageImage)
+            val menu = PopupMenu(activity, binding.imageStorageDown)
             storageList.forEachIndexed { index, storage ->
                 menu.menu.add(0, STORAGE_ITEM_FIRST + index, index, storage)
             }
@@ -93,10 +99,10 @@ class FileChooserFragment: DialogFragment() {
             menu.show()
         }
 
-        val saveButton = view.findViewById<TextView>(R.id.button_save)
-        val editFileName = view.findViewById<TextInputEditText>(R.id.edit_file_name)
+        val saveButton = binding.buttonSave
+        val editFileName = binding.editFileName
         if (!showFileNameEdit)
-            view.findViewById<TextInputLayout>(R.id.edit_file_name_wrapper)?.visibility = View.GONE
+            binding.editFileNameWrapper.visibility = View.GONE
         editFileName.setText(fileName)
         editFileName.afterTextChanged { fileName = it }
         editFileName.validate {
@@ -116,10 +122,9 @@ class FileChooserFragment: DialogFragment() {
             dismiss()
         }
 
-        val cancelButton = view.findViewById<TextView>(R.id.button_cancel)
-        cancelButton.setOnClickListener { dismiss() }
+        binding.buttonCancel.setOnClickListener { dismiss() }
 
-        navigateTo(currentDir ?: storageList.firstOrNull() ?: context!!.filesDir.canonicalPath)
+        navigateTo(currentDir ?: storageList.firstOrNull() ?: requireContext().filesDir.canonicalPath)
 
     }
 
@@ -135,14 +140,14 @@ class FileChooserFragment: DialogFragment() {
         if (!directory.canRead())
             return
         currentDir = directory.canonicalPath
-        textStorage.text = currentDir
+        binding.textStorage.text = currentDir
 
         val list = mutableListOf<File>()
         if (directory.parentFile != null) {
             list.add(File(".."))
         }
 
-        list.addAll(directory.listFiles { file -> !dirsOnly || file.isDirectory }.sortedWith(compareBy({ !it.isDirectory }, { it.name })))
+        list.addAll(directory.listFiles { file -> !dirsOnly || file.isDirectory }!!.sortedWith(compareBy({ !it.isDirectory }, { it.name })))
 
         fileItemAdapter.fileList = list
 

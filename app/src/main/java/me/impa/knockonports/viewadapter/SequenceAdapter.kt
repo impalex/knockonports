@@ -25,12 +25,11 @@ import android.content.Context
 import android.content.pm.ShortcutManager
 import android.os.Build
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import kotlinx.android.synthetic.main.sequence_element.view.*
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.databinding.SequenceElementBinding
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 
 class SequenceAdapter(val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<SequenceAdapter.ViewHolder>(), ItemTouchHelperAdapter {
@@ -52,15 +51,15 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
     override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ViewHolder(LayoutInflater.from(context).inflate(R.layout.sequence_element, parent, false))
+        val holder = ViewHolder(SequenceElementBinding.inflate(LayoutInflater.from(context), parent, false))
 
-        view.view.setOnClickListener {
-            onClick?.invoke(items[view.layoutPosition])
+        holder.view.setOnClickListener {
+            onClick?.invoke(items[holder.layoutPosition])
         }
 
-        return view
-
+        return holder
     }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val sequence = items[position]
@@ -121,12 +120,13 @@ class SequenceAdapter(val context: Context): androidx.recyclerview.widget.Recycl
 
     }
 
-    class ViewHolder(val view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        val sequenceName = view.sequence_name!!
-        val moreIcon = view.more_icon!!
-        val textHost = view.text_host!!
-        val textPorts = view.text_ports!!
-        val knockButton = view.knock_button!!
+    class ViewHolder(binding: SequenceElementBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
+        val view = binding.root
+        val sequenceName = binding.sequenceName
+        val moreIcon = binding.moreIcon
+        val textHost = binding.textHost
+        val textPorts = binding.textPorts
+        val knockButton = binding.knockButton
     }
 
 }

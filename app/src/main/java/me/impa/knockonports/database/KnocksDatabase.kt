@@ -30,6 +30,7 @@ import androidx.room.migration.Migration
 import android.content.Context
 import android.util.Base64
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.data.IcmpType
 import me.impa.knockonports.database.converter.DataConverters
 import me.impa.knockonports.database.dao.LogEntryDao
 import me.impa.knockonports.database.dao.SequenceDao
@@ -38,7 +39,7 @@ import me.impa.knockonports.database.entity.Sequence
 
 @Database(
         entities = [Sequence::class, LogEntry::class],
-        version = 14
+        version = 16
 )
 @TypeConverters(DataConverters::class)
 abstract class KnocksDatabase : RoomDatabase() {
@@ -253,28 +254,49 @@ abstract class KnocksDatabase : RoomDatabase() {
         }
     }
 
+    class Migration14To15: Migration(14, 15) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_ipv` INTEGER")
+            database.execSQL("UPDATE `tbSequence` SET `_ipv`=0")
+        }
+    }
+
+    class Migration15To16: Migration(15, 16) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("UPDATE `tbSequence` SET `_icmp_type`=${IcmpType.WITH_ICMP_HEADER.ordinal} WHERE `_icmp_type`=${IcmpType.WITH_IP_AND_ICMP_HEADERS.ordinal}")
+        }
+
+    }
+
     companion object {
         private var INSTANCE: KnocksDatabase? = null
 
         fun getInstance(context: Context): KnocksDatabase? {
             if (INSTANCE == null) {
                 synchronized(KnocksDatabase::class) {
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                                    KnocksDatabase::class.java, "knocksdb")
-                            .addMigrations(Migration1To2(),
-                                    Migration2To3(),
-                                    Migration3To4(),
-                                    Migration4To5(),
-                                    Migration5To6(),
-                                    Migration6To7(context),
-                                    Migration7To8(),
-                                    Migration8To9(),
-                                    Migration9To10(),
-                                    Migration10To11(),
-                                    Migration11To12(),
-                                    Migration12To13(),
-                                    Migration13To14())
-                            .build()
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        KnocksDatabase::class.java,
+                        "knocksdb"
+                    )
+                        .addMigrations(
+                            Migration1To2(),
+                            Migration2To3(),
+                            Migration3To4(),
+                            Migration4To5(),
+                            Migration5To6(),
+                            Migration6To7(context),
+                            Migration7To8(),
+                            Migration8To9(),
+                            Migration9To10(),
+                            Migration10To11(),
+                            Migration11To12(),
+                            Migration12To13(),
+                            Migration13To14(),
+                            Migration14To15(),
+                            Migration15To16()
+                        )
+                        .build()
                 }
             }
             return INSTANCE

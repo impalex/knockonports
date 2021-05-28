@@ -32,26 +32,28 @@ import androidx.core.widget.ImageViewCompat
 import androidx.appcompat.app.AppCompatActivity
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
-import kotlinx.android.synthetic.main.knocks_widget.*
-import kotlinx.android.synthetic.main.knocks_widget_configure.*
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
+import me.impa.knockonports.databinding.KnocksWidgetConfigureBinding
 
 class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogListener {
     private var appWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID
 
+    private lateinit var binding: KnocksWidgetConfigureBinding
+
     public override fun onCreate(icicle: Bundle?) {
         super.onCreate(icicle)
+        binding = KnocksWidgetConfigureBinding.inflate(layoutInflater)
 
         setResult(Activity.RESULT_CANCELED)
 
-        setContentView(R.layout.knocks_widget_configure)
+        setContentView(binding.root)
 
-        add_button.setOnClickListener {
+        binding.addButton.setOnClickListener {
 
-            saveBackgroundPref(this, appWidgetId, color_panel_background.color)
-            saveForegroundPref(this, appWidgetId, color_panel_foreground.color)
-            saveButtonsPref(this, appWidgetId, color_panel_arrows.color)
+            saveBackgroundPref(this, appWidgetId, binding.colorPanelBackground.color)
+            saveForegroundPref(this, appWidgetId, binding.colorPanelForeground.color)
+            saveButtonsPref(this, appWidgetId, binding.colorPanelArrows.color)
 
             val appWidgetManager = AppWidgetManager.getInstance(this)
             KnocksWidget.updateAppWidget(this, appWidgetManager, appWidgetId)
@@ -85,9 +87,9 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
         previewColor(CHANGE_FOREGROUND_COLOR, colorForeground)
         previewColor(CHANGE_BACKGROUND_COLOR, colorBackround)
 
-        color_panel_arrows.setOnClickListener { showColorPickerDialog(color_panel_arrows.color, CHANGE_BUTTON_COLOR) }
-        color_panel_foreground.setOnClickListener { showColorPickerDialog(color_panel_foreground.color, CHANGE_FOREGROUND_COLOR) }
-        color_panel_background.setOnClickListener { showColorPickerDialog(color_panel_background.color, CHANGE_BACKGROUND_COLOR, true) }
+        binding.colorPanelArrows.setOnClickListener { showColorPickerDialog(binding.colorPanelArrows.color, CHANGE_BUTTON_COLOR) }
+        binding.colorPanelForeground.setOnClickListener { showColorPickerDialog(binding.colorPanelForeground.color, CHANGE_FOREGROUND_COLOR) }
+        binding.colorPanelBackground.setOnClickListener { showColorPickerDialog(binding.colorPanelBackground.color, CHANGE_BACKGROUND_COLOR, true) }
 
     }
 
@@ -102,17 +104,17 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
     private fun previewColor(typeId: Int, color: Int) {
         when(typeId) {
             CHANGE_BACKGROUND_COLOR -> {
-                color_panel_background.color = color
-                widget_layout.setBackgroundColor(color)
+                binding.colorPanelBackground.color = color
+                binding.widgetPreview.widgetLayout.setBackgroundColor(color)
             }
             CHANGE_FOREGROUND_COLOR -> {
-                color_panel_foreground.color = color
-                appwidget_text.setTextColor(color)
+                binding.colorPanelForeground.color = color
+                binding.widgetPreview.appwidgetText.setTextColor(color)
             }
             CHANGE_BUTTON_COLOR -> {
-                color_panel_arrows.color = color
-                ImageViewCompat.setImageTintList(widget_right_arrow, ColorStateList.valueOf(color))
-                ImageViewCompat.setImageTintList(widget_left_arrow, ColorStateList.valueOf(color))
+                binding.colorPanelArrows.color = color
+                ImageViewCompat.setImageTintList(binding.widgetPreview.widgetRightArrow, ColorStateList.valueOf(color))
+                ImageViewCompat.setImageTintList(binding.widgetPreview.widgetLeftArrow, ColorStateList.valueOf(color))
             }
         }
     }
@@ -126,9 +128,9 @@ class KnocksWidgetConfigureActivity : AppCompatActivity(), ColorPickerDialogList
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putInt(PREF_BUNDLE + CHANGE_BUTTON_COLOR, color_panel_arrows.color)
-        outState.putInt(PREF_BUNDLE + CHANGE_BACKGROUND_COLOR, color_panel_background.color)
-        outState.putInt(PREF_BUNDLE + CHANGE_FOREGROUND_COLOR, color_panel_foreground.color)
+        outState.putInt(PREF_BUNDLE + CHANGE_BUTTON_COLOR, binding.colorPanelArrows.color)
+        outState.putInt(PREF_BUNDLE + CHANGE_BACKGROUND_COLOR, binding.colorPanelBackground.color)
+        outState.putInt(PREF_BUNDLE + CHANGE_FOREGROUND_COLOR, binding.colorPanelForeground.color)
     }
 
     companion object {

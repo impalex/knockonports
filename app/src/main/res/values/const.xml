@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2019 Alexander Yaburov
+  ~ Copyright (c) 2021 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -20,8 +20,9 @@
   ~ under the License.
   -->
 
-<alpha xmlns:android="http://schemas.android.com/apk/res/android"
-    android:interpolator="@android:anim/accelerate_interpolator"
-    android:fromAlpha="0.0"
-    android:toAlpha="1.0"
-    android:duration="500" />
+<resources>
+    <string name="const_theme_dark" translatable="false">DARK</string>
+    <string name="const_theme_default" translatable="false">DEFAULT</string>
+    <string name="const_disable" translatable="false">disable</string>
+    <string name="const_custom" translatable="false">custom</string>
+</resources>

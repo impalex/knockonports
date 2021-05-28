@@ -21,49 +21,55 @@
 
 package me.impa.knockonports.fragment
 
-import androidx.lifecycle.Observer
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputEditText
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import me.impa.knockonports.R
 import me.impa.knockonports.data.DescriptionType
 import me.impa.knockonports.data.IcmpType
+import me.impa.knockonports.data.ProtocolVersionType
+import me.impa.knockonports.databinding.FragmentSequenceConfigAdvancedBinding
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class AdvancedSettingsFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
-    private val delayEdit by lazy { view!!.findViewById<TextInputEditText>(R.id.edit_sequence_delay) }
-    private val appNameText by lazy { view!!.findViewById<TextView>(R.id.text_app_name) }
-    private val downArrow by lazy { view!!.findViewById<ImageView>(R.id.image_app_down) }
-    private val icmpTypeSpinner by lazy { view!!.findViewById<Spinner>(R.id.icmp_type_spinner) }
-    private val hideDetailsCheckBox by lazy { view!!.findViewById<CheckBox>(R.id.checkbox_hide_details) }
+    private var _binding: FragmentSequenceConfigAdvancedBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_sequence_config_advanced, container, false)
+    private val mainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View
+    {
+        _binding = FragmentSequenceConfigAdvancedBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        icmpTypeSpinner.run {
+        binding.icmpTypeSpinner.run {
             val icmpTypeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, arrayOf(
                     context.getString(R.string.icmp_type_without_headers),
-                    context.getString(R.string.icmp_type_with_icmp_header),
-                    context.getString(R.string.icmp_type_full)
+                    context.getString(R.string.icmp_type_with_icmp_header)
             ))
             icmpTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             adapter = icmpTypeAdapter
-            onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     val icmpType = IcmpType.fromOrdinal(position)
                     mainViewModel.getDirtySequence().value?.icmpType = icmpType
-                    mainViewModel.getDirtySteps().value?.forEach { it.icmpSizeOffset = icmpType.offset }
+                    mainViewModel.getDirtySteps().value?.forEach { it.icmpSizeOffset = icmpType.getOffset() }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -72,29 +78,52 @@ class AdvancedSettingsFragment: Fragment() {
             }
         }
 
-        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
-            delayEdit.setText(it?.delay?.toString())
-            icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
-            hideDetailsCheckBox.isChecked = (it?.descriptionType == DescriptionType.HIDE)
+        binding.ipVersionSpinner.run {
+            val ipVersionAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, arrayOf(
+                    context.getString(R.string.ip_prefer_ipv4),
+                    context.getString(R.string.ip_prefer_ipv6),
+                    context.getString(R.string.ip_only_ipv4),
+                    context.getString(R.string.ip_only_ipv6),
+                    context.getString(R.string.ip_both)
+            ))
+            ipVersionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter = ipVersionAdapter
+            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    val ipType = ProtocolVersionType.fromOrdinal(position)
+                    mainViewModel.getDirtySequence().value?.ipv = ipType
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                }
+            }
+        }
+
+        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, {
+            binding.editSequenceDelay.setText(it?.delay?.toString())
+            binding.ipVersionSpinner.setSelection(it?.ipv?.ordinal ?: 0)
+            binding.icmpTypeSpinner.setSelection(it?.icmpType?.ordinal ?: 1)
+            binding.checkboxHideDetails.isChecked = (it?.descriptionType == DescriptionType.HIDE)
             view.jumpDrawablesToCurrentState()
             showAppName(it?.application, it?.applicationName)
         })
 
-        appNameText.setOnClickListener { showAppChooser() }
-        downArrow.setOnClickListener { showAppChooser() }
+        binding.textAppName.setOnClickListener { showAppChooser() }
+        binding.imageAppDown.setOnClickListener { showAppChooser() }
 
-        delayEdit.afterTextChanged {
+        binding.editSequenceDelay.afterTextChanged {
             mainViewModel.getDirtySequence().value?.delay = it.toIntOrNull()
         }
 
-        hideDetailsCheckBox.setOnCheckedChangeListener { _, isChecked ->
+        binding.checkboxHideDetails.setOnCheckedChangeListener { _, isChecked ->
             mainViewModel.getDirtySequence().value?.descriptionType = if (isChecked) DescriptionType.HIDE else DescriptionType.DEFAULT
         }
     }
 
     private fun showAppName(appId: String?, defaultName: String? = null) {
         val app = mainViewModel.getInstalledApps().value?.firstOrNull { it.app == appId }
-        appNameText.text = app?.name ?: when {
+        binding.textAppName.text = app?.name ?: when {
             appId.isNullOrEmpty() -> getString(R.string.none)
             defaultName.isNullOrEmpty() -> appId
             else -> defaultName

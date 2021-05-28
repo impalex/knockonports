@@ -26,9 +26,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.app_element.view.*
-import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.databinding.AppElementBinding
 
 class AppListAdapter(context: Context): BaseAdapter() {
     var apps = listOf<AppData>()
@@ -47,7 +46,7 @@ class AppListAdapter(context: Context): BaseAdapter() {
     override fun getItem(position: Int): AppData = apps[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: inflater.inflate(R.layout.app_element, parent, false).apply { tag = ViewHolder(this) }
+        val view = convertView ?: AppElementBinding.inflate(inflater, parent, false).apply { root.tag = ViewHolder(this) }.root
         val holder = view.tag as ViewHolder
         holder.name.text = apps[position].name
         holder.view.setOnClickListener { onSelected?.invoke(apps[position]) }
@@ -55,8 +54,9 @@ class AppListAdapter(context: Context): BaseAdapter() {
         return view
     }
 
-    class ViewHolder(val view: View) {
-        val name = view.text_app!!
+    class ViewHolder(binding: AppElementBinding) {
+        val view = binding.root
+        val name = binding.textApp
     }
 
 }

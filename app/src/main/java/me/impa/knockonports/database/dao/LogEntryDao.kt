@@ -21,7 +21,7 @@
 
 package me.impa.knockonports.database.dao
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -34,5 +34,8 @@ interface LogEntryDao {
     suspend fun insertLogEntry(logEntry: LogEntry): Long
 
     @Query("SELECT * FROM tbLog ORDER BY _id DESC")
-    fun logEntriesById(): DataSource.Factory<Int, LogEntry>
+    fun logEntriesById(): PagingSource<Int, LogEntry>
+
+    @Query("DELETE FROM tbLog")
+    suspend fun clearLogEntries(): Int
 }

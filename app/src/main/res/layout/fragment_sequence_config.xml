@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         app:tabMode="fixed" />
 
-    <me.impa.knockonports.component.HackyViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager_settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

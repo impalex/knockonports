@@ -23,7 +23,7 @@ package me.impa.knockonports.util
 
 import android.content.Context
 import android.os.Handler
-import android.view.View
+import android.os.Looper
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -62,7 +62,7 @@ object HintManager {
                 ?: return
 
         HintMap[hint] = true
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             Snackbar.make(view, HintResources.getValue(hint), Snackbar.LENGTH_LONG)
                     .setAction(R.string.got_it) {
                         AppPrefs.markHintAsShown(context, hint)

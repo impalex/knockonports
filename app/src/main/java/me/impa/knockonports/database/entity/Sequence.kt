@@ -33,6 +33,7 @@ import me.impa.knockonports.R
 import me.impa.knockonports.StartKnockActivity
 import me.impa.knockonports.data.DescriptionType
 import me.impa.knockonports.data.IcmpType
+import me.impa.knockonports.data.ProtocolVersionType
 import me.impa.knockonports.data.SequenceStepType
 import me.impa.knockonports.json.SequenceStep
 
@@ -60,7 +61,9 @@ data class Sequence(
         @ColumnInfo(name = "_descriptionType")
         var descriptionType: DescriptionType?,
         @ColumnInfo(name = "_pin")
-        var pin: String?
+        var pin: String?,
+        @ColumnInfo(name = "_ipv")
+        var ipv: ProtocolVersionType?
 ) {
 
     fun getReadableDescription(): String? = when(descriptionType) {

@@ -27,14 +27,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import me.impa.knockonports.R
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.databinding.FragmentSequenceListBinding
 import me.impa.knockonports.ext.expandTo
 import me.impa.knockonports.viewadapter.KnockerItemTouchHelper
 import me.impa.knockonports.viewadapter.SequenceAdapter
@@ -44,16 +43,26 @@ private const val EXPAND_DURATION = 300L
 
 class SequenceListFragment: Fragment() {
 
-    private val sequenceAdapter by lazy { SequenceAdapter(context!!) }
-    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
+    private var _binding: FragmentSequenceListBinding? = null
+    private val binding get() = _binding!!
+
+    private val sequenceAdapter by lazy { SequenceAdapter(requireContext()) }
+    private val mainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
     private val twoPaneMode by lazy { resources.getBoolean(R.bool.twoPaneMode) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_sequence_list, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSequenceListBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val recycler = view.findViewById<RecyclerView>(R.id.recycler_view_sequences)
+        val recycler = binding.recyclerViewSequences
 
         recycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -81,7 +90,7 @@ class SequenceListFragment: Fragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val shortcutManager = context?.getSystemService(ShortcutManager::class.java)
                 if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported) {
-                    shortcutManager.requestPinShortcut(Sequence.getShortcutInfo(context!!, it, false), null)
+                    shortcutManager.requestPinShortcut(Sequence.getShortcutInfo(requireContext(), it, false), null)
                 }
             }
         }
@@ -95,7 +104,7 @@ class SequenceListFragment: Fragment() {
         val touchHelper = ItemTouchHelper(KnockerItemTouchHelper(sequenceAdapter, ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0))
         touchHelper.attachToRecyclerView(recycler)
 
-        mainViewModel.getSequenceList().observe(viewLifecycleOwner, Observer {
+        mainViewModel.getSequenceList().observe(viewLifecycleOwner, {
             sequenceAdapter.items = it?.toMutableList() ?: mutableListOf()
         })
 
@@ -103,18 +112,18 @@ class SequenceListFragment: Fragment() {
             childFragmentManager.beginTransaction()
                     .replace(R.id.fragment_seq_config, SequenceConfigFragment())
                     .commit()
-            val detailsFrame = view.findViewById<FrameLayout>(R.id.fragment_seq_config)
-            mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
+            val detailsFrame = binding.fragmentSeqConfig
+            mainViewModel.getDirtySequence().observe(viewLifecycleOwner, {
                 if (it==null) {
                     detailsFrame?.expandTo(0f, EXPAND_DURATION)
                     recycler.expandTo(1f, EXPAND_DURATION)
                 } else {
                     if (it.id == null) {
                         detailsFrame?.expandTo(1f, EXPAND_DURATION)
-                        recycler?.expandTo(0f, EXPAND_DURATION)
+                        recycler.expandTo(0f, EXPAND_DURATION)
                     } else {
                         detailsFrame?.expandTo(2f, EXPAND_DURATION)
-                        recycler?.expandTo(1f, EXPAND_DURATION)
+                        recycler.expandTo(1f, EXPAND_DURATION)
                     }
                 }
             })

@@ -24,6 +24,7 @@ package me.impa.knockonports.viewadapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -31,10 +32,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.step_element.view.*
 import me.impa.knockonports.R
 import me.impa.knockonports.data.ContentEncoding
 import me.impa.knockonports.data.SequenceStepType
+import me.impa.knockonports.databinding.StepElementBinding
 import me.impa.knockonports.ext.ItemTouchHelperAdapter
 import me.impa.knockonports.ext.afterTextChanged
 import me.impa.knockonports.ext.validate
@@ -58,10 +59,10 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
     override fun getItemCount(): Int = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-            ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.step_element, parent, false))
+        ViewHolder(StepElementBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     fun ViewHolder.selectedItem(): SequenceStep? = try {
-        items[this.adapterPosition]
+        items[this.absoluteAdapterPosition]
     } catch (_: ArrayIndexOutOfBoundsException) {
         null
     }
@@ -88,7 +89,7 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
                     val selectedItem = holder.selectedItem() ?: return
                     if (selectedItem.type != type) {
                         selectedItem.type = type
-                        notifyItemChanged(holder.adapterPosition)
+                        notifyItemChanged(holder.absoluteAdapterPosition)
                         if (type == SequenceStepType.ICMP)
                             HintManager.showHint(context, HintManager.Hint.CHECK_ICMP_SIZE)
                     }
@@ -123,8 +124,8 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
                     val selectedItem = holder.selectedItem() ?: return@run
                     if (selectedItem.isExpanded != isChecked) {
                         selectedItem.isExpanded = isChecked
-                        Handler().post {
-                            notifyItemChanged(holder.adapterPosition)
+                        Handler(Looper.getMainLooper()).post {
+                            notifyItemChanged(holder.absoluteAdapterPosition)
                         }
                     }
                 }
@@ -160,20 +161,8 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         holder.icmpSizeEdit.afterTextChanged {
             holder.selectedItem()?.icmpSize = it.toIntOrNull()
         }
-        if (step.type == SequenceStepType.ICMP) {
-            holder.icmpSizeEdit.validate {
-                val offset = holder.selectedItem()?.icmpSizeOffset ?: return@validate null
-                val size = (it.toIntOrNull() ?: 0) + offset - 8
-                when {
-                    size < 0 -> context.getString(R.string.error_min_icmp_size, 8 - offset)
-                    size > 65507 -> context.getString(R.string.error_max_icmp_size, 65507 + 8 - offset)
-                    else -> null
-                }
-
-            }
-        } else holder.icmpSizeEdit.error = null
         step.onIcmpSizeOffsetChanged = if (step.type == SequenceStepType.ICMP) { _, _ ->
-            notifyItemChanged(holder.adapterPosition)
+            notifyItemChanged(holder.absoluteAdapterPosition)
         } else null
 
         holder.icmpCountEdit.afterTextChanged {
@@ -192,15 +181,15 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
         notifyItemMoved(fromPosition, toPosition)
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val typeSpinner = view.step_type_spinner!!
-        val dragHandle = view.drag_handle!!
-        val stepDataButton = view.step_data!!
-        val icmpWrapper = view.icmp_config_wrapper!!
-        val icmpCountEdit = view.icmp_count_edit!!
-        val icmpSizeEdit = view.icmp_size_edit!!
-        val portWrapper = view.port_wrapper!!
-        val portEdit = view.port_edit!!
-        val dataEdit = view.data_edit!!
+    class ViewHolder(binding: StepElementBinding) : RecyclerView.ViewHolder(binding.root) {
+        val typeSpinner = binding.stepTypeSpinner
+        val dragHandle = binding.dragHandle
+        val stepDataButton = binding.stepData
+        val icmpWrapper = binding.icmpConfigWrapper
+        val icmpCountEdit = binding.icmpCountEdit
+        val icmpSizeEdit = binding.icmpSizeEdit
+        val portWrapper = binding.portWrapper
+        val portEdit = binding.portEdit
+        val dataEdit = binding.dataEdit
     }
 }

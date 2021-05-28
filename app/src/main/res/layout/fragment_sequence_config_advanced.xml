@@ -55,6 +55,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/ip_version"
+                android:layout_marginRight="5dp"
+                android:layout_marginEnd="5dp"/>
+            <Spinner
+                android:id="@+id/ip_version_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawSelectorOnTop="true"
+                android:popupBackground="?attr/popupBackground"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/icmp_type_header"
                 android:layout_marginRight="5dp"
                 android:layout_marginEnd="5dp"/>
@@ -92,7 +111,7 @@
                 android:padding="4dp"
                 app:srcCompat="@drawable/id_down_arrow"
                 tools:ignore="ContentDescription"
-                android:tint="?attr/imageTint"/>
+                app:tint="?attr/imageTint"/>
 
         </LinearLayout>
 

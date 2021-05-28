@@ -21,8 +21,9 @@
 
 package me.impa.knockonports.service
 
-import android.app.IntentService
+import android.content.Context
 import android.content.Intent
+import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.runBlocking
 import me.impa.knockonports.R
@@ -31,7 +32,7 @@ import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.util.Logging
 import me.impa.knockonports.util.warn
 
-class KnockerService: IntentService(KnockerService::class.java.name), Logging {
+class KnockerService: JobIntentService(), Logging {
 
     private fun dummyServiceStart() {
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -45,13 +46,7 @@ class KnockerService: IntentService(KnockerService::class.java.name), Logging {
 
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-
-        if (intent == null) {
-            dummyServiceStart()
-            return
-        }
-
+    override fun onHandleWork(intent: Intent) {
         val seqId = intent.getLongExtra(SEQUENCE_ID, Sequence.INVALID_SEQ_ID)
 
         if (seqId == Sequence.INVALID_SEQ_ID) {
@@ -74,9 +69,9 @@ class KnockerService: IntentService(KnockerService::class.java.name), Logging {
 
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
         notificationBuilder.setOngoing(true)
-                .setContentTitle(resources.getString(R.string.notification_title))
-                .setContentText(resources.getString(R.string.notification_desc, sequence.name))
-                .setSmallIcon(R.drawable.ic_knock_notif)
+            .setContentTitle(resources.getString(R.string.notification_title))
+            .setContentText(resources.getString(R.string.notification_desc, sequence.name))
+            .setSmallIcon(R.drawable.ic_knock_notif)
 
         startForeground(FOREGROUND_ID, notificationBuilder.build())
 
@@ -89,6 +84,9 @@ class KnockerService: IntentService(KnockerService::class.java.name), Logging {
         private const val FOREGROUND_ID = 1337
         const val CHANNEL_ID = "KNOCKER_CHANNEL"
         const val SEQUENCE_ID = "KNOCK_SEQUENCE_ID"
+
+        fun enqueueWork(context: Context, intent: Intent) =
+            enqueueWork(context, KnockerService::class.java, 1, intent)
     }
 
 

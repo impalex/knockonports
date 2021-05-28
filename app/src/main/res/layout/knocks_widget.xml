@@ -24,7 +24,6 @@
     android:id="@+id/widget_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWidgetBackground"
     android:padding="@dimen/widget_margin"
     android:gravity="center_vertical">
     <ImageView
@@ -32,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/prev_sequence"
-        android:tint="@color/colorWidgetButtons"
+        app:tint="@color/colorWidgetButtons"
         app:srcCompat="@drawable/ic_left_arrow_x"/>
     <TextView
         android:id="@+id/appwidget_text"
@@ -54,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:contentDescription="@string/next_sequence"
-        android:tint="@color/colorWidgetButtons"
+        app:tint="@color/colorWidgetButtons"
         app:srcCompat="@drawable/ic_right_arrow_x"/>
 
 </LinearLayout>

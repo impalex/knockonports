@@ -26,9 +26,12 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import androidx.lifecycle.*
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
 import me.impa.knockonports.R
 import me.impa.knockonports.data.*
 import me.impa.knockonports.database.KnocksRepository
@@ -43,17 +46,16 @@ import me.impa.knockonports.util.info
 import me.impa.knockonports.util.toast
 import me.impa.knockonports.util.warn
 import me.impa.knockonports.widget.KnocksWidget
-import java.io.File
 
 class MainViewModel(application: Application): AndroidViewModel(application), Logging {
 
     private val repository by lazy { KnocksRepository(application) }
     private lateinit var sequenceList: LiveData<List<Sequence>>
-    private lateinit var log: LiveData<PagedList<LogEntry>>
+    private lateinit var log: Flow<PagingData<LogEntry>>
     private val selectedSequence = MutableLiveData<Sequence?>()
     private val settingsTabIndex = MutableLiveData<Int>()
     private val fabVisible = MutableLiveData<Boolean>().default(true)
-    private val logVisible = MutableLiveData<Boolean>().default(false)
+    private val activeFragment = MutableLiveData<ActiveFragmentType>().default(ActiveFragmentType.MAIN)
     private val pendingOrderChanges: MutableLiveData<List<Long>> = MutableLiveData()
     private val installedApps = MutableLiveData<List<AppData>?>().default(null)
     private val dirtySequence = Transformations.map(selectedSequence) {
@@ -63,7 +65,7 @@ class MainViewModel(application: Application): AndroidViewModel(application), Lo
         it?.copy()
     }
     private val dirtySteps = Transformations.map(selectedSequence) {
-        it?.steps?.onEach { e -> e.icmpSizeOffset = it.icmpType?.offset ?: 0 }?.toMutableList() ?: mutableListOf()
+        it?.steps?.onEach { e -> e.icmpSizeOffset = it.icmpType?.getOffset() ?: 0 }?.toMutableList() ?: mutableListOf()
     }
     fun getSequenceList(): LiveData<List<Sequence>> {
         runBlocking { savePendingData() }
@@ -75,11 +77,11 @@ class MainViewModel(application: Application): AndroidViewModel(application), Lo
         return sequenceList
     }
 
-    fun getLog(): LiveData<PagedList<LogEntry>> {
+    fun getLog(): Flow<PagingData<LogEntry>> {
         if (!::log.isInitialized) {
             runBlocking {
-                //repository.getLogEntries().toLiveData
-                log = repository.getLogEntries().toLiveData(pageSize = 50)
+                log = Pager(PagingConfig(pageSize = 50)) { repository.getLogEntries() }
+                    .flow.cachedIn(viewModelScope)
             }
         }
         return log
@@ -107,10 +109,10 @@ class MainViewModel(application: Application): AndroidViewModel(application), Lo
         fabVisible.value = isVisible
     }
 
-    fun getLogVisible(): LiveData<Boolean> = logVisible
+    fun getActiveFragment(): LiveData<ActiveFragmentType> = activeFragment
 
-    fun setLogVisible(isVisible: Boolean) {
-        logVisible.value = isVisible
+    fun setActiveFragment(fragment: ActiveFragmentType) {
+        activeFragment.value = fragment
     }
 
     fun getInstalledApps(): LiveData<List<AppData>?> = installedApps
@@ -145,18 +147,21 @@ class MainViewModel(application: Application): AndroidViewModel(application), Lo
         }
     }
 
-    fun addToLog(event: EventType, date: Long = System.currentTimeMillis(), data: List<String?>? = null) {
-        runBlocking {
-            repository.saveLogEntry(LogEntry(null, date, event, data))
-        }
+    private fun addToLog(event: EventType, date: Long = System.currentTimeMillis(), data: List<String?>? = null) = runBlocking {
+        repository.saveLogEntry(LogEntry(null, date, event, data))
+    }
+
+
+    fun clearLog() = runBlocking {
+        repository.clearLogEntries()
     }
 
     fun createEmptySequence() {
         setSelectedSequence(Sequence(null, null, null,
                 null, 500, null, null, IcmpType.WITHOUT_HEADERS,
                 listOf(SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW).apply {
-                    icmpSizeOffset = IcmpType.WITHOUT_HEADERS.offset
-                }), DescriptionType.DEFAULT, null))
+                    icmpSizeOffset = IcmpType.WITHOUT_HEADERS.getOffset()
+                }), DescriptionType.DEFAULT, null, ProtocolVersionType.PREFER_IPV4))
     }
 
     fun saveDirtyData() {
@@ -200,57 +205,62 @@ class MainViewModel(application: Application): AndroidViewModel(application), Lo
         }
     }
 
-    fun exportData(fileName: String) {
+    fun exportSequences(fileName: String, writer: (data: String) -> Unit) {
         val application = getApplication<Application>()
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                info { "Exporting data to $fileName" }
+        try {
+            info { "Exporting data to $fileName" }
 
-                val data = sequenceList.value?.asSequence()?.map { SequenceData.fromEntity(it) }?.toList()
-                        ?: return@launch
+            val data = sequenceList.value?.asSequence()?.map { SequenceData.fromEntity(it) }?.toList()
+                    ?: return
 
-                File(fileName).writeText(SequenceData.toJson(data))
-
-                addToLog(EventType.EXPORT, data = listOf(fileName, data.size.toString()))
-
-                viewModelScope.launch {
-                    application.toast(application.resources.getString(R.string.export_success, fileName))
+            runBlocking {
+                withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                    writer.invoke(SequenceData.toJson(data))
                 }
-                info { "Export complete" }
+            }
 
-            } catch (e: Exception) {
-                warn("Unable to export data", e)
-                addToLog(EventType.ERROR_EXPORT, data = listOf(fileName, e.message))
-                viewModelScope.launch {
-                    application.toast(R.string.error_export)
-                }
+            addToLog(EventType.EXPORT, data = listOf(fileName, data.size.toString()))
+
+            viewModelScope.launch {
+                application.toast(
+                    application.resources.getString(
+                        R.string.export_success,
+                        fileName
+                    )
+                )
+            }
+            info { "Export complete" }
+
+        } catch (e: Exception) {
+            warn("Unable to export data", e)
+            addToLog(EventType.ERROR_EXPORT, data = listOf(fileName, e.message))
+            viewModelScope.launch {
+                application.toast(R.string.error_export)
             }
         }
     }
 
-    fun importData(fileName: String) {
+    fun importSequences(fileName: String, reader: () -> String) {
         val application = getApplication<Application>()
-        val order = sequenceList.value?.size ?: 0
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val raw = File(fileName).readText()
-                val data = SequenceData.fromJson(raw)
-                data.forEachIndexed { index, sequenceData ->
-                    val seq = sequenceData.toEntity()
-                    seq.order = order + index
-                    repository.saveSequence(seq)
-                }
-                addToLog(EventType.IMPORT, data = listOf(fileName, data.size.toString()))
-                viewModelScope.launch {
-                    application.toast(application.resources.getQuantityString(R.plurals.import_success, data.size, data.size, fileName))
-                }
-            } catch (e: Exception) {
-                warn("Unable to import data", e)
-                addToLog(EventType.ERROR_IMPORT, data = listOf(fileName, e.message))
-                viewModelScope.launch {
-                    application.toast(R.string.error_import)
+        try {
+            val data = SequenceData.fromJson(reader.invoke())
+            val listSize = sequenceList.value?.size ?: 0
+            data.forEachIndexed { index, sequenceData ->
+                val seq = sequenceData.toEntity().apply { order = listSize + index }
+                runBlocking {
+                    withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+                        repository.saveSequence(seq)
+                    }
                 }
             }
+            addToLog(EventType.IMPORT, data = listOf(fileName, data.size.toString()))
+            viewModelScope.launch {
+                application.toast(application.resources.getQuantityString(R.plurals.import_success, data.size, data.size, fileName))
+            }
+        } catch (e: Exception) {
+            warn("Unable to import data", e)
+            addToLog(EventType.ERROR_IMPORT, data = listOf(fileName, e.message))
+            viewModelScope.launch { application.toast(R.string.error_import) }
         }
     }
 

@@ -21,6 +21,7 @@
 
 package me.impa.knockonports.data
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import me.impa.knockonports.R
@@ -40,6 +41,7 @@ data class AppData(val app: String, val name: String) {
     }
 
     companion object {
+        @SuppressLint("QueryPermissionsNeeded")
         fun loadInstalledApps(context: Context): List<AppData> =
                 sequenceOf(AppData("", context.resources.getString(R.string.none)))
                         .plus(context.packageManager.getInstalledApplications(PackageManager.GET_META_DATA)

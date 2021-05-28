@@ -21,12 +21,11 @@
 
 package me.impa.knockonports.data
 
+import me.impa.knockonports.ext.EnumCompanion
+
 enum class DescriptionType {
     DEFAULT,
     HIDE;
 
-    companion object {
-        val values = values()
-        fun fromOrdinal(ordinal: Int): DescriptionType = if (ordinal in values.indices) values[ordinal] else DEFAULT
-    }
+    companion object : EnumCompanion<DescriptionType>(values())
 }

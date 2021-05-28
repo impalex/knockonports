@@ -22,29 +22,37 @@
 package me.impa.knockonports
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.provider.OpenableColumns
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.activity_main.*
+import me.impa.knockonports.data.ActiveFragmentType
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.databinding.ActivityMainBinding
 import me.impa.knockonports.fragment.*
 import me.impa.knockonports.util.AppPrefs
 import me.impa.knockonports.util.Logging
 import me.impa.knockonports.util.info
 import me.impa.knockonports.util.warn
 import me.impa.knockonports.viewmodel.MainViewModel
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -53,10 +61,13 @@ private const val REQUEST_IMPORT = 3000
 private const val FRAGMENT_SEQ_LIST = "SEQUENCE_LIST"
 private const val FRAGMENT_SEQ_CFG = "SEQUENCE_CONFIG"
 private const val FRAGMENT_LOG = "LOG"
+private const val FRAGMENT_PREF = "PREF"
 private const val STATE_EXPORT_FILENAME = "STATE_EXPORT_FILENAME"
 private const val STATE_EXPORT_DIR = "STATE_EXPORT_DIR"
 private const val STATE_IMPORT_DIR = "STATE_IMPORT_DIR"
 const val EXTRA_SEQ_ID = "EXTRA_SEQ_ID"
+const val EXTRA_ASK_CONFIRMATION = "EXTRA_ASK_CONFIRMATION"
+const val EXTRA_IS_WIDGET = "EXTRA_IS_WIDGET"
 
 class MainActivity : AppCompatActivity(), Logging {
 
@@ -66,14 +77,29 @@ class MainActivity : AppCompatActivity(), Logging {
     private var fragmentImport: FileChooserFragment? = null
     private var fragmentRateApp: RateAppFragment? = null
     private val isInstalledFromPlayStore by lazy {
-        arrayOf("com.android.vending", "com.google.android.feedback").contains(packageManager.getInstallerPackageName(packageName))
+        arrayOf("com.android.vending", "com.google.android.feedback").contains(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
+                packageManager.getInstallSourceInfo(packageName).installingPackageName
+            else
+                @Suppress("DEPRECATION")
+                packageManager.getInstallerPackageName(packageName)
+        )
     }
     private val currentTheme by lazy { AppPrefs.getCurrentTheme(this) }
 
     private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        AppPrefs.init(this)
+        AppPrefs.registerRestartHandler {
+            recreate()
+        }
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
         when(currentTheme) {
             AppPrefs.THEME_DARK -> setTheme(R.style.AppTheme_Dark)
@@ -84,13 +110,12 @@ class MainActivity : AppCompatActivity(), Logging {
 
         installShortcutWatcher()
 
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        fab.setOnClickListener {
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
+        binding.fab.setOnClickListener {
             mainViewModel.createEmptySequence()
         }
-        mainViewModel.getSelectedSequence().observe(this, Observer {
+        mainViewModel.getSelectedSequence().observe(this, {
             checkMenuGroups(noSelectedSeq = it == null)
             /*
             if (it == null) {
@@ -117,15 +142,15 @@ class MainActivity : AppCompatActivity(), Logging {
                 supportFragmentManager.beginTransaction().remove(fragment).commit()
         }
 
-        mainViewModel.getFabVisible().observe(this, Observer {
+        mainViewModel.getFabVisible().observe(this, {
             if (it == false) {
-                fab.hide()
+                binding.fab.hide()
             } else {
-                fab.show()
+                binding.fab.show()
             }
         })
 
-        mainViewModel.getDirtySequence().observe(this, Observer {
+        mainViewModel.getDirtySequence().observe(this, {
             if (it == null) {
                 if (twoPaneMode) {
                     mainViewModel.setFabVisible(true)
@@ -146,14 +171,20 @@ class MainActivity : AppCompatActivity(), Logging {
             }
         })
 
-        mainViewModel.getLogVisible().observe(this, Observer {
-            checkMenuGroups(logVisibility = it)
-            if (it) {
+        mainViewModel.getActiveFragment().observe(this, {
+            val isLogVisible = it == ActiveFragmentType.LOG
+            val isPrefVisible = it == ActiveFragmentType.PREFERENCES
+            checkMenuGroups(logVisibility = isLogVisible, prefsVisibility = isPrefVisible)
+            if (isLogVisible)
                 supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, LogFragment())
                         .addToBackStack(FRAGMENT_LOG)
                         .commit()
-            }
+            if (isPrefVisible)
+                supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, PreferencesFragment())
+                        .addToBackStack(FRAGMENT_PREF)
+                        .commit()
         })
 
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, SequenceListFragment(), FRAGMENT_SEQ_LIST).commit()
@@ -164,7 +195,7 @@ class MainActivity : AppCompatActivity(), Logging {
                     true -> {
                         mainViewModel.setSelectedSequence(null)
                         mainViewModel.setFabVisible(true)
-                        mainViewModel.setLogVisible(false)
+                        mainViewModel.setActiveFragment(ActiveFragmentType.MAIN)
                         supportActionBar?.setDisplayHomeAsUpEnabled(false)
                         supportActionBar?.setTitle(R.string.app_name)
                     }
@@ -177,13 +208,12 @@ class MainActivity : AppCompatActivity(), Logging {
             }
 
         }
-
         if (isInstalledFromPlayStore && RateAppFragment.isTimeToAskForReview(this))
             askForReview()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> mainViewModel.setSelectedSequence(null)
             R.id.action_done -> {
                 mainViewModel.saveDirtyData()
@@ -193,21 +223,17 @@ class MainActivity : AppCompatActivity(), Logging {
             R.id.action_export -> exportData()
             R.id.action_import -> importData()
             R.id.action_rate -> RateAppFragment.openPlayMarket(this)
-            R.id.action_theme -> {
-                AppPrefs.saveCurrentTheme(this, if (currentTheme == AppPrefs.THEME_DARK) AppPrefs.THEME_DEFAULT else AppPrefs.THEME_DARK)
-                finish()
-                startActivity(intent)
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
-            }
-            R.id.action_log -> mainViewModel.setLogVisible(true)
+            R.id.action_log -> mainViewModel.setActiveFragment(ActiveFragmentType.LOG)
+            R.id.action_preferences -> mainViewModel.setActiveFragment(ActiveFragmentType.PREFERENCES)
+            R.id.action_clear_log -> clearLogData()
         }
         return true
     }
 
     override fun onBackPressed() {
         when {
-            mainViewModel.getLogVisible().value == true -> {
-                mainViewModel.setLogVisible(false)
+            mainViewModel.getActiveFragment().value != ActiveFragmentType.MAIN -> {
+                mainViewModel.setActiveFragment(ActiveFragmentType.MAIN)
                 super.onBackPressed()
             }
             twoPaneMode && mainViewModel.getSelectedSequence().value != null -> mainViewModel.setSelectedSequence(null)
@@ -215,17 +241,15 @@ class MainActivity : AppCompatActivity(), Logging {
         }
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        if (savedInstanceState != null) {
-            val exName = savedInstanceState.getString(STATE_EXPORT_FILENAME)
-            val exDir = savedInstanceState.getString(STATE_EXPORT_DIR)
-            val impDir = savedInstanceState.getString(STATE_IMPORT_DIR)
-            if (exName != null) {
-                exportData(exName, exDir)
-            } else if (impDir != null) {
-                importData(impDir)
-            }
+        val exName = savedInstanceState.getString(STATE_EXPORT_FILENAME)
+        val exDir = savedInstanceState.getString(STATE_EXPORT_DIR)
+        val impDir = savedInstanceState.getString(STATE_IMPORT_DIR)
+        if (exName != null) {
+            exportData(exName, exDir)
+        } else if (impDir != null) {
+            importData(impDir)
         }
     }
 
@@ -255,7 +279,33 @@ class MainActivity : AppCompatActivity(), Logging {
         super.onDestroy()
     }
 
-    private fun importData(importDir: String? = null) {
+    private fun importData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            importDataSaf()
+        else
+            importData(null)
+    }
+
+    private val importActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            val (contentUri, fileName) = parseIntentForUri(it.data) ?: return@registerForActivityResult
+            mainViewModel.importSequences(fileName ?: "<?>") {
+                application.contentResolver.openInputStream(contentUri)?.use { stream ->
+                    stream.reader().use { reader -> reader.readText() }
+                }!!
+            }
+        }
+    }
+
+    private fun importDataSaf() {
+        val openDocIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }
+        importActivityResultLauncher.launch(openDocIntent)
+    }
+
+    private fun importData(importDir: String?) {
         if (!checkPermissions(REQUEST_IMPORT, Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return
         }
@@ -266,32 +316,87 @@ class MainActivity : AppCompatActivity(), Logging {
             showSaveButton = false
             showFileNameEdit = false
             onDismiss = { fragmentImport = null }
-            onSelected = { mainViewModel.importData(it) }
+            onSelected = { mainViewModel.importSequences(it) { File(it).readText() } }
         }
-
     }
 
-    private fun exportData(fileName: String? = null, exportDir: String? = null) {
+    private fun exportData() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            exportDataSaf()
+        else
+            exportData(null, null)
+    }
+
+    private val exportActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        if (it.resultCode == RESULT_OK) {
+            val (contentUri, fileName) = parseIntentForUri(it.data) ?: return@registerForActivityResult
+            mainViewModel.exportSequences(fileName ?: "<?>") { data ->
+                application.contentResolver.openOutputStream(contentUri)?.use { stream ->
+                    stream.writer().use { writer ->
+                        writer.write(data)
+                    }
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.KITKAT)
+    private fun exportDataSaf() {
+        val saveDocIntent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_TITLE, getDefaultFileName())
+        }
+        exportActivityResultLauncher.launch(saveDocIntent)
+    }
+
+    private fun exportData(fileName: String?, exportDir: String?) {
         if (!checkPermissions(REQUEST_EXPORT, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             return
         }
-
         fragmentExport = fileChooser {
             title = this@MainActivity.getString(R.string.title_export)
             dirsOnly = true
-            this.fileName = fileName ?: this@MainActivity.getString(R.string.export_file_template,
-                    SimpleDateFormat("yyyyMMdd_hhmmss", Locale.US).format(Date()))
+            this.fileName = fileName ?: getDefaultFileName()
             currentDir = exportDir
             onDismiss = { fragmentExport = null }
-            onSelected = { mainViewModel.exportData(it) }
+            onSelected = { mainViewModel.exportSequences(it) { data -> File(it).writeText(data) } }
 
         }
+    }
+
+    private fun getDefaultFileName() = getString(R.string.export_file_template,
+        SimpleDateFormat("yyyyMMdd_hhmmss", Locale.US).format(Date()))
+
+    private fun parseIntentForUri(intent: Intent?): Pair<Uri, String?>? {
+        val contentUri = intent?.data ?: return null
+        val fileName = contentResolver.query(contentUri, null, null, null, null)
+            .use { cursor ->
+                cursor?.run {
+                    val nameIndex = getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    moveToFirst()
+                    getString(nameIndex)
+                }
+            }
+        return Pair(contentUri, fileName)
+    }
+
+    private fun clearLogData() {
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage(R.string.text_confirm_clear_log)
+                .setTitle(R.string.title_clear_log)
+                .setPositiveButton(R.string.action_yes) { _, _ ->
+                    mainViewModel.clearLog()
+                }
+                .setNegativeButton(R.string.action_no) { dialog, _ ->
+                    dialog.dismiss()
+                }
+        builder.create().show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
-        menu.findItem(R.id.action_theme).isChecked = currentTheme == AppPrefs.THEME_DARK
         checkMenuGroups()
         /*
         val selectedSequenceState = mainViewModel.getSelectedSequence().value == null
@@ -302,13 +407,17 @@ class MainActivity : AppCompatActivity(), Logging {
     }
 
     private fun checkMenuGroups(noSelectedSeq: Boolean = mainViewModel.getSelectedSequence().value == null,
-                                logVisibility: Boolean = mainViewModel.getLogVisible().value == true) {
-        menu?.setGroupVisible(R.id.group_settings, !noSelectedSeq && !logVisibility)
-        menu?.setGroupVisible(R.id.group_main, (noSelectedSeq || twoPaneMode) && !logVisibility)
-        menu?.setGroupVisible(R.id.group_rate, (noSelectedSeq || twoPaneMode) && !logVisibility && isInstalledFromPlayStore)
+                                logVisibility: Boolean = mainViewModel.getActiveFragment().value == ActiveFragmentType.LOG,
+                                prefsVisibility: Boolean = mainViewModel.getActiveFragment().value == ActiveFragmentType.PREFERENCES) {
+        menu?.setGroupVisible(R.id.group_settings, !noSelectedSeq && !logVisibility && !prefsVisibility)
+        menu?.setGroupVisible(R.id.group_main, (noSelectedSeq || twoPaneMode) && !logVisibility && !prefsVisibility)
+        menu?.setGroupVisible(R.id.group_rate, (noSelectedSeq || twoPaneMode) && !logVisibility && !prefsVisibility && isInstalledFromPlayStore)
+        menu?.setGroupVisible(R.id.group_log, logVisibility)
     }
 
     private fun checkPermissions(action: Int, vararg perms: String): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true
         val reqPermissions = mutableListOf<String>()
         perms.forEach {
             val permission = ContextCompat.checkSelfPermission(this, it)
@@ -323,14 +432,14 @@ class MainActivity : AppCompatActivity(), Logging {
             ActivityCompat.requestPermissions(this, reqPermissions.toTypedArray(), action)
             return false
         }
-
         return true
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (permissions.size == grantResults.size && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
             // Delayed coz of android 6 bug - https://issuetracker.google.com/issues/37067655
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 when (requestCode) {
                     REQUEST_EXPORT -> exportData()
                     REQUEST_IMPORT -> importData()

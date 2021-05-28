@@ -22,11 +22,13 @@
 package me.impa.knockonports
 
 import android.content.pm.ShortcutManager
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import me.impa.knockonports.database.entity.Sequence
+import me.impa.knockonports.ext.askForConfirmation
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class StartKnockActivity : AppCompatActivity() {
@@ -35,15 +37,27 @@ class StartKnockActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setBackgroundDrawable(ColorDrawable(0))
         val seqId = intent.getLongExtra(EXTRA_SEQ_ID, 0)
+        val askConfirmation = intent.getBooleanExtra(EXTRA_ASK_CONFIRMATION, false)
+        val isWidget = intent.getBooleanExtra(EXTRA_IS_WIDGET, false)
         val seq = mainViewModel.findSequence(seqId)
         if (seq != null) {
-            mainViewModel.knock(seq)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            if (askConfirmation) {
+                askForConfirmation(seq.name) {
+                    if (it)
+                        mainViewModel.knock(seq)
+                    finish()
+                }
+            } else {
+                mainViewModel.knock(seq)
+                finish()
+            }
+
+            if (!isWidget && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
                 val shortcutManager = getSystemService(ShortcutManager::class.java)
                 shortcutManager?.reportShortcutUsed(Sequence.shortcutId(seqId))
             }
         }
-        finish()
     }
 }

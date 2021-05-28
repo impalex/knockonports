@@ -21,18 +21,12 @@
 
 package me.impa.knockonports.database.converter
 
-import android.annotation.SuppressLint
-import android.provider.SyncStateContract
-import androidx.room.TypeConverter
 import android.util.Base64
+import androidx.room.TypeConverter
 import me.impa.knockonports.data.*
 import me.impa.knockonports.json.SequenceStep
 import java.net.URLDecoder
 import java.net.URLEncoder
-import java.text.SimpleDateFormat
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Suppress("unused")
 class DataConverters {
@@ -50,7 +44,7 @@ class DataConverters {
             }
 
     @TypeConverter
-    fun stringToSequenceStep(data: String?): List<SequenceStep>? =
+    fun stringToSequenceStep(data: String?) =
             data?.split(ENTRY_SEPARATOR)?.map {
                 val s = it.split(VALUE_SEPARATOR)
                 SequenceStep(if (s.isNotEmpty()) SequenceStepType.fromOrdinal(s[0].toIntOrNull() ?: SequenceStepType.UDP.ordinal) else null,
@@ -86,6 +80,12 @@ class DataConverters {
 
     @TypeConverter
     fun eventTypeToInt(data: EventType): Int = data.ordinal
+
+    @TypeConverter
+    fun intToProtocolVersionType(data: Int?): ProtocolVersionType = ProtocolVersionType.fromOrdinal(data ?: 0)
+
+    @TypeConverter
+    fun protocolVersionTypeToInt(data: ProtocolVersionType?): Int = data?.ordinal ?: 0
 
     companion object {
         const val VALUE_SEPARATOR = ':'

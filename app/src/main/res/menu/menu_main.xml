@@ -40,14 +40,13 @@
             android:orderInCategory="3000"
             android:title="@string/action_import"
             app:showAsAction="never"/>
-        <item android:id="@+id/action_theme"
-            android:orderInCategory="3300"
-            android:title="@string/action_dark_theme"
-            android:checkable="true"
-            app:showAsAction="never"/>
         <item android:id="@+id/action_log"
             android:orderInCategory="3400"
             android:title="@string/action_log"
+            app:showAsAction="never"/>
+        <item android:id="@+id/action_preferences"
+            android:orderInCategory="3500"
+            android:title="@string/action_preferences"
             app:showAsAction="never"/>
     </group>
     <group android:id="@+id/group_rate">
@@ -63,6 +62,14 @@
             android:orderInCategory="4000"
             android:title="@string/action_done"
             app:showAsAction="ifRoom" />
+    </group>
+    <group
+        android:id="@+id/group_log">
+        <item
+            android:id="@+id/action_clear_log"
+            android:orderInCategory="5000"
+            android:title="@string/action_clear_log"
+            app:showAsAction="ifRoom"/>
     </group>
 
 </menu>

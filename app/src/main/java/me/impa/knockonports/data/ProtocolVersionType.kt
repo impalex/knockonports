@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2021 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -19,29 +19,12 @@
  * under the License.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package me.impa.knockonports.data
 
-buildscript {
-    repositories {
-        google()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.1'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10"
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-}
+import me.impa.knockonports.ext.EnumCompanion
 
-allprojects {
-    repositories {
-        google()
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
+enum class ProtocolVersionType {
+    PREFER_IPV4, PREFER_IPV6, ONLY_IPV4, ONLY_IPV6, BOTH;
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+    companion object : EnumCompanion<ProtocolVersionType>(values())
 }

@@ -26,8 +26,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import kotlinx.android.synthetic.main.file_element.view.*
 import me.impa.knockonports.R
+import me.impa.knockonports.databinding.FileElementBinding
 import java.io.File
 
 class FileItemAdapter(context: Context) : BaseAdapter() {
@@ -48,7 +48,8 @@ class FileItemAdapter(context: Context) : BaseAdapter() {
     override fun getItem(position: Int): File = fileList[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: inflater.inflate(R.layout.file_element, parent, false).apply { tag = ViewHolder(this) }
+
+        val view = convertView ?: FileElementBinding.inflate(inflater, parent, false).apply { root.tag = ViewHolder(this) }.root
         val holder = view.tag as ViewHolder
         holder.image.setImageResource(if (fileList[position].isDirectory) R.drawable.ic_folder else R.drawable.ic_file)
         holder.name.text = fileList[position].name
@@ -56,8 +57,9 @@ class FileItemAdapter(context: Context) : BaseAdapter() {
         return view
     }
 
-    class ViewHolder(val view: View) {
-        val image = view.image_file_type!!
-        val name = view.text_file_name!!
+    class ViewHolder(val binding: FileElementBinding) {
+        val view = binding.root
+        val image = binding.imageFileType
+        val name = binding.textFileName
     }
 }

@@ -21,26 +21,28 @@
 
 package me.impa.knockonports.data
 
+import me.impa.knockonports.ext.EnumCompanion
+import java.net.Inet4Address
+import java.net.Inet6Address
+import java.net.InetAddress
+import java.security.InvalidParameterException
+
 enum class IcmpType {
     WITHOUT_HEADERS {
-        override val offset: Int
-            get() = 8
+        override fun getOffset(address: InetAddress?): Int = 8
     },
     WITH_ICMP_HEADER {
-        override val offset: Int
-            get() = 0
+        override fun getOffset(address: InetAddress?): Int = 0
     },
-    @Suppress("unused")
     WITH_IP_AND_ICMP_HEADERS {
-        override val offset: Int
-            get() = -20
+        override fun getOffset(address: InetAddress?): Int = when(address) {
+            is Inet4Address, null -> -20
+            is Inet6Address -> -40
+            else -> throw InvalidParameterException()
+        }
     };
 
-    abstract val offset: Int
+    abstract fun getOffset(address: InetAddress? = null): Int
 
-    companion object {
-        val values = values()
-
-        fun fromOrdinal(ordinal: Int): IcmpType = if (ordinal in values.indices) values[ordinal] else WITH_ICMP_HEADER
-    }
+    companion object : EnumCompanion<IcmpType>(values(), WITH_ICMP_HEADER)
 }

@@ -26,17 +26,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.ProgressBar
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.coroutines.*
 import me.impa.knockonports.R
 import me.impa.knockonports.data.AppData
+import me.impa.knockonports.databinding.FragmentAppChooserBinding
 import me.impa.knockonports.viewadapter.AppListAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class AppChooserFragment: DialogFragment() {
+
+    private var _binding: FragmentAppChooserBinding? = null
+    private val binding get() = _binding!!
 
     var onSelected: ((AppData) -> Unit)? = null
 
@@ -45,26 +47,33 @@ class AppChooserFragment: DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_app_chooser, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentAppChooserBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val appAdapter = AppListAdapter(context!!).apply { onSelected = this@AppChooserFragment.onSelected }
-        val mainViewModel = ViewModelProvider(activity!!).get(MainViewModel::class.java)
-        val listView = view.findViewById<ListView>(R.id.list_apps)
+        val appAdapter = AppListAdapter(requireContext()).apply { onSelected = this@AppChooserFragment.onSelected }
+        val mainViewModel = ViewModelProvider(requireActivity()).get(MainViewModel::class.java)
+        val listView = binding.listApps
 
         listView.adapter = appAdapter
 
         val apps = mainViewModel.getInstalledApps().value
-        val progressBar = view.findViewById<ProgressBar>(R.id.progress_loading)
+        val progressBar = binding.progressLoading
 
         if (apps == null) {
             listView.visibility = View.GONE
             CoroutineScope(Dispatchers.Main).launch {
                 val appList = withContext(Dispatchers.Default) {
-                    AppData.loadInstalledApps(activity!!)
+                    AppData.loadInstalledApps(requireActivity())
                 }
                 mainViewModel.setInstalledApps(appList)
                 appAdapter.apps = appList

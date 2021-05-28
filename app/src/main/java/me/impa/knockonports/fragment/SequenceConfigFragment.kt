@@ -26,20 +26,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import me.impa.knockonports.R
-import me.impa.knockonports.component.HackyViewPager
+import me.impa.knockonports.databinding.FragmentSequenceConfigBinding
 import me.impa.knockonports.viewadapter.SettingsPagerAdapter
 import me.impa.knockonports.viewmodel.MainViewModel
 
 class SequenceConfigFragment: Fragment() {
 
-    private val mainViewModel by lazy { ViewModelProvider(activity!!).get(MainViewModel::class.java) }
+    private var _binding: FragmentSequenceConfigBinding? = null
+    private val binding get() = _binding!!
+    private val titleList by lazy { arrayOf(requireActivity().getString(R.string.title_settings), requireActivity().getString(R.string.title_advanced)) }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_sequence_config, container, false)
+    private val mainViewModel by lazy { ViewModelProvider(requireActivity()).get(MainViewModel::class.java) }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentSequenceConfigBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,16 +60,16 @@ class SequenceConfigFragment: Fragment() {
         } else {
             View.VISIBLE
         }
-        val adapter = SettingsPagerAdapter(childFragmentManager,
-                arrayOf(BasicSettingsFragment(), AdvancedSettingsFragment()),
-                arrayOf(activity!!.getString(R.string.title_settings), activity!!.getString(R.string.title_advanced)))
+        val adapter = SettingsPagerAdapter(this,
+                arrayOf(BasicSettingsFragment(), AdvancedSettingsFragment()))
 
-        val viewPager = view.findViewById<HackyViewPager>(R.id.viewpager_settings)
-        viewPager!!.adapter = adapter
+        binding.viewpagerSettings.adapter = adapter
 
 
-        val tabLayout = view.findViewById<TabLayout>(R.id.tabs_settings)
-        tabLayout.setupWithViewPager(viewPager)
+        val tabLayout = binding.tabsSettings
+        TabLayoutMediator(tabLayout, binding.viewpagerSettings) { tab, pos ->
+            tab.text = titleList[pos]
+        }.attach()
 
         val tabIdx = mainViewModel.getSettingsTabIndex().value
         if (tabIdx != null)
@@ -76,7 +87,7 @@ class SequenceConfigFragment: Fragment() {
             }
         })
 
-        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, Observer {
+        mainViewModel.getDirtySequence().observe(viewLifecycleOwner, {
             view.visibility = if (it == null) {
                 View.INVISIBLE
             } else {

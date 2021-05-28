@@ -26,11 +26,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.twofortyfouram.locale.sdk.client.ui.activity.AbstractAppCompatPluginActivity
 import me.impa.knockonports.R
+import me.impa.knockonports.databinding.TaskerActionConfigureBinding
 import me.impa.knockonports.tasker.bundle.KnockerBundleValues
 import me.impa.knockonports.util.AppPrefs
 import me.impa.knockonports.util.Logging
@@ -41,9 +40,9 @@ import net.jcip.annotations.NotThreadSafe
 @NotThreadSafe
 class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
 
-    private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    private lateinit var binding: TaskerActionConfigureBinding
 
-    private val sequenceSpinner by lazy { findViewById<Spinner>(R.id.knock_on_spinner) }
+    private val mainViewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
 
     private var idsList: List<Long>? = null
     private var seqId: Long = -1
@@ -51,15 +50,17 @@ class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        binding = TaskerActionConfigureBinding.inflate(layoutInflater)
+
         when(AppPrefs.getCurrentTheme(this)) {
             AppPrefs.THEME_DARK -> setTheme(R.style.AppTheme_Tasker_Dark)
             else -> setTheme(R.style.AppTheme_Tasker)
         }
 
-        setContentView(R.layout.tasker_action_configure)
+        setContentView(binding.root)
 
         val appLabel = try {
-            packageManager.getApplicationLabel(packageManager.getApplicationInfo(callingPackage, 0))
+            packageManager.getApplicationLabel(packageManager.getApplicationInfo(callingPackage!!, 0))
         } catch (e: PackageManager.NameNotFoundException) {
             error("Calling package couldn't be found", e)
             null
@@ -70,10 +71,10 @@ class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
 
         supportActionBar?.setSubtitle(R.string.app_name)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        mainViewModel.getSequenceList().observe(this, Observer { sequences ->
+        mainViewModel.getSequenceList().observe(this, { sequences ->
             val sortedList = sequences?.sortedBy { it.name }
             idsList = sortedList?.map { it.id!! }
-            sequenceSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, sortedList?.map { it.name }?.toMutableList()
+            binding.knockOnSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, sortedList?.map { it.name }?.toMutableList()
                     ?: mutableListOf()).apply { setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
             selectSequence(seqId)
         })
@@ -82,7 +83,7 @@ class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
     private fun selectSequence(id: Long) {
         val idx = idsList?.indexOf(id) ?: -1
         if (idx >= 0)
-            sequenceSpinner.setSelection(idx)
+            binding.knockOnSpinner.setSelection(idx)
     }
 
     override fun getResultBlurb(bundle: Bundle): String {
@@ -96,7 +97,7 @@ class SelectSequenceActivity : AbstractAppCompatPluginActivity(), Logging {
     override fun isBundleValid(bundle: Bundle) = KnockerBundleValues.isBundleValid(bundle)
 
     override fun getResultBundle(): Bundle? {
-        val selection = sequenceSpinner.selectedItemPosition
+        val selection = binding.knockOnSpinner.selectedItemPosition
         return if (selection >= 0 && selection < idsList?.count() ?: 0 && idsList != null) KnockerBundleValues.generateBundle(this, idsList!![selection]) else null
     }
 

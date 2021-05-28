@@ -32,7 +32,10 @@
     <attr name="dialogAccent" format="reference"/>
     <attr name="dialogTextHint" format="reference"/>
     <attr name="dialogTextColor" format="reference"/>
+    <attr name="dialogTextColorSecondary" format="reference"/>
     <attr name="imageTint" format="reference"/>
     <attr name="popupBackground" format="reference"/>
     <attr name="buttonTextColor" format="reference"/>
+    <attr name="compoundButtonTextColor" format="reference" />
+
 </resources>

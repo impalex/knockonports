@@ -30,11 +30,11 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.widget.RemoteViews
 import kotlinx.coroutines.runBlocking
-import me.impa.knockonports.R
+import me.impa.knockonports.*
 import me.impa.knockonports.database.KnocksDatabase
 import me.impa.knockonports.database.entity.Sequence
 import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
-import me.impa.knockonports.ext.startSequence
+import me.impa.knockonports.util.AppPrefs
 
 class KnocksWidget : AppWidgetProvider() {
 
@@ -99,7 +99,15 @@ class KnocksWidget : AppWidgetProvider() {
 
     private fun knockOn(context: Context, widgetId: Int) {
         val sequenceId = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
-        context.startSequence(sequenceId)
+        val ask = AppPrefs.getAskConfirmation(context)
+        val intent = Intent(context, StartKnockActivity::class.java).apply {
+            putExtra(EXTRA_SEQ_ID, sequenceId)
+            putExtra(EXTRA_IS_WIDGET, true)
+            putExtra(EXTRA_ASK_CONFIRMATION, ask)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        context.startActivity(intent)
+        //context.startSequence(sequenceId)
     }
 
     companion object {

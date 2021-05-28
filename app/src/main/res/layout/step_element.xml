@@ -34,7 +34,7 @@
         app:srcCompat="@drawable/ic_drag_handle_black_24dp"
         android:contentDescription="@string/drag_item"
         android:layout_alignParentStart="true"
-        android:tint="?attr/imageTint"/>
+        app:tint="?attr/imageTint"/>
 
     <RelativeLayout
         android:id="@+id/step_wrapper"
@@ -88,7 +88,8 @@
             android:layout_alignParentRight="true"
             android:layout_toRightOf="@id/step_type_spinner"
             android:layout_toEndOf="@id/step_type_spinner"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:baselineAligned="false">
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

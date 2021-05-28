@@ -52,4 +52,6 @@ class KnocksRepository(context: Context) {
 
     fun getLogEntries() = logEntryDao.logEntriesById()
 
+    suspend fun clearLogEntries() = logEntryDao.clearLogEntries()
+
 }

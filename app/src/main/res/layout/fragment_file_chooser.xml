@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/id_down_arrow"
             tools:ignore="ContentDescription"
-            android:tint="?attr/imageTint"/>
+            app:tint="?attr/imageTint"/>
     </LinearLayout>
 
     <ListView

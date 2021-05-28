@@ -32,17 +32,18 @@ import java.io.StringWriter
 data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                         var application: String?, var appName: String?, var icmpType: IcmpType?,
                         var steps: List<SequenceStep>, var descriptionType: DescriptionType?,
-                        var pin: String?) {
+                        var pin: String?, var ipv: ProtocolVersionType?) {
 
-    fun toEntity(): Sequence = Sequence(null, name, host,null, delay, application,
-            appName, icmpType, steps.filter { it.isValid() }, descriptionType, pin)
+    fun toEntity(): Sequence = Sequence(null, name, host, null, delay, application,
+            appName, icmpType, steps.filter { it.isValid() }, descriptionType, pin, ipv)
 
     companion object {
 
         fun fromEntity(sequence: Sequence): SequenceData =
                 SequenceData(sequence.name, sequence.host, sequence.delay,
                         sequence.application, sequence.applicationName, sequence.icmpType,
-                        sequence.steps ?: listOf(), sequence.descriptionType, sequence.pin)
+                        sequence.steps ?: listOf(), sequence.descriptionType, sequence.pin,
+                        sequence.ipv)
 
         private fun writeValue(writer: JsonWriter, name: String, value: String?) {
             if (value == null)
@@ -91,10 +92,11 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                     writeValue(writer, "icmp_type", it.icmpType?.ordinal)
                     writeValue(writer, "description", it.descriptionType?.ordinal)
                     writeValue(writer, "pin", it.pin)
+                    writeValue(writer, "ipv", it.ipv?.ordinal)
 
                     writer.name("steps")
                     writer.beginArray()
-                    it.steps.forEach {s ->
+                    it.steps.forEach { s ->
                         writer.beginObject()
                         writeValue(writer, "type", s.type?.ordinal)
                         writeValue(writer, "port", s.port)
@@ -111,8 +113,7 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
 
                 writer.endArray()
                 return sw.toString()
-            }
-            finally {
+            } finally {
                 writer.close()
                 sw.close()
             }
@@ -130,14 +131,14 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                 reader.beginArray()
                 while (reader.hasNext()) {
                     reader.beginObject()
-                    val seq = SequenceData(null, null,null, null, null, null, listOf(), null, null)
-                    var oldUdpContent : String? = null
-                    var oldBase64 : Int? = null
+                    val seq = SequenceData(null, null, null, null, null, null, listOf(), null, null, null)
+                    var oldUdpContent: String? = null
+                    var oldBase64: Int? = null
                     var oldType: Int? = null
                     val oldPorts = mutableListOf<SequenceStep>()
                     val oldIcmp = mutableListOf<SequenceStep>()
                     while (reader.hasNext()) {
-                        when(reader.nextName()) {
+                        when (reader.nextName()) {
                             "name" -> seq.name = readString(reader)
                             "host" -> seq.host = readString(reader)
                             "timeout" -> readInt(reader) // Deprecated. Just read and ignore.
@@ -148,8 +149,10 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                             "app_name" -> seq.appName = readString(reader)
                             "type" -> oldType = readInt(reader) // Deprecated
                             "icmp_type" -> seq.icmpType = IcmpType.fromOrdinal(readInt(reader) ?: 1)
-                            "description" -> seq.descriptionType = DescriptionType.fromOrdinal(readInt(reader) ?: 0)
+                            "description" -> seq.descriptionType = DescriptionType.fromOrdinal(readInt(reader)
+                                    ?: 0)
                             "pin" -> seq.pin = readString(reader)
+                            "ipv" -> seq.ipv = ProtocolVersionType.fromOrdinal(readInt(reader) ?: 0)
                             "ports" -> {
                                 // Deprecated stuff
                                 reader.beginArray()
@@ -158,9 +161,10 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                     while (reader.hasNext()) {
                                         val port = SequenceStep(SequenceStepType.UDP, null, null, null, null, ContentEncoding.RAW)
                                         while (reader.hasNext()) {
-                                            when(reader.nextName()) {
+                                            when (reader.nextName()) {
                                                 "value" -> port.port = readInt(reader)
-                                                "type" -> port.type = SequenceStepType.fromOrdinal(readInt(reader) ?: 0)
+                                                "type" -> port.type = SequenceStepType.fromOrdinal(readInt(reader)
+                                                        ?: 0)
                                             }
                                         }
                                         oldPorts.add(port)
@@ -177,9 +181,10 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                     while (reader.hasNext()) {
                                         val icmpData = SequenceStep(SequenceStepType.ICMP, null, null, null, null, ContentEncoding.RAW)
                                         while (reader.hasNext()) {
-                                            when(reader.nextName()) {
+                                            when (reader.nextName()) {
                                                 "size" -> icmpData.icmpSize = readInt(reader)
-                                                "encoding" -> icmpData.encoding = ContentEncoding.fromOrdinal(readInt(reader) ?: 0)
+                                                "encoding" -> icmpData.encoding = ContentEncoding.fromOrdinal(readInt(reader)
+                                                        ?: 0)
                                                 "content" -> icmpData.content = readString(reader)
                                                 "count" -> icmpData.icmpCount = readInt(reader)
                                             }
@@ -199,12 +204,14 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                                         val step = SequenceStep(SequenceStepType.UDP, null, null, null, null, null)
                                         while (reader.hasNext()) {
                                             when (reader.nextName()) {
-                                                "type" -> step.type = SequenceStepType.fromOrdinal(readInt(reader) ?: 0)
+                                                "type" -> step.type = SequenceStepType.fromOrdinal(readInt(reader)
+                                                        ?: 0)
                                                 "port" -> step.port = readInt(reader)
                                                 "icmp_size" -> step.icmpSize = readInt(reader)
                                                 "icmp_count" -> step.icmpCount = readInt(reader)
                                                 "content" -> step.content = readString(reader)
-                                                "encoding" -> step.encoding = ContentEncoding.fromOrdinal(readInt(reader) ?: 0)
+                                                "encoding" -> step.encoding = ContentEncoding.fromOrdinal(readInt(reader)
+                                                        ?: 0)
                                             }
                                         }
                                         steps.add(step)
@@ -230,12 +237,13 @@ data class SequenceData(var name: String?, var host: String?, var delay: Int?,
                             seq.steps = oldIcmp
                         }
                     }
+                    if (seq.icmpType == IcmpType.WITH_IP_AND_ICMP_HEADERS) // deprecated
+                        seq.icmpType = IcmpType.WITH_ICMP_HEADER
                     result.add(seq)
                     reader.endObject()
                 }
                 reader.endArray()
-            }
-            finally {
+            } finally {
                 reader.close()
                 sr.close()
             }

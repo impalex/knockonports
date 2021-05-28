@@ -30,13 +30,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import me.impa.knockonports.R
+import me.impa.knockonports.databinding.FragmentAskReviewBinding
 import me.impa.knockonports.util.AppPrefs
 import me.impa.knockonports.util.toast
 
 class RateAppFragment: DialogFragment() {
+
+    private var _binding: FragmentAskReviewBinding? = null
+    private val binding get() = _binding!!
 
     var onDismiss: (() -> Unit)? = null
 
@@ -45,24 +48,31 @@ class RateAppFragment: DialogFragment() {
         setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_ask_review, container)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        _binding = FragmentAskReviewBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<Button>(R.id.button_rate_now).setOnClickListener {
-            openPlayMarket(context!!)
+        binding.buttonRateNow.setOnClickListener {
+            openPlayMarket(requireContext())
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.button_rate_disable).setOnClickListener {
-            AppPrefs.turnOffAskReviewDialog(context!!)
+        binding.buttonRateDisable.setOnClickListener {
+            AppPrefs.turnOffAskReviewDialog(requireContext())
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.button_rate_later).setOnClickListener {
-            AppPrefs.postponeReviewDialog(context!!, AppPrefs.POSTPONE_TIME)
+        binding.buttonRateLater.setOnClickListener {
+            AppPrefs.postponeReviewDialog(requireContext(), AppPrefs.POSTPONE_TIME)
             dismiss()
         }
     }
@@ -71,7 +81,7 @@ class RateAppFragment: DialogFragment() {
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        AppPrefs.postponeReviewDialog(this@RateAppFragment.context!!, AppPrefs.POSTPONE_TIME_CANCEL)
+        AppPrefs.postponeReviewDialog(this@RateAppFragment.requireContext(), AppPrefs.POSTPONE_TIME_CANCEL)
     }
 
     override fun onDismiss(dialog: DialogInterface) {

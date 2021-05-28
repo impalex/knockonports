@@ -37,5 +37,4 @@ data class LogEntry(
         var event: EventType?,
         @ColumnInfo(name = "_data")
         var data: List<String?>? = null
-) {
-}
+)

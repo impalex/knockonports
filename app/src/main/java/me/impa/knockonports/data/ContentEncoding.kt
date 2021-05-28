@@ -22,6 +22,7 @@
 package me.impa.knockonports.data
 
 import android.util.Base64
+import me.impa.knockonports.ext.EnumCompanion
 import java.lang.Exception
 
 enum class ContentEncoding {
@@ -30,31 +31,30 @@ enum class ContentEncoding {
     },
     BASE64 {
         override fun decode(data: String?): ByteArray =
-                try {
-                    Base64.decode(data, Base64.DEFAULT)
-                } catch (_: Exception) {
-                    byteArrayOf()
-                }
+            try {
+                Base64.decode(data, Base64.DEFAULT)
+            } catch (_: Exception) {
+                byteArrayOf()
+            }
     },
+
     @Suppress("unused")
     HEX {
         override fun decode(data: String?): ByteArray =
-                try {
-                    if (data == null) {
-                        byteArrayOf()
-                    } else {
-                        ByteArray(data.length / 2) { data.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
-                    }
-                } catch (_: Exception) {
+            try {
+                if (data == null) {
                     byteArrayOf()
+                } else {
+                    ByteArray(data.length / 2) {
+                        data.substring(it * 2, it * 2 + 2).toInt(16).toByte()
+                    }
                 }
+            } catch (_: Exception) {
+                byteArrayOf()
+            }
     };
 
     abstract fun decode(data: String?): ByteArray
 
-    companion object {
-        val values = values()
-
-        fun fromOrdinal(ordinal: Int): ContentEncoding = if (ordinal in values.indices) values[ordinal] else RAW
-    }
+    companion object : EnumCompanion<ContentEncoding>(values())
 }
