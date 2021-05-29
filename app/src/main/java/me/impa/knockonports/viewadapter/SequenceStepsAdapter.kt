@@ -22,6 +22,7 @@
 package me.impa.knockonports.viewadapter
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -171,6 +172,7 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
     }
 
     override fun onItemDismiss(position: Int) {
+        (context as Activity).currentFocus?.clearFocus() // prevents IllegalArgumentException@android.view.ViewGroup.offsetRectBetweenParentAndChild
         items.removeAt(position)
         notifyItemRemoved(position)
     }
