@@ -46,17 +46,24 @@ class AppListAdapter(context: Context): BaseAdapter() {
     override fun getItem(position: Int): AppData = apps[position]
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: AppElementBinding.inflate(inflater, parent, false).apply { root.tag = ViewHolder(this) }.root
-        val holder = view.tag as ViewHolder
-        holder.name.text = apps[position].name
-        holder.view.setOnClickListener { onSelected?.invoke(apps[position]) }
-
+        val view = convertView ?: AppElementBinding.inflate(inflater, parent, false)
+            .apply { root.tag = ViewHolder(this, onSelected) }.root
+        (view.tag as ViewHolder).run {
+            name.text = apps[position].name
+            app = apps[position]
+        }
         return view
     }
 
-    class ViewHolder(binding: AppElementBinding) {
-        val view = binding.root
+    class ViewHolder(binding: AppElementBinding, private val onSelected: ((AppData) -> Unit)?) {
+        lateinit var app: AppData
+        init {
+            binding.root.apply {
+                setOnClickListener { onSelected?.invoke(app) }
+            }
+        }
         val name = binding.textApp
+
     }
 
 }

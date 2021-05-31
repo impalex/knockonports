@@ -86,6 +86,7 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
             setSelection(step.type?.ordinal ?: 0)
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                    (context as Activity).currentFocus?.clearFocus() // prevents IllegalArgumentException@android.view.ViewGroup.offsetRectBetweenParentAndChild
                     val type = SequenceStepType.fromOrdinal(pos)
                     val selectedItem = holder.selectedItem() ?: return
                     if (selectedItem.type != type) {
@@ -126,6 +127,7 @@ class SequenceStepsAdapter(val context: Context): RecyclerView.Adapter<SequenceS
                     if (selectedItem.isExpanded != isChecked) {
                         selectedItem.isExpanded = isChecked
                         Handler(Looper.getMainLooper()).post {
+                            (context as Activity).currentFocus?.clearFocus() // prevents IllegalArgumentException@android.view.ViewGroup.offsetRectBetweenParentAndChild
                             notifyItemChanged(holder.absoluteAdapterPosition)
                         }
                     }

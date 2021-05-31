@@ -49,16 +49,21 @@ class FileItemAdapter(context: Context) : BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
 
-        val view = convertView ?: FileElementBinding.inflate(inflater, parent, false).apply { root.tag = ViewHolder(this) }.root
-        val holder = view.tag as ViewHolder
-        holder.image.setImageResource(if (fileList[position].isDirectory) R.drawable.ic_folder else R.drawable.ic_file)
-        holder.name.text = fileList[position].name
-        holder.view.setOnClickListener { onSelected?.invoke(fileList[position]) }
+        val view = convertView ?: FileElementBinding.inflate(inflater, parent, false)
+            .apply { root.tag = ViewHolder(this, onSelected) }.root
+        (view.tag as ViewHolder).run {
+            image.setImageResource(if (fileList[position].isDirectory) R.drawable.ic_folder else R.drawable.ic_file)
+            name.text = fileList[position].name
+            file = fileList[position]
+        }
         return view
     }
 
-    class ViewHolder(val binding: FileElementBinding) {
-        val view = binding.root
+    class ViewHolder(val binding: FileElementBinding, private val onSelected: ((File)-> Unit)?) {
+        lateinit var file: File
+        init {
+            binding.root.setOnClickListener { onSelected?.invoke(file) }
+        }
         val image = binding.imageFileType
         val name = binding.textFileName
     }
