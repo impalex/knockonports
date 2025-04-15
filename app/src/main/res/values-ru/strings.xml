@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024-2025 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -10,7 +9,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -18,92 +17,159 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
   -->
 
 <resources>
-    <string name="action_done">Сохранить</string>
-    <string name="hint_name">Название</string>
-    <string name="hint_host">Хост</string>
-    <string name="hint_delay">Задержка между пакетами (мс)</string>
-    <string name="hint_port">Порт</string>
-    <string name="hint_run_app">Запустить приложение:</string>
-    <string name="none">Нет</string>
-    <string name="action_knock">Постучать</string>
-    <string name="action_edit">Редактировать</string>
-    <string name="action_delete">Удалить</string>
-    <string name="action_new_sequence">Новая последовательность</string>
-    <string name="drag_item">Переместить</string>
-    <string name="empty_sequence_warning">%s: пустая последовательность!</string>
-    <string name="start_knocking">Стучу в %s</string>
-    <string name="end_knocking">Всё, постучали!</string>
-    <string name="untitled_sequence">(Без имени)</string>
-    <string name="error_resolve">Невозможно определить хост \'%s\'!</string>
-    <string name="error_export">ОШИБКА: Не удалось экспортировать данные!</string>
-    <string name="error_import">ОШИБКА: Не удалось импортировать данные!</string>
-    <string name="host_not_set">Не задан хост!</string>
+    <string name="type_protocol_prefer_ipv4">предпочитать IPv4</string>
+    <string name="type_protocol_prefer_ipv6">предпочитать IPv6</string>
+    <string name="type_protocol_only_ipv4">только IPv4</string>
+    <string name="type_protocol_only_ipv6">только IPv6</string>
+    <string name="type_protocol_both_ipv4_ipv6">одновременно IPv4 и IPv6</string>
     <string name="action_export">Экспорт</string>
     <string name="action_import">Импорт</string>
-    <string name="title_export">Экспортировать данные в…</string>
-    <string name="title_import">Импортировать данные из…</string>
-    <string name="title_settings">Настройки</string>
-    <string name="title_advanced">Дополнительно</string>
-    <string name="button_save">Сохранить</string>
-    <string name="button_cancel">Отмена</string>
-    <string name="title_file_name">Имя файла</string>
-    <string name="export_success">Успешно экспортировано в %s</string>
-    <string name="appwidget_text">Название последовательности</string>
-    <string name="configure">Конфигурация виджета</string>
-    <string name="add_widget">Добавить виджет</string>
-    <string name="next_sequence">Следующая последовательность</string>
-    <string name="prev_sequence">Предыдущая последовательность</string>
-    <string name="color_background">Цвет фона</string>
-    <string name="color_text">Цвет текста</string>
-    <string name="color_arrow">Цвет стрелок</string>
-    <string name="channel_name">Тук-тук</string>
-    <string name="channel_description">Кто там?</string>
-    <string name="notification_title">Тук-тук!</string>
-    <string name="notification_desc">Стучу в %s. Есть кто-нибудь?</string>
-    <string name="installed_apps">Установленные приложения</string>
-    <string name="icmp_size">Размер</string>
-    <string name="icmp_count">Количество</string>
-    <string name="icmp_type_without_headers">без заголовков</string>
-    <string name="icmp_type_with_icmp_header">с ICMP заголовком</string>
-    <string name="icmp_type_header">Размер ICMP пакета:</string>
-    <string name="action_rate_app">Оценить приложение…</string>
+    <string name="action_settings">Настройки</string>
+    <string name="action_show_log">Журнал</string>
+    <string name="title_screen_sequence">Последовательность</string>
+    <string name="title_screen_log">Журнал</string>
+    <string name="title_tab_basic_settings">Настройки</string>
+    <string name="title_tab_advanced_settings">Дополнительно</string>
+    <string name="title_review_request">Нравится %s?</string>"
+    <string name="text_review_request">Если у вас есть минутка, я буду рад вашему отзыву! Честные оценки помогают мне улучшать приложение и делать его лучше. Спасибо за вашу поддержку!</string>
+    <string name="action_rate_now">Оценить приложение</string>
+    <string name="action_remind_later">Напомнить позже</string>
+    <string name="action_no_thanks">Нет, спасибо</string>
+    <string name="text_review_decline">Хорошо! Если передумаете — буду рад вашему мнению в любое время.</string>
+    <string name="field_name">Имя</string>
+    <string name="field_host">Хост</string>
+    <string name="field_delay">Задержка между пакетами (мс)</string>
+    <string name="field_ip_version">Версия IP</string>
+    <string name="title_screen_settings">Настройки</string>
+    <string name="list_app_none">Нет</string>
+    <string name="field_local_port">Использовать локальный UDP порт</string>
+    <string name="message_sequence_saved">Последовательность \"%s\" сохранена</string>
+    <string name="action_knock">Постучать</string>
+    <string name="text_unnamed_sequence">(Без имени)</string>
+    <string name="text_host_not_set">(Хост не задан)</string>
+    <string name="text_empty_sequence">(Пустая последовательность)</string>
+    <string name="hint_reorder">Изменить порядок</string>
+    <string name="hint_delete">Удалить</string>
+    <string name="field_port">Порт</string>
+    <string name="field_data">Данные</string>
+    <string name="field_size">Размер</string>
+    <string name="field_count">Количество</string>
+    <string name="hint_collapse">Свернуть</string>
+    <string name="hint_expand">Развернуть</string>
+    <string name="title_list_sequence_steps">Шаги последовательности</string>
+    <string name="action_add">Добавить</string>
+    <string name="type_icmp_size_without_headers">только данные</string>
+    <string name="type_icmp_size_with_icmp_header">данные + ICMP заголовок</string>
+    <string name="field_icmp_packet_size">Размер ICMP пакета включает…</string>
+    <string name="field_launch_app">Запустить приложение после простукивания</string>
+    <string name="field_launch_uri">Открыть URI после простукивания</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_cancel">Отмена</string>
     <string name="action_create_shortcut">Создать ярлык</string>
-    <string name="text_ask_review">Если Вам нравится это приложение, пожалуйста, оцените его. Это займет не более минуты. Огромное спасибо за поддержку!</string>
-    <string name="action_rate_now">Оценить сейчас</string>
-    <string name="action_rate_later">Напомнить позднее</string>
-    <string name="action_rate_disable">Нет, спасибо</string>
-    <string name="title_ask_review">Нравится приложение?</string>
-    <string name="error_play_store">Не удалось открыть Play Store</string>
-    <string name="data_editor_default_hint">Данные</string>
-    <string name="hint_delete_step">Вы можете удалить элемент свайпом его в сторону.</string>
-    <string name="hint_icmp_size">Проверьте размер пакета ICMP в расширенных настройках.</string>
-    <string name="error_app_launch">Не удалось запустить приложение «%s»!</string>
-    <string name="action_add_step">Добавить</string>
-    <string name="error_empty_port">Не указан номер порта</string>
-    <string name="error_invalid_port">Некорректный номер порта</string>
-    <string name="error_empty_sequence_name">Введите название последовательности</string>
-    <string name="error_empty_host">Введите имя хоста или его IP</string>
-    <string name="error_empty_file_name">Имя файла не может быть пустым</string>
-    <string name="knock_on">Постучать в:</string>
-    <string name="tasker_action_blurb">Постучать в «%s»</string>
-    <string name="unknown_sequence">Неизвестная последовательность</string>
-    <plurals name="import_success">
-        <item quantity="one">%1$d последовательность импортирована из %2$s</item>
-        <item quantity="few">%1$d последовательности импортированы из %2$s</item>
-        <item quantity="many">%1$d последовательностей импортировано из %2$s</item>
-        <item quantity="other">%1$d последовательностей импортировано из %2$s</item>
+    <string name="action_integration">Автоматизация</string>
+    <string name="title_delete_sequence">Удалить последовательность?</string>
+    <string name="text_delete_sequence_alert">Последовательнеость \"%s\" будет безвозвратно удалена. Вы не сможете ее восстановить.</string>
+    <string name="message_sequence_deleted">Последовательность \"%s\" удалена</string>
+    <plurals name="message_sequence_import">
+        <item quantity="one">Добавлена %d последовательность</item>
+        <item quantity="few">Добавлено %d последовательностей</item>
+        <item quantity="many">Добавлено %d последовательностей</item>
     </plurals>
-    <string name="error_network_not_avail">ОШИБКА: Недоступно сетевое подключение!</string>
-    <string name="hide_details">Скрывать подробное описание в списке последовательностей</string>
-    <string name="action_log">Журнал</string>
+    <plurals name="message_sequence_export">
+        <item quantity="one">Сохранена %d последовательность</item>
+        <item quantity="few">Сохранено %d последовательностей</item>
+        <item quantity="many">Сохранено %d последовательностей</item>
+    </plurals>
+    <string name="title_settings_general">Основные</string>
+    <string name="title_settings_theme">Оформление приложения</string>
+    <string name="title_settings_about">О приложении</string>
+    <string name="title_settings_dynamic_theme">Динамическая цветовая тема</string>
+    <string name="text_settings_dynamic_theme">Соответствует цветовой теме устройства – адаптация темы приложения к системной теме и обоям</string>
+    <string name="title_settings_dark_light">Режим темы</string>
+    <string name="text_settings_system_dark_light">Системный (по-умолчанию)</string>
+    <string name="text_settings_dark">Темный</string>
+    <string name="text_settings_light">Светлый</string>
+    <string name="title_settings_contrast">Контраст</string>
+    <string name="text_settings_contrast_standard">Стандартный</string>
+    <string name="text_settings_contrast_medium">Средний</string>
+    <string name="text_settings_contrast_high">Высокий</string>
+    <string name="title_settings_custom_theme">Пользовательский цвет темы</string>
+    <string name="text_settings_custom_theme">Выберите основной цвет для интерфейса приложения</string>
+    <string name="title_settings_widget_confirmation">Подтверждения виджета</string>
+    <string name="text_settings_widget_confirmation_desc">Требуется подтверждение при запуске последовательностей с помощью виджета</string>
+    <string name="title_public_ip_alert">Разрешить определение внешнего IP?</string>
+    <string name="text_public_ip_alert_1">Эта функция использует сторонний сервис для определения вашего внешнего IP-адреса.</string>
+    <string name="text_public_ip_alert_2">При включении этой опции на этот сервис будет отправляться запрос при каждом запуске последовательности.</string>
+    <string name="text_public_ip_alert_3">Этот сервис не контролируется данным приложением. Вы уверены, что хотите продолжить?</string>
+    <string name="title_settings_detailed_list_view">Подробный список последовательностей</string>
+    <string name="text_settings_detailed_list_view">Показ хоста и деталей последовательности в списке на главном экране</string>
+    <string name="title_settings_detect_ip">Определение внешнего IP</string>
+    <string name="text_settings_detect_ip">Разрешить приложению определять ваш внешний IP</string>
+    <string name="action_allow">Разрешить</string>
+    <string name="action_confirm">Подтвердить</string>
+    <string name="title_settings_ipv4_lookup_provider">Сервис определения IPv4</string>
+    <string name="title_settings_ipv6_lookup_provider">Сервис определения IPv6</string>
+    <string name="type_provider_custom">Пользовательский</string>
+    <string name="title_custom_service_dialog">Пользовательский сервис определения IP</string>
+    <string name="text_custom_service_dialog">Укажите адрес сервиса, который возвращает ваш внешний IP как текст (например, <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="field_custom_ip_provider">URL сервиса</string>
+    <string name="text_custom_provider_not_specified">(не указано)</string>
+    <string name="title_settings_custom_ipv4_provider">Пользовательский сервис определения IPv4</string>
+    <string name="title_settings_custom_ipv6_provider">Пользовательский сервис определения IPv6</string>
+    <string name="title_settings_version">Версия</string>
+    <string name="title_settings_privacy_policy">Политика конфиденциальности</string>
+    <string name="title_settings_source_code">Исходный код</string>
+    <string name="title_settings_report_issue">Сообщить о проблеме</string>
+    <string name="title_settings_contact_author">Связаться с автором</string>
+    <string name="text_settings_rate_app">Пожалуйста, не ругайтесь слишком сильно!</string>
+    <string name="text_settings_privacy_policy">Расслабьтесь, я не слежу за вами — даже если бы захотел, я слишком ленив, чтобы кодить это.</string>
+    <string name="text_settings_source_code">Магия открытого кода. Осторожно: может содержать следы испачканого кофеином кода.</string>
+    <string name="text_settings_report_issue">Нашелся баг? Без паники, кидайте сюда. Я пофикшу (возможно) его к 3025.</string>
+    <string name="text_settings_contact_author">Сообщить о проблеме, рекомендовать функции или просто поздороваться. 👋</string>
+    <string name="text_annoying_version_1">v%1$s: Теперь на %2$d%% меньше падений!*\n*Согласно очень оптимистичным оценкам.</string>
+    <string name="text_annoying_version_2">v.%1$s Build 36%2$d: Сопротивление бесполезно. Вы будете ассимилированы.</string>
+    <string name="text_annoying_version_3">Version %s — Теперь во всем великолепии 16-битного режима!*\n*На самом деле может не содержать ничего 16-битного.</string>
+    <string name="text_annoying_version_4">Release %s: Как упоротая кофеином белка, только чуть-чуть более стабильная.</string>
+    <string name="text_annoying_version_5">%s: Это номер. Он подрос. Возрадуемся.</string>
+    <string name="text_annoying_version_6">v.%s: Всё еще не слежу за тобой. Серьёзно, почитай код.</string>
+    <string name="text_annoying_version_7">Season %1$s Episode %2$d — Тот, в котором мы поправили ту фигню.</string>
+    <string name="text_annoying_version_8">v%s — Создано на кофеине, слезах и экзистенциальных сомнениях.</string>
+    <string name="text_annoying_version_9">v%s: При поддержке неоплачиваемой страсти и легкого пренебрежения к здравомыслию.</string>
+    <string name="message_error_network_not_avail">Сеть недоступна</string>
+    <string name="message_error_empty_host">В последовательности не указан хост</string>
+    <string name="message_error_empty_sequence">Последовательность \"%s\" пустая</string>
+    <string name="message_error_resolve">Не удалось разрешить хост \"%s\"</string>
+    <string name="message_error_unknown_host">Неизвестный хост \"%s\"</string>
+    <string name="message_error_app_launch">Не удалось запустить \"%s\"</string>
+    <string name="message_knocking_complete">Всё, постучали!</string>
+    <string name="message_error_unknown">Неизвестная ошибка: %s</string>
+    <string name="message_start_knocking">Тук-тук-тук! \"%s\", откройся.</string>
+    <string name="action_yes">Да</string>
+    <string name="action_no">Нет</string>
+    <string name="action_copy">Копировать</string>
+    <string name="action_duplicate">Дублировать</string>
+    <string name="action_close">Закрыть</string>
+    <string name="title_confirm_knock_alert">Тук-тук!</string>
+    <string name="text_confirm_knock_alert">Запустить последовательность \"%s\"?</string>
+    <string name="channel_name">Тук-тук</string>
+    <string name="channel_description">Кто там? \u1F632</string>
+    <string name="notification_title">Тук-тук!</string>
+    <string name="notification_desc">Стучу в \"%s\". Есть кто дома?</string>
+    <string name="title_integration_alert">URI для автоматизации</string>
+    <string name="text_integration_alert">Скопируйте эту ссылку для запуска последовательности из приложений для автоматизации, таких как Tasker или Macrodroid. Нет необходимости открывать приложение — просто откройте URI.</string>
+    <string name="title_widget">Список последовательностей</string>
+    <string name="text_widget_description">Запуск любой последовательности с домашнего экрана</string>
+    <string name="text_widget_empty_list">Пустой список последовательностей</string>
     <string name="log_unknown">Неизвестное событие</string>
     <string name="log_knock">Стук \'%1$s\' [%2$s] (%3$s→%4$s)</string>
-    <string name="log_error_network">Сетевое подключение недоступно</string>
-    <string name="log_error_invalid_host">Последовательность \'%s\': неверное имя хоста</string>
-    <string name="log_error_resolve_host">Невозможно найти %1$s: %2$s</string>
+    <string name="log_error_network">Сеть недоступна</string>
+    <string name="log_error_invalid_host">Последовательность \'%s\': неправильный хост</string>
+    <string name="log_error_resolve_host">Невозможно разрешить %1$s: %2$s</string>
     <string name="log_error_empty_sequence">Пустая последовательность \'%s\'</string>
     <string name="log_error_unknown">Неизвестная ошибка: %s</string>
     <string name="log_sequence_saved">Сохранена последовательность \'%s\'</string>
@@ -112,39 +178,6 @@
     <string name="log_import">Импорт из %1$s (%2$s последовательностей)</string>
     <string name="log_error_export">Экспорт в %1$s: %2$s</string>
     <string name="log_error_import">Импорт из %1$s: %2$s</string>
-    <string name="ip_version">Версия IP:</string>
-    <string name="ip_prefer_ipv4">предпочитать IPv4</string>
-    <string name="ip_prefer_ipv6">предпочитать IPv6</string>
-    <string name="ip_only_ipv4">только IPv4</string>
-    <string name="ip_only_ipv6">только IPv6</string>
-    <string name="ip_both">IPv4 и IPv6 одновременно</string>
-    <string name="action_clear_log">Очистить лог</string>
-    <string name="text_confirm_clear_log">Вы уверены, что желаете очистить лог? Пожалуйста, обратите внимание, что это действие необратимо.</string>
-    <string name="action_yes">Да</string>
-    <string name="action_no">Нет</string>
-    <string name="title_clear_log">Очистить лог</string>
-    <string name="option_theme_dark">Темное</string>
-    <string name="option_theme_light">Светлое</string>
-    <string name="pref_title_theme">Оформление</string>
-    <string name="action_preferences">Настройки</string>
-    <string name="pref_title_group_general">Общее</string>
-    <string name="pref_title_group_about">О приложении</string>
-    <string name="pref_title_ask_confirm_widget">Виджет: спрашивать подтверждение</string>
-    <string name="pref_summary_ask_confirm_widget_on">Спрашивать подтверждение стука после нажатия на виджет.</string>
-    <string name="pref_summary_ask_confirm_widget_off">После нажатия на виджет стучать без подтверждения.</string>
-    <string name="title_confirm_knock">Тук-тук!</string>
-    <string name="message_confirm_knock">Вы желаете запустить последовательность «%s»?</string>
-    <string name="option_disable">Отключить</string>
-    <string name="option_custom">Пользовательский</string>
-    <string name="pref_title_app_version">Версия</string>
-    <string name="pref_title_app_source">Исходный код</string>
-    <string name="pref_title_contact">Связаться с автором</string>
-    <string name="pref_title_report_issue">Сообщить о проблеме</string>
-    <string name="pref_title_ip4_service">Провайдер внешнего IPv4</string>
-    <string name="pref_title_ip6_service">Провайдер внешнего IPv6</string>
-    <string name="pref_title_ip4_custom_service">Пользовательский провайдер IPv4</string>
-    <string name="pref_title_ip6_custom_service">Пользовательский провайдер IPv6</string>
-    <string name="pref_summary_ip4_custom_service">URL, который возвращает IPv4 адрес</string>
-    <string name="pref_summary_ip6_custom_service">URL, который возвращает IPv6 адрес</string>
-    <string name="lil_easter">Кто там? 😲</string>
+    <string name="text_error_general">Ошибка: %s</string>
+    <string name="title_settings_rate_app">Оценить приложение</string>
 </resources>

@@ -1,0 +1,9 @@
+toml
+[versions]
+detekt = "1.23.6"  # или последняя актуальная версия
+detektFormatting = "1.23.6" # или последняя актуальная версия (если нужен плагин форматирования)
+
+[libraries]
+detekt-core = { module = "io.gitlab.arturbosch.detekt:detekt-core", version.ref = "detekt" }
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detektFormatting" } # если нужен
+detekt-cli = { module = "io.gitlab.arturbosch.detekt:detekt-cli", version.ref = "detekt" } # если нужен запуск из командной строки

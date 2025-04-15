@@ -3,7 +3,6 @@
 
 Features:
 * UDP/TCP/ICMP sequences
-* full IPv4 and IPv6 support
 * customizable content of UDP and ICMP packets
 * ability to start another application after a knock
 * Tasker integration

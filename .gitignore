@@ -20,3 +20,8 @@ publisher.properties
 .idea/dictionaries/impa.xml
 .idea/dictionaries/
 app/.cxx/
+.idea/caches/
+.idea/deploymentTargetSelector.xml
+gradle.properties
+.idea/appInsightsSettings.xml
+.kotlin/

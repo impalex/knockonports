@@ -1,4 +1,0 @@
-New: Full IPv6 support
-Widget: Optional confirmation before knocking
-Improved Android 4.0.3 compatibility
-Bugfixes

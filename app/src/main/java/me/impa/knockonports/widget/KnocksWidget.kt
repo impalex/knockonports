@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Alexander Yaburov
+ * Copyright (c) 2025 Alexander Yaburov
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -17,162 +17,228 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
+ *
  */
 
 package me.impa.knockonports.widget
 
-import android.app.PendingIntent
-import android.appwidget.AppWidgetManager
-import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.os.Build
-import android.widget.RemoteViews
-import kotlinx.coroutines.runBlocking
-import me.impa.knockonports.*
-import me.impa.knockonports.database.KnocksDatabase
-import me.impa.knockonports.database.entity.Sequence
-import me.impa.knockonports.database.entity.Sequence.Companion.INVALID_SEQ_ID
-import me.impa.knockonports.util.AppPrefs
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
+import androidx.datastore.core.DataStore
+import androidx.glance.GlanceId
+import androidx.glance.GlanceModifier
+import androidx.glance.GlanceTheme
+import androidx.glance.ImageProvider
+import androidx.glance.LocalContext
+import androidx.glance.LocalSize
+import androidx.glance.action.clickable
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.components.CircleIconButton
+import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.components.TitleBar
+import androidx.glance.appwidget.cornerRadius
+import androidx.glance.appwidget.lazy.LazyColumn
+import androidx.glance.appwidget.lazy.itemsIndexed
+import androidx.glance.appwidget.provideContent
+import androidx.glance.background
+import androidx.glance.currentState
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.Column
+import androidx.glance.layout.Spacer
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
+import androidx.glance.layout.padding
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
+import androidx.glance.state.GlanceStateDefinition
+import androidx.glance.text.FontWeight
+import androidx.glance.text.Text
+import androidx.glance.text.TextStyle
+import me.impa.knockonports.BuildConfig
+import me.impa.knockonports.R
+import me.impa.knockonports.StartKnockingActivity
+import me.impa.knockonports.constants.EXTRA_VALUE_SOURCE_WIDGET
+import me.impa.knockonports.data.WidgetDataStore
+import me.impa.knockonports.data.db.entity.Sequence
+import me.impa.knockonports.screen.PreviewData
+import timber.log.Timber
+import java.io.File
 
-class KnocksWidget : AppWidgetProvider() {
+class KnocksWidget : GlanceAppWidget() {
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+    override val sizeMode: SizeMode = SizeMode.Exact
+
+    override val stateDefinition: GlanceStateDefinition<List<Sequence>>?
+        get() = object : GlanceStateDefinition<List<Sequence>> {
+            override suspend fun getDataStore(
+                context: Context,
+                fileKey: String
+            ): DataStore<List<Sequence>> {
+                Timber.d("getDataStore")
+                return WidgetDataStore.get(context)
+            }
+
+            override fun getLocation(context: Context, fileKey: String): File {
+                throw NotImplementedError()
+            }
+
+        }
+
+    override suspend fun provideGlance(context: Context, id: GlanceId) {
+
+        provideContent {
+            Timber.d("Update widget")
+            KnocksWidgetContent(currentState())
         }
     }
+}
 
-    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        for (appWidgetId in appWidgetIds) {
-            KnocksWidgetConfigureActivity.deleteBackgroundPref(context, appWidgetId)
-            KnocksWidgetConfigureActivity.deleteButtonsPref(context, appWidgetId)
-            KnocksWidgetConfigureActivity.deleteForegroundPref(context, appWidgetId)
-            KnocksWidgetConfigureActivity.deleteSeqPref(context, appWidgetId)
+@Composable
+private fun KnocksWidgetContent(sequences: List<Sequence>) {
+    GlanceTheme {
+        Scaffold(
+            backgroundColor = GlanceTheme.colors.widgetBackground,
+            titleBar = { if (showTitlebar()) WidgetTitleBar() else null },
+            modifier = GlanceModifier.padding(
+                bottom = 14.dp,
+                top = if (showTitlebar()) 0.dp else 14.dp
+            )
+        ) {
+            WidgetSequenceList(sequences)
         }
     }
+}
 
-    override fun onEnabled(context: Context) {
-        // ...
-    }
-
-    override fun onDisabled(context: Context) {
-        // ...
-    }
-
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
-        val widgetId = intent.getIntExtra(INTENT_EXTRA_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID)
-            return
-        when(intent.action) {
-            ACTION_NEXT_SEQ -> nextSequence(context, widgetId)
-            ACTION_PREV_SEQ -> prevSequence(context, widgetId)
-            ACTION_KNOCK_SEQ -> knockOn(context, widgetId)
-            else -> return
+@Composable
+private fun WidgetTitleBar() {
+    TitleBar(
+        title = "Knock-knock",
+        startIcon = ImageProvider(R.drawable.knocker_widget_icon),
+        iconColor = GlanceTheme.colors.primary,
+        textColor = GlanceTheme.colors.onSurface,
+        modifier = GlanceModifier.clickable(
+            onClick = actionStartActivity(
+                Intent(
+                    Intent.ACTION_VIEW,
+                    "${BuildConfig.APP_SCHEME}://${BuildConfig.APP_HOST}/list".toUri()
+                )
+            )
+        ),
+        actions = {
+            CircleIconButton(
+                imageProvider = ImageProvider(R.drawable.add_icon),
+                contentDescription = null,
+                onClick = actionStartActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        "${BuildConfig.APP_SCHEME}://${BuildConfig.APP_HOST}/sequence/null".toUri()
+                    )
+                ),
+                contentColor = GlanceTheme.colors.secondary,
+                backgroundColor = null
+            )
         }
-        updateAppWidget(context, AppWidgetManager.getInstance(context), widgetId)
-    }
+    )
+}
 
-    private fun nextSequence(context: Context, widgetId: Int) {
-        val curSeq = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
-        val db = KnocksDatabase.getInstance(context)
-        val sequence = if (curSeq == INVALID_SEQ_ID) {
-            runBlocking { db?.sequenceDao()?.getFirstSequence() }
+@Composable
+private fun WidgetSequenceList(sequences: List<Sequence>) {
+    Box {
+        if (sequences.isEmpty()) {
+            NoData()
         } else {
-            runBlocking { db?.sequenceDao()?.getNextSequence(curSeq) ?: db?.sequenceDao()?.getFirstSequence() }
-        } ?: return
-        KnocksWidgetConfigureActivity.saveSeqPref(context, widgetId, sequence.id!!)
-    }
-
-    private fun prevSequence(context: Context, widgetId: Int) {
-        val curSeq = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
-        val db = KnocksDatabase.getInstance(context)
-        val sequence = if (curSeq == INVALID_SEQ_ID) {
-            runBlocking { db?.sequenceDao()?.getFirstSequence() }
-        } else {
-            runBlocking { db?.sequenceDao()?.getPrevSequence(curSeq) ?: db?.sequenceDao()?.getLastSequence() }
-        } ?: return
-        KnocksWidgetConfigureActivity.saveSeqPref(context, widgetId, sequence.id!!)
-    }
-
-    private fun knockOn(context: Context, widgetId: Int) {
-        val sequenceId = KnocksWidgetConfigureActivity.loadSeqPref(context, widgetId)
-        val ask = AppPrefs.getAskConfirmation(context)
-        val intent = Intent(context, StartKnockActivity::class.java).apply {
-            putExtra(EXTRA_SEQ_ID, sequenceId)
-            putExtra(EXTRA_IS_WIDGET, true)
-            putExtra(EXTRA_ASK_CONFIRMATION, ask)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            SequencesList(sequences)
         }
-        context.startActivity(intent)
-        //context.startSequence(sequenceId)
     }
+}
 
-    companion object {
+@Composable
+private fun SequencesList(sequences: List<Sequence>) {
+    val context = LocalContext.current
+    val resources = context.resources
+    val noName = resources.getString(R.string.text_unnamed_sequence)
+    LazyColumn {
+        itemsIndexed(sequences) { index, item ->
+            Column(modifier = GlanceModifier.fillMaxWidth().padding(horizontal = 4.dp)) {
+                if (index > 0)
+                    Spacer(modifier = GlanceModifier.height(4.dp))
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxWidth()
+                        .background(GlanceTheme.colors.secondaryContainer)
+                        .cornerRadius(8.dp)
+                        .clickable {
+                            item.id?.let { launchKnocker(context, it) }
+                        }
+                ) {
+                    Text(
+                        text = if (item.name.isNullOrBlank()) noName else item.name, maxLines = 1,
+                        style = TextStyle(
+                            color = GlanceTheme.colors.onSecondaryContainer,
+                            fontSize = 16.sp
+                        ),
+                        modifier = GlanceModifier.padding(horizontal = 8.dp, vertical = 16.dp)
+                    )
+                }
 
-        const val ACTION_NEXT_SEQ = "ACTION_NEXT"
-        const val ACTION_PREV_SEQ = "ACTION_PREV"
-        const val ACTION_KNOCK_SEQ = "ACTION_KNOCK"
-        const val INTENT_EXTRA_ID = "EXTRA_WIDGET_ID"
-
-        internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager,
-                                     appWidgetId: Int) {
-
-            val db = KnocksDatabase.getInstance(context)
-            val views = RemoteViews(context.packageName, R.layout.knocks_widget)
-
-            val seqId = KnocksWidgetConfigureActivity.loadSeqPref(context, appWidgetId)
-            var sequence: Sequence? = null
-            if (seqId != INVALID_SEQ_ID) {
-                sequence = runBlocking { db?.sequenceDao()?.findSequenceById(seqId) }
             }
-            if (sequence == null) {
-                sequence = runBlocking { db?.sequenceDao()?.getFirstSequence() }
-                if (sequence != null)
-                    KnocksWidgetConfigureActivity.saveSeqPref(context, appWidgetId, sequence.id!!)
-            }
-            val widgetText = sequence?.name ?: "Knock-knock!"
-
-            views.setTextViewText(R.id.appwidget_text, widgetText)
-            views.setTextColor(R.id.appwidget_text, KnocksWidgetConfigureActivity.loadForegroundPref(context, appWidgetId))
-
-            views.setInt(R.id.widget_layout, "setBackgroundColor", KnocksWidgetConfigureActivity.loadBackgroundPref(context, appWidgetId))
-
-            val buttonColor = KnocksWidgetConfigureActivity.loadButtonsPref(context, appWidgetId)
-
-            updateImage(context, views, R.id.widget_right_arrow, R.drawable.ic_right_arrow_x, R.mipmap.ic_right_arrow, buttonColor)
-            updateImage(context, views, R.id.widget_left_arrow, R.drawable.ic_left_arrow_x, R.mipmap.ic_left_arrow, buttonColor)
-
-            views.setOnClickPendingIntent(R.id.widget_left_arrow, getPendingIntent(context, ACTION_PREV_SEQ, appWidgetId))
-            views.setOnClickPendingIntent(R.id.widget_right_arrow, getPendingIntent(context, ACTION_NEXT_SEQ, appWidgetId))
-            views.setOnClickPendingIntent(R.id.appwidget_text, getPendingIntent(context, ACTION_KNOCK_SEQ, appWidgetId))
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
-
-        private fun updateImage(context: Context, views: RemoteViews, imageId: Int, drawableId: Int, olderBitmapId: Int, color: Int) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                views.setImageViewResource(imageId, drawableId)
-            } else {
-                /*val d = ContextCompat.getDrawable(context, drawableId)
-                val b = Bitmap.createBitmap(d.intrinsicWidth, d.intrinsicHeight, Bitmap.Config.ARGB_8888)
-                val c = Canvas(b)
-                d.setBounds(0, 0, c.width, c.height)
-                d.draw(c)*/
-                val b = BitmapFactory.decodeResource(context.resources, olderBitmapId)
-                views.setImageViewBitmap(imageId, b)
-            }
-            views.setInt(imageId, "setColorFilter", color)
-        }
-
-        private fun getPendingIntent(context: Context, action: String, widgetId: Int): PendingIntent {
-            val intent = Intent(context, KnocksWidget::class.java)
-            intent.action = action
-            intent.putExtra(INTENT_EXTRA_ID, widgetId)
-            return PendingIntent.getBroadcast(context, widgetId, intent, 0)
         }
     }
+}
+
+@Composable
+private fun NoData() {
+    val noDataText = LocalContext.current.resources.getString(R.string.text_widget_empty_list)
+    Column(
+        modifier = GlanceModifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = noDataText,
+            style = TextStyle(
+                fontWeight = FontWeight.Medium,
+                color = GlanceTheme.colors.onSurface,
+                fontSize = 16.sp
+            )
+        )
+    }
+}
+
+@Composable
+private fun showTitlebar(): Boolean =
+    LocalSize.current.width > 180.dp
+
+private fun launchKnocker(context: Context, sequenceId: Long) {
+    val intent = Intent(context, StartKnockingActivity::class.java).apply {
+        putExtra("EXTRA_SEQ_ID", sequenceId)
+        putExtra("EXTRA_SOURCE", EXTRA_VALUE_SOURCE_WIDGET)
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    context.startActivity(intent)
+}
+
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 200, heightDp = 200)
+@Composable
+fun PreviewWidget() {
+    KnocksWidgetContent(PreviewData.mockSequences)
+}
+
+@Suppress("unused")
+@OptIn(ExperimentalGlancePreviewApi::class)
+@Preview(widthDp = 200, heightDp = 200)
+@Composable
+fun PreviewNoDataWidget() {
+    KnocksWidgetContent(listOf())
 }
 

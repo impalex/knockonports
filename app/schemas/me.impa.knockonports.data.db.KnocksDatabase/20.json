@@ -1,0 +1,132 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 20,
+    "identityHash": "d899d7aea81e87e27d78644415ecad51",
+    "entities": [
+      {
+        "tableName": "tbSequence",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `_name` TEXT, `_host` TEXT, `_order` INTEGER, `_delay` INTEGER, `_application` TEXT, `_application_name` TEXT, `_icmp_type` INTEGER, `_steps` TEXT, `_description_type` INTEGER, `_pin` TEXT, `_ipv` INTEGER, `_local_port` INTEGER, `_ttl` INTEGER, `_uri` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "_name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "host",
+            "columnName": "_host",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "order",
+            "columnName": "_order",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "delay",
+            "columnName": "_delay",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "application",
+            "columnName": "_application",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "applicationName",
+            "columnName": "_application_name",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "icmpType",
+            "columnName": "_icmp_type",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "steps",
+            "columnName": "_steps",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "descriptionType",
+            "columnName": "_description_type",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "pin",
+            "columnName": "_pin",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "ipv",
+            "columnName": "_ipv",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "localPort",
+            "columnName": "_local_port",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "ttl",
+            "columnName": "_ttl",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "uri",
+            "columnName": "_uri",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        }
+      },
+      {
+        "tableName": "tbLog",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT, `_dt` INTEGER, `_event` INTEGER, `_data` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "_id",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "_dt",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "event",
+            "columnName": "_event",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "data",
+            "columnName": "_data",
+            "affinity": "TEXT"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "_id"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd899d7aea81e87e27d78644415ecad51')"
+    ]
+  }
+}

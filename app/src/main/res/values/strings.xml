@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2018 Alexander Yaburov
+  ~ Copyright (c) 2024-2025 Alexander Yaburov
   ~
   ~ Licensed to the Apache Software Foundation (ASF) under one
   ~ or more contributor license agreements.  See the NOTICE file
@@ -9,7 +9,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -17,96 +17,168 @@
   ~ KIND, either express or implied.  See the License for the
   ~ specific language governing permissions and limitations
   ~ under the License.
+  ~
   -->
 
 <resources>
     <string name="app_name" translatable="false">Knock on Ports</string>
-    <string name="author_contact" translatable="false">dev@impa.me</string>
-    <string name="action_done">Done</string>
-    <string name="hint_name">Name</string>
-    <string name="hint_host">Host</string>
-    <string name="hint_delay">Delay between packets (ms)</string>
-    <string name="hint_port">Port</string>
-    <string name="hint_run_app">Launch application:</string>
-    <string name="udp" translatable="false">UDP</string>
-    <string name="tcp" translatable="false">TCP</string>
-    <string name="icmp" translatable="false">ICMP</string>
-    <string name="none">None</string>
-    <string name="action_knock">Knock</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_edit">Edit</string>
-    <string name="action_new_sequence">New Sequence</string>
-    <string name="drag_item">Reorganize</string>
-    <string name="empty_sequence_warning">%s: empty sequence!</string>
-    <string name="start_knocking">Knock-knock-knockin\' on %s</string>
-    <string name="end_knocking">Knocking complete!</string>
-    <string name="untitled_sequence">(Untitled Sequence)</string>
-    <string name="error_resolve">Unable to resolve host \'%s\'!</string>
-    <string name="error_export">ERROR: Unable to export data!</string>
-    <string name="error_import">ERROR: Unable to import data!</string>
-    <string name="error_network_not_avail">ERROR: Network connection not available!</string>
-    <string name="host_not_set">Host is not set!</string>
+    <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
+    <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
+    <string name="type_protocol_only_ipv4">only IPv4</string>
+    <string name="type_protocol_only_ipv6">only IPv6</string>
+    <string name="type_protocol_both_ipv4_ipv6">both IPv4 and IPv6</string>
     <string name="action_export">Export</string>
     <string name="action_import">Import</string>
-    <string name="title_export">Export data to…</string>
-    <string name="title_import">Import data from…</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_advanced">Advanced</string>
-    <string name="button_save">Save</string>
-    <string name="button_cancel">Cancel</string>
-    <string name="title_file_name">File Name</string>
-    <string name="export_success">Exported successfully to %s</string>
-    <string name="export_file_template" translatable="false">knocks_%s.json</string>
-    <string name="appwidget_text">Sequence Name</string>
-    <string name="configure">Configure Widget</string>
-    <string name="add_widget">Add widget</string>
-    <string name="next_sequence">Next sequence</string>
-    <string name="prev_sequence">Previous sequence</string>
-    <string name="color_background">Background color</string>
-    <string name="color_text">Text color</string>
-    <string name="color_arrow">Arrows color</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_show_log">View Log</string>
+    <string name="title_screen_sequence">Sequence</string>
+    <string name="title_screen_log">Log</string>
+    <string name="title_tab_basic_settings">Settings</string>
+    <string name="title_tab_advanced_settings">Advanced</string>
+    <string name="title_review_request">Enjoying %s?</string>"
+    <string name="text_review_request">If you have a moment, I\'d appreciate your feedback! Honest ratings help me improve and keep the app evolving. Thanks for being part of the journey!</string>
+    <string name="action_rate_now">Rate Now</string>
+    <string name="action_remind_later">Remind Me Later</string>
+    <string name="action_no_thanks">No Thanks</string>
+    <string name="text_review_decline">All right! If you change your mind, I\'d welcome your opinion anytime.</string>
+    <string name="field_name">Name</string>
+    <string name="field_host">Host</string>
+    <string name="field_delay">Delay between packets (ms)</string>
+    <string name="field_ip_version">IP version</string>
+    <string name="title_screen_settings">Settings</string>
+    <string name="list_app_none">None</string>
+    <string name="field_local_port">Use local UDP port</string>
+    <string name="field_ttl" translatable="false">TTL/Hop Limit</string>
+    <string name="message_sequence_saved">\"%s\" saved</string>
+    <string name="action_knock">Knock</string>
+    <string name="text_unnamed_sequence">(Unnamed sequence)</string>
+    <string name="text_host_not_set">(Host is not set)</string>
+    <string name="text_empty_sequence">(Empty sequence)</string>
+    <string name="hint_reorder">Reorder</string>
+    <string name="hint_delete">Delete</string>
+    <string name="field_port">Port</string>
+    <string name="field_data">Data</string>
+    <string name="field_size">Size</string>
+    <string name="field_count">Count</string>
+    <string name="type_sequence_step_tcp" translatable="false">TCP</string>
+    <string name="type_sequence_step_udp" translatable="false">UDP</string>
+    <string name="type_sequence_step_icmp" translatable="false">ICMP</string>
+    <string name="hint_collapse">Collapse</string>
+    <string name="hint_expand">Expand</string>
+    <string name="type_content_encoding_raw" translatable="false">RAW</string>
+    <string name="type_content_encoding_base64" translatable="false">Base64</string>
+    <string name="type_content_encoding_hex" translatable="false">HEX</string>
+    <string name="title_list_sequence_steps">Sequence Steps</string>
+    <string name="action_add">Add</string>
+    <string name="type_icmp_size_without_headers">data only</string>
+    <string name="type_icmp_size_with_icmp_header">data + ICMP header</string>
+    <string name="field_icmp_packet_size">ICMP packet size includes…</string>
+    <string name="field_launch_app">Launch app after knocking</string>
+    <string name="field_launch_uri">Open URI after knocking</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_create_shortcut">Create Shortcut</string>
+    <string name="action_integration">Automation</string>
+    <string name="title_delete_sequence">Delete sequence?</string>
+    <string name="text_delete_sequence_alert">This will permanently remove the sequence \"%s\". You won’t be able to recover it.</string>
+    <string name="message_sequence_deleted">\"%s\" deleted</string>
+    <plurals name="message_sequence_import">
+        <item quantity="zero">%d sequences added</item>
+        <item quantity="one">%d sequence added</item>
+        <item quantity="other">%d sequences added</item>
+    </plurals>
+    <plurals name="message_sequence_export">
+        <item quantity="zero">%d sequences saved</item>
+        <item quantity="one">%d sequence saved</item>
+        <item quantity="other">%d sequences saved</item>
+    </plurals>
+    <string name="title_settings_general">General</string>
+    <string name="title_settings_theme">Application Theme</string>
+    <string name="title_settings_about">About Application</string>
+    <string name="title_settings_dynamic_theme">Dynamic Color Theme</string>
+    <string name="text_settings_dynamic_theme">Match your device’s colors – adapts the app’s palette to your system theme and wallpaper</string>
+    <string name="title_settings_dark_light">Theme Mode</string>
+    <string name="text_settings_system_dark_light">System default</string>
+    <string name="text_settings_dark">Dark</string>
+    <string name="text_settings_light">Light</string>
+    <string name="title_settings_contrast">Contrast</string>
+    <string name="text_settings_contrast_standard">Standard</string>
+    <string name="text_settings_contrast_medium">Medium</string>
+    <string name="text_settings_contrast_high">High</string>
+    <string name="title_settings_custom_theme">Custom Theme Color</string>
+    <string name="text_settings_custom_theme">Choose a primary color for the app’s interface</string>
+    <string name="title_settings_widget_confirmation">Widget Confirmation</string>
+    <string name="text_settings_widget_confirmation_desc">Require confirmation when launching sequences from the widget</string>
+    <string name="title_public_ip_alert">Allow public IP detection?</string>
+    <string name="text_public_ip_alert_1">This feature uses a third-party service to determine your public IP address.</string>
+    <string name="text_public_ip_alert_2">When enabled, a request will be sent to an external service every time a sequence is launched.</string>
+    <string name="text_public_ip_alert_3">This service is not controlled by this app. Do you want to proceed?</string>
+    <string name="title_settings_detailed_list_view">Detailed List View</string>
+    <string name="text_settings_detailed_list_view">Show host and sequence details on the main screen</string>
+    <string name="title_settings_detect_ip">Detect Public IP</string>
+    <string name="text_settings_detect_ip">Allow the app to detect your public IP</string>
+    <string name="action_allow">Allow</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="title_settings_ipv4_lookup_provider">IPv4 Lookup Provider</string>
+    <string name="title_settings_ipv6_lookup_provider">IPv6 Lookup Provider</string>
+    <string name="type_provider_wtfismyip" translatable="false">wtfismyip.com</string>
+    <string name="type_provider_ipify" translatable="false">ipify.org</string>
+    <string name="type_provider_icanhazip" translatable="false">icanhazip.com</string>
+    <string name="type_provider_custom">Custom</string>
+    <string name="title_custom_service_dialog">Custom IP Lookup Service</string>
+    <string name="text_custom_service_dialog">Specify a custom endpoint that returns your public IP address as plain text (e.g., <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="field_custom_ip_provider">Service URL</string>
+    <string name="text_custom_provider_not_specified">(not specified)</string>
+    <string name="title_settings_custom_ipv4_provider">Custom IPv4 Lookup Provider</string>
+    <string name="title_settings_custom_ipv6_provider">Custom IPv6 Lookup Provider</string>
+    <string name="title_settings_version">Version</string>
+    <string name="title_settings_privacy_policy">Privacy Policy</string>
+    <string name="title_settings_source_code">Source Code</string>
+    <string name="title_settings_report_issue">Report an Issue</string>
+    <string name="title_settings_contact_author">Contact Developer</string>
+    <string name="title_settings_rate_app">Rate Application</string>
+    <string name="text_settings_rate_app">Please don\'t cuss too much!</string>
+    <string name="text_settings_privacy_policy">Relax, I don’t track you — even if I wanted to, I\'m too lazy to code that.</string>
+    <string name="text_settings_source_code">Open-source magic inside. Warning: may contain traces of caffeine-fueled code.</string>
+    <string name="text_settings_report_issue">Found a bug? Don’t panic, just throw it here. I’ll (maybe) fix it by 3025.</string>
+    <string name="text_settings_contact_author">Report issues, suggest features, or just say hello. 👋</string>
+    <string name="text_annoying_version_1">v%1$s: Now with %2$d%% fewer crashes!*\n*According to very optimistic estimates.</string>
+    <string name="text_annoying_version_2">v.%1$s Build 36%2$d: Resistance is futile. You will be assimilated.</string>
+    <string name="text_annoying_version_3">Version %s — Now in 16-bit Glorious Mode!*\n*May not actually include 16-bit anything.</string>
+    <string name="text_annoying_version_4">Release %s: Like a caffeinated squirrel, but slightly more stable.</string>
+    <string name="text_annoying_version_5">%s: It’s a number. It went up. Rejoice.</string>
+    <string name="text_annoying_version_6">v.%s: Still not tracking you. Seriously, go check the code.</string>
+    <string name="text_annoying_version_7">Season %1$s Episode %2$d — The One Where We Fixed That Annoying Thing.</string>
+    <string name="text_annoying_version_8">v%s — Crafted with caffeine, tears, and existential doubts.</string>
+    <string name="text_annoying_version_9">v%s: Sponsored by unpaid passion and a slight disregard for sanity.</string>
+    <string name="message_error_network_not_avail">Network not available</string>
+    <string name="message_error_empty_host">Sequence has empty host</string>
+    <string name="message_error_empty_sequence">Sequence \"%s\" is empty</string>
+    <string name="message_error_resolve">Unable to resolve host \"%s\"</string>
+    <string name="message_error_unknown_host">Unknown host \"%s\"</string>
+    <string name="message_error_app_launch">Unable to launch \"%s\"</string>
+    <string name="message_knocking_complete">Knocking complete!</string>
+    <string name="message_error_unknown">Unknown error: %s</string>
+    <string name="message_start_knocking">Knock-knock-knockin\' on \"%s\"</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="action_close">Close</string>
+    <string name="title_confirm_knock_alert">Knock-knock!</string>
+    <string name="text_confirm_knock_alert">Do you want to execute sequence \"%s\"?</string>
     <string name="channel_name">Knock-knock</string>
     <string name="channel_description">Who\'s there? \u1F632</string>
     <string name="notification_title">Knock-knock!</string>
-    <string name="notification_desc">Knocking on %s. Is anybody there?</string>
-    <string name="installed_apps">Installed applications</string>
-    <string name="icmp_size">Size</string>
-    <string name="icmp_count">Count</string>
-    <string name="encoding_raw" translatable="false">Raw</string>
-    <string name="encoding_hex" translatable="false">Hex</string>
-    <string name="encoding_base64" translatable="false">Base64</string>
-    <string name="icmp_type_without_headers">without headers</string>
-    <string name="icmp_type_with_icmp_header">with ICMP header</string>
-    <string name="icmp_type_header">ICMP packet size:</string>
-    <string name="action_rate_app">Rate this app…</string>
-    <string name="action_create_shortcut">Create shortcut</string>
-    <string name="text_ask_review">If you like this app, please take a moment to rate it. It won\'t take more than a minute. Thank you for your support!</string>
-    <string name="action_rate_now">Rate now</string>
-    <string name="action_rate_later">Remind later</string>
-    <string name="action_rate_disable">No, thanks</string>
-    <string name="title_ask_review">Do you like this app?</string>
-    <string name="error_play_store">Unable to open Play Store</string>
-    <string name="data_editor_default_hint">Data</string>
-    <string name="got_it" translatable="false">OK</string>
-    <string name="hint_delete_step">You can delete a row by swiping it aside.</string>
-    <string name="hint_icmp_size">Сheck «ICMP packet size» in the advanced settings.</string>
-    <string name="error_app_launch">Could not launch application «%s»!</string>
-    <string name="action_add_step">Add</string>
-    <string name="error_empty_port">Port number cannot be empty</string>
-    <string name="error_invalid_port">Invalid port number</string>
-    <string name="error_empty_sequence_name">Empty sequence name</string>
-    <string name="error_empty_host">Empty hostname or IP address</string>
-    <string name="error_empty_file_name">File name cannot be empty</string>
-    <string name="knock_on">Knock on:</string>
-    <string name="tasker_action_blurb">Knock on «%s»</string>
-    <string name="unknown_sequence">Unknown sequence</string>
-    <plurals name="import_success">
-        <item quantity="one">%1$d entry was imported from %2$s</item>
-        <item quantity="other">%1$d entries were imported from %2$s</item>
-    </plurals>
-    <string name="lil_easter">Who\'s there? 😲</string>
-    <string name="hide_details">Hide details in the sequence list</string>
-    <string name="action_log">Log</string>
+    <string name="notification_desc">Knocking on \"%s\". Is anybody there?</string>
+    <string name="contact_author_mail" translatable="false">dev@impa.me</string>
+    <string name="contact_subject" translatable="false">Knock on Ports</string>
+    <string name="title_integration_alert">Automation URI</string>
+    <string name="text_integration_alert">Copy this link to trigger the sequence from automation apps like Tasker or Macrodroid. No need to open the app — just call the URI.</string>
+    <string name="title_widget">Sequence List</string>
+    <string name="text_widget_description">Launch any sequence from home screen</string>
+    <string name="text_widget_empty_list">Empty sequence list</string>
     <string name="log_unknown">Unknown event</string>
     <string name="log_knock">Knock \'%1$s\' [%2$s] (%3$s→%4$s)</string>
     <string name="log_error_network">Network connection not available</string>
@@ -120,41 +192,5 @@
     <string name="log_import">Import from %1$s (%2$s sequences)</string>
     <string name="log_error_export">Export to %1$s: %2$s</string>
     <string name="log_error_import">Import from %1$s: %2$s</string>
-    <string name="ip_version">IP version:</string>
-    <string name="ip_prefer_ipv4">prefer IPv4</string>
-    <string name="ip_prefer_ipv6">prefer IPv6</string>
-    <string name="ip_only_ipv4">only IPv4</string>
-    <string name="ip_only_ipv6">only IPv6</string>
-    <string name="ip_both">both IPv4 and IPv6</string>
-    <string name="action_clear_log">Clear Log</string>
-    <string name="text_confirm_clear_log">Are you sure you want to clear the log?\nPlease note that this action cannot be undone.</string>
-    <string name="action_yes">Yes</string>
-    <string name="action_no">No</string>
-    <string name="title_clear_log">Clear Log</string>
-    <string name="option_theme_dark">Dark</string>
-    <string name="option_theme_light">Light</string>
-    <string name="pref_title_theme">Theme</string>
-    <string name="action_preferences">Preferences</string>
-    <string name="pref_title_group_general">General</string>
-    <string name="pref_title_group_about">About</string>
-    <string name="pref_title_ask_confirm_widget">Widget: ask for confirmation</string>
-    <string name="pref_summary_ask_confirm_widget_on">Ask for confirmation to knock after tapping on the widget.</string>
-    <string name="pref_summary_ask_confirm_widget_off">Knock without confirmation after tapping on the widget.</string>
-    <string name="title_confirm_knock">Knock-knock!</string>
-    <string name="message_confirm_knock">Do you want to execute sequence «%s»?</string>
-    <string name="option_disable">Disable</string>
-    <string name="option_wtfismyip" translatable="false">wtfismyip.com</string>
-    <string name="option_ipify" translatable="false">ipify.org</string>
-    <string name="option_icanhazip" translatable="false">icanhazip.com</string>
-    <string name="option_custom">Custom</string>
-    <string name="pref_title_ip4_service">IPv4 public address API</string>
-    <string name="pref_title_ip6_service">IPv6 public address API</string>
-    <string name="pref_title_ip4_custom_service">Custom IPv4 public address API</string>
-    <string name="pref_title_ip6_custom_service">Custom IPv6 public address API</string>
-    <string name="pref_title_app_version">Version</string>
-    <string name="pref_title_app_source">Source code</string>
-    <string name="pref_title_contact">Contact author</string>
-    <string name="pref_title_report_issue">Report issue</string>
-    <string name="pref_summary_ip4_custom_service">URL that returns PLAIN IPv4 address</string>
-    <string name="pref_summary_ip6_custom_service">URL that returns PLAIN IPv6 address</string>
+    <string name="text_error_general">Error: %s</string>
 </resources>
