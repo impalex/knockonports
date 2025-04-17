@@ -35,20 +35,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.TAG_AUTOMATE_MENU_ITEM
+import me.impa.knockonports.constants.TAG_SEQUENCE_DOTS_BUTTON
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.screen.event.SequenceMenuEvent
 
 @Composable
-fun SequenceMenu(isShortcutsAvailable: Boolean, onAction: (SequenceMenuEvent) -> Unit = {}) {
+fun SequenceMenu(id: Long?, isShortcutsAvailable: Boolean, onAction: (SequenceMenuEvent) -> Unit = {}) {
     var showMenu by remember { mutableStateOf(false) }
     fun execute(event: SequenceMenuEvent) {
         onAction(event)
         showMenu = false
     }
+    val dotsTag = "${TAG_SEQUENCE_DOTS_BUTTON}$id"
     Box {
-        IconButton(onClick = debounced({ showMenu = true })) {
+        IconButton(onClick = debounced({ showMenu = true }),
+            modifier = Modifier.testTag(dotsTag)) {
             Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
         }
         DropdownMenu(
@@ -69,6 +75,7 @@ fun SequenceMenu(isShortcutsAvailable: Boolean, onAction: (SequenceMenuEvent) ->
                 onClick = { execute(SequenceMenuEvent.Duplicate) }
             )
             DropdownMenuItem(
+                modifier = Modifier.testTag(TAG_AUTOMATE_MENU_ITEM),
                 text = { Text(stringResource(R.string.action_integration)) },
                 onClick = { execute(SequenceMenuEvent.Automation) }
             )

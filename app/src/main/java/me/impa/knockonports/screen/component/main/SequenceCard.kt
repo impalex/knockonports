@@ -54,10 +54,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.async
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.TAG_SEQUENCE_ITEM
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.sequenceString
@@ -157,6 +159,7 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp)
+                .testTag("${TAG_SEQUENCE_ITEM}${sequence.id}")
         ),
         onClick = debounced({ sequence.id?.let { actions.onEdit(it) } }),
         interactionSource = interactionSource
@@ -177,6 +180,7 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                     if (!showSequenceDetails)
                         KnockIconButton()
                     SequenceMenu(
+                        id = sequence.id,
                         isShortcutsAvailable = isShortcutsAvailable,
                         onAction = { event ->
                             Timber.d("Sequence menu event: $event")

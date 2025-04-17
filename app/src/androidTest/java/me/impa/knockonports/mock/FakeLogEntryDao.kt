@@ -20,26 +20,26 @@
  *
  */
 
-package me.impa.knockonports.data.settings
+package me.impa.knockonports.mock
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.flow.StateFlow
-import me.impa.knockonports.ui.config.ThemeConfig
+import kotlinx.coroutines.flow.Flow
+import me.impa.knockonports.data.db.dao.LogEntryDao
+import me.impa.knockonports.data.db.entity.LogEntry
 
-interface SettingsRepository {
-    val appSettings: StateFlow<AppSettings>
-    val themeSettings: StateFlow<ThemeConfig>
-    val knockCount: State<Long>
-    val doNotAskAboutNotifications: State<Boolean>
-    val firstLaunchV2: State<Boolean>
-    val askReviewTime: State<Long>
-    val doNotAskForReview: State<Boolean>
-    val isInstalledFromPlayStore: State<Boolean>
-    fun updateAppSettings(newSettings: AppSettings)
-    fun updateThemeSettings(newSettings: ThemeConfig)
-    fun incrementKnockCount()
-    fun setDoNotAskAboutNotificationsFlag()
-    fun postponeReviewRequest(time: Long)
-    fun doNotAskForReview()
-    fun clearFirstLaunchV2()
+object FakeLogEntryDao: LogEntryDao {
+    override suspend fun insertLogEntry(logEntry: LogEntry): Long {
+        TODO("Not yet implemented")
+    }
+
+    override fun logEntriesById(): Flow<List<LogEntry>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun clearLogEntries(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun cleanupLogEntries(keepCount: Int): Int {
+        TODO("Not yet implemented")
+    }
 }

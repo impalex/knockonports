@@ -71,17 +71,19 @@ class FileRepository @Inject constructor(private val contentResolver: ContentRes
         }
     }
 
-    suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>) = withContext(Dispatchers.IO) {
-        val data = sequences.asJsonData()
-        val jsonString = jsonCoder.encodeToString(SequencesData.serializer(), data)
-        Timber.d("SequencesData: $jsonString")
-        try {
-            contentResolver.openOutputStream(uri)?.use { outputStream ->
-                outputStream.write(jsonString.toByteArray())
+    suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>) {
+        withContext(Dispatchers.IO) {
+            val data = sequences.asJsonData()
+            val jsonString = jsonCoder.encodeToString(SequencesData.serializer(), data)
+            Timber.d("SequencesData: $jsonString")
+            try {
+                contentResolver.openOutputStream(uri)?.use { outputStream ->
+                    outputStream.write(jsonString.toByteArray())
+                }
+            } catch (e: Exception) {
+                Timber.e(e)
+                throw e
             }
-        } catch (e: Exception) {
-            Timber.e(e)
-            throw e
         }
     }
 }

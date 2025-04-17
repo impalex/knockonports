@@ -59,7 +59,7 @@ fun ValueTextField(
             keyboardType = keyboardType
         ),
         singleLine = true,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.then(Modifier.fillMaxWidth())
     )
 }
 

@@ -1,27 +1,20 @@
 *.iml
 .gradle
 /local.properties
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
-# .idea/caches/
 app/release/
-# .idea/dictionaries/
-.idea/assetWizardSettings.xml
-# .idea/misc.xml
-.idea/caches/build_file_checksums.ser
 keystore.properties
 publisher.properties
-.idea/kotlinc.xml
-.idea/dictionaries/impa.xml
-.idea/dictionaries/
 app/.cxx/
-.idea/caches/
-.idea/deploymentTargetSelector.xml
-gradle.properties
-.idea/appInsightsSettings.xml
+Gemfile
+Gemfile.lock
+fastlane/Appfile
 .kotlin/
+*.iml
+.idea
+!.idea/modules.xml
+!.idea/runConfigurations
+fastlane/report.xml

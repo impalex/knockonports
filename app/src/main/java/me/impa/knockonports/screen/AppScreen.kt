@@ -44,12 +44,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.TAG_APP_SCREEN
+import me.impa.knockonports.constants.TAG_BACK_BUTTON
 import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.navigation.AppNavGraph
@@ -68,7 +71,7 @@ fun AppScreen(
     val currentEvent by viewModel.eventFlow.collectAsState()
 
     Surface(
-        modifier = modifier,
+        modifier = modifier.then(Modifier.testTag(TAG_APP_SCREEN)),
         color = MaterialTheme.colorScheme.background
     ) {
         var appBarState by remember { mutableStateOf(AppBarState()) }
@@ -87,9 +90,12 @@ fun AppScreen(
                     ),
                     navigationIcon = {
                         if (appBarState.backAvailable) {
-                            IconButton(onClick = {
-                                navController.popBackStack()
-                            }) {
+                            IconButton(
+                                onClick = {
+                                    navController.popBackStack()
+                                },
+                                modifier = Modifier.testTag(TAG_BACK_BUTTON)
+                            ) {
                                 Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                             }
                         }

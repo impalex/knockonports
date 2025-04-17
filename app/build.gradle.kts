@@ -74,7 +74,7 @@ android {
         versionCode = 203
         versionName = "2.0.3"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -142,37 +142,56 @@ android {
 }
 
 dependencies {
+    // Core
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.immutable.collections)
+
+    // Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.hilt.android)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.immutable.collections)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.ui.tooling)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
+    // Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Glance
     implementation(libs.androidx.glance.appwidget)
     implementation(libs.androidx.glance.material3)
     implementation(libs.androidx.glance.preview)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.glance.appwidget.preview)
+
+    // Utils
     implementation(libs.calvin.reorderable)
     implementation(libs.timber)
-    ksp(libs.hilt.compiler)
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler)
+
+    // Compose tests
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
-    ksp(libs.androidx.room.compiler)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.glance.appwidget.preview)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.screengrab)
+
+    // Debug
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.rebugger)
     detektPlugins(libs.detekt.formatting)

@@ -20,26 +20,17 @@
  *
  */
 
-package me.impa.knockonports.data.settings
+package me.impa.knockonports.constants
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.flow.StateFlow
-import me.impa.knockonports.ui.config.ThemeConfig
-
-interface SettingsRepository {
-    val appSettings: StateFlow<AppSettings>
-    val themeSettings: StateFlow<ThemeConfig>
-    val knockCount: State<Long>
-    val doNotAskAboutNotifications: State<Boolean>
-    val firstLaunchV2: State<Boolean>
-    val askReviewTime: State<Long>
-    val doNotAskForReview: State<Boolean>
-    val isInstalledFromPlayStore: State<Boolean>
-    fun updateAppSettings(newSettings: AppSettings)
-    fun updateThemeSettings(newSettings: ThemeConfig)
-    fun incrementKnockCount()
-    fun setDoNotAskAboutNotificationsFlag()
-    fun postponeReviewRequest(time: Long)
-    fun doNotAskForReview()
-    fun clearFirstLaunchV2()
-}
+const val TAG_APP_SCREEN = "APP_SCREEN"
+const val TAG_SEQUENCE_ITEM = "SEQUENCE_ITEM"
+const val TAG_EDIT_BASIC_TAB = "BASIC_TAB"
+const val TAG_EDIT_ADVANCED_TAB = "ADVANCED_TAB"
+const val TAG_EDIT_LOCAL_PORT = "EDIT_TTL"
+const val TAG_EDIT_HOST = "EDIT_HOST"
+const val TAG_BACK_BUTTON = "BACK_BUTTON"
+const val TAG_MAIN_DOTS_BUTTON = "MAIND_DOTS_BUTTON"
+const val TAG_SETTINGS_MENU_ITEM = "SETTINGS_MENU_ITEM"
+const val TAG_SEQUENCE_DOTS_BUTTON = "SEQUENCE_DOTS_BUTTON"
+const val TAG_AUTOMATE_MENU_ITEM = "AUTOMATE_MENU_ITEM"
+const val TAG_CLOSE_BUTTON = "CLOSE_BUTTON"

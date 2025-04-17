@@ -20,26 +20,15 @@
  *
  */
 
-package me.impa.knockonports.data.settings
+package me.impa.knockonports
 
-import androidx.compose.runtime.State
-import kotlinx.coroutines.flow.StateFlow
-import me.impa.knockonports.ui.config.ThemeConfig
+import android.app.Application
+import android.content.Context
+import androidx.test.runner.AndroidJUnitRunner
+import dagger.hilt.android.testing.HiltTestApplication
 
-interface SettingsRepository {
-    val appSettings: StateFlow<AppSettings>
-    val themeSettings: StateFlow<ThemeConfig>
-    val knockCount: State<Long>
-    val doNotAskAboutNotifications: State<Boolean>
-    val firstLaunchV2: State<Boolean>
-    val askReviewTime: State<Long>
-    val doNotAskForReview: State<Boolean>
-    val isInstalledFromPlayStore: State<Boolean>
-    fun updateAppSettings(newSettings: AppSettings)
-    fun updateThemeSettings(newSettings: ThemeConfig)
-    fun incrementKnockCount()
-    fun setDoNotAskAboutNotificationsFlag()
-    fun postponeReviewRequest(time: Long)
-    fun doNotAskForReview()
-    fun clearFirstLaunchV2()
+class HiltTestRunner: AndroidJUnitRunner() {
+    override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application? {
+        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+    }
 }

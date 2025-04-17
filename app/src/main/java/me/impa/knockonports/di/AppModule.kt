@@ -22,14 +22,12 @@
 
 package me.impa.knockonports.di
 
-import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.content.pm.ShortcutManager
 import android.os.Build
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -38,6 +36,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import me.impa.knockonports.data.KnocksRepository
+import me.impa.knockonports.data.KnocksRepositoryImpl
+import me.impa.knockonports.data.KnocksWidgetRepository
 import me.impa.knockonports.data.db.KnocksDatabase
 import me.impa.knockonports.data.db.Migrations.Migration10To11
 import me.impa.knockonports.data.db.Migrations.Migration11To12
@@ -60,6 +61,10 @@ import me.impa.knockonports.data.db.Migrations.Migration8To9
 import me.impa.knockonports.data.db.Migrations.Migration9To10
 import me.impa.knockonports.data.db.dao.LogEntryDao
 import me.impa.knockonports.data.db.dao.SequenceDao
+import me.impa.knockonports.data.event.SharedEventHolder
+import me.impa.knockonports.data.file.FileRepository
+import me.impa.knockonports.data.settings.SettingsRepository
+import me.impa.knockonports.data.settings.SettingsRepositoryImpl
 import me.impa.knockonports.util.ShortcutManagerWrapper
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -76,6 +81,7 @@ annotation class DefaultDispatcher
 @Qualifier
 annotation class MainDispatcher
 
+@Suppress("TooManyFunctions", "Unused")
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
@@ -111,6 +117,27 @@ object AppModule {
             .build()
     }
 
+    @Suppress("LongParameterList")
+    @Provides
+    @Singleton
+    fun provideKnocksRepository(
+        logEntryDao: LogEntryDao,
+        sequenceDao: SequenceDao,
+        fileRepository: FileRepository,
+        eventHolder: SharedEventHolder,
+        settingsRepository: SettingsRepository,
+        widgetRepository: KnocksWidgetRepository
+    ): KnocksRepository {
+        return KnocksRepositoryImpl(
+            logEntryDao = logEntryDao,
+            sequenceDao = sequenceDao,
+            fileRepository = fileRepository,
+            eventHolder = eventHolder,
+            settingsRepository = settingsRepository,
+            widgetRepository = widgetRepository
+        )
+    }
+
     @Provides
     @Singleton
     fun provideLogEntryDao(knocksDatabase: KnocksDatabase): LogEntryDao {
@@ -134,6 +161,13 @@ object AppModule {
     fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("me.impa.knockonports_preferences", Context.MODE_PRIVATE)
     }
+
+    @Provides
+    @Singleton
+    fun provideSettingsRepository(
+        sharedPreferences: SharedPreferences,
+        packageManager: PackageManager
+    ): SettingsRepository = SettingsRepositoryImpl(sharedPreferences, packageManager)
 
     @Provides
     @IoDispatcher

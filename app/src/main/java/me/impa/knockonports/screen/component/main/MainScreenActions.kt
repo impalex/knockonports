@@ -38,9 +38,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.TAG_SETTINGS_MENU_ITEM
+import me.impa.knockonports.constants.TAG_MAIN_DOTS_BUTTON
 import me.impa.knockonports.screen.event.MainBarEvent
 import me.impa.knockonports.extension.debounced
 
@@ -51,7 +55,10 @@ fun RowScope.MainScreenActions(onAction: (MainBarEvent) -> Unit = {}) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null)
     }
     Box {
-        IconButton(onClick = debounced({ showMenu = true })) {
+        IconButton(
+            onClick = debounced({ showMenu = true }),
+            modifier = Modifier.testTag(TAG_MAIN_DOTS_BUTTON)
+        ) {
             Icon(imageVector = Icons.Default.MoreVert, contentDescription = null)
         }
         DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
@@ -65,6 +72,7 @@ fun RowScope.MainScreenActions(onAction: (MainBarEvent) -> Unit = {}) {
                 })
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.action_settings)) },
+                modifier = Modifier.testTag(TAG_SETTINGS_MENU_ITEM),
                 onClick = {
                     onAction(MainBarEvent.Settings)
                     showMenu = false

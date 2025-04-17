@@ -26,6 +26,7 @@ accompanistPermissions = "0.37.2"
 reorderable = "2.3.3"
 timber = "5.0.1"
 rebugger = "1.0.0-rc03"
+screengrab = "2.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -51,6 +52,7 @@ androidx-glance-preview = { group="androidx.glance", name="glance-preview", vers
 androidx-glance-appwidget-preview = { group="androidx.glance", name="glance-appwidget-preview", version.ref="glance" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hiltVersion"}
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltVersion"}
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltVersion"}
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
@@ -61,6 +63,7 @@ kotlinx-immutable-collections = { group = "org.jetbrains.kotlinx", name = "kotli
 calvin-reorderable = { group = "sh.calvin.reorderable", name = "reorderable", version.ref = "reorderable" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 rebugger = { group = "io.github.theapache64", name = "rebugger", version.ref = "rebugger" }
+screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "screengrab" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

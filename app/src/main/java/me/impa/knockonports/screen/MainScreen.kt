@@ -96,9 +96,9 @@ fun MainScreen(
     navController.UpdateAppBar(onComposing, viewModel::importSequences, viewModel::exportSequences)
     val firstLaunchV2 by viewModel.firstLaunchV2
     if (firstLaunchV2)
-      UpdateToV2Alert(onDismiss = viewModel::clearFirstLaunchV2)
+        UpdateToV2Alert(onDismiss = viewModel::clearFirstLaunchV2)
 
-        CheckReviewRequest(viewModel)
+    CheckReviewRequest(viewModel)
     val doNotAskAboutNotifications by viewModel.doNotAskAboutNotifications
     val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
         !doNotAskAboutNotifications

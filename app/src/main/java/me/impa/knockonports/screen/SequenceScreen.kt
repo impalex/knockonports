@@ -56,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,6 +65,10 @@ import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
 import kotlinx.collections.immutable.ImmutableList
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.TAG_EDIT_ADVANCED_TAB
+import me.impa.knockonports.constants.TAG_EDIT_BASIC_TAB
+import me.impa.knockonports.constants.TAG_EDIT_HOST
+import me.impa.knockonports.constants.TAG_EDIT_LOCAL_PORT
 import me.impa.knockonports.data.model.SequenceStep
 import me.impa.knockonports.data.type.ContentEncodingType
 import me.impa.knockonports.data.type.IcmpType
@@ -199,7 +204,7 @@ private fun SequenceTabs(modifier: Modifier, pageContent: @Composable PagerScope
     Column(modifier = modifier.fillMaxSize()) {
         var selectedTabIndex by remember { mutableIntStateOf(0) }
         val pagerState = rememberPagerState { 2 }
-
+        println("selectedTabIndex: $selectedTabIndex")
         LaunchedEffect(selectedTabIndex) {
             pagerState.animateScrollToPage(selectedTabIndex)
         }
@@ -214,11 +219,13 @@ private fun SequenceTabs(modifier: Modifier, pageContent: @Composable PagerScope
             Tab(
                 selected = selectedTabIndex == 0,
                 onClick = { selectedTabIndex = 0 },
+                modifier = Modifier.testTag(TAG_EDIT_BASIC_TAB),
                 text = { Text(stringResource(R.string.title_tab_basic_settings)) }
             )
             Tab(
                 selected = selectedTabIndex == 1,
                 onClick = { selectedTabIndex = 1 },
+                modifier = Modifier.testTag(TAG_EDIT_ADVANCED_TAB),
                 text = { Text(stringResource(R.string.title_tab_advanced_settings)) }
             )
         }
@@ -247,7 +254,8 @@ private fun LazyListScope.sequenceBasicConfig(
         ValueTextField(stringResource(R.string.field_name), name, onValueChange = { onUpdateName(it) })
     }
     item(key = "host_edit") {
-        ValueTextField(stringResource(R.string.field_host), host, onValueChange = { onUpdateHost(it) })
+        ValueTextField(stringResource(R.string.field_host), host, onValueChange = { onUpdateHost(it) },
+            modifier = Modifier.testTag(TAG_EDIT_HOST))
     }
     stickyHeader(key = "seq_header") {
         SequenceStepsHeader(onAddNew = { onAddNew() })
@@ -341,6 +349,7 @@ private fun LazyListScope.sequenceAdvancedConfig(
         ValueTextField(
             stringResource(R.string.field_local_port),
             localPort,
+            modifier = Modifier.testTag(TAG_EDIT_LOCAL_PORT),
             onValueChange = { onUpdateLocalPort(it) },
             onValidate = { it in 1..65535 })
     }
