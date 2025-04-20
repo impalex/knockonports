@@ -1,13 +1,16 @@
-"Knock on Ports" is a port knocking client compatible with knockd, icmpKNOCK and other port knocking servers.
+Unlock your server's secret knock!
+Knock on Ports is the ultimate port knocking client for Android, giving you secure and seamless access to services hidden behind firewalls.
 
-Features:
-- UDP/TCP/ICMP sequences
-- IPv4 and IPv6 support
-- customizable content of UDP and ICMP packets
-- ability to start another application after a knock
-- Tasker integration
-- interpacket delays
-- sequence shortcuts
-- customizable widget
-- data export/import
-- free, no ads, open source
+Craft custom knock sequences using UDP, TCP, or ICMP packets (IPv4/IPv6 support) to keep your server ports stealthy until the right "knock" unlocks them.
+
+Why Knock on Ports?
+
+• Flexible Sequences: Customize UDP/TCP/ICMP packets, set interpacket delays, and fine-tune TTL/Hop Limit for all protocols.
+• Smart Automation: Trigger apps (e.g., SSH) or URLs after a successful knock. Integrate with external tools via URI for advanced workflows.
+• Connect Anywhere: Full IPv4 & IPv6 compatibility.
+• Quick Access: Home screen shortcuts and a widget for instant sequence launches.
+• Customizable Look: Dynamic themes (Android 12+), custom colors, light/dark modes, and contrast controls.
+• Data Control: Export/import configurations effortlessly.
+• No Ads, Open Source: Free, transparent, and privacy-focused.
+
+Download now and knock with confidence!

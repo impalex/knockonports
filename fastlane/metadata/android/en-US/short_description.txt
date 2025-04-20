@@ -1,1 +1,1 @@
-Port knocking client
+Secret knock, secure access: Your server, your rules.

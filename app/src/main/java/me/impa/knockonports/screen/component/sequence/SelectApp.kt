@@ -29,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import me.impa.knockonports.R
 import me.impa.knockonports.screen.component.common.DialogItemsSource
 import me.impa.knockonports.screen.component.common.DialogMenu
@@ -44,7 +46,7 @@ fun SelectApp(appPackage: String?, appName: String?, onUpdate: (String?, String?
         itemsSource = DialogItemsSource.AsyncItems(
             loadItems = {
                 if (appList == null) {
-                    appList = AppData.loadInstalledApps(context)
+                    appList = withContext(Dispatchers.Default) { AppData.loadInstalledApps(context) }
                 }
                 appList ?: listOf<AppData>()
             },

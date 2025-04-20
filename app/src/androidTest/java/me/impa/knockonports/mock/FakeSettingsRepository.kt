@@ -22,6 +22,7 @@
 
 package me.impa.knockonports.mock
 
+import android.os.Build
 import androidx.compose.runtime.State
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -35,7 +36,9 @@ object FakeSettingsRepository : SettingsRepository {
     override val appSettings: StateFlow<AppSettings>
         get() = TODO("Not yet implemented")
     override val themeSettings: StateFlow<ThemeConfig>
-        get() = MutableStateFlow(ThemeConfig(useDarkTheme = DarkMode.DARK))
+        get() = MutableStateFlow(
+            ThemeConfig(useDarkTheme = DarkMode.DARK)
+        )
     override val knockCount: State<Long>
         get() = TODO("Not yet implemented")
     override val doNotAskAboutNotifications: State<Boolean>

@@ -44,13 +44,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DragIndicator
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,8 +78,6 @@ import me.impa.knockonports.data.type.ContentEncodingType
 import me.impa.knockonports.data.type.SequenceStepType
 import me.impa.knockonports.extension.stringResourceId
 import me.impa.knockonports.screen.component.common.ExpandableIconButton
-import me.impa.knockonports.screen.component.common.MultiToggleButton
-import me.impa.knockonports.screen.component.common.MultiToggleButtonOrientation
 import me.impa.knockonports.screen.component.common.ValueTextField
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
@@ -187,18 +189,20 @@ private fun TypeSelector(
         remember(resources) { SequenceStepType.entries.map { resources.getString(it.stringResourceId()) } }
 
     Row(verticalAlignment = Alignment.Bottom, modifier = Modifier.fillMaxWidth()) {
-        // MultiToggleButton to select the type of sequence step (TCP, UDP, ICMP).
-        MultiToggleButton(
-            states = stateList,
-            orientation = MultiToggleButtonOrientation.HORIZONTAL,
-            initialStateIndex = type.ordinal,
-            unselectedTint = MaterialTheme.colorScheme.surfaceContainer,
-            unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-            onStateChanged = { onUpdateType(id, SequenceStepType.fromOrdinal(it)) }
-        )
+        SingleChoiceSegmentedButtonRow {
+            stateList.forEachIndexed { index, label ->
+                SegmentedButton(
+                    icon = {},
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = stateList.size),
+                    onClick = { onUpdateType(id, SequenceStepType.fromOrdinal(index)) },
+                    selected = type.ordinal == index,
+                    label = { Text(label) })
+            }
+
+        }
         Spacer(modifier = Modifier.weight(1f))
         IconButton(onClick = { onDelete(id) }) {
-            Icon(Icons.Default.Delete, contentDescription = null)
+            Icon(Icons.Default.Close, contentDescription = null)
         }
     }
 }
@@ -266,17 +270,20 @@ private fun IcmpUdpAdvancedConfig(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp)
     ) {
-        // MultiToggleButton to select the content encoding type.
-        MultiToggleButton(
-            states = ContentEncodingType.entries.map { stringResource(it.stringResourceId()) },
-            orientation = MultiToggleButtonOrientation.HORIZONTAL,
-            initialStateIndex = encoding.ordinal,
-            unselectedTint = MaterialTheme.colorScheme.surfaceContainer,
-            unselectedTextColor = MaterialTheme.colorScheme.onSurface,
-            onStateChanged = { index -> onEncodingUpdate(ContentEncodingType.fromOrdinal(index)) }
-        )
+        val encodings = ContentEncodingType.entries.map { stringResource(it.stringResourceId()) }
+
+        SingleChoiceSegmentedButtonRow {
+            encodings.forEachIndexed { index, label ->
+                SegmentedButton(
+                    icon = {},
+                    shape = SegmentedButtonDefaults.itemShape(index = index, count = encodings.size),
+                    onClick = { onEncodingUpdate(ContentEncodingType.fromOrdinal(index)) },
+                    selected = encoding.ordinal == index,
+                    label = { Text(label) })
+            }
+        }
+
         // Text field for entering the content data.
         ValueTextField(
             label = stringResource(R.string.field_data),

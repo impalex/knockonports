@@ -46,8 +46,8 @@ fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onImport: (Ur
                         MainScreenActions(onAction = { action ->
                             when (action) {
                                 is MainBarEvent.AddSequence -> this@UpdateAppBar.navigate(AppNavGraph.SequenceRoute())
-                                is MainBarEvent.Import -> onImport
-                                is MainBarEvent.Export -> onExport
+                                is MainBarEvent.Import -> onImport(action.uri)
+                                is MainBarEvent.Export -> onExport(action.uri)
                                 is MainBarEvent.ShowLogs -> this@UpdateAppBar.navigate(AppNavGraph.LogRoute)
                                 is MainBarEvent.Settings -> this@UpdateAppBar.navigate(AppNavGraph.SettingsRoute)
                             }

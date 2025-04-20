@@ -21,20 +21,59 @@ platform :android do
     gradle(task: "test")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+  desc "Submit a new Production Build to the Google Play"
+  lane :release do
+    gradle(
+	  task: "clean bundleRelease"
+	)
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'false',
+      track: 'production',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+    )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+  desc "Submit a new Beta Build to the Google Play"
+  lane :beta do
+    gradle(
+	  task: "clean bundleRelease"
+	)
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'false',
+      track: 'beta',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+    )
   end
+
+  desc "Submit a new Alpha Build to the Google Play"
+  lane :alpha do
+    gradle(
+	  task: "clean bundleRelease"
+	)
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'true',
+      track: 'alpha',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+    )
+  end
+
+#  desc "Deploy a new version to the Google Play"
+#  lane :deploy do
+#    gradle(task: "clean assembleRelease")
+#    upload_to_play_store
+#  end
   
   lane :screenshots do
     gradle(

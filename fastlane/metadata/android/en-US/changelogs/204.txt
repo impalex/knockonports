@@ -1,0 +1,7 @@
+• Complete rebuild: Rewritten for stability, requires Android 7.0+.
+• UI/UX: Compact sequence list, dynamic themes (Android 12+), color/contrast customization.
+• Automation: Launch via URI (replaces Tasker), post-knock URI actions (e.g., open apps/sites).
+• Sequences: Duplicate with one tap.
+• Packet control: Specify UDP source ports, configure TTL/Hop Limit for all packets.
+• Widget: It's new.
+• IP detection: Updated settings – check if used.

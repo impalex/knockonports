@@ -23,6 +23,7 @@
 package me.impa.knockonports.mock
 
 import android.net.Uri
+import android.os.Build
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +35,7 @@ import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
 
 object FakeRepository: KnocksRepository {
@@ -112,7 +114,7 @@ object FakeRepository: KnocksRepository {
 
     override fun getThemeSettings(): StateFlow<ThemeConfig> {
         return MutableStateFlow(ThemeConfig(
-            useDynamicColors = false
+            useDynamicColors =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
         ))
     }
 
