@@ -178,7 +178,7 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                         sequence.host?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_host_not_set),
                         sequence.sequenceString() ?: stringResource(R.string.text_empty_sequence), showSequenceDetails)
                     if (!showSequenceDetails)
-                        KnockIconButton()
+                        KnockIconButton(onKnock = { onKnock(sequence.id!!) })
                     SequenceMenu(
                         id = sequence.id,
                         isShortcutsAvailable = isShortcutsAvailable,
@@ -212,8 +212,8 @@ fun ColumnScope.KnockButton(onKnock: () -> Unit = {}) {
 }
 
 @Composable
-fun KnockIconButton() {
-    FilledIconButton(onClick = {}) {
+fun KnockIconButton(onKnock: () -> Unit) {
+    FilledIconButton(onClick = { onKnock() }) {
         Icon(Icons.Default.PlayArrow, contentDescription = null)
     }
 }

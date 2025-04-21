@@ -23,6 +23,7 @@
 package me.impa.knockonports.screen.component.common
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,9 +40,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -51,23 +54,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import me.impa.knockonports.extension.debouncedClickable
-import me.impa.knockonports.ui.theme.KnockOnPortsTheme
-import me.impa.knockonports.ui.theme.LocalThemeConfig
-import timber.log.Timber
+import me.impa.knockonports.R
 
 @Composable
 @Suppress("LongParameterList")
@@ -82,7 +86,8 @@ fun <T> DialogMenu(
     drawItem: @Composable (T, Boolean, Boolean, () -> Unit) -> Unit =
         @Composable { item: T, selected: Boolean, enabled: Boolean, onClick: () -> Unit ->
             DialogMenuItem(selectedItemToString(item), selected, enabled, onClick)
-        }
+        },
+    enableFilter: Boolean = false
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -123,7 +128,9 @@ fun <T> DialogMenu(
             onDismissRequest = { expanded = false },
             itemsSource = itemsSource,
             drawItem = drawItem,
-            onItemSelected = onItemSelected
+            onItemSelected = onItemSelected,
+            selectedItemToString = selectedItemToString,
+            enableFilter = enableFilter
         )
     }
 }
@@ -134,9 +141,10 @@ fun <T> DialogItemList(
     onDismissRequest: () -> Unit,
     itemsSource: DialogItemsSource<T>,
     drawItem: @Composable (T, Boolean, Boolean, () -> Unit) -> Unit,
-    onItemSelected: (index: Int, item: T) -> Unit
+    onItemSelected: (index: Int, item: T) -> Unit,
+    selectedItemToString: (T) -> String,
+    enableFilter: Boolean
 ) {
-    val currentConfig = LocalThemeConfig.current
     var items by remember {
         // Initialize items based on the data source type
         if (itemsSource is DialogItemsSource.ListItems)
@@ -162,25 +170,49 @@ fun <T> DialogItemList(
 
     // Create a Dialog window
     Dialog(onDismissRequest = onDismissRequest) {
-        KnockOnPortsTheme(config = currentConfig) {
-            Surface(shape = RoundedCornerShape(12.dp)) {
-                if (!isListLoaded) {
-                    LoadingIndicator()
-                } else {
+        Surface(shape = RoundedCornerShape(12.dp)) {
+            if (!isListLoaded) {
+                LoadingIndicator()
+            } else {
+                Column {
                     // Display the list of items
                     val listState = rememberLazyListState()
                     // Scroll to the selected item if one is selected
                     if (selectedIndex > -1) {
                         LaunchedEffect("ScrollToSelectedIndex") {
-                            Timber.d("ScrollToSelectedIndex: $selectedIndex")
                             listState.scrollToItem(selectedIndex)
                         }
                     }
+                    var filter by rememberSaveable { mutableStateOf("") }
+
+                    val filteredItems by remember {
+                        derivedStateOf {
+                            if (filter.isBlank())
+                                items else items.filter { selectedItemToString(it).contains(filter.trim(), true) }
+                        }
+                    }
+
+                    if (enableFilter)
+                        OutlinedTextField(
+                            value = filter,
+                            label = { Text(stringResource(R.string.field_search)) },
+                            onValueChange = { filter = it },
+                            singleLine = true,
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            trailingIcon = {
+                                IconButton(onClick = { filter = "" }) {
+                                    Icon(Icons.Default.Clear, contentDescription = null)
+                                }
+                            }
+                        )
+
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
                         state = listState
                     ) {
-                        itemsIndexed(items) { index, item ->
+                        itemsIndexed(filteredItems) { index, item ->
                             val isSelected = index == selectedIndex
                             // Draw the item with selection and click handling
                             drawItem(item, isSelected, true) {
@@ -192,6 +224,7 @@ fun <T> DialogItemList(
                             }
                         }
                     }
+
                 }
             }
         }
@@ -250,6 +283,7 @@ fun DialogMenuItem(text: String, selected: Boolean, enabled: Boolean, onClick: (
 sealed interface DialogItemsSource<T> {
     @Stable
     data class ListItems<T>(val items: List<T>, val selectedIndex: Int) : DialogItemsSource<T>
+
     @Stable
     data class AsyncItems<T>(
         val loadItems: suspend () -> List<T>,
@@ -280,6 +314,8 @@ fun PreviewDialogItemList() {
         onDismissRequest = {},
         itemsSource = DialogItemsSource.ListItems(listOf("Item1", "Item2", "Item3", "Item4"), 1),
         drawItem = @Composable { item, selected, enabled, onClick -> DialogMenuItem(item, selected, enabled, onClick) },
-        onItemSelected = { index, item -> }
+        selectedItemToString = { it.toString() },
+        onItemSelected = { index, item -> },
+        enableFilter = false
     )
 }

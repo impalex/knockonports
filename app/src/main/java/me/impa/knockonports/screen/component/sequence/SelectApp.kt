@@ -43,6 +43,7 @@ fun SelectApp(appPackage: String?, appName: String?, onUpdate: (String?, String?
     var appList by remember { mutableStateOf<List<AppData>?>(null) }
     DialogMenu(
         label = stringResource(R.string.field_launch_app),
+        enableFilter = true,
         itemsSource = DialogItemsSource.AsyncItems(
             loadItems = {
                 if (appList == null) {

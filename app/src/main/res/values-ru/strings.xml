@@ -67,6 +67,7 @@
     <string name="field_icmp_packet_size">Размер ICMP пакета включает…</string>
     <string name="field_launch_app">Запустить приложение после простукивания</string>
     <string name="field_launch_uri">Открыть URI после простукивания</string>
+    <string name="field_search">Поиск</string>
     <string name="action_edit">Редактировать</string>
     <string name="action_delete">Удалить</string>
     <string name="action_cancel">Отмена</string>

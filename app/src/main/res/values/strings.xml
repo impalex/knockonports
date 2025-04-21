@@ -75,6 +75,7 @@
     <string name="field_icmp_packet_size">ICMP packet size includes…</string>
     <string name="field_launch_app">Launch app after knocking</string>
     <string name="field_launch_uri">Open URI after knocking</string>
+    <string name="field_search">Search</string>
     <string name="action_edit">Edit</string>
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>

@@ -1,0 +1,3 @@
+Hotfix: Fixed start button in compact list mode
+New: Search in application list
+Changed: Returned old file name format when exporting

@@ -166,6 +166,8 @@ fun PrefMultiSelection(
         DialogItemList(
             onDismissRequest = { showDialog = false },
             itemsSource = itemsSource,
+            selectedItemToString = { map[it].toString() },
+            enableFilter = false,
             drawItem = { item, selected, enabled, onClick ->
                 DialogMenuItem(
                     map[item].toString(),

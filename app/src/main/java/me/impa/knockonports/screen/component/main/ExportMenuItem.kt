@@ -22,6 +22,7 @@
 
 package me.impa.knockonports.screen.component.main
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -32,7 +33,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import me.impa.knockonports.R
+import java.text.SimpleDateFormat
+import java.util.Date
 
+@SuppressLint("SimpleDateFormat")
 @Composable
 fun ExportMenuItem(onExport: (uri: Uri) -> Unit = {}, onDismiss: () -> Unit = {}) {
 
@@ -55,7 +59,7 @@ fun ExportMenuItem(onExport: (uri: Uri) -> Unit = {}, onDismiss: () -> Unit = {}
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)
                 type = "*/*"
-                putExtra(Intent.EXTRA_TITLE, "export_file.json")
+                putExtra(Intent.EXTRA_TITLE, "knocks_" + SimpleDateFormat("yyyyMMdd_HHmmss").format(Date()) + ".json")
             }
             saveLauncher.launch(intent)
         }
