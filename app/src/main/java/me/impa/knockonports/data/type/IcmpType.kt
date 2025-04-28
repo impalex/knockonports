@@ -30,15 +30,11 @@ import java.net.InetAddress
 @Serializable
 enum class IcmpType {
     @SerialName("without_headers")
-    WITHOUT_HEADERS {
-        override fun getOffset(address: InetAddress?): Int = 8
-    },
+    WITHOUT_HEADERS,
     @SerialName("with_ip_header")
-    WITH_ICMP_HEADER {
-        override fun getOffset(address: InetAddress?): Int = 0
-    };
-
-    abstract fun getOffset(address: InetAddress? = null): Int
+    WITH_ICMP_HEADER,
+    @SerialName("with_ip_and_icmp_headers")
+    WITH_IP_AND_ICMP_HEADERS;
 
     companion object : EnumCompanion<IcmpType>(IcmpType.entries.toTypedArray(), WITH_ICMP_HEADER)
 }

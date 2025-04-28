@@ -24,7 +24,7 @@ package me.impa.knockonports.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,24 +35,25 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerScope
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DoubleArrow
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
+import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalView
@@ -63,17 +64,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
+import androidx.window.core.layout.WindowWidthSizeClass
 import kotlinx.collections.immutable.ImmutableList
 import me.impa.knockonports.R
-import me.impa.knockonports.constants.TAG_EDIT_ADVANCED_TAB
-import me.impa.knockonports.constants.TAG_EDIT_BASIC_TAB
+import me.impa.knockonports.constants.TAG_EDIT_CONFIG_TAB
 import me.impa.knockonports.constants.TAG_EDIT_HOST
 import me.impa.knockonports.constants.TAG_EDIT_LOCAL_PORT
-import me.impa.knockonports.data.model.SequenceStep
-import me.impa.knockonports.data.type.ContentEncodingType
-import me.impa.knockonports.data.type.IcmpType
-import me.impa.knockonports.data.type.ProtocolVersionType
-import me.impa.knockonports.data.type.SequenceStepType
+import me.impa.knockonports.constants.TAG_EDIT_SEQUENCE_TAB
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.screen.component.common.ValueTextField
 import me.impa.knockonports.screen.component.sequence.SelectApp
@@ -82,8 +79,9 @@ import me.impa.knockonports.screen.component.sequence.SelectProtocolVersion
 import me.impa.knockonports.screen.component.sequence.SequenceStepCard
 import me.impa.knockonports.screen.component.sequence.UpdateAppBar
 import me.impa.knockonports.screen.viewmodel.SequenceViewModel
-import me.impa.knockonports.screen.viewmodel.state.AdvancedSequenceSettings
-import me.impa.knockonports.screen.viewmodel.state.BasicSequenceSettings
+import me.impa.knockonports.screen.viewmodel.state.sequence.StepUiState
+import me.impa.knockonports.screen.viewmodel.state.sequence.UiEvent
+import me.impa.knockonports.screen.viewmodel.state.sequence.UiState
 import me.impa.knockonports.ui.theme.Typography
 import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -96,72 +94,44 @@ fun SequenceScreen(
     viewModel: SequenceViewModel,
     modifier: Modifier
 ) {
-    val savedSequenceId by viewModel.savedSequenceId.collectAsState()
-    savedSequenceId?.let { navController.NavigateUpAfterSave(it) }
+    val state by viewModel.state.collectAsState()
+    state.savedSequenceId?.let { navController.NavigateUpAfterSave(it) }
     navController.UpdateAppBar(onComposing, viewModel::saveSequence)
-    val isLoading by viewModel.isLoading.collectAsState()
-    var autoScrollToEnd by remember { mutableStateOf(false) }
 
     // Stabilize lambda
-    val addNewStep = remember(viewModel) {
-        {
-            viewModel.addSequenceStep()
-            autoScrollToEnd = true
-        }
-    }
+    val onEvent = remember(viewModel) { { event: UiEvent -> viewModel.onEvent(event) } }
 
-    if (!isLoading) {
-        val basicConfig by viewModel.basicConfig.collectAsState()
-        val advancedConfig by viewModel.advancedConfig.collectAsState()
-        val sequenceSteps by viewModel.sequenceSteps.collectAsState()
-
-        SequenceTabs(modifier) { index ->
+    if (!state.isLoading) {
+        NavScaffold(modifier) { index ->
             val view = LocalView.current
             val listState = rememberLazyListState()
-            val savedStateList = rememberSaveable(saver = LazyListState.Saver) { listState }
             val reorderableListState = getReorderableListState(
-                savedStateList, onMove = { from, to -> viewModel.moveSequenceStep(from, to) },
+                listState, onMove = { from, to -> onEvent(UiEvent.MoveStep(from, to)) },
                 onFeedback = {
                     ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK)
                 })
-            Timber.d("AutoScrollToEnd: $autoScrollToEnd")
             if (index == 0) {
-                if (autoScrollToEnd) AutoScroller(savedStateList, sequenceSteps) { autoScrollToEnd = false }
+                state.newStepId?.let { AutoScroller(listState = listState, state = state, onEvent = onEvent) }
             }
 
-            LazyColumn(state = savedStateList, modifier = Modifier.fillMaxSize()) {
+            LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
                 when (index) {
                     0 -> {
                         sequenceBasicConfig(
-                            config = basicConfig,
-                            onUpdateName = viewModel::updateName,
-                            onUpdateHost = viewModel::updateHost,
-                            onAddNew = addNewStep,
+                            state = state,
+                            onEvent = onEvent
                         )
                         stepList(
-                            steps = sequenceSteps,
+                            state = state,
+                            steps = state.steps,
                             reorderableListState = reorderableListState,
-                            onDelete = viewModel::deleteSequenceStep,
-                            onUpdateType = viewModel::updateStepType,
-                            onUpdatePort = viewModel::updateStepPort,
-                            onUpdateIcmpSize = viewModel::updateStepIcmpSize,
-                            onUpdateIcmpCount = viewModel::updateStepIcmpCount,
-                            onUpdateContentEncoding = viewModel::updateStepEncoding,
-                            onUpdateContent = viewModel::updateStepContent
+                            onEvent = onEvent
                         )
                     }
 
                     1 -> sequenceAdvancedConfig(
-                        config = advancedConfig,
-                        onUpdateDelay = { viewModel.updateAdvancedConfig { copy(delay = it) } },
-                        onUpdateLocalPort = { viewModel.updateAdvancedConfig { copy(localPort = it) } },
-                        onUpdateTtl = { viewModel.updateAdvancedConfig { copy(ttl = it) } },
-                        onUpdateProtocolVersion = { viewModel.updateAdvancedConfig { copy(protocolVersion = it) } },
-                        onUpdateIcmpSizeType = { viewModel.updateAdvancedConfig { copy(icmpSizeType = it) } },
-                        onUpdateUri = { viewModel.updateAdvancedConfig { copy(uri = it) } },
-                        onUpdateApp = { appPackage, appName ->
-                            viewModel.updateAdvancedConfig { copy(appPackage = appPackage, appName = appName) }
-                        }
+                        state = state,
+                        onEvent = onEvent
                     )
                 }
             }
@@ -179,12 +149,13 @@ private fun NavController.NavigateUpAfterSave(sequenceId: Long) {
 }
 
 @Composable
-private fun AutoScroller(listState: LazyListState, sequenceSteps: ImmutableList<SequenceStep>, onDone: () -> Unit) {
-    LaunchedEffect(sequenceSteps) {
-        if (!sequenceSteps.isEmpty()) {
-            listState.animateScrollToItem(sequenceSteps.lastIndex)
+private fun AutoScroller(listState: LazyListState, state: UiState, onEvent: (UiEvent) -> Unit) {
+    LaunchedEffect(state.steps) {
+        val index = state.steps.indexOfFirst { it.id == state.newStepId }
+        if (index >= 0) {
+            listState.animateScrollToItem(index + DRAGGABLE_LIST_OFFSET)
+            onEvent(UiEvent.ResetNewStepId)
         }
-        onDone()
     }
 }
 
@@ -200,92 +171,87 @@ private fun getReorderableListState(
 }
 
 @Composable
-private fun SequenceTabs(modifier: Modifier, pageContent: @Composable PagerScope.(page: Int) -> Unit) {
-    Column(modifier = modifier.fillMaxSize()) {
-        var selectedTabIndex by remember { mutableIntStateOf(0) }
-        val pagerState = rememberPagerState { 2 }
-        println("selectedTabIndex: $selectedTabIndex")
-        LaunchedEffect(selectedTabIndex) {
-            pagerState.animateScrollToPage(selectedTabIndex)
-        }
-
-        LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-            if (!pagerState.isScrollInProgress) {
-                selectedTabIndex = pagerState.currentPage
-            }
-        }
-
-        TabRow(selectedTabIndex = selectedTabIndex) {
-            Tab(
-                selected = selectedTabIndex == 0,
-                onClick = { selectedTabIndex = 0 },
-                modifier = Modifier.testTag(TAG_EDIT_BASIC_TAB),
-                text = { Text(stringResource(R.string.title_tab_basic_settings)) }
+private fun NavScaffold(
+    modifier: Modifier = Modifier,
+    pageContent: @Composable (page: Int) -> Unit = {}
+) {
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+    val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    NavigationSuiteScaffold(
+        modifier = modifier,
+        navigationSuiteItems = {
+            item(
+                selected = selectedItemIndex == 0,
+                onClick = {
+                    selectedItemIndex = 0
+                },
+                icon = {
+                    Icon(Icons.Default.DoubleArrow, contentDescription = null)
+                },
+                label = {
+                    Text(text = stringResource(R.string.title_nav_sequence))
+                },
+                modifier = Modifier.testTag(TAG_EDIT_SEQUENCE_TAB)
             )
-            Tab(
-                selected = selectedTabIndex == 1,
-                onClick = { selectedTabIndex = 1 },
-                modifier = Modifier.testTag(TAG_EDIT_ADVANCED_TAB),
-                text = { Text(stringResource(R.string.title_tab_advanced_settings)) }
+            item(
+                selected = selectedItemIndex == 1,
+                onClick = {
+                    selectedItemIndex = 1
+                },
+                icon = {
+                    Icon(Icons.Default.Tune, contentDescription = null)
+                },
+                label = {
+                    Text(text = stringResource(R.string.title_nav_config))
+                },
+                modifier = Modifier.testTag(TAG_EDIT_CONFIG_TAB)
             )
+        },
+        layoutType = when (windowWidthClass) {
+            WindowWidthSizeClass.EXPANDED -> NavigationSuiteType.NavigationDrawer
+            WindowWidthSizeClass.MEDIUM -> NavigationSuiteType.NavigationRail
+            else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
         }
-        HorizontalPager(
-            state = pagerState,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .fillMaxSize(1f)
-                .padding(8.dp),
-            pageContent = pageContent
-        )
+    ) {
+        Box(modifier = Modifier.padding(8.dp)) {
+            pageContent(selectedItemIndex)
+        }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 private fun LazyListScope.sequenceBasicConfig(
-    config: BasicSequenceSettings,
-    onUpdateName: (String) -> Unit = {},
-    onUpdateHost: (String) -> Unit = {},
-    onAddNew: () -> Unit = {}
+    state: UiState,
+    onEvent: (UiEvent) -> Unit = {}
 ) {
 
-    val name = config.name
-    val host = config.host
     item(key = "name_edit") {
-        ValueTextField(stringResource(R.string.field_name), name, onValueChange = { onUpdateName(it) })
+        ValueTextField(stringResource(R.string.field_name), state.title,
+            onValueChange = { onEvent(UiEvent.UpdateTitle(it)) },
+            validationResult = state.titleValidation)
     }
     item(key = "host_edit") {
-        ValueTextField(stringResource(R.string.field_host), host, onValueChange = { onUpdateHost(it) },
-            modifier = Modifier.testTag(TAG_EDIT_HOST))
+        ValueTextField(
+            stringResource(R.string.field_host), state.host,
+            onValueChange = { onEvent(UiEvent.UpdateHost(it)) },
+            validationResult = state.hostValidation,
+            modifier = Modifier.testTag(TAG_EDIT_HOST)
+        )
     }
     stickyHeader(key = "seq_header") {
-        SequenceStepsHeader(onAddNew = { onAddNew() })
+        SequenceStepsHeader(onAddNew = { onEvent(UiEvent.AddStep) })
     }
 }
 
 private fun LazyListScope.stepList(
-    steps: ImmutableList<SequenceStep>,
+    state: UiState,
+    steps: ImmutableList<StepUiState>,
     reorderableListState: ReorderableLazyListState,
-    onDelete: (String) -> Unit = {},
-    onUpdateType: (String, SequenceStepType) -> Unit = { _, _ -> },
-    onUpdatePort: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateIcmpSize: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateIcmpCount: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateContentEncoding: (String, ContentEncodingType) -> Unit = { _, _ -> },
-    onUpdateContent: (String, String) -> Unit = { _, _ -> }
+    onEvent: (UiEvent) -> Unit = {}
 ) {
     items(steps, key = { it.id }) { step ->
-        Timber.d("ReorderableItem ${step.id}")
-
-        SequenceStepCard(
-            step, state = reorderableListState,
-            onDelete = { onDelete(it) },
-            onUpdateType = { id, newType -> onUpdateType(id, newType) },
-            onUpdatePort = { id, newPort -> onUpdatePort(id, newPort) },
-            onUpdateIcmpSize = { id, newSize -> onUpdateIcmpSize(id, newSize) },
-            onUpdateIcmpCount = { id, newCount -> onUpdateIcmpCount(id, newCount) },
-            onUpdateContentEncoding = { id, newEncoding -> onUpdateContentEncoding(id, newEncoding) },
-            onUpdateContent = { id, newContent -> onUpdateContent(id, newContent) }
-        )
+        SequenceStepCard(step, ip4HeaderSize = state.ip4HeaderSize,
+            icmpType = state.icmpSizeType, state = reorderableListState, onEvent = onEvent)
     }
 }
 
@@ -327,53 +293,51 @@ private fun SequenceStepsHeader(onAddNew: () -> Unit = {}) {
 }
 
 private fun LazyListScope.sequenceAdvancedConfig(
-    config: AdvancedSequenceSettings,
-    onUpdateDelay: (Int?) -> Unit = {},
-    onUpdateLocalPort: (Int?) -> Unit = {},
-    onUpdateTtl: (Int?) -> Unit = {},
-    onUpdateProtocolVersion: (ProtocolVersionType) -> Unit = {},
-    onUpdateIcmpSizeType: (IcmpType) -> Unit = {},
-    onUpdateApp: (String?, String?) -> Unit = { _, _ -> },
-    onUpdateUri: (String?) -> Unit = {}
+    state: UiState,
+    onEvent: (UiEvent) -> Unit = {},
 ) {
-    val delay = config.delay
-    val appPackage = config.appPackage
-    val appName = config.appName
-    val localPort = config.localPort
-    val protocolVersion = config.protocolVersion
-    val icmpType = config.icmpSizeType
     item(key = "delay_edit") {
-        ValueTextField(stringResource(R.string.field_delay), delay, onValueChange = { onUpdateDelay(it) })
+        ValueTextField(
+            stringResource(R.string.field_delay),
+            state.delay,
+            onValueChange = { onEvent(UiEvent.UpdateDelay(it)) },
+            validationResult = state.delayValidation)
     }
     item(key = "local_port") {
         ValueTextField(
             stringResource(R.string.field_local_port),
-            localPort,
+            state.localPort,
             modifier = Modifier.testTag(TAG_EDIT_LOCAL_PORT),
-            onValueChange = { onUpdateLocalPort(it) },
-            onValidate = { it in 1..65535 })
+            onValueChange = { onEvent(UiEvent.UpdateLocalPort(it)) },
+            validationResult = state.localPortValidation)
     }
     item(key = "ttl") {
-        ValueTextField(stringResource(R.string.field_ttl), config.ttl, onValueChange = { onUpdateTtl(it) })
+        ValueTextField(
+            stringResource(R.string.field_ttl), state.ttl,
+            onValueChange = { onEvent(UiEvent.UpdateTtl(it)) },
+            validationResult = state.ttlValidation)
     }
     item(key = "protocol_version") {
-        SelectProtocolVersion(protocolVersion) { onUpdateProtocolVersion(it) }
+        SelectProtocolVersion(state.protocolVersion) { onEvent(UiEvent.UpdateProtocol(it)) }
     }
     item(key = "icmp_type") {
-        SelectIcmpSizeType(icmpType) { onUpdateIcmpSizeType(it) }
+        SelectIcmpSizeType(state.icmpSizeType) { onEvent(UiEvent.UpdateIcmpType(it)) }
     }
     item(key = "app_edit") {
-        SelectApp(appPackage, appName) { appPackage, appName -> onUpdateApp(appPackage, appName) }
+        SelectApp(state.appPackage, state.appName)
+        { appPackage, appName -> onEvent(UiEvent.UpdateApp(appPackage, appName)) }
     }
     item(key = "uri_edit") {
-        ValueTextField(stringResource(R.string.field_launch_uri), config.uri ?: "", onValueChange = { onUpdateUri(it) })
+        ValueTextField(
+            stringResource(R.string.field_launch_uri), state.uri ?: "",
+            onValueChange = { onEvent(UiEvent.UpdateUri(it)) })
     }
 }
 
 @Preview
 @Composable
-fun PreviewSequenceTabs() {
-    SequenceTabs(modifier = Modifier) { }
+fun PreviewNavScaffold() {
+    NavScaffold()
 }
 
 @Preview
@@ -381,7 +345,7 @@ fun PreviewSequenceTabs() {
 fun PreviewBasicConfig() {
     LazyColumn {
         sequenceBasicConfig(
-            BasicSequenceSettings("Sequence name", "Sequence host")
+            UiState(title = "Title", host = "10.5.0.3")
         )
     }
 }
@@ -390,7 +354,7 @@ fun PreviewBasicConfig() {
 @Composable
 fun PreviewAdvancedConfig() {
     LazyColumn {
-        sequenceAdvancedConfig(AdvancedSequenceSettings())
+        sequenceAdvancedConfig(UiState())
     }
 }
 

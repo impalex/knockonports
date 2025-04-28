@@ -23,8 +23,6 @@
 package me.impa.knockonports.screen
 
 import android.Manifest
-import android.content.Context
-import android.content.pm.ShortcutManager
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,23 +51,22 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.collections.immutable.ImmutableList
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.POSTPONE_TIME
 import me.impa.knockonports.constants.POSTPONE_TIME_CANCEL
-import me.impa.knockonports.data.db.entity.Sequence
-import me.impa.knockonports.extension.getShortcutInfo
-import me.impa.knockonports.knock.KnockerService
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.navigation.AppNavGraph
-import me.impa.knockonports.screen.action.MainViewInterface
 import me.impa.knockonports.screen.component.main.DeleteSequenceAlert
 import me.impa.knockonports.screen.component.main.FocusedSequenceWatcher
-import me.impa.knockonports.screen.component.main.MaybeShowReviewRequestDialog
+import me.impa.knockonports.screen.component.main.IntegrationAlert
+import me.impa.knockonports.screen.component.main.ReviewRequestDialog
 import me.impa.knockonports.screen.component.main.SequenceCard
 import me.impa.knockonports.screen.component.main.UpdateAppBar
 import me.impa.knockonports.screen.component.main.UpdateToV2Alert
 import me.impa.knockonports.screen.viewmodel.MainViewModel
+import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
+import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
+import me.impa.knockonports.screen.viewmodel.state.main.UiState
 import me.impa.knockonports.util.openPlayStore
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import timber.log.Timber
@@ -93,86 +90,25 @@ fun MainScreen(
     onComposing: (AppBarState) -> Unit, navController: NavController,
     modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
 ) {
-    navController.UpdateAppBar(onComposing, viewModel::importSequences, viewModel::exportSequences)
-    val firstLaunchV2 by viewModel.firstLaunchV2
-    if (firstLaunchV2)
-        UpdateToV2Alert(onDismiss = viewModel::clearFirstLaunchV2)
+    navController.UpdateAppBar(onComposing, viewModel::onEvent)
 
-    CheckReviewRequest(viewModel)
-    val doNotAskAboutNotifications by viewModel.doNotAskAboutNotifications
-    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-        !doNotAskAboutNotifications
-    ) {
-        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
-    } else {
-        grantedNotificationPermission
-    }
-    val focusedSequenceId by viewModel.focusedSequenceId.collectAsState()
-    FocusedSequenceWatcher(
-        navController.currentBackStackEntry?.savedStateHandle,
-        onFocusedSequenceChange = viewModel::setFocusedSequence
-    )
-    val settings by viewModel.appSettings.collectAsState()
-    // Observe sequences from ViewModel
-    val sequences by viewModel.sequences.collectAsState()
-    val isShortcutsAvailable by viewModel.shortcutsAvailable.collectAsState()
-    val context = LocalContext.current
-    val actions = object : MainViewInterface {
-        override var confirmDelete by rememberSaveable { mutableStateOf<Sequence?>(null) }
-        override val onSequenceMove = { from: Int, to: Int -> viewModel.moveSequence(from, to) }
-        override val onDragEnded = { viewModel.confirmReorder() }
-        override val onDelete = { sequence: Sequence -> viewModel.deleteSequence(sequence) }
-        override val onCreateShortcut = { sequence: Sequence ->
-            if (isShortcutsAvailable)
-                createShortcut(context, viewModel.shortcutManager.value!!, sequence)
+    val state by viewModel.state.collectAsState()
+    LaunchedEffect(state) {
+        if (state.editMode) {
+            navController.navigate(AppNavGraph.SequenceRoute(state.editSequenceId))
+            viewModel.onEvent(UiEvent.ResetEditMode)
         }
-        override val onFocusedSequenceChange = { id: Long? -> viewModel.setFocusedSequence(id) }
-        override val onEdit = { sequenceId: Long ->
-            navController.navigate(AppNavGraph.SequenceRoute(sequenceId))
-        }
-        override val onDuplicate = { sequenceId: Long -> viewModel.cloneSequence(sequenceId) }
     }
+
+    val overlay by viewModel.overlay.collectAsState()
+    overlay?.let { ShowOverlay(it, viewModel::onEvent) }
+
+    FocusedSequenceWatcher(navController.currentBackStackEntry?.savedStateHandle, viewModel::onEvent)
     MainScreenContent(
-        sequences,
-        focusedSequenceId,
-        actions = actions,
-        showSequenceDetails = settings.detailedListView,
-        onFocusedSequenceChange = viewModel::setFocusedSequence,
+        state,
         modifier = modifier,
-        isShortcutsAvailable = isShortcutsAvailable,
-        onKnock = {
-            checkPermission(notificationPermissionState, viewModel::setDoNotAskAboutNotificationsFlag)
-            KnockerService.startService(context, it)
-        }
+        onEvent = viewModel::onEvent
     )
-}
-
-@Composable
-private fun CheckReviewRequest(viewModel: MainViewModel) {
-    val isInstalledFromPlayStore by viewModel.isInstalledFromPlayStore
-    val doNotAskForReview by viewModel.doNotAskForReview
-    if (isInstalledFromPlayStore && !doNotAskForReview) {
-        val knockCount by viewModel.knockCount
-        val askReviewTime by viewModel.askReviewTime
-        val context = LocalContext.current
-        MaybeShowReviewRequestDialog(
-            knockCount, askReviewTime,
-            onDismiss = { viewModel.postponeReviewRequest(POSTPONE_TIME_CANCEL) },
-            onDecline = {
-                viewModel.doNotAskForReview()
-                viewModel.sendMessageEvent(R.string.text_review_decline)
-            },
-            onPostpone = { viewModel.postponeReviewRequest(POSTPONE_TIME) },
-            onRateNow = {
-                viewModel.doNotAskForReview()
-                try {
-                    openPlayStore(context)
-                } catch (e: Exception) {
-                    Timber.e(e)
-                    viewModel.sendErrorEvent(e.message ?: "")
-                }
-            })
-    }
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -182,74 +118,97 @@ private fun checkPermission(permissionState: PermissionState, turnOffRequest: ()
     turnOffRequest()
 }
 
-private fun createShortcut(context: Context, shortcutManager: ShortcutManager, sequence: Sequence) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        shortcutManager.requestPinShortcut(sequence.getShortcutInfo(context, false), null)
-    }
-}
-
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MainScreenContent(
-    sequences: ImmutableList<Sequence>,
-    focusedSequenceId: Long?,
-    actions: MainViewInterface,
-    showSequenceDetails: Boolean,
-    isShortcutsAvailable: Boolean,
+    state: UiState,
     modifier: Modifier = Modifier,
-    onFocusedSequenceChange: (Long?) -> Unit = { },
-    onKnock: (Long) -> Unit = {}
+    onEvent: (UiEvent) -> Unit = {}
 ) {
+    val notificationPermissionState = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+        !state.disableNotificationRequest
+    ) {
+        rememberPermissionState(Manifest.permission.POST_NOTIFICATIONS)
+    } else {
+        grantedNotificationPermission
+    }
     // State for the LazyColumn
     val listState = rememberLazyListState()
-    // Save and restore the LazyColumn's state across configuration changes
-    val savedListState = rememberSaveable(saver = LazyListState.Saver) { listState }
     val view = LocalView.current
     // State for the reorderable list functionality. Handles drag and drop reordering within the list.
     // The lambda is called when an item is moved.
-    val reorderableListState = rememberReorderableLazyListState(savedListState) { from, to ->
-        actions.onSequenceMove(from.index, to.index)
+    val reorderableListState = rememberReorderableLazyListState(listState) { from, to ->
+        onEvent(UiEvent.Move(from.index, to.index))
         ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK)
     }
     var highLightSequenceId by rememberSaveable { mutableStateOf<Long?>(null) }
-    if (focusedSequenceId != null) {
-        highLightSequenceId = focusedSequenceId
-        LaunchedEffect(focusedSequenceId, sequences) {
-            val index = sequences.indexOfFirst { it.id == focusedSequenceId }
-            Timber.d("Focused sequence id: $focusedSequenceId index: $index")
+    state.focusedSequenceId?.let {
+        highLightSequenceId = it
+        LaunchedEffect(it, state.sequences) {
+            val index = state.sequences.indexOfFirst { it.id == state.focusedSequenceId }
             if (index != -1) {
-                if (savedListState.layoutInfo.visibleItemsInfo.none { it.key == focusedSequenceId })
-                    savedListState.animateScrollToItem(index)
-                onFocusedSequenceChange(null)
+                if (listState.layoutInfo.visibleItemsInfo.none { it.key == state.focusedSequenceId })
+                    listState.animateScrollToItem(index)
+                onEvent(UiEvent.Focus(null))
             }
         }
     }
 
-    actions.confirmDelete?.let { sequence ->
-        Timber.d("Showing delete sequence alert")
-        DeleteSequenceAlert(sequence, onDismiss = { actions.confirmDelete = null }, onConfirm = {
-            actions.confirmDelete = null
-            actions.onDelete(sequence)
-        })
-    }
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier.then(Modifier.fillMaxSize()), state = savedListState
+        modifier = modifier.then(Modifier.fillMaxSize()), state = listState
     ) {
-        itemsIndexed(sequences, key = { index, sequence -> sequence.id ?: 0L }) { index, sequence ->
+        itemsIndexed(state.sequences, key = { index, sequence -> sequence.id ?: 0L }) { index, sequence ->
             // Display each sequence as a card
             SequenceCard(
                 sequence = sequence,
                 state = reorderableListState,
                 isHighLighted = highLightSequenceId == sequence.id,
                 onHighLightFinished = { highLightSequenceId = null },
-                actions = actions,
-                showSequenceDetails = showSequenceDetails,
-                isShortcutsAvailable = isShortcutsAvailable,
+                showSequenceDetails = state.detailedList,
+                isShortcutsAvailable = state.areShortcutsAvailable,
                 modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
-                onKnock = onKnock
+                onEvent = onEvent,
+                onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
+                    && !state.disableNotificationRequest
+                ) {
+                    { checkPermission(notificationPermissionState, { onEvent(UiEvent.DisableNotificationRequest) }) }
+                } else {
+                    null
+                }
             )
         }
+    }
+}
+
+@Composable
+fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
+    val context = LocalContext.current
+    when (overlay) {
+        is UiOverlay.ConfirmDelete -> DeleteSequenceAlert(
+            sequenceName = overlay.name,
+            onDismiss = { onEvent(UiEvent.ClearOverlay) },
+            onConfirm = { onEvent(UiEvent.ConfirmDelete) })
+
+        is UiOverlay.Automate -> IntegrationAlert(id = overlay.id, onDismiss = { onEvent(UiEvent.ClearOverlay) })
+        is UiOverlay.UpdateToV2 -> UpdateToV2Alert(onDismiss = { onEvent(UiEvent.ClearOverlay) })
+        is UiOverlay.Review -> ReviewRequestDialog(
+            onDismissRequest = { onEvent(UiEvent.PostponeReviewRequest(POSTPONE_TIME_CANCEL)) },
+            onDecline = {
+                onEvent(UiEvent.DoNotAskForReview)
+                onEvent(UiEvent.ShowMessage(R.string.text_review_decline))
+            },
+            onPostpone = { onEvent(UiEvent.PostponeReviewRequest(POSTPONE_TIME)) },
+            onRateNow = {
+                onEvent(UiEvent.DoNotAskForReview)
+                try {
+                    openPlayStore(context)
+                } catch (e: Exception) {
+                    Timber.e(e)
+                    onEvent(UiEvent.ShowError(e.message ?: ""))
+                }
+            }
+        )
     }
 }
 
@@ -257,8 +216,9 @@ fun MainScreenContent(
 @Composable
 fun PreviewMainScreen() {
     MainScreenContent(
-        PreviewData.mockSequences, null, PreviewData.dummyMainInterface,
-        isShortcutsAvailable = true, showSequenceDetails = true
+        UiState(sequences = PreviewData.mockSequences),
+        onEvent = {},
+        modifier = Modifier
     )
 }
 
@@ -272,7 +232,6 @@ fun PreviewSequenceCard() {
             SequenceCard(
                 PreviewData.mockSequences[0],
                 state = reorderableListState,
-                actions = PreviewData.dummyMainInterface,
                 isShortcutsAvailable = true,
                 showSequenceDetails = true
             )
@@ -290,7 +249,6 @@ fun PreviewCompactSequenceCard() {
             SequenceCard(
                 PreviewData.mockSequences[2],
                 state = reorderableListState,
-                actions = PreviewData.dummyMainInterface,
                 isShortcutsAvailable = true,
                 showSequenceDetails = false
             )

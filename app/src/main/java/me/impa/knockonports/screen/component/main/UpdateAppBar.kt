@@ -31,10 +31,11 @@ import me.impa.knockonports.R
 import me.impa.knockonports.extension.OnDestination
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.navigation.AppNavGraph
-import me.impa.knockonports.screen.event.MainBarEvent
+import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
+import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 
 @Composable
-fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onImport: (Uri) -> Unit, onExport: (Uri) -> Unit) {
+fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onEvent: (UiEvent) -> Unit) {
     val title = stringResource(R.string.app_name)
     OnDestination<AppNavGraph.MainRoute> {
         LaunchedEffect(true) {
@@ -46,8 +47,8 @@ fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onImport: (Ur
                         MainScreenActions(onAction = { action ->
                             when (action) {
                                 is MainBarEvent.AddSequence -> this@UpdateAppBar.navigate(AppNavGraph.SequenceRoute())
-                                is MainBarEvent.Import -> onImport(action.uri)
-                                is MainBarEvent.Export -> onExport(action.uri)
+                                is MainBarEvent.Import -> onEvent(UiEvent.Import(action.uri))
+                                is MainBarEvent.Export -> onEvent(UiEvent.Export(action.uri))
                                 is MainBarEvent.ShowLogs -> this@UpdateAppBar.navigate(AppNavGraph.LogRoute)
                                 is MainBarEvent.Settings -> this@UpdateAppBar.navigate(AppNavGraph.SettingsRoute)
                             }

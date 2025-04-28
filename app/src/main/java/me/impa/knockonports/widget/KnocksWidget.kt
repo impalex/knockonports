@@ -82,7 +82,6 @@ class KnocksWidget : GlanceAppWidget() {
                 context: Context,
                 fileKey: String
             ): DataStore<List<Sequence>> {
-                Timber.d("getDataStore")
                 return WidgetDataStore.get(context)
             }
 
@@ -95,7 +94,6 @@ class KnocksWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
         provideContent {
-            Timber.d("Update widget")
             KnocksWidgetContent(currentState())
         }
     }

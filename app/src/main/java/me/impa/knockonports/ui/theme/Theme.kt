@@ -75,8 +75,6 @@ fun KnockOnPortsTheme(
         val darkScheme = themeMap.getOrElse(currentConfig.customTheme) { themeMap.values.first() }
             .theme[DarkMode.DARK]!![currentConfig.contrast]!!
 
-        Timber.d("currentConfig: $currentConfig")
-
         val colorScheme = if (currentConfig.useDynamicColors && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)) {
             selectTheme(
                 currentConfig.useDarkTheme, systemDark,

@@ -138,10 +138,9 @@ fun EventHandler(event: AppEvent, snackbarHostState: SnackbarHostState, onEventH
         is AppEvent.SequenceListImported ->
             pluralStringResource(R.plurals.message_sequence_import, event.count, event.count)
 
-        is AppEvent.GeneralError -> stringResource(R.string.text_error_general, event.errorMessage)
-        is AppEvent.GeneralMessage -> stringResource(event.resourceId)
+        is AppEvent.GeneralError -> stringResource(R.string.text_error_general, event.error.asString())
+        is AppEvent.GeneralMessage -> event.message.asString()
     }
-    Timber.d("Event: $message")
     LaunchedEffect(message) {
         snackbarHostState.showSnackbar(message)
         onEventHandled()

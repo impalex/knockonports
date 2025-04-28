@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import me.impa.knockonports.R
-import me.impa.knockonports.constants.REVIEW_KNOCKS_REQUIRED
 
 @Composable
 fun ReviewRequestDialog(
@@ -91,21 +90,6 @@ fun ReviewRequestDialog(
             }
         }
     }
-}
-
-@Suppress("LongParameterList")
-@Composable
-fun MaybeShowReviewRequestDialog(knockCount: Long, askReviewTime: Long,
-                                 onDismiss: () -> Unit, onDecline: () -> Unit, onPostpone: () -> Unit,
-                                 onRateNow: () -> Unit) {
-    if (knockCount < REVIEW_KNOCKS_REQUIRED ||  System.currentTimeMillis() < askReviewTime) return
-
-    ReviewRequestDialog(
-        onDismissRequest = onDismiss,
-        onDecline = onDecline,
-        onRateNow = onRateNow,
-        onPostpone = onPostpone
-    )
 }
 
 @Preview

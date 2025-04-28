@@ -35,6 +35,8 @@
     <string name="title_screen_log">Log</string>
     <string name="title_tab_basic_settings">Settings</string>
     <string name="title_tab_advanced_settings">Advanced</string>
+    <string name="title_nav_sequence">Sequence</string>
+    <string name="title_nav_config">Config</string>
     <string name="title_review_request">Enjoying %s?</string>"
     <string name="text_review_request">If you have a moment, I\'d appreciate your feedback! Honest ratings help me improve and keep the app evolving. Thanks for being part of the journey!</string>
     <string name="action_rate_now">Rate Now</string>
@@ -72,6 +74,7 @@
     <string name="action_add">Add</string>
     <string name="type_icmp_size_without_headers">data only</string>
     <string name="type_icmp_size_with_icmp_header">data + ICMP header</string>
+    <string name="type_icmp_size_all_headers">data + IP&amp;ICMP headers</string>
     <string name="field_icmp_packet_size">ICMP packet size includes…</string>
     <string name="field_launch_app">Launch app after knocking</string>
     <string name="field_launch_uri">Open URI after knocking</string>
@@ -162,6 +165,7 @@
     <string name="message_knocking_complete">Knocking complete!</string>
     <string name="message_error_unknown">Unknown error: %s</string>
     <string name="message_start_knocking">Knock-knock-knockin\' on \"%s\"</string>
+    <string name="message_clipboard_confirmation">Copied</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
     <string name="action_copy">Copy</string>
@@ -194,4 +198,29 @@
     <string name="log_error_export">Export to %1$s: %2$s</string>
     <string name="log_error_import">Import from %1$s: %2$s</string>
     <string name="text_error_general">Error: %s</string>
+    <string name="text_error_empty_value">Value is empty</string>
+    <string name="text_error_invalid_range">Value should be between %1$d and %2$d</string>
+    <string name="text_error_number_only">Value should be a number</string>
+    <string name="title_settings_enable_custom_ip_hdr">Custom IP Header Size</string>
+    <string name="text_settings_enable_custom_ip_hdr">Specify the IP header size on your network</string>
+    <string name="title_settings_ip4_hdr_size">IPv4 Header Size</string>
+    <string name="text_settings_ip4_hdr_size">%d bytes</string>
+    <string name="title_custom_ip4hdr_alert">Warning!</string>
+    <string name="text_custom_ip4hdr_alert"><![CDATA[
+⚠️ <b>Proceed with caution!</b><br><br>
+This setting allows you to specify the IP header size used in <i>your network</i>.<br><br>
+<b>Important notes:</b><br><br>
+• <b>This does NOT modify the actual header size</b> — it only informs the app about your network’s configuration.<br>
+• Misconfiguration <b>may</b> cause the app to behave incorrectly.<br>
+• Adjust this <b>only if you’re certain</b> your network uses non-standard IP headers (e.g., custom VPNs, legacy systems).<br><br>
+For most users: <b>do not change this setting</b>.
+    ]]>
+    </string>
+    <string name="action_understand">I Understand</string>
+    <string name="title_icmp_size_tooltip">ICMP Packet Total Size</string>
+    <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (IP header — %2$d, ICMP header — %3$d, data — %4$d)</string>
+    <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d bytes (IP header — %2$d, ICMP header — %3$d, data — %4$d)</string>
+    <string name="title_settings_discord">Discord Server</string>
+    <string name="text_settings_discord">A place where I pretend to work.</string>
+    <string name="discord_invite" translatable="false">https://discord.com/invite/AXT5dXkjEQ</string>
 </resources>

@@ -34,6 +34,7 @@
     <string name="title_screen_log">Журнал</string>
     <string name="title_tab_basic_settings">Настройки</string>
     <string name="title_tab_advanced_settings">Дополнительно</string>
+    <string name="title_nav_config">Конфигурация</string>
     <string name="title_review_request">Нравится %s?</string>"
     <string name="text_review_request">Если у вас есть минутка, я буду рад вашему отзыву! Честные оценки помогают мне улучшать приложение и делать его лучше. Спасибо за вашу поддержку!</string>
     <string name="action_rate_now">Оценить приложение</string>
@@ -64,6 +65,7 @@
     <string name="action_add">Добавить</string>
     <string name="type_icmp_size_without_headers">только данные</string>
     <string name="type_icmp_size_with_icmp_header">данные + ICMP заголовок</string>
+    <string name="type_icmp_size_all_headers">данные + IP и ICMP заголовки</string>
     <string name="field_icmp_packet_size">Размер ICMP пакета включает…</string>
     <string name="field_launch_app">Запустить приложение после простукивания</string>
     <string name="field_launch_uri">Открыть URI после простукивания</string>
@@ -78,12 +80,12 @@
     <string name="message_sequence_deleted">Последовательность \"%s\" удалена</string>
     <plurals name="message_sequence_import">
         <item quantity="one">Добавлена %d последовательность</item>
-        <item quantity="few">Добавлено %d последовательностей</item>
+        <item quantity="few">Добавлено %d последовательности</item>
         <item quantity="many">Добавлено %d последовательностей</item>
     </plurals>
     <plurals name="message_sequence_export">
         <item quantity="one">Сохранена %d последовательность</item>
-        <item quantity="few">Сохранено %d последовательностей</item>
+        <item quantity="few">Сохранено %d последовательности</item>
         <item quantity="many">Сохранено %d последовательностей</item>
     </plurals>
     <string name="title_settings_general">Основные</string>
@@ -107,7 +109,7 @@
     <string name="text_public_ip_alert_1">Эта функция использует сторонний сервис для определения вашего внешнего IP-адреса.</string>
     <string name="text_public_ip_alert_2">При включении этой опции на этот сервис будет отправляться запрос при каждом запуске последовательности.</string>
     <string name="text_public_ip_alert_3">Этот сервис не контролируется данным приложением. Вы уверены, что хотите продолжить?</string>
-    <string name="title_settings_detailed_list_view">Подробный список последовательностей</string>
+    <string name="title_settings_detailed_list_view">Подробный список</string>
     <string name="text_settings_detailed_list_view">Показ хоста и деталей последовательности в списке на главном экране</string>
     <string name="title_settings_detect_ip">Определение внешнего IP</string>
     <string name="text_settings_detect_ip">Разрешить приложению определять ваш внешний IP</string>
@@ -126,7 +128,7 @@
     <string name="title_settings_privacy_policy">Политика конфиденциальности</string>
     <string name="title_settings_source_code">Исходный код</string>
     <string name="title_settings_report_issue">Сообщить о проблеме</string>
-    <string name="title_settings_contact_author">Связаться с автором</string>
+    <string name="title_settings_contact_author">Связаться с разработчиком</string>
     <string name="text_settings_rate_app">Пожалуйста, не ругайтесь слишком сильно!</string>
     <string name="text_settings_privacy_policy">Расслабьтесь, я не слежу за вами — даже если бы захотел, я слишком ленив, чтобы кодить это.</string>
     <string name="text_settings_source_code">Магия открытого кода. Осторожно: может содержать следы испачканого кофеином кода.</string>
@@ -137,10 +139,10 @@
     <string name="text_annoying_version_3">Version %s — Теперь во всем великолепии 16-битного режима!*\n*На самом деле может не содержать ничего 16-битного.</string>
     <string name="text_annoying_version_4">Release %s: Как упоротая кофеином белка, только чуть-чуть более стабильная.</string>
     <string name="text_annoying_version_5">%s: Это номер. Он подрос. Возрадуемся.</string>
-    <string name="text_annoying_version_6">v.%s: Всё еще не слежу за тобой. Серьёзно, почитай код.</string>
+    <string name="text_annoying_version_6">v.%s: Всё еще не слежу за вами. Серьёзно, почитайте код.</string>
     <string name="text_annoying_version_7">Season %1$s Episode %2$d — Тот, в котором мы поправили ту фигню.</string>
     <string name="text_annoying_version_8">v%s — Создано на кофеине, слезах и экзистенциальных сомнениях.</string>
-    <string name="text_annoying_version_9">v%s: При поддержке неоплачиваемой страсти и легкого пренебрежения к здравомыслию.</string>
+    <string name="text_annoying_version_9">v%s: При поддержке неоплачиваемой старости и легкого пренебрежения к здравомыслию.</string>
     <string name="message_error_network_not_avail">Сеть недоступна</string>
     <string name="message_error_empty_host">В последовательности не указан хост</string>
     <string name="message_error_empty_sequence">Последовательность \"%s\" пустая</string>
@@ -150,6 +152,7 @@
     <string name="message_knocking_complete">Всё, постучали!</string>
     <string name="message_error_unknown">Неизвестная ошибка: %s</string>
     <string name="message_start_knocking">Тук-тук-тук! \"%s\", откройся.</string>
+    <string name="message_clipboard_confirmation">Скопировано</string>
     <string name="action_yes">Да</string>
     <string name="action_no">Нет</string>
     <string name="action_copy">Копировать</string>
@@ -181,4 +184,29 @@
     <string name="log_error_import">Импорт из %1$s: %2$s</string>
     <string name="text_error_general">Ошибка: %s</string>
     <string name="title_settings_rate_app">Оценить приложение</string>
+    <string name="title_nav_sequence">Последовательность</string>
+    <string name="text_error_empty_value">Не указано значение</string>
+    <string name="text_error_invalid_range">Значение должно быть в диапазоне от %1$d до %2$d</string>
+    <string name="text_error_number_only">Значение должно быть числом</string>
+    <string name="title_settings_enable_custom_ip_hdr">Нестандартный IP заголовок</string>
+    <string name="text_settings_enable_custom_ip_hdr">Укажите размер IP заголовка в вашей сети.</string>
+    <string name="title_settings_ip4_hdr_size">Размер IPv4 заголовка</string>
+    <string name="text_settings_ip4_hdr_size">%d байт</string>
+    <string name="title_custom_ip4hdr_alert">Внимание!</string>
+    <string name="text_custom_ip4hdr_alert"><![CDATA[
+⚠️ <b>Будьте осторожны!</b><br><br>
+Эта настройка позволяет указать размер IP заголовка, используемого <i>в вашей сети</i>.<br><br>
+<b>Важно:</b><br><br>
+• <b>Настройка НЕ модифицирует размер заголовка</b>, она только сообщает приложению о конфигурации вашей сети.<br>
+• Неправильная конфигурация <b>может</b> привести к некорректному поведению приложения.<br>
+• Используйте <b>только если вы уверены</b>, что ваша сеть использует нестандартные IP заголовки (например, особые VPN, устаревшие сети).<br><br>
+Для большинства пользователей: <b>не трогайте эту настройку</b>.
+    ]]>
+    </string>
+    <string name="action_understand">Я понимаю</string>
+    <string name="title_icmp_size_tooltip">Общий размер ICMP пакета</string>
+    <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d байт (IP заголовок — %2$d, ICMP заголовок — %3$d, данные — %4$d)</string>
+    <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d байт (IP заголовок — %2$d, ICMP заголовок — %3$d, данные — %4$d)</string>
+    <string name="title_settings_discord">Сервер Discord</string>
+    <string name="text_settings_discord">Место, где я притворяюсь, что работаю.</string>
 </resources>

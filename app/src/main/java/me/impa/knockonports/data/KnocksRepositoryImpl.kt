@@ -23,6 +23,7 @@
 package me.impa.knockonports.data
 
 import android.net.Uri
+import kotlinx.coroutines.flow.StateFlow
 import me.impa.knockonports.data.db.dao.LogEntryDao
 import me.impa.knockonports.data.db.dao.SequenceDao
 import me.impa.knockonports.data.db.entity.LogEntry
@@ -31,6 +32,7 @@ import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
 import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.data.settings.AppState
 import me.impa.knockonports.data.settings.SettingsRepository
 import me.impa.knockonports.ui.config.ThemeConfig
 import javax.inject.Inject
@@ -86,6 +88,8 @@ class KnocksRepositoryImpl @Inject constructor(
 
     override suspend fun getMaxOrder() = sequenceDao.getMaxOrder()
 
+    override suspend fun deleteSequenceById(id: Long) =
+        sequenceDao.deleteSequenceById(id).also { widgetRepository.updateWidget() }
     // endregion
 
     // region Log Entries
@@ -122,21 +126,14 @@ class KnocksRepositoryImpl @Inject constructor(
 
     override fun updateThemeSettings(newSettings: ThemeConfig) = settingsRepository.updateThemeSettings(newSettings)
 
+    override fun getAppState(): StateFlow<AppState> = settingsRepository.appState
+
     override fun incrementKnockCount() = settingsRepository.incrementKnockCount()
-
-    override fun getKnockCount() = settingsRepository.knockCount
-
-    override fun doNotAskAboutNotifications() = settingsRepository.doNotAskAboutNotifications
 
     override fun setDoNotAskAboutNotificationsFlag() = settingsRepository.setDoNotAskAboutNotificationsFlag()
 
-    override fun getFirstLaunchV2() = settingsRepository.firstLaunchV2
-    override fun getAskReviewTime() = settingsRepository.askReviewTime
-    override fun getDoNotAskForReview() = settingsRepository.doNotAskForReview
-
     override fun postponeReviewRequest(time: Long) = settingsRepository.postponeReviewRequest(time)
     override fun doNotAskForReview() = settingsRepository.doNotAskForReview()
-    override fun isInstalledFromPlayStore() = settingsRepository.isInstalledFromPlayStore
     override fun clearFirstLaunchV2() = settingsRepository.clearFirstLaunchV2()
     // endregion
 

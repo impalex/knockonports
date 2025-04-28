@@ -22,10 +22,12 @@
 
 package me.impa.knockonports
 
+import android.content.pm.ShortcutManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -39,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toDrawable
+import androidx.glance.LocalContext
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -51,9 +54,9 @@ import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.shortcutId
+import me.impa.knockonports.knock.KnockHelper
 import me.impa.knockonports.knock.KnockerService
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
-import me.impa.knockonports.util.ShortcutManagerWrapper
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -68,7 +71,7 @@ class StartKnockingActivity : ComponentActivity() {
     lateinit var ioDispatcher: CoroutineDispatcher
 
     @Inject
-    lateinit var shortcutManagerWrapper: ShortcutManagerWrapper
+    lateinit var knockHelper: KnockHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,12 +111,16 @@ class StartKnockingActivity : ComponentActivity() {
                         }
                     }
                 } else {
+                    val shortcutManager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+                        getSystemService(ShortcutManager::class.java)
+                    } else {
+                        null
+                    }
                     LaunchedEffect(true) {
                         if (source == EXTRA_VALUE_SOURCE_SHORTCUT &&
                             Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1
                         ) {
-                            (shortcutManagerWrapper as? ShortcutManagerWrapper.Available)
-                                ?.instance?.reportShortcutUsed(shortcutId(sequenceId))
+                            shortcutManager?.reportShortcutUsed(shortcutId(sequenceId))
                         }
                         launchSequence(sequenceId)
                     }
@@ -146,7 +153,7 @@ class StartKnockingActivity : ComponentActivity() {
     }
 
     fun launchSequence(sequenceId: Long) {
-        KnockerService.startService(this, sequenceId)
+        knockHelper.start(sequenceId)
         finish()
     }
 

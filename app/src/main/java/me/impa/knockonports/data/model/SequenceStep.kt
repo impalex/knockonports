@@ -35,5 +35,4 @@ data class SequenceStep(
     val icmpCount: Int? = null,
     val content: String? = null,
     val encoding: ContentEncodingType? = ContentEncodingType.RAW,
-    val id: String = UUID.randomUUID().toString()
 )

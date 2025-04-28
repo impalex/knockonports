@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.data.settings.AppState
 import me.impa.knockonports.data.settings.SettingsRepository
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
@@ -39,18 +40,8 @@ object FakeSettingsRepository : SettingsRepository {
         get() = MutableStateFlow(
             ThemeConfig(useDarkTheme = DarkMode.DARK)
         )
-    override val knockCount: State<Long>
-        get() = TODO("Not yet implemented")
-    override val doNotAskAboutNotifications: State<Boolean>
-        get() = TODO("Not yet implemented")
-    override val firstLaunchV2: State<Boolean>
-        get() = TODO("Not yet implemented")
-    override val askReviewTime: State<Long>
-        get() = TODO("Not yet implemented")
-    override val doNotAskForReview: State<Boolean>
-        get() = TODO("Not yet implemented")
-    override val isInstalledFromPlayStore: State<Boolean>
-        get() = TODO("Not yet implemented")
+    override val appState: StateFlow<AppState>
+        get() = MutableStateFlow(AppState())
 
     override fun updateAppSettings(newSettings: AppSettings) {
         TODO("Not yet implemented")

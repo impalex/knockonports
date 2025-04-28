@@ -38,7 +38,6 @@ import me.impa.knockonports.di.AppModule
 import me.impa.knockonports.di.DefaultDispatcher
 import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.di.MainDispatcher
-import me.impa.knockonports.util.ShortcutManagerWrapper
 import javax.inject.Singleton
 
 @TestInstallIn(components = [SingletonComponent::class], replaces = [AppModule::class])
@@ -61,10 +60,6 @@ object FakeModule {
     @Singleton
     @Provides
     fun provideSettingsRepository(): SettingsRepository = FakeSettingsRepository
-
-    @Singleton
-    @Provides
-    fun provideShortcutManagerWrapper(): ShortcutManagerWrapper = ShortcutManagerWrapper.Unavailable
 
     @Provides
     @IoDispatcher

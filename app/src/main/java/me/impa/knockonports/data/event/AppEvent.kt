@@ -22,10 +22,12 @@
 
 package me.impa.knockonports.data.event
 
+import me.impa.knockonports.data.type.TextResource
+
 sealed interface AppEvent {
 
-    data class GeneralError(val errorMessage: String) : AppEvent
-    data class GeneralMessage(val resourceId: Int) : AppEvent
+    data class GeneralError(val error: TextResource) : AppEvent
+    data class GeneralMessage(val message: TextResource) : AppEvent
     data class SequenceRemoved(val sequenceName: String?) : AppEvent
     data class SequenceSaved(val sequenceName: String?) : AppEvent
     data class SequenceListImported(val count: Int) : AppEvent

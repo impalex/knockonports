@@ -20,11 +20,14 @@
  *
  */
 
-package me.impa.knockonports.util
+package me.impa.knockonports.data.settings
 
-import android.content.pm.ShortcutManager
-
-sealed interface ShortcutManagerWrapper {
-    data class Available(val instance: ShortcutManager) : ShortcutManagerWrapper
-    data object Unavailable: ShortcutManagerWrapper
-}
+data class AppState(
+    val knockCount: Long = 0L,
+    val notificationPermissionRequestDisabled: Boolean = false,
+    val isFirstLaunchV2: Boolean = false,
+    val reviewRequestTimestamp: Long = 0L,
+    val reviewRequestDisabled: Boolean = false,
+    val isPlayStoreInstallation: Boolean = false,
+    val areShortcutsAvailable: Boolean = false
+)

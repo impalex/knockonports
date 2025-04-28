@@ -33,8 +33,8 @@ import me.impa.knockonports.constants.TAG_APP_SCREEN
 import me.impa.knockonports.constants.TAG_AUTOMATE_MENU_ITEM
 import me.impa.knockonports.constants.TAG_BACK_BUTTON
 import me.impa.knockonports.constants.TAG_CLOSE_BUTTON
-import me.impa.knockonports.constants.TAG_EDIT_ADVANCED_TAB
-import me.impa.knockonports.constants.TAG_EDIT_BASIC_TAB
+import me.impa.knockonports.constants.TAG_EDIT_CONFIG_TAB
+import me.impa.knockonports.constants.TAG_EDIT_SEQUENCE_TAB
 import me.impa.knockonports.constants.TAG_EDIT_HOST
 import me.impa.knockonports.constants.TAG_EDIT_LOCAL_PORT
 import me.impa.knockonports.constants.TAG_MAIN_DOTS_BUTTON
@@ -42,16 +42,10 @@ import me.impa.knockonports.constants.TAG_SEQUENCE_DOTS_BUTTON
 import me.impa.knockonports.constants.TAG_SEQUENCE_ITEM
 import me.impa.knockonports.constants.TAG_SETTINGS_MENU_ITEM
 import me.impa.knockonports.di.AppModule
-import org.junit.AfterClass
-import org.junit.BeforeClass
 import org.junit.ClassRule
 import org.junit.Rule
 import org.junit.Test
 import tools.fastlane.screengrab.Screengrab
-import tools.fastlane.screengrab.UiAutomatorScreenshotStrategy
-import tools.fastlane.screengrab.cleanstatusbar.BluetoothState
-import tools.fastlane.screengrab.cleanstatusbar.CleanStatusBar
-import tools.fastlane.screengrab.cleanstatusbar.MobileDataType
 import tools.fastlane.screengrab.locale.LocaleTestRule
 
 
@@ -76,12 +70,12 @@ class AppScreenTest {
         val selectItemTag = "${TAG_SEQUENCE_ITEM}4"
         composeTestRule.onNodeWithTag(selectItemTag).performClick()
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithTag(TAG_EDIT_BASIC_TAB).assertIsDisplayed()
+        composeTestRule.onNodeWithTag(TAG_EDIT_SEQUENCE_TAB).assertIsDisplayed()
         composeTestRule.onNodeWithTag(TAG_EDIT_HOST).assertIsDisplayed()
         Thread.sleep(1000)
         Screengrab.screenshot("02_sequence_edit_basic")
         // Advanced sequence settings
-        composeTestRule.onNodeWithTag(TAG_EDIT_ADVANCED_TAB).performClick()
+        composeTestRule.onNodeWithTag(TAG_EDIT_CONFIG_TAB).performClick()
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag(TAG_EDIT_LOCAL_PORT).assertIsDisplayed()
         Thread.sleep(1000)

@@ -88,6 +88,7 @@ fun ContentEncodingType.stringResourceId() = when (this) {
 fun IcmpType.stringResourceId() = when (this) {
     IcmpType.WITHOUT_HEADERS -> R.string.type_icmp_size_without_headers
     IcmpType.WITH_ICMP_HEADER -> R.string.type_icmp_size_with_icmp_header
+    IcmpType.WITH_IP_AND_ICMP_HEADERS -> R.string.type_icmp_size_all_headers
 }
 
 /**

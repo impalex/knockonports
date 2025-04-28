@@ -29,6 +29,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -46,19 +48,26 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DragIndicator
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -71,14 +80,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
+import kotlinx.coroutines.launch
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.CustomConstraints.topPaddingValue
-import me.impa.knockonports.data.model.SequenceStep
+import me.impa.knockonports.constants.ICMP_HEADER_SIZE
+import me.impa.knockonports.constants.IP6_HEADER_SIZE
+import me.impa.knockonports.constants.MAX_PACKET_SIZE
+import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
 import me.impa.knockonports.data.type.ContentEncodingType
+import me.impa.knockonports.data.type.IcmpType
 import me.impa.knockonports.data.type.SequenceStepType
+import me.impa.knockonports.extension.AddressType
 import me.impa.knockonports.extension.stringResourceId
 import me.impa.knockonports.screen.component.common.ExpandableIconButton
 import me.impa.knockonports.screen.component.common.ValueTextField
+import me.impa.knockonports.screen.validate.ValidationResult
+import me.impa.knockonports.screen.viewmodel.state.sequence.StepUiState
+import me.impa.knockonports.screen.viewmodel.state.sequence.UiEvent
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
@@ -89,47 +107,51 @@ private const val ANIMATION_DURATION = 300
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.SequenceStepCard(
-    step: SequenceStep,
+    step: StepUiState,
     state: ReorderableLazyListState,
+    ip4HeaderSize: Int,
+    icmpType: IcmpType,
     modifier: Modifier = Modifier,
-    onDelete: (String) -> Unit = {},
-    onUpdateType: (String, SequenceStepType) -> Unit = { _, _ -> },
-    onUpdatePort: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateIcmpSize: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateIcmpCount: (String, Int?) -> Unit = { _, _ -> },
-    onUpdateContentEncoding: (String, ContentEncodingType) -> Unit = { _, _ -> },
-    onUpdateContent: (String, String) -> Unit = { _, _ -> }
+    onEvent: (UiEvent) -> Unit = {},
 ) {
     val id = step.id
-    val type = step.type ?: SequenceStepType.UDP
+    val type = step.type
     val icmpSize = step.icmpSize
     val icmpCount = step.icmpCount
     val port = step.port
-    val encoding = step.encoding ?: ContentEncodingType.RAW
+    val encoding = step.encoding
     val data = step.content ?: ""
+    val portValidation = step.portValidation
 
     StepCardCover(id, state, modifier) {
         DragHandle()
-        Column(modifier = Modifier
-            .wrapContentHeight()
-            .padding(start = 4.dp, bottom = 8.dp, end = 8.dp)) {
-            TypeSelector(id = id, type = type, onUpdateType = onUpdateType, onDelete = onDelete)
+        Column(
+            modifier = Modifier
+                .wrapContentHeight()
+                .padding(start = 4.dp, bottom = 8.dp, end = 8.dp)
+        ) {
+            TypeSelector(
+                id = id, type = type,
+                onUpdateType = { id, type -> onEvent(UiEvent.UpdateStepType(id, type)) },
+                onDelete = { onEvent(UiEvent.DeleteStep(id)) })
             var isExpanded by rememberSaveable { mutableStateOf(false) }
             AnimatedContainer(type) { state ->
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
+                    verticalAlignment = Alignment.Top,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     // base
                     if (state == SequenceStepType.ICMP) {
                         IcmpDataEditor(
-                            icmpSize, icmpCount,
-                            { onUpdateIcmpSize(id, it) }, { onUpdateIcmpCount(id, it) })
+                            icmpSize, icmpCount, ip4HeaderSize, icmpType,
+                            { onEvent(UiEvent.UpdateStepIcmpSize(id, it)) },
+                            { onEvent(UiEvent.UpdateStepIcmpCount(id, it)) })
                     } else {
                         TcpUdpBaseConfig(
                             port,
-                            { onUpdatePort(id, it) },
+                            portValidation,
+                            { onEvent(UiEvent.UpdateStepPort(id, it)) },
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -140,8 +162,8 @@ fun LazyItemScope.SequenceStepCard(
                 if (isExpanded && state != SequenceStepType.TCP) {
                     IcmpUdpAdvancedConfig(
                         encoding, data,
-                        { onUpdateContentEncoding(id, it) },
-                        { onUpdateContent(id, it) })
+                        { onEvent(UiEvent.UpdateStepEncoding(id, it)) },
+                        { onEvent(UiEvent.UpdateStepContent(id, it)) })
                 }
             }
         }
@@ -151,7 +173,7 @@ fun LazyItemScope.SequenceStepCard(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.StepCardCover(
-    id: String, state: ReorderableLazyListState, modifier: Modifier = Modifier,
+    id: Int, state: ReorderableLazyListState, modifier: Modifier = Modifier,
     content: @Composable ReorderableCollectionItemScope.() -> Unit
 ) {
     ReorderableItem(state = state, key = id) {
@@ -179,10 +201,10 @@ fun LazyItemScope.StepCardCover(
 
 @Composable
 private fun TypeSelector(
-    id: String,
+    id: Int,
     type: SequenceStepType,
-    onUpdateType: (String, SequenceStepType) -> Unit = { _, _ -> },
-    onDelete: (String) -> Unit = {}
+    onUpdateType: (Int, SequenceStepType) -> Unit = { _, _ -> },
+    onDelete: (Int) -> Unit = {}
 ) {
     val resources = LocalContext.current.resources
     val stateList =
@@ -208,12 +230,12 @@ private fun TypeSelector(
 }
 
 @Composable
-private fun ExpandAdvanced(isExpanded: Boolean, onStateChanged: () -> Unit) {
+private fun RowScope.ExpandAdvanced(isExpanded: Boolean, onStateChanged: () -> Unit) {
     ExpandableIconButton(
         isExpanded = isExpanded,
         onStateChanged = onStateChanged,
         modifier = Modifier
-            .padding(top = with(LocalDensity.current) { topPaddingValue.toDp() }),
+            .padding(top = with(LocalDensity.current) { topPaddingValue.toDp() + 4.dp }),
         expandedContentDescription = stringResource(R.string.hint_collapse),
         collapsedContentDescription = stringResource(R.string.hint_expand)
     )
@@ -293,11 +315,12 @@ private fun IcmpUdpAdvancedConfig(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun RowScope.IcmpDataEditor(
-    size: Int?, count: Int?,
-    onSizeUpdate: (Int?) -> Unit,
-    onCountUpdate: (Int?) -> Unit
+    size: Int?, count: Int?, ip4HeaderSize: Int, type: IcmpType,
+    onSizeUpdate: (Int?) -> Unit = {},
+    onCountUpdate: (Int?) -> Unit = {}
 ) {
     // Text field for ICMP packet size.
     ValueTextField(
@@ -305,7 +328,36 @@ private fun RowScope.IcmpDataEditor(
         value = size,
         onValueChange = onSizeUpdate,
         modifier = Modifier
-            .weight(1f)
+            .weight(1f),
+        trailingIcon = {
+
+            val positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider()
+            val state = rememberTooltipState(isPersistent = true)
+            val coroutineScope = rememberCoroutineScope()
+            val interactionSource = remember { MutableInteractionSource() }
+
+            TooltipBox(
+                positionProvider = positionProvider,
+                tooltip = {
+                    RichTooltip(title = { Text(stringResource(R.string.title_icmp_size_tooltip)) }) {
+                        Column {
+                            IcmpSizeText(size, type, AddressType.IPV4, ip4HeaderSize)
+                            IcmpSizeText(size, type, AddressType.IPV6, ip4HeaderSize)
+                        }
+                    }
+                },
+                state = state
+            ) {
+                Icon(
+                    Icons.Default.Info, contentDescription = null,
+                    modifier = Modifier.clickable(
+                        onClick = { coroutineScope.launch { state.show() } },
+                        indication = null,
+                        interactionSource = interactionSource
+                    )
+                )
+            }
+        }
     )
     Spacer(modifier = Modifier.width(8.dp))
     // Text field for ICMP packet count.
@@ -319,14 +371,35 @@ private fun RowScope.IcmpDataEditor(
 }
 
 @Composable
-private fun TcpUdpBaseConfig(port: Int?, onPortUpdate: (Int?) -> Unit, modifier: Modifier = Modifier) {
+private fun TcpUdpBaseConfig(
+    port: Int?, validationResult: ValidationResult,
+    onPortUpdate: (Int?) -> Unit, modifier: Modifier = Modifier
+) {
     // Text field for TCP/UDP port number.
     ValueTextField(
         label = stringResource(R.string.field_port),
         value = port,
         onValueChange = { onPortUpdate(it) },
-        onValidate = { value -> value in 1..65535 },
+        validationResult = validationResult,
         modifier = modifier
+    )
+}
+
+@Composable
+private fun IcmpSizeText(size: Int?, type: IcmpType, addressType: AddressType, ip4HeaderSize: Int) {
+    val icmpHeader = ICMP_HEADER_SIZE
+    val ipHeader = if (addressType == AddressType.IPV6) IP6_HEADER_SIZE else ip4HeaderSize
+    val total = ((size ?: 0) + when (type) {
+        IcmpType.WITHOUT_HEADERS -> ipHeader + icmpHeader
+        IcmpType.WITH_ICMP_HEADER -> ipHeader
+        IcmpType.WITH_IP_AND_ICMP_HEADERS -> 0
+    }).coerceAtLeast(icmpHeader + ipHeader).coerceAtMost(MAX_PACKET_SIZE)
+    val data = total - (icmpHeader + ipHeader)
+    Text(
+        stringResource(
+            if (addressType == AddressType.IPV4) R.string.text_icmp_size_ip4_tooltip
+            else R.string.text_icmp_size_ip6_tooltip, total, ipHeader, icmpHeader, data
+        )
     )
 }
 
@@ -338,14 +411,16 @@ fun PreviewTcpSequenceStepCard() {
     LazyColumn(state = lazyListState) {
         item {
             SequenceStepCard(
-                SequenceStep(
+                StepUiState(
                     type = SequenceStepType.TCP,
                     port = 35535,
                     icmpSize = null,
                     icmpCount = null,
                     content = null,
-                    encoding = null
+                    id = 1,
                 ),
+                ip4HeaderSize = MIN_IP4_HEADER_SIZE,
+                icmpType = IcmpType.WITHOUT_HEADERS,
                 state = reorderableListState
             )
         }
@@ -360,14 +435,16 @@ fun PreviewUdpSequenceStepCard() {
     LazyColumn(state = lazyListState) {
         item {
             SequenceStepCard(
-                SequenceStep(
+                StepUiState(
                     type = SequenceStepType.UDP,
                     port = 54841,
                     icmpSize = null,
                     icmpCount = null,
                     content = null,
-                    encoding = null
+                    id = 1,
                 ),
+                ip4HeaderSize = MIN_IP4_HEADER_SIZE,
+                icmpType = IcmpType.WITHOUT_HEADERS,
                 state = reorderableListState
             )
         }
@@ -382,14 +459,16 @@ fun PreviewIcmpSequenceStepCard() {
     LazyColumn(state = lazyListState) {
         item {
             SequenceStepCard(
-                SequenceStep(
+                StepUiState(
                     type = SequenceStepType.ICMP,
                     port = null,
                     icmpSize = 666,
                     icmpCount = 6,
                     content = null,
-                    encoding = null
+                    id = 1,
                 ),
+                ip4HeaderSize = MIN_IP4_HEADER_SIZE,
+                icmpType = IcmpType.WITHOUT_HEADERS,
                 state = reorderableListState
             )
         }

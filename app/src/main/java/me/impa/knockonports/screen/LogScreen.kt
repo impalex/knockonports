@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
@@ -44,9 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -112,9 +109,7 @@ fun stringResourceSafe(id: Int, formatArgs: List<Any?>): String {
 @Composable
 fun LogEventList(events: List<LogEntry>, modifier: Modifier = Modifier) {
     val lazyState = rememberLazyListState()
-    val savedLazyState = rememberSaveable(saver = LazyListState.Saver) { lazyState }
-    val resources = LocalContext.current.resources
-    LazyColumn(state = savedLazyState, modifier = modifier) {
+    LazyColumn(state = lazyState, modifier = modifier) {
         itemsIndexed(items = events, key = { _, item -> item.id ?: 0L }) { index, item ->
             if (index > 0)
                 HorizontalDivider(modifier = Modifier.fillMaxWidth())

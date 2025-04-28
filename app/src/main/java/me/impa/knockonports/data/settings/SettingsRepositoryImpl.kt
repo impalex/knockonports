@@ -23,21 +23,18 @@
 package me.impa.knockonports.data.settings
 
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.edit
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.updateAndGet
+import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
+import me.impa.knockonports.constants.POSTPONE_TIME_START
 import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.theme.themeMap
 import javax.inject.Inject
 import javax.inject.Singleton
-import androidx.core.content.edit
-import me.impa.knockonports.constants.POSTPONE_TIME_START
-import me.impa.knockonports.util.isInstalledFromPlayStore
-import timber.log.Timber
 
 private const val CFG_APP_THEME = "CFG_APP_THEME"
 private const val CFG_DYNAMIC_THEME = "CFG_DYNAMIC_THEME"
@@ -56,32 +53,27 @@ private const val CFG_DO_NOT_ASK_REVIEW = "CFG_DO_NOT_ASK_REVIEW"
 private const val CFG_DO_NOT_ASK_BEFORE = "CFG_DO_NOT_ASK_BEFORE"
 private const val CFG_DETAILED_LIST_VIEW = "CFG_DETAILED_LIST_VIEW"
 private const val CFG_DO_NOT_ASK_NOTIFICATION = "CFG_DO_NOT_ASK_NOTIFICATION"
+private const val CFG_IP4_HEADER_SIZE = "CFG_IP4_HEADER_SIZE"
+private const val CFG_CUSTOM_IP4_HEADER = "CFG_CUSTOM_IP4_HEADER"
 
 inline fun <reified T : Enum<T>> String.toEnum(default: T): T =
     enumValues<T>().firstOrNull { this.equals(it) } ?: default
 
 /**
- * Repository for managing application settings, persisting and retrieving them from SharedPreferences.
+ * Implementation of the [SettingsRepository] interface.
  *
- * This class provides access to application-wide settings ([AppSettings]) and theme-related settings ([ThemeConfig]).
- * It uses [StateFlow] to expose settings as reactive streams, allowing UI components to observe and react to changes.
+ * This class is responsible for managing and persisting application settings using [SharedPreferences].
+ * It provides methods to load, save, and update various settings related to the application's behavior,
+ * theme, and state.
  *
- * **AppSettings:**  General application settings like IP address service preferences, widget behavior, etc.
- *
- * **ThemeConfig:**  Settings related to the app's appearance, including dark mode, dynamic colors, and custom themes.
- *
- * In addition to the core settings, this repository also manages various utility settings related to app usage,
- * such as launch counts, review requests, and notification prompts.  These are kept separate from the main
- * settings objects for organizational purposes.
- *
- * @property sharedPreferences The SharedPreferences instance used for persistent storage of settings.
- * @property packageManager  The PackageManager instance used to determine installation source (e.g., Play Store).
+ * @property sharedPreferences An instance of [SharedPreferences] for persistent storage.
+ * @property deviceState An instance of [DeviceState] to access device-related information.
  */
 @Singleton
 class SettingsRepositoryImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    packageManager: PackageManager
-): SettingsRepository {
+    deviceState: DeviceState
+) : SettingsRepository {
 
     private val _appSettings = MutableStateFlow<AppSettings>(AppSettings())
 
@@ -92,31 +84,12 @@ class SettingsRepositoryImpl @Inject constructor(
     override val themeSettings: StateFlow<ThemeConfig>
         get() = _themeSettings
 
-    // region Various Settings. There is no reason to keep these settings along with others
-    private val _knockCount = mutableLongStateOf(0L)
-    override val knockCount: State<Long>
-        get() = _knockCount
-
-    private val _doNotAskAboutNotifications = mutableStateOf(false)
-    override val doNotAskAboutNotifications: State<Boolean>
-        get() = _doNotAskAboutNotifications
-
-    private val _firstLaunchV2 = mutableStateOf(false)
-    override val firstLaunchV2: State<Boolean>
-        get() = _firstLaunchV2
-
-    private val _askReviewTime = mutableLongStateOf(0L)
-    override val askReviewTime: State<Long>
-        get() = _askReviewTime
-
-    private val _doNotAskForReview = mutableStateOf(false)
-    override val doNotAskForReview: State<Boolean>
-        get() = _doNotAskForReview
-    // endregion
-
-    private val _isInstalledFromPlayStore = mutableStateOf(isInstalledFromPlayStore(packageManager))
-    override val isInstalledFromPlayStore: State<Boolean>
-        get() = _isInstalledFromPlayStore
+    private val _appState = MutableStateFlow<AppState>(AppState(
+        areShortcutsAvailable = deviceState.areShortcutsAvailable,
+        isPlayStoreInstallation = deviceState.isPlayStoreInstallation
+    ))
+    override val appState: StateFlow<AppState>
+        get() = _appState
 
     init {
         loadSettings()
@@ -153,12 +126,7 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun loadUtilitySettings() {
-        _knockCount.longValue = sharedPreferences.getLong(CFG_KNOCK_COUNT, 0)
-        Timber.d("Knock count: ${_knockCount.longValue}")
-        _doNotAskAboutNotifications.value = sharedPreferences.getBoolean(CFG_DO_NOT_ASK_NOTIFICATION, false)
-        Timber.d("Do not ask about notifications: ${_doNotAskAboutNotifications.value}")
-
+    private fun loadAppState() {
         sharedPreferences.getLong(CFG_FIRST_LAUNCH, 0).also {
             if (it == 0L) {
                 // First launch
@@ -172,7 +140,7 @@ class SettingsRepositoryImpl @Inject constructor(
                 sharedPreferences.getLong(CFG_FIRST_LAUNCH_V2, 0).also {
                     if (it == 0L) {
                         // V2 first launch
-                        _firstLaunchV2.value = true
+                        _appState.update { it.copy(isFirstLaunchV2 = true) }
                         sharedPreferences.edit {
                             putLong(CFG_FIRST_LAUNCH_V2, System.currentTimeMillis())
                         }
@@ -181,15 +149,22 @@ class SettingsRepositoryImpl @Inject constructor(
             }
         }
 
-        _askReviewTime.longValue = sharedPreferences.getLong(CFG_DO_NOT_ASK_BEFORE, 0)
-        Timber.d("Ask review time: ${_askReviewTime.longValue}")
-        _doNotAskForReview.value = sharedPreferences.getBoolean(CFG_DO_NOT_ASK_REVIEW, false)
-        Timber.d("Do not ask for review: ${_doNotAskForReview.value}")
+        _appState.update {
+            it.copy(
+                knockCount = sharedPreferences.getLong(CFG_KNOCK_COUNT, 0),
+                notificationPermissionRequestDisabled = sharedPreferences.getBoolean(
+                    CFG_DO_NOT_ASK_NOTIFICATION,
+                    false
+                ),
+                reviewRequestTimestamp = sharedPreferences.getLong(CFG_DO_NOT_ASK_BEFORE, 0),
+                reviewRequestDisabled = sharedPreferences.getBoolean(CFG_DO_NOT_ASK_REVIEW, false)
+            )
+        }
     }
 
     private fun loadSettings() {
         // Load app settings from SharedPreferences
-        loadUtilitySettings()
+        loadAppState()
         _themeSettings.value = loadThemeSettings()
         _appSettings.value = _appSettings.value.copy(
             widgetConfirmation = sharedPreferences.getBoolean(CFG_CONFIRM_WIDGET, false),
@@ -210,7 +185,9 @@ class SettingsRepositoryImpl @Inject constructor(
             },
             customIpv4Service = sharedPreferences.getString(CFG_IP_4_CUSTOM_SERVICE, "") ?: "",
             customIpv6Service = sharedPreferences.getString(CFG_IP_6_CUSTOM_SERVICE, "") ?: "",
-            detailedListView = sharedPreferences.getBoolean(CFG_DETAILED_LIST_VIEW, true)
+            detailedListView = sharedPreferences.getBoolean(CFG_DETAILED_LIST_VIEW, true),
+            ip4HeaderSize = sharedPreferences.getInt(CFG_IP4_HEADER_SIZE, MIN_IP4_HEADER_SIZE),
+            customIp4Header = sharedPreferences.getBoolean(CFG_CUSTOM_IP4_HEADER, false)
         )
     }
 
@@ -224,6 +201,8 @@ class SettingsRepositoryImpl @Inject constructor(
                 putString(CFG_IP_4_CUSTOM_SERVICE, customIpv4Service)
                 putString(CFG_IP_6_CUSTOM_SERVICE, customIpv6Service)
                 putBoolean(CFG_DETAILED_LIST_VIEW, detailedListView)
+                putInt(CFG_IP4_HEADER_SIZE, ip4HeaderSize)
+                putBoolean(CFG_CUSTOM_IP4_HEADER, customIp4Header)
             }
         }
     }
@@ -239,35 +218,31 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override fun incrementKnockCount() {
-        _knockCount.longValue = _knockCount.longValue + 1
-        sharedPreferences.edit {
-            putLong(CFG_KNOCK_COUNT, _knockCount.longValue)
+        _appState.updateAndGet { it.copy(knockCount = it.knockCount + 1) }.also {
+            sharedPreferences.edit { putLong(CFG_KNOCK_COUNT, it.knockCount) }
         }
     }
 
     override fun setDoNotAskAboutNotificationsFlag() {
-        _doNotAskAboutNotifications.value = true
-        sharedPreferences.edit {
-            putBoolean(CFG_DO_NOT_ASK_NOTIFICATION, _doNotAskAboutNotifications.value)
+        _appState.updateAndGet { it.copy(notificationPermissionRequestDisabled = true) }.also {
+            sharedPreferences.edit { putBoolean(CFG_DO_NOT_ASK_NOTIFICATION, it.notificationPermissionRequestDisabled) }
         }
     }
 
     override fun postponeReviewRequest(time: Long) {
-        _askReviewTime.longValue = System.currentTimeMillis() + time
-        Timber.d("Postponing review request for $time ms (until ${_askReviewTime.longValue})")
-        sharedPreferences.edit {
-            putLong(CFG_DO_NOT_ASK_BEFORE, _askReviewTime.longValue)
-        }
+        _appState.updateAndGet { it.copy(reviewRequestTimestamp = System.currentTimeMillis() + time) }
+            .also {
+                sharedPreferences.edit { putLong(CFG_DO_NOT_ASK_BEFORE, it.reviewRequestTimestamp) }
+            }
     }
 
     override fun doNotAskForReview() {
-        _doNotAskForReview.value = true
-        sharedPreferences.edit {
-            putBoolean(CFG_DO_NOT_ASK_REVIEW, _doNotAskForReview.value)
+        _appState.updateAndGet { it.copy(reviewRequestDisabled = true) }.also {
+            sharedPreferences.edit { putBoolean(CFG_DO_NOT_ASK_REVIEW, it.reviewRequestDisabled) }
         }
     }
 
     override fun clearFirstLaunchV2() {
-        _firstLaunchV2.value = false
+        _appState.update { it.copy(isFirstLaunchV2 = false) }
     }
 }

@@ -27,12 +27,16 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import kotlinx.coroutines.FlowPreview
 import me.impa.knockonports.extension.debounced
+import me.impa.knockonports.screen.validate.NumberValidator
+import me.impa.knockonports.screen.validate.ValidationResult
 
 @OptIn(FlowPreview::class)
 @Composable
@@ -40,7 +44,9 @@ fun ValueTextField(
     label: String, value: String,
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit = { },
-    keyboardType: KeyboardType = KeyboardType.Companion.Text
+    validationResult: ValidationResult = ValidationResult.Valid,
+    keyboardType: KeyboardType = KeyboardType.Companion.Text,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     val currentValue = remember(key1 = value) { mutableStateOf(value) }
 
@@ -59,23 +65,33 @@ fun ValueTextField(
             keyboardType = keyboardType
         ),
         singleLine = true,
+        isError = validationResult != ValidationResult.Valid,
+        supportingText = {
+            if (validationResult is ValidationResult.Invalid) {
+                Text(validationResult.message.asString())
+            }
+        },
+        trailingIcon = trailingIcon,
         modifier = modifier.then(Modifier.fillMaxWidth())
     )
 }
+
+private val numberValidator = NumberValidator()
 
 @Composable
 fun ValueTextField(
     label: String, value: Int?,
     modifier: Modifier = Modifier,
     onValueChange: (Int?) -> Unit = { },
-    onValidate: (Int) -> Boolean = { true },
-    keyboardType: KeyboardType = KeyboardType.Companion.Number
+    validationResult: ValidationResult = ValidationResult.Valid,
+    keyboardType: KeyboardType = KeyboardType.Companion.Number,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
+    var localValidation by remember { mutableStateOf<ValidationResult?>(null) }
     ValueTextField(label, value?.toString() ?: "", modifier, { newValue ->
-        if (newValue == "") {
-            onValueChange(null)
-        } else {
-            newValue.toIntOrNull()?.takeIf { onValidate(it) }?.let { onValueChange(it) }
+        localValidation = numberValidator.validate(newValue) as? ValidationResult.Invalid
+        if (localValidation == null) {
+            if (newValue.isBlank()) onValueChange(null) else newValue.toIntOrNull()?.let { onValueChange(it) }
         }
-    }, keyboardType)
+    }, localValidation ?: validationResult, keyboardType, trailingIcon)
 }

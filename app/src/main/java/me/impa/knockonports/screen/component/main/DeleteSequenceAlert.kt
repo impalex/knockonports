@@ -36,7 +36,7 @@ import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.screen.PreviewData
 
 @Composable
-fun DeleteSequenceAlert(sequence: Sequence, onDismiss: () -> Unit = {}, onConfirm: () -> Unit = {}) {
+fun DeleteSequenceAlert(sequenceName: String, onDismiss: () -> Unit = {}, onConfirm: () -> Unit = {}) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(text = stringResource(R.string.title_delete_sequence)) },
@@ -44,7 +44,7 @@ fun DeleteSequenceAlert(sequence: Sequence, onDismiss: () -> Unit = {}, onConfir
             Text(
                 text = stringResource(
                     R.string.text_delete_sequence_alert,
-                    sequence.name ?: stringResource(R.string.text_unnamed_sequence)
+                    sequenceName ?: stringResource(R.string.text_unnamed_sequence)
                 )
             )
         },
@@ -70,5 +70,5 @@ fun DeleteSequenceAlert(sequence: Sequence, onDismiss: () -> Unit = {}, onConfir
 @Preview
 @Composable
 fun PreviewDeleteSequenceAlert() {
-    DeleteSequenceAlert(PreviewData.mockSequences[0])
+    DeleteSequenceAlert(PreviewData.mockSequences[0].name!!)
 }

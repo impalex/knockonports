@@ -43,7 +43,7 @@ fun Sequence.shortcutId(isAuto: Boolean = true) = shortcutId(this.id, isAuto)
 
 @RequiresApi(Build.VERSION_CODES.N_MR1)
 fun Sequence.getShortcutInfo(context: Context, isAuto: Boolean = false,
-                             iconResource: Int = R.drawable.play_icon): ShortcutInfo =
+                             iconResource: Int = R.mipmap.ic_play_seq): ShortcutInfo =
     ShortcutInfo.Builder(context, this.shortcutId(isAuto))
         .setShortLabel(name ?: context.getString(R.string.text_unnamed_sequence))
         .setLongLabel(name ?: context.getString(R.string.text_unnamed_sequence))

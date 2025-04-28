@@ -24,53 +24,63 @@ package me.impa.knockonports.screen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import me.impa.knockonports.data.KnocksRepository
-import me.impa.knockonports.ui.config.DarkMode
-import me.impa.knockonports.ui.config.ThemeContrast
+import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
+import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
+import me.impa.knockonports.ui.config.ThemeConfig
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsViewModel @Inject constructor(private val repository: KnocksRepository): ViewModel() {
+class SettingsViewModel @Inject constructor(private val repository: KnocksRepository) : ViewModel() {
 
     val appSettings = repository.getAppSettings()
 
     val themeSettings = repository.getThemeSettings()
 
-    val isInstalledFromPlayStore = repository.isInstalledFromPlayStore()
+    val appState = repository.getAppState()
 
-    fun setDynamicMode(dynamic: Boolean) {
-        repository.updateThemeSettings(themeSettings.value.copy(useDynamicColors = dynamic))
+    private val _overlay = MutableStateFlow<UiOverlay?>(null)
+    val overlay: StateFlow<UiOverlay?> = _overlay
+
+    fun onEvent(event: UiEvent) {
+        when (event) {
+            UiEvent.ClearOverlay -> _overlay.update { null }
+            UiEvent.ConfirmIPDetection -> updateAppSettings { it.copy(detectPublicIP = true) }
+                .also { _overlay.update { null } }
+
+            is UiEvent.SetContrast -> updateThemeSettings { it.copy(contrast = event.contrast) }
+            is UiEvent.SetCustomTheme -> updateThemeSettings { it.copy(customTheme = event.theme) }
+            is UiEvent.SetDarkMode -> updateThemeSettings { it.copy(useDarkTheme = event.darkMode) }
+            is UiEvent.SetDetailedView -> updateAppSettings { it.copy(detailedListView = event.detailed) }
+            is UiEvent.SetDynamicMode -> updateThemeSettings { it.copy(useDynamicColors = event.dynamic) }
+            is UiEvent.SetIPDetection ->
+                if (event.ipDetection) _overlay.update { UiOverlay.ConfirmIPDetection }
+                else updateAppSettings { it.copy(detectPublicIP = false) }
+
+            is UiEvent.SetIpv4Service -> updateAppSettings { it.copy(ipv4Service = event.service) }
+            is UiEvent.SetIpv6Service -> updateAppSettings { it.copy(ipv6Service = event.service) }
+            is UiEvent.SetWidgetConfirmation -> updateAppSettings { it.copy(widgetConfirmation = event.confirmation) }
+            is UiEvent.SetCustomIpv4Service -> updateAppSettings { it.copy(customIpv4Service = event.service) }
+            is UiEvent.SetCustomIpv6Service -> updateAppSettings { it.copy(customIpv6Service = event.service) }
+            is UiEvent.SetCustomIPHeaderSize -> updateAppSettings { it.copy(ip4HeaderSize = event.size) }
+            is UiEvent.SetCustomIPHeaderSizeEnabled ->
+                if (event.enabled) _overlay.update { UiOverlay.CustomIPHeaderAlert }
+                else updateAppSettings { it.copy(customIp4Header = false) }
+
+            is UiEvent.ConfirmCustomIPHeaderSizeEnabled -> updateAppSettings { it.copy(customIp4Header = true) }
+                .also { _overlay.update { null } }
+        }
     }
 
-    fun setDarkMode(darkMode: DarkMode) {
-        repository.updateThemeSettings(themeSettings.value.copy(useDarkTheme = darkMode))
+    private fun updateAppSettings(onUpdate: (AppSettings) -> AppSettings) {
+        repository.updateAppSettings(onUpdate(appSettings.value))
     }
 
-    fun setContrast(contrast: ThemeContrast) {
-        repository.updateThemeSettings(themeSettings.value.copy(contrast = contrast))
-    }
-
-    fun setCustomTheme(themeTag: String) {
-        repository.updateThemeSettings(themeSettings.value.copy(customTheme = themeTag))
-    }
-
-    fun setWidgetConfirmation(confirmation: Boolean) {
-        repository.updateAppSettings(appSettings.value.copy(widgetConfirmation = confirmation))
-    }
-
-    fun setIPDetection(detection: Boolean) {
-        repository.updateAppSettings(appSettings.value.copy(detectPublicIP = detection))
-    }
-
-    fun setDetailedView(detailed: Boolean) {
-        repository.updateAppSettings(appSettings.value.copy(detailedListView = detailed))
-    }
-
-    fun setIpv4Service(service: String) {
-        repository.updateAppSettings(appSettings.value.copy(ipv4Service = service))
-    }
-
-    fun setIpv6Service(service: String) {
-        repository.updateAppSettings(appSettings.value.copy(ipv6Service = service))
+    private fun updateThemeSettings(onUpdate: (ThemeConfig) -> ThemeConfig) {
+        repository.updateThemeSettings(onUpdate(themeSettings.value))
     }
 }

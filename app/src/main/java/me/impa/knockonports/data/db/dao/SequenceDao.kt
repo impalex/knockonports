@@ -78,4 +78,7 @@ interface SequenceDao {
 
     @Query("SELECT _name FROM tbSequence WHERE _id=:id")
     suspend fun getSequenceName(id: Long): String?
+
+    @Query("DELETE FROM tbSequence WHERE _id=:id")
+    suspend fun deleteSequenceById(id: Long): Int
 }

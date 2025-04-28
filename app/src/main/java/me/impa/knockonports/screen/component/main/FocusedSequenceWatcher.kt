@@ -28,17 +28,17 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import me.impa.knockonports.screen.FOCUSED_SEQUENCE_ID
+import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 import timber.log.Timber
 
 @Composable
 fun FocusedSequenceWatcher(
     stateHandle: SavedStateHandle?,
-    onFocusedSequenceChange: (Long?) -> Unit = {}
+    onEvent: (UiEvent) -> Unit
 ) {
     LaunchedEffect(stateHandle) {
         stateHandle?.getStateFlow<Long?>(FOCUSED_SEQUENCE_ID, null)?.filterNotNull()?.collectLatest {
-            Timber.d("Focused sequence id: $it")
-            onFocusedSequenceChange(it)
+            onEvent(UiEvent.Focus(it))
             stateHandle[FOCUSED_SEQUENCE_ID] = null
         }
     }

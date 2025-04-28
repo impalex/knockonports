@@ -39,10 +39,14 @@ import me.impa.knockonports.R
 import me.impa.knockonports.extension.OnDestination
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.navigation.AppNavGraph
+import me.impa.knockonports.screen.component.settings.DetectIPAlert
+import me.impa.knockonports.screen.component.settings.IPHeaderSizeAlert
 import me.impa.knockonports.screen.component.settings.aboutSection
 import me.impa.knockonports.screen.component.settings.generalSection
 import me.impa.knockonports.screen.component.settings.themeSection
 import me.impa.knockonports.screen.viewmodel.SettingsViewModel
+import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
+import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
 
 @Composable
 fun SettingsScreen(
@@ -53,9 +57,10 @@ fun SettingsScreen(
 ) {
     val settings by viewModel.appSettings.collectAsState()
     val theme by viewModel.themeSettings.collectAsState()
+    val appState by viewModel.appState.collectAsState()
+    val overlay by viewModel.overlay.collectAsState()
     val title = stringResource(R.string.title_screen_settings)
     val lazyListState = rememberLazyListState()
-    val savedListState = rememberSaveable(saver = LazyListState.Saver) { lazyListState }
     navController.OnDestination<AppNavGraph.SettingsRoute> {
         LaunchedEffect(key1 = true) {
             onComposing(
@@ -67,24 +72,26 @@ fun SettingsScreen(
             )
         }
     }
-    val isInstalledFromPlayStore by viewModel.isInstalledFromPlayStore
 
-    LazyColumn(state = savedListState, modifier = modifier.fillMaxSize()) {
+    overlay?.let { ShowOverlay(it, viewModel::onEvent) }
+
+    LazyColumn(state = lazyListState, modifier = modifier.fillMaxSize()) {
         generalSection(
             config = settings,
-            onWidgetConfirmationChanged = viewModel::setWidgetConfirmation,
-            onDetectPublicIPChanged = viewModel::setIPDetection,
-            onDetailedListViewChanged = viewModel::setDetailedView,
-            onIpv4ServiceChanged = viewModel::setIpv4Service,
-            onIpv6ServiceChanged = viewModel::setIpv6Service
+            onEvent = viewModel::onEvent
         )
         themeSection(
             theme = theme,
-            onDynamicChange = viewModel::setDynamicMode,
-            onDarkModeChange = viewModel::setDarkMode,
-            onContrastChange = viewModel::setContrast,
-            onCustomThemeChange = viewModel::setCustomTheme
+            onEvent = viewModel::onEvent
         )
-        aboutSection(isInstalledFromPlayStore)
+        aboutSection(appState.isPlayStoreInstallation)
+    }
+}
+
+@Composable
+fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
+    when (overlay) {
+        UiOverlay.ConfirmIPDetection -> DetectIPAlert(onEvent)
+        UiOverlay.CustomIPHeaderAlert -> IPHeaderSizeAlert(onEvent)
     }
 }

@@ -24,9 +24,11 @@ package me.impa.knockonports.util
 
 import android.content.Context
 import android.content.pm.ShortcutInfo
+import android.content.pm.ShortcutManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.distinctUntilChanged
 import me.impa.knockonports.constants.EXTRA_SEQ_ID
 import me.impa.knockonports.constants.INVALID_SEQ_ID
 import me.impa.knockonports.data.KnocksRepository
@@ -46,52 +48,54 @@ import javax.inject.Singleton
  * insufficient.
  *
  * @property context The application context.
- * @property shortcutManagerWrapper An instance of [ShortcutManagerWrapper], providing access to
- *           the system's ShortcutManager, or indicating its unavailability.
  * @property repository A [KnocksRepository] instance, used to retrieve the list of sequences.
  */
 @Singleton
 class ShortcutWatcher @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val shortcutManagerWrapper: ShortcutManagerWrapper,
     private val repository: KnocksRepository
 ) {
-
-    suspend fun startObserving() {
-        if (shortcutManagerWrapper is ShortcutManagerWrapper.Unavailable ||
-            Build.VERSION.SDK_INT < Build.VERSION_CODES.N_MR1
-        )
-            return
-        repository.getSequences().collect {
-            validateShortcuts(it)
+    private val shortcutManager by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
+            context.getSystemService(ShortcutManager::class.java)
+        } else {
+            null
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.N_MR1)
-    private fun validateShortcuts(sequences: List<Sequence>) {
-        Timber.d("Validating shortcuts (${sequences.size})")
-        val shortcutManager = (shortcutManagerWrapper as? ShortcutManagerWrapper.Available)?.instance ?: return
-        if (sequences.isEmpty()) {
-            shortcutManager.removeAllDynamicShortcuts()
-        } else {
-            shortcutManager.dynamicShortcuts = sequences.filter { !it.name.isNullOrBlank() }
-                .take(shortcutManager.maxShortcutCountPerActivity).map { it.getShortcutInfo(context) }
+    suspend fun startObserving() {
+        shortcutManager?.let { manager ->
+            repository.getSequences().distinctUntilChanged().collect {
+                validateShortcuts(manager, it)
+            }
         }
-        Timber.d("Shortcuts validated, count: ${shortcutManager.dynamicShortcuts.size}")
+    }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !shortcutManager.isRequestPinShortcutSupported)
+    @RequiresApi(Build.VERSION_CODES.N_MR1)
+    private fun validateShortcuts(manager: ShortcutManager, sequences: List<Sequence>) {
+        shortcutManager ?: return
+        Timber.d("Validating shortcuts (${sequences.size})")
+        if (sequences.isEmpty()) {
+            manager.removeAllDynamicShortcuts()
+        } else {
+            manager.dynamicShortcuts = sequences.filter { !it.name.isNullOrBlank() }
+                .take(manager.maxShortcutCountPerActivity).map { it.getShortcutInfo(context) }
+        }
+        Timber.d("Shortcuts validated, count: ${manager.dynamicShortcuts.size}")
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !manager.isRequestPinShortcutSupported)
             return
 
         Timber.d("Validating pinned shortcuts")
 
-        val pinnedShortcuts = shortcutManager.pinnedShortcuts
+        val pinnedShortcuts = manager.pinnedShortcuts
         val enableShortcuts = mutableListOf<String>()
         val disableShortcuts = mutableListOf<String>()
         val updateShortcuts = mutableListOf<ShortcutInfo>()
 
         for (shortcut in pinnedShortcuts) {
             val action = checkShortcut(shortcut, sequences)
-            Timber.d("Shortcut: ${shortcut.id}, action: $action")
             when (action) {
                 is Action.Enable -> enableShortcuts.add(shortcut.id)
                 is Action.Disable -> disableShortcuts.add(shortcut.id)
@@ -99,9 +103,9 @@ class ShortcutWatcher @Inject constructor(
                 is Action.Skip -> {}
             }
         }
-        updateShortcuts.takeIf { it.isNotEmpty() }?.let { shortcutManager.updateShortcuts(it) }
-        enableShortcuts.takeIf { it.isNotEmpty() }?.let { shortcutManager.enableShortcuts(it) }
-        disableShortcuts.takeIf { it.isNotEmpty() }?.let { shortcutManager.disableShortcuts(it) }
+        updateShortcuts.takeIf { it.isNotEmpty() }?.let { manager.updateShortcuts(it) }
+        enableShortcuts.takeIf { it.isNotEmpty() }?.let { manager.enableShortcuts(it) }
+        disableShortcuts.takeIf { it.isNotEmpty() }?.let { manager.disableShortcuts(it) }
     }
 
     @Suppress("ReturnCount")

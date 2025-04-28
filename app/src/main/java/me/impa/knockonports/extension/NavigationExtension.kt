@@ -36,7 +36,8 @@ import me.impa.knockonports.navigation.AppNavGraph
  * current navigation stack.  It then checks if the current destination's route corresponds to the
  * provided `AppNavGraph` type. If a match is found, the composable block is executed; otherwise, it's skipped.
  *
- * @param T The type of `AppNavGraph` to check against the current navigation destination's route.  Must be a reified type.
+ * @param T The type of `AppNavGraph` to check against the current navigation destination's route.
+ *  Must be a reified type.
  * @param block The composable block to execute if the destination matches the specified route.
  */
 @Composable

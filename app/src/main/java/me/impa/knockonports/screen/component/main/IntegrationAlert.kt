@@ -22,6 +22,9 @@
 
 package me.impa.knockonports.screen.component.main
 
+import android.content.ClipData
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -43,7 +46,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -58,7 +64,9 @@ import me.impa.knockonports.constants.TAG_CLOSE_BUTTON
 @Composable
 fun IntegrationAlert(id: Long, onDismiss: () -> Unit = {}) {
     val knockUri = "${BuildConfig.APP_SCHEME}://${BuildConfig.KNOCK_HOST}/$id"
-    val clipboardManager = LocalClipboardManager.current
+    val clipboard = LocalClipboard.current
+    val context = LocalContext.current
+
     AlertDialog(
         title = { Text(text = stringResource(R.string.title_integration_alert)) },
         text = {
@@ -81,7 +89,14 @@ fun IntegrationAlert(id: Long, onDismiss: () -> Unit = {}) {
                         )
                     }
                     IconButton(
-                        onClick = { clipboardManager.setText(AnnotatedString(knockUri)) }
+                        onClick = {
+                            clipboard.nativeClipboard.setPrimaryClip(ClipData.newPlainText("Knock Uri", knockUri))
+                            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2)
+                                Toast.makeText(
+                                    context, R.string.message_clipboard_confirmation,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                        }
                     ) {
                         Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.action_copy))
                     }

@@ -29,12 +29,7 @@ import me.impa.knockonports.ui.config.ThemeConfig
 interface SettingsRepository {
     val appSettings: StateFlow<AppSettings>
     val themeSettings: StateFlow<ThemeConfig>
-    val knockCount: State<Long>
-    val doNotAskAboutNotifications: State<Boolean>
-    val firstLaunchV2: State<Boolean>
-    val askReviewTime: State<Long>
-    val doNotAskForReview: State<Boolean>
-    val isInstalledFromPlayStore: State<Boolean>
+    val appState: StateFlow<AppState>
     fun updateAppSettings(newSettings: AppSettings)
     fun updateThemeSettings(newSettings: ThemeConfig)
     fun incrementKnockCount()

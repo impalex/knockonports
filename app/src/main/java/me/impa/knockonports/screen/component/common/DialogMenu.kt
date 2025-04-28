@@ -22,6 +22,9 @@
 
 package me.impa.knockonports.screen.component.common
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -59,19 +62,29 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import me.impa.knockonports.extension.debouncedClickable
+import androidx.core.graphics.drawable.toBitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import me.impa.knockonports.R
+import me.impa.knockonports.extension.debouncedClickable
+import timber.log.Timber
+
+private const val ICON_SIZE = 32
 
 @Composable
 @Suppress("LongParameterList")
@@ -83,13 +96,14 @@ fun <T> DialogMenu(
     enabled: Boolean = true,
     selectedItemToString: (T) -> String = { it.toString() },
     unsetValueText: String = "",
-    drawItem: @Composable (T, Boolean, Boolean, () -> Unit) -> Unit =
-        @Composable { item: T, selected: Boolean, enabled: Boolean, onClick: () -> Unit ->
-            DialogMenuItem(selectedItemToString(item), selected, enabled, onClick)
+    drawItem: @Composable (T, Boolean, Boolean, IconData?, () -> Unit) -> Unit =
+        @Composable { item: T, selected: Boolean, enabled: Boolean, iconData: IconData?, onClick: () -> Unit ->
+            DialogMenuItem(selectedItemToString(item), selected, enabled, iconData, onClick)
         },
-    enableFilter: Boolean = false
+    enableFilter: Boolean = false,
+    imageProvider: ((T) -> IconData?)? = null
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Box(modifier = modifier.height(IntrinsicSize.Min)) {
         // OutlinedTextField to display the selected item or a placeholder
@@ -130,7 +144,8 @@ fun <T> DialogMenu(
             drawItem = drawItem,
             onItemSelected = onItemSelected,
             selectedItemToString = selectedItemToString,
-            enableFilter = enableFilter
+            enableFilter = enableFilter,
+            imageProvider = imageProvider
         )
     }
 }
@@ -140,10 +155,11 @@ fun <T> DialogMenu(
 fun <T> DialogItemList(
     onDismissRequest: () -> Unit,
     itemsSource: DialogItemsSource<T>,
-    drawItem: @Composable (T, Boolean, Boolean, () -> Unit) -> Unit,
+    drawItem: @Composable (T, Boolean, Boolean, IconData?, () -> Unit) -> Unit,
     onItemSelected: (index: Int, item: T) -> Unit,
     selectedItemToString: (T) -> String,
-    enableFilter: Boolean
+    enableFilter: Boolean,
+    imageProvider: ((T) -> IconData?)? = null
 ) {
     var items by remember {
         // Initialize items based on the data source type
@@ -208,14 +224,29 @@ fun <T> DialogItemList(
                             }
                         )
 
+                    val coroutineScope = rememberCoroutineScope()
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
                         state = listState
                     ) {
-                        itemsIndexed(filteredItems) { index, item ->
+                        itemsIndexed(filteredItems, key = { index, item -> item.hashCode() }) { index, item ->
                             val isSelected = index == selectedIndex
+                            var imageData by remember {
+                                mutableStateOf<IconData?>(imageProvider?.let { IconData.PlaceHolder })
+                            }
+                            imageProvider?.let {
+                                LaunchedEffect(it) {
+                                    coroutineScope.launch(Dispatchers.IO) {
+                                        try {
+                                            imageData = it(item)
+                                        } catch (e: Exception) {
+                                            Timber.e(e)
+                                        }
+                                    }
+                                }
+                            }
                             // Draw the item with selection and click handling
-                            drawItem(item, isSelected, true) {
+                            drawItem(item, isSelected, true, imageData) {
                                 onItemSelected(index, item)
                                 onDismissRequest()
                             }
@@ -244,7 +275,7 @@ private fun LoadingIndicator() {
 }
 
 @Composable
-fun DialogMenuItem(text: String, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
+fun DialogMenuItem(text: String, selected: Boolean, enabled: Boolean, iconData: IconData?, onClick: () -> Unit) {
     // Set the content color based on the item's state (enabled, selected)
     val contentColor = when {
         !enabled -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
@@ -274,6 +305,26 @@ fun DialogMenuItem(text: String, selected: Boolean, enabled: Boolean, onClick: (
             } else {
                 Spacer(modifier = Modifier.size(iconSize))
             }
+            iconData?.let {
+                Box(modifier = Modifier.padding(horizontal = 8.dp)) {
+                    when (it) {
+                        is IconData.Image -> Image(
+                            bitmap = it.drawable.toBitmap(config = Bitmap.Config.ARGB_8888).asImageBitmap(),
+                            contentDescription = null,
+                            modifier = Modifier.size(ICON_SIZE.dp)
+                        )
+
+                        is IconData.Icon -> Icon(
+                            it.imageVector, contentDescription = null,
+                            modifier = Modifier.size(ICON_SIZE.dp)
+                        )
+
+                        IconData.PlaceHolder -> Spacer(modifier = Modifier.size(ICON_SIZE.dp))
+                    }
+                }
+            }
+
+
             Text(text = text, style = MaterialTheme.typography.titleSmall, modifier = Modifier.padding(start = 8.dp))
         }
     }
@@ -291,10 +342,21 @@ sealed interface DialogItemsSource<T> {
     ) : DialogItemsSource<T>
 }
 
+@Stable
+sealed interface IconData {
+    data object PlaceHolder : IconData
+
+    @Stable
+    data class Icon(val imageVector: ImageVector) : IconData
+
+    @Stable
+    data class Image(val drawable: Drawable) : IconData
+}
+
 @Composable
 @Preview
 fun PreviewDialogMenuItem() {
-    DialogMenuItem("Item 1", false, true) {}
+    DialogMenuItem("Item 1", false, true, null) {}
 }
 
 @Composable
@@ -313,7 +375,9 @@ fun PreviewDialogItemList() {
     DialogItemList(
         onDismissRequest = {},
         itemsSource = DialogItemsSource.ListItems(listOf("Item1", "Item2", "Item3", "Item4"), 1),
-        drawItem = @Composable { item, selected, enabled, onClick -> DialogMenuItem(item, selected, enabled, onClick) },
+        drawItem = @Composable { item, selected, enabled, image, onClick ->
+            DialogMenuItem(item, selected, enabled, image, onClick)
+        },
         selectedItemToString = { it.toString() },
         onItemSelected = { index, item -> },
         enableFilter = false

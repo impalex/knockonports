@@ -22,14 +22,12 @@
 
 package me.impa.knockonports.screen
 
-import androidx.annotation.VisibleForTesting
 import kotlinx.collections.immutable.persistentListOf
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.model.SequenceStep
 import me.impa.knockonports.data.type.EventType
 import me.impa.knockonports.data.type.SequenceStepType
-import me.impa.knockonports.screen.action.MainViewInterface
 
 object PreviewData {
     val mockSequences = persistentListOf(
@@ -102,16 +100,5 @@ object PreviewData {
             data = listOf("My Sequence", "host.url", "10.2.0.23", "10.2.0.93")
         ),
     )
-
-    val dummyMainInterface = object : MainViewInterface {
-        override var confirmDelete: Sequence? = null
-        override val onSequenceMove: (Int, Int) -> Unit = { _, _ -> }
-        override val onDragEnded: () -> Unit = {}
-        override val onDelete: (Sequence) -> Unit = {}
-        override val onCreateShortcut: (Sequence) -> Unit = {}
-        override val onDuplicate: (Long) -> Unit = {}
-        override val onFocusedSequenceChange: (Long?) -> Unit = {}
-        override val onEdit: (Long) -> Unit = {}
-    }
 
 }

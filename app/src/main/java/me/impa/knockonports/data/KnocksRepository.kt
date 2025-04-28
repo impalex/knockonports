@@ -34,6 +34,7 @@ import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
 import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.data.settings.AppState
 import me.impa.knockonports.data.settings.SettingsRepository
 import me.impa.knockonports.ui.config.ThemeConfig
 import javax.inject.Inject
@@ -47,6 +48,7 @@ interface KnocksRepository {
     suspend fun saveSequence(sequence: Sequence): Long
     suspend fun saveSequences(sequences: List<Sequence>): List<Long>
     suspend fun getSequenceName(id: Long): String?
+    suspend fun deleteSequenceById(id: Long): Int
     suspend fun getMaxOrder(): Int?
     suspend fun saveLogEntry(logEntry: LogEntry): Long
     fun getLogEntries(): Flow<List<LogEntry>>
@@ -62,14 +64,9 @@ interface KnocksRepository {
     fun getThemeSettings(): StateFlow<ThemeConfig>
     fun updateThemeSettings(newSettings: ThemeConfig)
     fun incrementKnockCount()
-    fun getKnockCount(): State<Long>
-    fun doNotAskAboutNotifications(): State<Boolean>
     fun setDoNotAskAboutNotificationsFlag()
-    fun getFirstLaunchV2(): State<Boolean>
-    fun getAskReviewTime(): State<Long>
-    fun getDoNotAskForReview(): State<Boolean>
     fun postponeReviewRequest(time: Long)
     fun doNotAskForReview()
-    fun isInstalledFromPlayStore(): State<Boolean>
     fun clearFirstLaunchV2()
+    fun getAppState(): StateFlow<AppState>
 }

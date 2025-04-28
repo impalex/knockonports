@@ -34,6 +34,7 @@ import kotlinx.coroutines.withContext
 import me.impa.knockonports.R
 import me.impa.knockonports.screen.component.common.DialogItemsSource
 import me.impa.knockonports.screen.component.common.DialogMenu
+import me.impa.knockonports.screen.component.common.IconData
 import me.impa.knockonports.util.AppData
 import timber.log.Timber
 
@@ -57,12 +58,15 @@ fun SelectApp(appPackage: String?, appName: String?, onUpdate: (String?, String?
         selectedItemToString = { item -> item.name },
         unsetValueText = appName ?: stringResource(R.string.list_app_none),
         onItemSelected = { _, item ->
-            Timber.d("Selected application: [${item.app}] - ${item.name}")
             if (item.app == "") {
                 onUpdate(null, null)
             } else {
                 onUpdate(item.app, item.name)
             }
+        },
+        imageProvider = {
+            if (it.app.isNotEmpty()) IconData.Image(context.packageManager.getApplicationIcon(it.app))
+            else IconData.PlaceHolder
         }
     )
 }

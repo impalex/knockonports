@@ -65,7 +65,7 @@ class DataConverters {
                 s.getOrNull(4)?.let {
                     String(Base64.decode(it, Base64.NO_WRAP or Base64.NO_PADDING), Charsets.UTF_8)
                 },
-                ContentEncodingType.fromOrdinal(s.getOrNull(5)?.toIntOrNull() ?: ContentEncodingType.RAW.ordinal)
+                ContentEncodingType.fromOrdinal(s.getOrNull(5)?.toIntOrNull() ?: ContentEncodingType.RAW.ordinal),
             )
         }?.toList() ?: listOf()
 

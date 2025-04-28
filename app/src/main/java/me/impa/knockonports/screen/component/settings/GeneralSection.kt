@@ -26,35 +26,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.toPersistentMap
-import me.impa.knockonports.data.settings.AppSettings
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.MAX_IP4_HEADER_SIZE
+import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
+import me.impa.knockonports.data.settings.AppSettings
 import me.impa.knockonports.data.settings.Ipv4ProviderMap
 import me.impa.knockonports.data.settings.Ipv6ProviderMap
 import me.impa.knockonports.data.settings.PROVIDER_CUSTOM
+import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 
 fun LazyListScope.generalSection(
     config: AppSettings,
-    onWidgetConfirmationChanged: (Boolean) -> Unit = {},
-    onDetectPublicIPChanged: (Boolean) -> Unit = {},
-    onDetailedListViewChanged: (Boolean) -> Unit = {},
-    onIpv4ServiceChanged: (String) -> Unit = {},
-    onIpv6ServiceChanged: (String) -> Unit = {},
-    onIpv4CustomServiceChanged: (String) -> Unit = {},
-    onIpv6CustomServiceChanged: (String) -> Unit = {}
+    onEvent: (UiEvent) -> Unit = {}
 ) {
-    val detailedListView = config.detailedListView
-    val widgetConfirmation = config.widgetConfirmation
-    val detectPublicIP = config.detectPublicIP
     item(key = "general") {
         HeaderSection(title = stringResource(R.string.title_settings_general), false)
     }
@@ -62,59 +52,56 @@ fun LazyListScope.generalSection(
         PrefSwitch(
             title = stringResource(R.string.title_settings_detailed_list_view),
             description = stringResource(R.string.text_settings_detailed_list_view),
-            value = detailedListView,
-            onClick = { onDetailedListViewChanged(!detailedListView) }
+            value = config.detailedListView,
+            onClick = { onEvent(UiEvent.SetDetailedView(!config.detailedListView)) }
         )
     }
     item(key = "widget_confirmation") {
         PrefSwitch(
             title = stringResource(R.string.title_settings_widget_confirmation),
             description = stringResource(R.string.text_settings_widget_confirmation_desc),
-            value = widgetConfirmation,
-            onClick = { onWidgetConfirmationChanged(!widgetConfirmation) }
+            value = config.widgetConfirmation,
+            onClick = { onEvent(UiEvent.SetWidgetConfirmation(!config.widgetConfirmation)) }
         )
     }
     item(key = "detect_ip") {
-        var askForConfirmation by rememberSaveable { mutableStateOf(false) }
-        if (askForConfirmation) {
-            DetectIPAlert(onDismiss = { askForConfirmation = false }, onConfirm = {
-                onDetectPublicIPChanged(true)
-                askForConfirmation = false
-            })
-        }
         PrefSwitch(
             title = stringResource(R.string.title_settings_detect_ip),
             description = stringResource(R.string.text_settings_detect_ip),
-            value = detectPublicIP,
-            onClick = {
-                if (detectPublicIP) {
-                    onDetectPublicIPChanged(false)
-                } else {
-                    askForConfirmation = true
-                }
-            }
+            value = config.detectPublicIP,
+            onClick = { onEvent(UiEvent.SetIPDetection(!config.detectPublicIP)) }
         )
     }
-    if (detectPublicIP) {
-        ipvSection(
-            config,
-            onIpv4ServiceChanged, onIpv4CustomServiceChanged,
-            onIpv6ServiceChanged, onIpv6CustomServiceChanged
-        )
+    if (config.detectPublicIP) {
+        ipvSection(config, onEvent)
+    }
+    item(key = "enable_custom_ip4_hdr") {
+        PrefSwitch(
+            title = stringResource(R.string.title_settings_enable_custom_ip_hdr),
+            description = stringResource(R.string.text_settings_enable_custom_ip_hdr),
+            value = config.customIp4Header,
+            onClick = { onEvent(UiEvent.SetCustomIPHeaderSizeEnabled((!config.customIp4Header))) })
+    }
+    if (config.customIp4Header) {
+        item(key = "custom_ip4_hdr") {
+            val sizeText = stringResource(R.string.text_settings_ip4_hdr_size, config.ip4HeaderSize)
+            PrefStepSlider(
+                title = stringResource(R.string.title_settings_ip4_hdr_size),
+                description = sizeText,
+                value = config.ip4HeaderSize,
+                minValue = MIN_IP4_HEADER_SIZE,
+                maxValue = MAX_IP4_HEADER_SIZE,
+                steps = (MAX_IP4_HEADER_SIZE - MIN_IP4_HEADER_SIZE) / 4,
+                onChanged = { onEvent(UiEvent.SetCustomIPHeaderSize(it)) })
+
+        }
     }
 }
 
 private fun LazyListScope.ipvSection(
     config: AppSettings,
-    onIpv4ServiceChanged: (String) -> Unit = {},
-    onIpv4CustomServiceChanged: (String) -> Unit = {},
-    onIpv6ServiceChanged: (String) -> Unit = {},
-    onIpv6CustomServiceChanged: (String) -> Unit = {}
+    onEvent: (UiEvent) -> Unit
 ) {
-    val ipv4Service = config.ipv4Service
-    val ipv4CustomService = config.customIpv4Service
-    val ipv6Service = config.ipv6Service
-    val ipv6CustomService = config.customIpv6Service
     item(key = "ipv4_service") {
         val resources = LocalContext.current.resources
         val serviceMap = remember(resources) {
@@ -122,14 +109,14 @@ private fun LazyListScope.ipvSection(
         }
         PrefMultiSelection(
             title = stringResource(R.string.title_settings_ipv4_lookup_provider),
-            value = ipv4Service,
+            value = config.ipv4Service,
             map = serviceMap,
-            onChanged = { onIpv4ServiceChanged(it) })
-        if (ipv4Service == PROVIDER_CUSTOM) {
+            onChanged = { onEvent(UiEvent.SetIpv4Service(it)) })
+        if (config.ipv4Service == PROVIDER_CUSTOM) {
             PrefCustomProviderEditor(
                 title = stringResource(R.string.title_settings_custom_ipv4_provider),
-                value = ipv4CustomService,
-                onChanged = { onIpv4CustomServiceChanged(it) }
+                value = config.customIpv4Service,
+                onChanged = { onEvent(UiEvent.SetCustomIpv4Service(it)) }
             )
         }
     }
@@ -140,14 +127,14 @@ private fun LazyListScope.ipvSection(
         }
         PrefMultiSelection(
             title = stringResource(R.string.title_settings_ipv6_lookup_provider),
-            value = ipv6Service,
+            value = config.ipv6Service,
             map = serviceMap,
-            onChanged = { onIpv6ServiceChanged(it) })
-        if (ipv6Service == PROVIDER_CUSTOM) {
+            onChanged = { onEvent(UiEvent.SetIpv6Service(it)) })
+        if (config.ipv6Service == PROVIDER_CUSTOM) {
             PrefCustomProviderEditor(
                 title = stringResource(R.string.title_settings_custom_ipv6_provider),
-                value = ipv6CustomService,
-                onChanged = { onIpv6CustomServiceChanged(it) }
+                value = config.customIpv6Service,
+                onChanged = { onEvent(UiEvent.SetCustomIpv6Service(it)) }
             )
         }
     }

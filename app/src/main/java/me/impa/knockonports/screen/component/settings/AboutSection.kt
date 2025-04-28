@@ -48,7 +48,7 @@ fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
 
     item(key = "app_version") {
         val resources = LocalContext.current.resources
-        val annoyingVersion = rememberSaveable() { getAnnoyingVersion(resources) }
+        val annoyingVersion = rememberSaveable { getAnnoyingVersion(resources) }
         PrefDescriptionClickable(
             title = stringResource(R.string.title_settings_version),
             subtitle = annoyingVersion
@@ -81,6 +81,16 @@ fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
             title = stringResource(R.string.title_settings_source_code),
             subtitle = stringResource(R.string.text_settings_source_code),
             onClick = { uriHandler.openUri("https://github.com/impalex/knockonports") }
+        )
+    }
+
+    item(key = "discord_invite") {
+        val invite = stringResource(R.string.discord_invite)
+        val uriHandler = LocalUriHandler.current
+        PrefDescriptionClickable(
+            title = stringResource(R.string.title_settings_discord),
+            subtitle = stringResource(R.string.text_settings_discord),
+            onClick = { uriHandler.openUri(invite) }
         )
     }
 

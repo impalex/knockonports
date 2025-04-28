@@ -172,27 +172,6 @@ class KnockerService : Service() {
         private const val FOREGROUND_ID = 1337
         const val CHANNEL_ID = "KNOCKER_CHANNEL"
         const val SEQUENCE_ID = "KNOCK_SEQUENCE_ID"
-
-        /**
-         * Starts the KnockerService.
-         *
-         * This function starts the service responsible for performing the knocking sequence.  It handles
-         * different service starting methods based on the Android SDK version.  On older versions (below
-         * Oreo), it uses `startService`, while on Oreo and above, it uses `startForegroundService` which is
-         * required for background service limitations.
-         *
-         * @param context The context from which the service is being started (e.g., Activity or Service).
-         * @param sequenceId The ID of the knocking sequence to be executed by the service.
-         */
-        fun startService(context: Context, sequenceId: Long) {
-            val intent = Intent(context, KnockerService::class.java)
-            intent.putExtra(SEQUENCE_ID, sequenceId)
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                context.startService(intent)
-            } else {
-                context.startForegroundService(intent)
-            }
-        }
     }
 
 }

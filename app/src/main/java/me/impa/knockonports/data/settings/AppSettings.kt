@@ -24,6 +24,7 @@ package me.impa.knockonports.data.settings
 
 import androidx.compose.runtime.Immutable
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
 import me.impa.knockonports.ui.config.ThemeConfig
 
 const val PROVIDER_CUSTOM = "custom"
@@ -36,7 +37,9 @@ data class AppSettings(
     val ipv6Service: String = "",
     val customIpv4Service: String = "",
     val customIpv6Service: String = "",
-    val detailedListView: Boolean = true
+    val detailedListView: Boolean = true,
+    val customIp4Header: Boolean = false,
+    val ip4HeaderSize: Int = MIN_IP4_HEADER_SIZE
 )
 
 val Ipv4ProviderMap = mapOf(

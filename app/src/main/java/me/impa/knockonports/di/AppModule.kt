@@ -25,9 +25,6 @@ package me.impa.knockonports.di
 import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.content.pm.ShortcutManager
-import android.os.Build
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -63,9 +60,10 @@ import me.impa.knockonports.data.db.dao.LogEntryDao
 import me.impa.knockonports.data.db.dao.SequenceDao
 import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
+import me.impa.knockonports.data.settings.DeviceState
+import me.impa.knockonports.data.settings.DeviceStateImpl
 import me.impa.knockonports.data.settings.SettingsRepository
 import me.impa.knockonports.data.settings.SettingsRepositoryImpl
-import me.impa.knockonports.util.ShortcutManagerWrapper
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -77,7 +75,7 @@ annotation class IoDispatcher
 @Qualifier
 annotation class DefaultDispatcher
 
-@Retention
+@Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class MainDispatcher
 
@@ -166,8 +164,8 @@ object AppModule {
     @Singleton
     fun provideSettingsRepository(
         sharedPreferences: SharedPreferences,
-        packageManager: PackageManager
-    ): SettingsRepository = SettingsRepositoryImpl(sharedPreferences, packageManager)
+        deviceState: DeviceState
+    ): SettingsRepository = SettingsRepositoryImpl(sharedPreferences, deviceState)
 
     @Provides
     @IoDispatcher
@@ -182,14 +180,6 @@ object AppModule {
     fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 
     @Provides
-    fun provideShortcutManagerWrapper(@ApplicationContext context: Context): ShortcutManagerWrapper =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            ShortcutManagerWrapper.Available(context.getSystemService(ShortcutManager::class.java))
-        } else {
-            ShortcutManagerWrapper.Unavailable
-        }
-
-    @Provides
-    fun providePackageManager(@ApplicationContext context: Context): PackageManager =
-        context.packageManager
+    fun provideDeviceState(@ApplicationContext context: Context): DeviceState =
+        DeviceStateImpl(context)
 }

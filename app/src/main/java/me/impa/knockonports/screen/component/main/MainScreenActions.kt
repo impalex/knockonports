@@ -45,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.TAG_SETTINGS_MENU_ITEM
 import me.impa.knockonports.constants.TAG_MAIN_DOTS_BUTTON
-import me.impa.knockonports.screen.event.MainBarEvent
+import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 import me.impa.knockonports.extension.debounced
 
 @Composable

@@ -78,4 +78,8 @@ object FakeSequenceDao: SequenceDao {
     override suspend fun getSequenceName(id: Long): String? {
         TODO("Not yet implemented")
     }
+
+    override suspend fun deleteSequenceById(id: Long): Int {
+        TODO("Not yet implemented")
+    }
 }

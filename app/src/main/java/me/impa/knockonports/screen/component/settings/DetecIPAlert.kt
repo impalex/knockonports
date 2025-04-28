@@ -32,11 +32,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import me.impa.knockonports.R
 import me.impa.knockonports.extension.debounced
+import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 
 @Composable
-fun DetectIPAlert(onDismiss: () -> Unit = {}, onConfirm: () -> Unit = {}) {
+fun DetectIPAlert(onEvent: (UiEvent) -> Unit = {}) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = { onEvent(UiEvent.ClearOverlay) },
         title = { Text(text = stringResource(R.string.title_public_ip_alert)) },
         text = {
             Column {
@@ -46,12 +47,12 @@ fun DetectIPAlert(onDismiss: () -> Unit = {}, onConfirm: () -> Unit = {}) {
             }
         },
         dismissButton = {
-            Button(onClick = onDismiss) {
+            Button(onClick = { onEvent(UiEvent.ClearOverlay) }) {
                 Text(text = stringResource(R.string.action_cancel))
             }
         },
         confirmButton = {
-            Button(onClick = debounced(onConfirm)) {
+            Button(onClick = debounced({ onEvent(UiEvent.ConfirmIPDetection) })) {
                 Text(text = stringResource(R.string.action_allow))
             }
         }

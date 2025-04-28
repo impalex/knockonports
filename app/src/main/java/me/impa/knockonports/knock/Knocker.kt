@@ -36,7 +36,11 @@ import kotlinx.coroutines.withContext
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.MAX_PORT
+import me.impa.knockonports.constants.MAX_SLEEP
+import me.impa.knockonports.constants.MAX_TTL
 import me.impa.knockonports.constants.MIN_PORT
+import me.impa.knockonports.constants.MIN_SLEEP
+import me.impa.knockonports.constants.MIN_TTL
 import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
@@ -49,6 +53,8 @@ import me.impa.knockonports.data.type.SequenceStepType
 import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.di.MainDispatcher
 import me.impa.knockonports.extension.decode
+import me.impa.knockonports.extension.getMaxIcmpPacketSize
+import me.impa.knockonports.extension.getOffset
 import me.impa.knockonports.util.IpAddressType
 import me.impa.knockonports.util.getPublicIp
 import me.impa.knockonports.util.isNetworkAvailable
@@ -60,7 +66,6 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val MAX_SLEEP = 15000
 private const val MAX_ICMP_SIZE_IPV4 = 65515
 private const val MAX_ICMP_SIZE_IPV6 = 65495
 
@@ -154,7 +159,7 @@ class Knocker @Inject constructor(
 
         showToast(R.string.message_start_knocking, sequence.name)
 
-        val delay = (sequence.delay ?: 0).coerceAtLeast(0).coerceAtMost(MAX_SLEEP).toLong()
+        val delay = (sequence.delay ?: 0).coerceAtLeast(MIN_SLEEP).coerceAtMost(MAX_SLEEP).toLong()
 
         try {
             var cnt = 0
@@ -163,7 +168,7 @@ class Knocker @Inject constructor(
                 Timber.d("Step $cnt")
                 withContext(ioDispatcher) {
                     sendPackets(
-                        addresses, sequence, it, sequence.ttl ?: 0,
+                        addresses, sequence, it, (sequence.ttl ?: 0).coerceAtLeast(MIN_TTL).coerceAtMost(MAX_TTL),
                         delay, sequence.localPort ?: 0
                     )
                 }
@@ -219,9 +224,9 @@ class Knocker @Inject constructor(
         address: InetAddress, ttl: Int, size: Int?, count: Int?, type: IcmpType?,
         delay: Int, content: ByteArray
     ): Deferred<Int> {
-        val packetSize = (size ?: 0) + (type?.getOffset(address) ?: 0)
+        val packetSize = ((size ?: 0) + (type?.getOffset(address, appSettings.value) ?: 0))
             .coerceAtLeast(0)
-            .coerceAtMost(if (address is Inet4Address) MAX_ICMP_SIZE_IPV4 else MAX_ICMP_SIZE_IPV6)
+            .coerceAtMost(getMaxIcmpPacketSize(address, appSettings.value))
         val packetCount = (count ?: 1).coerceAtLeast(1)
         Timber.d("Sending ICMP packet to $address: [${packetSize}]x[${packetCount}]")
 

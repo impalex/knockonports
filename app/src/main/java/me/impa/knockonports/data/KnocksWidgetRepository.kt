@@ -43,7 +43,6 @@ class KnocksWidgetRepository @Inject constructor(
 ) {
 
     suspend fun updateWidget() {
-        Timber.d("Update widgets!")
         KnocksWidget().updateAll(context)
     }
 

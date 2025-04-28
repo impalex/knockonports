@@ -46,11 +46,7 @@ import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,25 +60,23 @@ import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.sequenceString
 import me.impa.knockonports.screen.ANIMATION_DURATION
-import me.impa.knockonports.screen.action.MainViewInterface
-import me.impa.knockonports.screen.event.SequenceMenuEvent
+import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
-import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.SequenceCard(
     sequence: Sequence,
     state: ReorderableLazyListState,
-    actions: MainViewInterface,
     showSequenceDetails: Boolean,
     isShortcutsAvailable: Boolean,
     modifier: Modifier = Modifier,
     isHighLighted: Boolean = false,
     onHighLightFinished: () -> Unit = {},
-    onKnock: (Long) -> Unit = {}
+    onEvent: (UiEvent) -> Unit = {},
+    onPermissionRequest: (() -> Unit)? = null
 ) {
     val highlightCardColor = MaterialTheme.colorScheme.secondaryContainer
     val defaultCardColor = CardDefaults.cardColors().containerColor
@@ -125,13 +119,13 @@ fun LazyItemScope.SequenceCard(
     ReorderableItem(state, key = sequence.id ?: 0L) {
         SequenceCardContent(
             sequence,
-            actions = actions,
             cardColor = animatedCardColor.value,
             textColor = animatedContentColor.value,
             showSequenceDetails = showSequenceDetails,
             isShortcutsAvailable = showShortcutMenu,
             modifier = modifier,
-            onKnock = onKnock
+            onEvent = onEvent,
+            onPermissionRequest = onPermissionRequest
         )
     }
 }
@@ -141,15 +135,14 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
     sequence: Sequence,
     cardColor: Color,
     textColor: Color,
-    actions: MainViewInterface,
     modifier: Modifier = Modifier,
     showSequenceDetails: Boolean = true,
     isShortcutsAvailable: Boolean = false,
-    onKnock: (Long) -> Unit = {}
+    onEvent: (UiEvent) -> Unit = {},
+    onPermissionRequest: (() -> Unit)? = null
 ) {
+
     val interactionSource = remember { MutableInteractionSource() }
-    var automationId by rememberSaveable { mutableStateOf<Long?>(null) }
-    automationId?.let { IntegrationAlert(it, onDismiss = { automationId = null }) }
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = cardColor,
@@ -161,13 +154,13 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                 .padding(horizontal = 8.dp)
                 .testTag("${TAG_SEQUENCE_ITEM}${sequence.id}")
         ),
-        onClick = debounced({ sequence.id?.let { actions.onEdit(it) } }),
+        onClick = debounced({ sequence.id?.let { onEvent(UiEvent.Edit(it)) } }),
         interactionSource = interactionSource
     ) {
         // Display sequence information and controls within a row
         Row(verticalAlignment = Alignment.CenterVertically) {
 
-            SequenceDragHandle(onDragEnded = actions.onDragEnded)
+            SequenceDragHandle(onDragEnded = { onEvent(UiEvent.ConfirmReorder) })
             Column(modifier = Modifier.weight(1f)) {
                 Row(
                     modifier = Modifier.wrapContentSize(),
@@ -178,23 +171,21 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                         sequence.host?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_host_not_set),
                         sequence.sequenceString() ?: stringResource(R.string.text_empty_sequence), showSequenceDetails)
                     if (!showSequenceDetails)
-                        KnockIconButton(onKnock = { onKnock(sequence.id!!) })
-                    SequenceMenu(
-                        id = sequence.id,
-                        isShortcutsAvailable = isShortcutsAvailable,
-                        onAction = { event ->
-                            Timber.d("Sequence menu event: $event")
-                            when (event) {
-                                is SequenceMenuEvent.Edit -> sequence.id?.let { actions.onEdit(it) }
-                                is SequenceMenuEvent.Delete -> actions.confirmDelete = sequence
-                                is SequenceMenuEvent.CreateShortcut -> actions.onCreateShortcut(sequence)
-                                is SequenceMenuEvent.Duplicate -> sequence.id?.let { actions.onDuplicate(it) }
-                                is SequenceMenuEvent.Automation -> automationId = sequence.id
-                            }
+                        KnockIconButton(onKnock = {
+                            onPermissionRequest?.invoke()
+                            onEvent(UiEvent.Knock(requireNotNull(sequence.id)))
                         })
+                    SequenceMenu(
+                        sequence = sequence,
+                        isShortcutsAvailable = isShortcutsAvailable,
+                        onEvent = onEvent
+                    )
                 }
                 if (showSequenceDetails)
-                    KnockButton(onKnock = { onKnock(sequence.id!!) })
+                    KnockButton(onKnock = {
+                        onPermissionRequest?.invoke()
+                        onEvent(UiEvent.Knock(requireNotNull(sequence.id)))
+                    })
             }
         }
     }

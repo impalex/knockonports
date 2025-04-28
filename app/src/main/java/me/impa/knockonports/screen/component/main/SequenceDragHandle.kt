@@ -45,11 +45,9 @@ fun ReorderableCollectionItemScope.SequenceDragHandle(onDragEnded: () -> Unit) {
             .draggableHandle(
                 onDragStarted = {
                     ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.GESTURE_START)
-                    Timber.d("Drag started")
                 },
                 onDragStopped = {
                     ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.GESTURE_END)
-                    Timber.d("Drag stopped")
                     onDragEnded()
                 }
             )

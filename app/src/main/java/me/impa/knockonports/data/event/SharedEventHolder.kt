@@ -47,7 +47,6 @@ class SharedEventHolder @Inject constructor() {
         get() = _currentEventFlow
 
     fun sendEvent(event: AppEvent) {
-        Timber.d("Event: $event")
         _currentEventFlow.value = event
     }
 

@@ -65,6 +65,8 @@ import me.impa.knockonports.screen.component.common.DialogItemsSource
 import me.impa.knockonports.screen.component.common.DialogMenuItem
 import me.impa.knockonports.ui.theme.themeMap
 import me.impa.knockonports.ui.theme.variant.AppColorScheme
+import timber.log.Timber
+import kotlin.math.roundToInt
 
 
 @Composable
@@ -131,16 +133,18 @@ fun PrefSwitch(
 
 @Composable
 fun PrefStepSlider(
-    title: String, description: String, value: Int, maxValue: Int,
-    modifier: Modifier = Modifier, onChanged: (Int) -> Unit = {}
+    title: String, description: String, value: Int, minValue: Int, maxValue: Int,
+    modifier: Modifier = Modifier, steps: Int = maxValue - minValue, onChanged: (Int) -> Unit = {}
 ) {
     Column(modifier = modifier) {
         PrefDescription(title = title, subtitle = description, modifier = Modifier.fillMaxWidth())
         Slider(
             value = value.toFloat(),
-            onValueChange = { onChanged(it.toInt()) },
-            valueRange = 0f..maxValue.toFloat(),
-            steps = maxValue - 1,
+            onValueChange = {
+                it.roundToInt().takeIf { it != value }?.let { onChanged(it) }
+            },
+            valueRange = minValue.toFloat()..maxValue.toFloat(),
+            steps = steps - 1,
             modifier = Modifier
                 .systemGestureExclusion { coords ->
                     Rect(0f, 0f, (coords.size.width).toFloat(), (coords.size.height).toFloat())
@@ -168,10 +172,10 @@ fun PrefMultiSelection(
             itemsSource = itemsSource,
             selectedItemToString = { map[it].toString() },
             enableFilter = false,
-            drawItem = { item, selected, enabled, onClick ->
+            drawItem = { item, selected, enabled, image, onClick ->
                 DialogMenuItem(
                     map[item].toString(),
-                    selected, enabled, onClick
+                    selected, enabled, image, onClick
                 )
             },
             onItemSelected = { index, item ->
@@ -289,7 +293,7 @@ fun PreviewPrefSwitch() {
 @Composable
 fun PreviewPrefStepSlider() {
     PrefStepSlider(
-        title = "Title", description = "Description", value = 1, maxValue = 2,
+        title = "Title", description = "Description", value = 1, minValue = 0, maxValue = 2,
         modifier = Modifier.fillMaxWidth()
     )
 }

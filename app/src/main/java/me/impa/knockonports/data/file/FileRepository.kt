@@ -63,7 +63,6 @@ class FileRepository @Inject constructor(private val contentResolver: ContentRes
 
         return@withContext try {
             val list = jsonCoder.decodeFromString<SequencesData>(fileContent ?: "")
-            Timber.d("SequencesData: $list")
             list.asSequenceList()
         } catch (e: Exception) {
             Timber.e(e)
@@ -75,7 +74,6 @@ class FileRepository @Inject constructor(private val contentResolver: ContentRes
         withContext(Dispatchers.IO) {
             val data = sequences.asJsonData()
             val jsonString = jsonCoder.encodeToString(SequencesData.serializer(), data)
-            Timber.d("SequencesData: $jsonString")
             try {
                 contentResolver.openOutputStream(uri)?.use { outputStream ->
                     outputStream.write(jsonString.toByteArray())

@@ -71,8 +71,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 35
-        versionCode = 206
-        versionName = "2.0.6"
+        versionCode = 211
+        versionName = "2.0.7"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -81,13 +81,18 @@ android {
         @Suppress("UnstableApiUsage")
         externalNativeBuild {
             cmake {
-                cppFlags += ""
                 arguments("-DANDROID_STL=c++_shared")
             }
         }
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas")
         }
+        buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
+        buildConfigField("String", "APP_HOST", "\"$appHost\"")
+        buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
+        manifestPlaceholders["appScheme"] = appScheme
+        manifestPlaceholders["appHost"] = appHost
+        manifestPlaceholders["knockHost"] = knockHost
     }
 
     buildFeatures {
@@ -99,24 +104,12 @@ android {
             isMinifyEnabled = false
             isDebuggable = true
             buildConfigField("Boolean", "DEBUG", "true")
-            buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
-            buildConfigField("String", "APP_HOST", "\"$appHost\"")
-            buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
-            manifestPlaceholders["appScheme"] = appScheme
-            manifestPlaceholders["appHost"] = appHost
-            manifestPlaceholders["knockHost"] = knockHost
         }
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.firstOrNull { it.name == "release" }
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("Boolean", "DEBUG", "false")
-            buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
-            buildConfigField("String", "APP_HOST", "\"$appHost\"")
-            buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
-            manifestPlaceholders["appScheme"] = appScheme
-            manifestPlaceholders["appHost"] = appHost
-            manifestPlaceholders["knockHost"] = knockHost
         }
     }
     compileOptions {
@@ -139,6 +132,7 @@ android {
             version = "3.22.1"
         }
     }
+    ndkVersion = "28.1.13356709"
 }
 
 dependencies {
@@ -156,6 +150,7 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.androidx.adaptive.navigation.suite)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.ui.tooling)
 

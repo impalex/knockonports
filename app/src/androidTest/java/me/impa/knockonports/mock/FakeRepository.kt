@@ -35,6 +35,7 @@ import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.data.settings.AppState
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
 
@@ -64,6 +65,10 @@ object FakeRepository: KnocksRepository {
     }
 
     override suspend fun getSequenceName(id: Long): String? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteSequenceById(id: Long): Int {
         TODO("Not yet implemented")
     }
 
@@ -126,20 +131,10 @@ object FakeRepository: KnocksRepository {
         TODO("Not yet implemented")
     }
 
-    override fun getKnockCount(): State<Long> = mutableStateOf(100)
-
-    override fun doNotAskAboutNotifications(): State<Boolean> = mutableStateOf(true)
-
     override fun setDoNotAskAboutNotificationsFlag() {
         TODO("Not yet implemented")
 
     }
-
-    override fun getFirstLaunchV2(): State<Boolean> = mutableStateOf(false)
-
-    override fun getAskReviewTime(): State<Long> = mutableStateOf(0)
-
-    override fun getDoNotAskForReview(): State<Boolean> = mutableStateOf(true)
 
     override fun postponeReviewRequest(time: Long) {
         TODO("Not yet implemented")
@@ -149,9 +144,10 @@ object FakeRepository: KnocksRepository {
         TODO("Not yet implemented")
     }
 
-    override fun isInstalledFromPlayStore(): State<Boolean> = mutableStateOf(true)
-
     override fun clearFirstLaunchV2() {
         TODO("Not yet implemented")
     }
+
+    override fun getAppState(): StateFlow<AppState> =
+        MutableStateFlow(AppState())
 }
