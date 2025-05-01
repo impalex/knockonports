@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports
@@ -27,21 +21,19 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toDrawable
-import androidx.glance.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -51,11 +43,12 @@ import me.impa.knockonports.constants.EXTRA_VALUE_SOURCE_SHORTCUT
 import me.impa.knockonports.constants.EXTRA_VALUE_SOURCE_WIDGET
 import me.impa.knockonports.constants.INVALID_SEQ_ID
 import me.impa.knockonports.data.KnocksRepository
+import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.shortcutId
-import me.impa.knockonports.knock.KnockHelper
-import me.impa.knockonports.knock.KnockerService
+import me.impa.knockonports.service.sequence.KnockHelper
+import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import timber.log.Timber
 import javax.inject.Inject
@@ -73,6 +66,9 @@ class StartKnockingActivity : ComponentActivity() {
     @Inject
     lateinit var knockHelper: KnockHelper
 
+    @Inject
+    lateinit var settingsDataStore: SettingsDataStore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(0.toDrawable())
@@ -88,10 +84,10 @@ class StartKnockingActivity : ComponentActivity() {
         }
 
         setContent {
-            val theme by repository.getThemeSettings().collectAsState()
-            val settings by repository.getAppSettings().collectAsState()
+            val widgetConfirmation by settingsDataStore.widgetConfirmation.collectAsStateWithLifecycle(initialValue = false)
+            val theme by settingsDataStore.themeSettings.collectAsStateWithLifecycle(initialValue = ThemeConfig())
             KnockOnPortsTheme(config = theme) {
-                if (source == EXTRA_VALUE_SOURCE_WIDGET && settings.widgetConfirmation) {
+                if (source == EXTRA_VALUE_SOURCE_WIDGET && widgetConfirmation) {
                     var sequenceName by rememberSaveable { mutableStateOf<String?>(null) }
                     LaunchedEffect(sequenceId) {
                         withContext(ioDispatcher) {

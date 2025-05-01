@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 import java.io.FileInputStream
@@ -71,8 +65,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 35
-        versionCode = 211
-        versionName = "2.0.7"
+        versionCode = 216
+        versionName = "2.0.8"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -84,15 +78,14 @@ android {
                 arguments("-DANDROID_STL=c++_shared")
             }
         }
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
         buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
         buildConfigField("String", "APP_HOST", "\"$appHost\"")
         buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
-        manifestPlaceholders["appScheme"] = appScheme
-        manifestPlaceholders["appHost"] = appHost
-        manifestPlaceholders["knockHost"] = knockHost
+        manifestPlaceholders.putAll(mapOf(
+            "appScheme" to appScheme,
+            "appHost" to appHost,
+            "knockHost" to knockHost
+        ))
     }
 
     buildFeatures {
@@ -101,12 +94,13 @@ android {
 
     buildTypes {
         debug {
+            signingConfig = signingConfigs.findByName("debug")
             isMinifyEnabled = false
             isDebuggable = true
             buildConfigField("Boolean", "DEBUG", "true")
         }
         release {
-            signingConfig = signingConfigs.firstOrNull { it.name == "release" }
+            signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("Boolean", "DEBUG", "false")
@@ -133,6 +127,9 @@ android {
         }
     }
     ndkVersion = "28.1.13356709"
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -149,7 +146,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material.icons.extended.android)
     implementation(libs.androidx.adaptive.navigation.suite)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.ui.tooling)
@@ -158,6 +154,9 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    // Datastore
+    implementation(libs.datastore.preferences)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -208,7 +207,8 @@ tasks {
 
 tasks.register("generateReleaseChangeLog") {
     doLast {
-        val changeLogFile = File("$rootDir/fastlane/metadata/android/en-US/changelogs/${android.defaultConfig.versionCode}.txt")
+        val changeLogFile = File("$rootDir/fastlane/metadata/android/en-US/changelogs/" +
+                "${android.defaultConfig.versionCode}.txt")
         println("Generating changelog for version ${android.defaultConfig.versionCode} from $changeLogFile")
         val outputDir = File("${layout.buildDirectory.get()}/outputs/changelog")
         val outputFileName = "changelog.txt"

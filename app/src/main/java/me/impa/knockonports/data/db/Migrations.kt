@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2018-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 @file:Suppress("MagicNumber", "LongMethod", "NestedBlockDepth", "LoopWithTooManyJumpStatements")
@@ -28,9 +22,11 @@ import android.content.Context
 import android.util.Base64
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import me.impa.knockonports.constants.DEFAULT_CHECK_RETRIES
+import me.impa.knockonports.constants.DEFAULT_CHECK_TIMEOUT
 import me.impa.knockonports.data.db.converter.DataConverters
 import me.impa.knockonports.data.type.IcmpType
-import me.impa.knockonports.util.AppData
+import me.impa.knockonports.helper.AppData
 
 class Migrations {
     class Migration1To2 : Migration(1, 2) {
@@ -335,4 +331,30 @@ class Migrations {
             database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_uri` TEXT")
         }
     }
+
+    class Migration20To21 : Migration(20, 21) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_group` TEXT")
+        }
+    }
+
+    class Migration21To22 : Migration(21, 22) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_access` INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_type` INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_port` INTEGER")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_host` TEXT")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_timeout` INTEGER NOT NULL " +
+                    "DEFAULT $DEFAULT_CHECK_TIMEOUT")
+        }
+    }
+
+    class Migration22To23 : Migration(22, 23) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_post_knock` INTEGER NOT NULL DEFAULT 0")
+            database.execSQL("ALTER TABLE `tbSequence` ADD COLUMN `_check_retries` INTEGER NOT NULL " +
+                    "DEFAULT $DEFAULT_CHECK_RETRIES")
+        }
+    }
+
 }

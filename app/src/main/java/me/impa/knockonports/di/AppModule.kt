@@ -1,30 +1,23 @@
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.di
 
 import android.content.ContentResolver
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -48,6 +41,9 @@ import me.impa.knockonports.data.db.Migrations.Migration17To18
 import me.impa.knockonports.data.db.Migrations.Migration18To19
 import me.impa.knockonports.data.db.Migrations.Migration19To20
 import me.impa.knockonports.data.db.Migrations.Migration1To2
+import me.impa.knockonports.data.db.Migrations.Migration20To21
+import me.impa.knockonports.data.db.Migrations.Migration21To22
+import me.impa.knockonports.data.db.Migrations.Migration22To23
 import me.impa.knockonports.data.db.Migrations.Migration2To3
 import me.impa.knockonports.data.db.Migrations.Migration3To4
 import me.impa.knockonports.data.db.Migrations.Migration4To5
@@ -62,8 +58,8 @@ import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.DeviceStateImpl
-import me.impa.knockonports.data.settings.SettingsRepository
-import me.impa.knockonports.data.settings.SettingsRepositoryImpl
+import me.impa.knockonports.data.settings.SettingsDataStore
+import me.impa.knockonports.data.settings.SettingsDataStoreImpl
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -110,7 +106,10 @@ object AppModule {
                 Migration16To17(),
                 Migration17To18(),
                 Migration18To19(),
-                Migration19To20()
+                Migration19To20(),
+                Migration20To21(),
+                Migration21To22(),
+                Migration22To23()
             )
             .build()
     }
@@ -123,7 +122,6 @@ object AppModule {
         sequenceDao: SequenceDao,
         fileRepository: FileRepository,
         eventHolder: SharedEventHolder,
-        settingsRepository: SettingsRepository,
         widgetRepository: KnocksWidgetRepository
     ): KnocksRepository {
         return KnocksRepositoryImpl(
@@ -131,7 +129,6 @@ object AppModule {
             sequenceDao = sequenceDao,
             fileRepository = fileRepository,
             eventHolder = eventHolder,
-            settingsRepository = settingsRepository,
             widgetRepository = widgetRepository
         )
     }
@@ -156,16 +153,9 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("me.impa.knockonports_preferences", Context.MODE_PRIVATE)
+    fun provideSettingsState(@ApplicationContext context: Context): SettingsDataStore {
+        return SettingsDataStoreImpl(context)
     }
-
-    @Provides
-    @Singleton
-    fun provideSettingsRepository(
-        sharedPreferences: SharedPreferences,
-        deviceState: DeviceState
-    ): SettingsRepository = SettingsRepositoryImpl(sharedPreferences, deviceState)
 
     @Provides
     @IoDispatcher

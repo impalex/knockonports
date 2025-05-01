@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.screen.component.settings
@@ -29,20 +23,30 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.collections.immutable.toPersistentMap
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.CHECK_PERIOD_STEP
+import me.impa.knockonports.constants.MAX_CHECK_PERIOD
 import me.impa.knockonports.constants.MAX_IP4_HEADER_SIZE
+import me.impa.knockonports.constants.MIN_CHECK_PERIOD
 import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
-import me.impa.knockonports.data.settings.AppSettings
+import me.impa.knockonports.constants.MS_IN_SECOND
 import me.impa.knockonports.data.settings.Ipv4ProviderMap
 import me.impa.knockonports.data.settings.Ipv6ProviderMap
 import me.impa.knockonports.data.settings.PROVIDER_CUSTOM
+import me.impa.knockonports.screen.component.common.HeaderSection
+import me.impa.knockonports.screen.component.common.PrefCustomProviderEditor
+import me.impa.knockonports.screen.component.common.PrefMultiSelection
+import me.impa.knockonports.screen.component.common.PrefStepSlider
+import me.impa.knockonports.screen.component.common.PrefSwitch
+import me.impa.knockonports.screen.viewmodel.state.settings.SettingsUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 
 fun LazyListScope.generalSection(
-    config: AppSettings,
+    config: SettingsUiState,
     onEvent: (UiEvent) -> Unit = {}
 ) {
     item(key = "general") {
@@ -75,6 +79,21 @@ fun LazyListScope.generalSection(
     if (config.detectPublicIP) {
         ipvSection(config, onEvent)
     }
+    item(key = "resource_check_interval") {
+        val periodInSeconds = config.resourceCheckPeriod / MS_IN_SECOND
+        PrefStepSlider(
+            title = stringResource(R.string.title_settings_resource_check_interval),
+            description = pluralStringResource(
+                R.plurals.text_settings_resource_check_interval,
+                periodInSeconds, periodInSeconds
+            ),
+            value = config.resourceCheckPeriod,
+            minValue = MIN_CHECK_PERIOD,
+            maxValue = MAX_CHECK_PERIOD,
+            steps = (MAX_CHECK_PERIOD - MIN_CHECK_PERIOD) / CHECK_PERIOD_STEP,
+            onChanged = { onEvent(UiEvent.SetResourceCheckPeriod(it)) }
+        )
+    }
     item(key = "enable_custom_ip4_hdr") {
         PrefSwitch(
             title = stringResource(R.string.title_settings_enable_custom_ip_hdr),
@@ -99,7 +118,7 @@ fun LazyListScope.generalSection(
 }
 
 private fun LazyListScope.ipvSection(
-    config: AppSettings,
+    config: SettingsUiState,
     onEvent: (UiEvent) -> Unit
 ) {
     item(key = "ipv4_service") {
@@ -144,6 +163,19 @@ private fun LazyListScope.ipvSection(
 @Composable
 fun PreviewGeneralSection() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        generalSection(AppSettings(detectPublicIP = true))
+        generalSection(
+            SettingsUiState(
+                widgetConfirmation = false,
+                detectPublicIP = false,
+                ipv4Service = PROVIDER_CUSTOM,
+                ipv6Service = PROVIDER_CUSTOM,
+                customIpv4Service = "",
+                customIpv6Service = "",
+                detailedListView = false,
+                customIp4Header = false,
+                ip4HeaderSize = 20,
+                resourceCheckPeriod = 5000
+            )
+        )
     }
 }

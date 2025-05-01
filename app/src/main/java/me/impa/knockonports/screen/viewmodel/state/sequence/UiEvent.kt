@@ -1,27 +1,22 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.screen.viewmodel.state.sequence
 
+import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.data.type.ContentEncodingType
 import me.impa.knockonports.data.type.IcmpType
 import me.impa.knockonports.data.type.ProtocolVersionType
@@ -29,6 +24,7 @@ import me.impa.knockonports.data.type.SequenceStepType
 
 sealed interface UiEvent {
     data class UpdateTitle(val title: String) : UiEvent
+    data class UpdateGroup(val group: String) : UiEvent
     data class UpdateHost(val host: String) : UiEvent
     data object AddStep : UiEvent
     data object ResetNewStepId : UiEvent
@@ -47,4 +43,11 @@ sealed interface UiEvent {
     data class UpdateIcmpType(val icmpType: IcmpType) : UiEvent
     data class UpdateTtl(val ttl: Int?) : UiEvent
     data class UpdateUri(val uri: String) : UiEvent
+    data object ToggleCheckAccess : UiEvent
+    data class UpdateCheckAccessType(val checkAccessType: CheckAccessType) : UiEvent
+    data class UpdateCheckAccessHost(val host: String) : UiEvent
+    data class UpdateCheckAccessPort(val port: Int?) : UiEvent
+    data class UpdateCheckAccessTimeout(val timeout: Int) : UiEvent
+    data object ToggleCheckAccessPostKnock : UiEvent
+    data class UpdateCheckAccessMaxRetries(val retries: Int) : UiEvent
 }

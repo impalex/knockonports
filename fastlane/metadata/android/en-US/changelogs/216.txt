@@ -1,0 +1,3 @@
+Resource Monitoring. Link sequences to external resources (ping, port, URL) with automatic availability checks. If the resource remains unavailable after knocking, the app will retry (configurable).
+Sequence Groups. Organize configurations into groups for better management.
+Edge-to-edge support for seamless display on devices with full-screen designs.

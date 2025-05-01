@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2018-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.data.db.converter
@@ -25,6 +19,7 @@ package me.impa.knockonports.data.db.converter
 import android.util.Base64
 import androidx.room.TypeConverter
 import me.impa.knockonports.data.model.SequenceStep
+import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.data.type.ContentEncodingType
 import me.impa.knockonports.data.type.DescriptionType
 import me.impa.knockonports.data.type.EventType
@@ -78,15 +73,13 @@ class DataConverters {
         data?.split(DATA_SEPARATOR)?.map { URLDecoder.decode(it, "utf-8") }?.toList()
 
     @TypeConverter
-    fun intToIcmpType(data: Int?): IcmpType? = if (data == null) null else IcmpType.fromOrdinal(data)
+    fun intToIcmpType(data: Int?): IcmpType? = data?.let { IcmpType.fromOrdinal(data) }
 
     @TypeConverter
     fun icmpTypeToInt(data: IcmpType?): Int? = data?.ordinal
 
     @TypeConverter
-    fun intToDescriptionType(
-        data: Int?
-    ): DescriptionType? = if (data == null) null else DescriptionType.fromOrdinal(data)
+    fun intToDescriptionType(data: Int?): DescriptionType? = data?.let { DescriptionType.fromOrdinal(data) }
 
     @TypeConverter
     fun descriptionTypeToInt(data: DescriptionType?): Int? = data?.ordinal
@@ -98,12 +91,16 @@ class DataConverters {
     fun eventTypeToInt(data: EventType?): Int? = data?.ordinal
 
     @TypeConverter
-    fun intToProtocolVersionType(
-        data: Int?
-    ): ProtocolVersionType? = if (data == null) null else ProtocolVersionType.fromOrdinal(data)
+    fun intToProtocolVersionType(data: Int?): ProtocolVersionType? = data?.let { ProtocolVersionType.fromOrdinal(data) }
 
     @TypeConverter
     fun protocolVersionTypeToInt(data: ProtocolVersionType?): Int? = data?.ordinal
+
+    @TypeConverter
+    fun intToCheckAccessType(data: Int?): CheckAccessType? = data?.let { CheckAccessType.fromOrdinal(data) }
+
+    @TypeConverter
+    fun checkAccessTypeToInt(data: CheckAccessType?): Int? = data?.ordinal
 
     companion object {
         const val VALUE_SEPARATOR = ':'

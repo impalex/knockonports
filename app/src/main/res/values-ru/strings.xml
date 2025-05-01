@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2024-2025 Alexander Yaburov
   ~
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License.  You may obtain a copy of the License at
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing,
-  ~ software distributed under the License is distributed on an
-  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
-  ~ specific language governing permissions and limitations
-  ~ under the License.
-  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
   -->
 
 <resources>
@@ -209,4 +203,42 @@
     <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d байт (IP заголовок — %2$d, ICMP заголовок — %3$d, данные — %4$d)</string>
     <string name="title_settings_discord">Сервер Discord</string>
     <string name="text_settings_discord">Место, где я притворяюсь, что работаю.</string>
+    <string name="field_group">Группа</string>
+    <string name="field_url">URL</string>
+    <string name="title_beta_alert">Бета-версия</string>
+    <string name="text_beta_alert">В эту бета-версию добавлена возможность связать последовательность с внешним ресурсом. При необходимости приложение может отслеживать доступность этого ресурса. Буду благодарен за фидбэк, пожелания и найденные баги. Фидбэк принимается на GitHub, емайл или Discord - все контакты можно найти в разделе \"О приложении\".</string>
+    <string name="title_header_sequence_packet_cfg">Пакеты</string>
+    <string name="title_header_sequence_post_knock">Действия после стука</string>
+    <string name="title_header_sequence_access_check">Связь с ресурсом</string>
+    <string name="title_check_access_enable">Проверять доступ</string>
+    <string name="text_check_access_enable">Периодически проверять доступность ресурса.</string>
+    <string name="type_check_access_url">URL</string>
+    <string name="type_check_access_port">Порт</string>
+    <string name="type_check_access_ping">Пинг</string>
+    <string name="title_check_access_post_knock">Повторять стук</string>
+    <string name="text_check_access_post_knock">Повторять последовательность, если ресурс не доступен после стука.</string>
+    <string name="text_error_unknown">Неизвестная ошибка</string>
+    <string name="text_error_http_code">Ошибка HTTP: %d</string>
+    <string name="text_error_no_response">Нет ответа</string>
+    <string name="text_resource_available">Доступно</string>
+    <string name="text_resource_checking">Проверка…</string>
+    <string name="title_check_access_timeout">Тайм-аут</string>
+    <plurals name="text_check_access_timeout">
+        <item quantity="one">%d секунда</item>
+        <item quantity="few">%d секунды</item>
+        <item quantity="many">%d секунд</item>
+    </plurals>
+    <string name="title_check_access_retries">Лимит попыток</string>
+    <plurals name="text_check_access_retries">
+        <item quantity="one">%d попытка</item>
+        <item quantity="few">%d попытки</item>
+        <item quantity="many">%d попыток</item>
+    </plurals>
+    <string name="title_settings_resource_check_interval">Периодичность проверки ресурсов</string>
+    <plurals name="text_settings_resource_check_interval">
+        <item quantity="one">Каждые %d секунду</item>
+        <item quantity="few">Каждые %d секунды</item>
+        <item quantity="many">Каждые %d секунд</item>
+    </plurals>
+
 </resources>

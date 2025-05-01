@@ -1,24 +1,16 @@
 /*
- * Copyright (c) 2018-2025 Alexander Yaburov
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
- */
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+*/
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "hicpp-member-init"
@@ -324,7 +316,7 @@ int send_udp_packet(int family, const char *host, const int ttl, const int port,
     return EXIT_SUCCESS;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_ping(JNIEnv *env, jobject  __unused thiz, jstring address, jint ttl, jint size, jint count, jbyteArray pattern, jint sleep) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_ping(JNIEnv *env, jobject  __unused thiz, jstring address, jint ttl, jint size, jint count, jbyteArray pattern, jint sleep) {
     const char *n_address = env->GetStringUTFChars(address, NULL);
 
     jbyte *const n_pattern = env->GetByteArrayElements(pattern, NULL);
@@ -338,7 +330,7 @@ extern "C" jint Java_me_impa_knockonports_knock_Knocker_ping(JNIEnv *env, jobjec
     return result;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_ping6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint size, jint count, jbyteArray pattern, jint sleep) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_ping6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint size, jint count, jbyteArray pattern, jint sleep) {
     const char *n_host = env->GetStringUTFChars(host, NULL);
 
     jbyte *const n_pattern = env->GetByteArrayElements(pattern, NULL);
@@ -352,7 +344,7 @@ extern "C" jint Java_me_impa_knockonports_knock_Knocker_ping6(JNIEnv *env, jobje
     return result;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendtcp(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_sendtcp(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port) {
     const char *n_host = env->GetStringUTFChars(host, NULL);
 
     int result = send_tcp_packet(AF_INET, n_host, ttl, port);
@@ -362,7 +354,7 @@ extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendtcp(JNIEnv *env, job
     return result;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendtcp6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_sendtcp6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port) {
     const char *n_host = env->GetStringUTFChars(host, NULL);
 
     int result = send_tcp_packet(AF_INET6, n_host, ttl, port);
@@ -372,7 +364,7 @@ extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendtcp6(JNIEnv *env, jo
     return result;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendudp(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port, jint local_port, jbyteArray data) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_sendudp(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port, jint local_port, jbyteArray data) {
     const char *n_host = env->GetStringUTFChars(host, NULL);
 
     jbyte *const n_data = env->GetByteArrayElements(data, NULL);
@@ -386,7 +378,7 @@ extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendudp(JNIEnv *env, job
     return result;
 }
 
-extern "C" jint Java_me_impa_knockonports_knock_Knocker_sendudp6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port, jint local_port, jbyteArray data) {
+extern "C" jint Java_me_impa_knockonports_service_sequence_Knocker_sendudp6(JNIEnv *env, jobject  __unused thiz, jstring host, jint ttl, jint port, jint local_port, jbyteArray data) {
     const char *n_host = env->GetStringUTFChars(host, NULL);
 
     jbyte *const n_data = env->GetByteArrayElements(data, NULL);

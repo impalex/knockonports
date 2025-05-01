@@ -1,27 +1,23 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.extension
 
+import me.impa.knockonports.constants.DEFAULT_CHECK_RETRIES
+import me.impa.knockonports.constants.DEFAULT_CHECK_TIMEOUT
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.json.LegacySequencesData
 import me.impa.knockonports.data.json.SequenceEntryDataV1
@@ -29,6 +25,7 @@ import me.impa.knockonports.data.json.SequenceStepDataV1
 import me.impa.knockonports.data.json.SequencesData
 import me.impa.knockonports.data.json.SequencesDataV1
 import me.impa.knockonports.data.model.SequenceStep
+import me.impa.knockonports.data.type.CheckAccessType
 
 /**
  * Converts a [SequencesData] object to a list of [Sequence] objects.
@@ -63,6 +60,16 @@ fun List<Sequence>.asJsonData(): SequencesData = SequencesDataV1(
             icmpType = it.icmpType,
             ipv = it.ipv,
             localPort = it.localPort,
+            ttl = it.ttl,
+            uri = it.uri,
+            group = it.group,
+            checkAccess = it.checkAccess,
+            checkType = it.checkType,
+            checkPort = it.checkPort,
+            checkHost = it.checkHost,
+            checkTimeout = it.checkTimeout,
+            checkPostKnock = it.checkPostKnock,
+            checkMaxRetries = it.checkRetries,
             steps = it.steps?.map { step ->
                 SequenceStepDataV1(
                     type = step.type,
@@ -102,6 +109,14 @@ private fun legacyToSequenceList(legacySequencesData: LegacySequencesData): List
             localPort = sequence.localPort,
             ttl = null,
             uri = null,
+            group = null,
+            checkAccess = false,
+            checkType = CheckAccessType.URL,
+            checkPort = null,
+            checkHost = null,
+            checkTimeout = DEFAULT_CHECK_TIMEOUT,
+            checkPostKnock = false,
+            checkRetries = DEFAULT_CHECK_RETRIES,
             steps = sequence.steps.map { step ->
                 SequenceStep(
                     type = step.type,
@@ -142,6 +157,14 @@ private fun v1ToSequenceList(v1SequencesData: SequencesDataV1): List<Sequence> =
             localPort = sequence.localPort,
             ttl = sequence.ttl,
             uri = sequence.uri,
+            group = sequence.group,
+            checkAccess = sequence.checkAccess,
+            checkType = sequence.checkType,
+            checkPort = sequence.checkPort,
+            checkHost = sequence.checkHost,
+            checkTimeout = sequence.checkTimeout,
+            checkPostKnock = sequence.checkPostKnock,
+            checkRetries = sequence.checkMaxRetries,
             steps = sequence.steps.map { step ->
                 SequenceStep(
                     type = step.type,

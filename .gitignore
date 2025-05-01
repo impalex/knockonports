@@ -1,6 +1,6 @@
 *.iml
 .gradle
-/local.properties
+local.properties
 .DS_Store
 /build
 /captures
@@ -13,7 +13,6 @@ Gemfile
 Gemfile.lock
 fastlane/Appfile
 .kotlin/
-*.iml
 .idea
 !.idea/modules.xml
 !.idea/runConfigurations

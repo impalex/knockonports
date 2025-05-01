@@ -1,28 +1,23 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.extension
 
 import me.impa.knockonports.R
+import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.data.type.ContentEncodingType
 import me.impa.knockonports.data.type.EventType
 import me.impa.knockonports.data.type.IcmpType
@@ -113,4 +108,18 @@ fun EventType.stringResourceId() = when (this) {
     EventType.ERROR_INVALID_HOST -> R.string.log_error_invalid_host
     EventType.ERROR_RESOLVE_HOST -> R.string.log_error_resolve_host
     EventType.ERROR_EMPTY_SEQUENCE -> R.string.log_error_empty_sequence
+}
+
+/**
+ * Returns the string resource ID associated with the [CheckAccessType].
+ *
+ * This extension function provides a convenient way to map each [CheckAccessType]
+ * to its corresponding string resource for display or other purposes.
+ *
+ * @return The string resource ID ([R.string]) that represents the [CheckAccessType].
+ */
+fun CheckAccessType.stringResourceId() = when (this) {
+    CheckAccessType.URL -> R.string.type_check_access_url
+    CheckAccessType.PORT -> R.string.type_check_access_port
+    CheckAccessType.PING -> R.string.type_check_access_ping
 }

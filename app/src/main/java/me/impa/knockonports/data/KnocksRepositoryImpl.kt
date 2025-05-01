@@ -1,42 +1,33 @@
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.data
 
 import android.net.Uri
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import me.impa.knockonports.data.db.dao.LogEntryDao
 import me.impa.knockonports.data.db.dao.SequenceDao
+import me.impa.knockonports.data.db.entity.CheckAccessData
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
 import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
-import me.impa.knockonports.data.settings.AppSettings
-import me.impa.knockonports.data.settings.AppState
-import me.impa.knockonports.data.settings.SettingsRepository
-import me.impa.knockonports.ui.config.ThemeConfig
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Repository class responsible for managing data related to knocks and sequences.
@@ -49,7 +40,6 @@ import javax.inject.Singleton
  * @property fileRepository Repository for handling file-related operations, specifically reading and
  *           writing sequences to/from files.
  * @property eventHolder Holds and manages shared events within the application.
- * @property settingsRepository Repository for managing application and theme settings.
  * @property widgetRepository Repository for interacting with the Knocks widget (updating its state).
  */
 @Suppress("TooManyFunctions")
@@ -58,12 +48,13 @@ class KnocksRepositoryImpl @Inject constructor(
     private val sequenceDao: SequenceDao,
     private val fileRepository: FileRepository,
     private val eventHolder: SharedEventHolder,
-    private val settingsRepository: SettingsRepository,
     private val widgetRepository: KnocksWidgetRepository
 ): KnocksRepository {
 
     // region Sequences
-    override fun getSequences() = sequenceDao.findAllSequences()
+    override fun getSequences() = sequenceDao.findAllSequences().distinctUntilChanged()
+
+    override fun getGroupList() = sequenceDao.getGroupList().distinctUntilChanged()
 
     override suspend fun findSequence(id: Long): Sequence? = sequenceDao.findSequenceById(id)
 
@@ -80,7 +71,6 @@ class KnocksRepositoryImpl @Inject constructor(
         sequence.id
     }).also { widgetRepository.updateWidget() }
 
-
     override suspend fun saveSequences(sequences: List<Sequence>) =
         sequenceDao.insertSequences(sequences).also { widgetRepository.updateWidget() }
 
@@ -90,12 +80,16 @@ class KnocksRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSequenceById(id: Long) =
         sequenceDao.deleteSequenceById(id).also { widgetRepository.updateWidget() }
+
+    override fun getAccessResources(): Flow<List<CheckAccessData>> = sequenceDao.getAccessResources()
+
+    override suspend fun getAccessResourceById(id: Long): CheckAccessData? = sequenceDao.getAccessResourceById(id)
     // endregion
 
     // region Log Entries
     override suspend fun saveLogEntry(logEntry: LogEntry) = logEntryDao.insertLogEntry(logEntry)
 
-    override fun getLogEntries() = logEntryDao.logEntriesById()
+    override fun getLogEntries() = logEntryDao.logEntriesById().distinctUntilChanged()
 
     override suspend fun clearLogEntries() = logEntryDao.clearLogEntries()
 
@@ -116,25 +110,4 @@ class KnocksRepositoryImpl @Inject constructor(
 
     override fun clearEvent() = eventHolder.clearEvent()
     // endregion
-
-    // region "Settings"
-    override fun getAppSettings() = settingsRepository.appSettings
-
-    override fun updateAppSettings(newSettings: AppSettings) = settingsRepository.updateAppSettings(newSettings)
-
-    override fun getThemeSettings() = settingsRepository.themeSettings
-
-    override fun updateThemeSettings(newSettings: ThemeConfig) = settingsRepository.updateThemeSettings(newSettings)
-
-    override fun getAppState(): StateFlow<AppState> = settingsRepository.appState
-
-    override fun incrementKnockCount() = settingsRepository.incrementKnockCount()
-
-    override fun setDoNotAskAboutNotificationsFlag() = settingsRepository.setDoNotAskAboutNotificationsFlag()
-
-    override fun postponeReviewRequest(time: Long) = settingsRepository.postponeReviewRequest(time)
-    override fun doNotAskForReview() = settingsRepository.doNotAskForReview()
-    override fun clearFirstLaunchV2() = settingsRepository.clearFirstLaunchV2()
-    // endregion
-
 }

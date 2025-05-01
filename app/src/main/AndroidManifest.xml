@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2018-2025 Alexander Yaburov
   ~
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License.  You may obtain a copy of the License at
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing,
-  ~ software distributed under the License is distributed on an
-  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
-  ~ specific language governing permissions and limitations
-  ~ under the License.
-  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
@@ -42,11 +36,13 @@
         android:xlargeScreens="true"
         tools:ignore="UnusedAttribute" />
 
+    <!-- NOTE: enableOnBackInvokedCallback has issues on Samsung devices (Android 14)
+     check https://issuetracker.google.com/issues/384186542 before enabling it back -->
     <application
         android:name=".KnockOnPortsApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
-        android:enableOnBackInvokedCallback="true"
+        android:enableOnBackInvokedCallback="@bool/atLeastSdk35"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -65,6 +61,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -86,6 +83,7 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -97,8 +95,8 @@
 
         <receiver
             android:name=".widget.KnocksWidgetReceiver"
-            android:label="@string/title_widget"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/title_widget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -107,9 +105,10 @@
                 android:resource="@xml/knocks_widget_info" />
         </receiver>
 
-        <service android:name=".knock.KnockerService"
-            android:foregroundServiceType="shortService"
-            android:exported="false"/>
+        <service
+            android:name=".service.sequence.KnockerService"
+            android:exported="false"
+            android:foregroundServiceType="shortService" />
     </application>
 
 </manifest>

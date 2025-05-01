@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.screen.viewmodel
@@ -32,11 +26,16 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.impa.knockonports.constants.MAX_CHECK_RETRIES
+import me.impa.knockonports.constants.MAX_CHECK_TIMEOUT
 import me.impa.knockonports.constants.MAX_PORT
 import me.impa.knockonports.constants.MAX_SLEEP
 import me.impa.knockonports.constants.MAX_TTL
+import me.impa.knockonports.constants.MIN_CHECK_RETRIES
+import me.impa.knockonports.constants.MIN_CHECK_TIMEOUT
 import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
 import me.impa.knockonports.constants.MIN_PORT
 import me.impa.knockonports.constants.MIN_SLEEP
@@ -45,6 +44,7 @@ import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
+import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.data.type.EventType
 import me.impa.knockonports.data.type.IcmpType
 import me.impa.knockonports.data.type.ProtocolVersionType
@@ -62,7 +62,8 @@ import timber.log.Timber
 @HiltViewModel(assistedFactory = SequenceViewModel.SequenceViewModelFactory::class)
 class SequenceViewModel @AssistedInject constructor(
     @Assisted private var sequenceId: Long?,
-    val repository: KnocksRepository
+    val repository: KnocksRepository,
+    val settingsDataStore: SettingsDataStore
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
@@ -81,7 +82,7 @@ class SequenceViewModel @AssistedInject constructor(
         }
     }
 
-    @Suppress("CyclomaticComplexMethod")
+    @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun onEvent(event: UiEvent) {
         when (event) {
             UiEvent.AddStep -> _state.update {
@@ -132,6 +133,8 @@ class SequenceViewModel @AssistedInject constructor(
                 )
             }
 
+            is UiEvent.UpdateGroup -> _state.update { it.copy(group = event.group) }
+
             is UiEvent.UpdateApp -> _state.update { it.copy(appName = event.appName, appPackage = event.appPackage) }
             is UiEvent.UpdateDelay -> _state.update {
                 it.copy(
@@ -157,6 +160,40 @@ class SequenceViewModel @AssistedInject constructor(
             }
 
             is UiEvent.UpdateUri -> _state.update { it.copy(uri = event.uri) }
+            is UiEvent.ToggleCheckAccess -> _state.update { it.copy(checkAccess = !it.checkAccess) }
+            is UiEvent.UpdateCheckAccessHost -> _state.update {
+                it.copy(
+                    checkAccessHost = event.host,
+                    checkAccessHostValidation = _notEmptyStringValidator.validate(event.host)
+                )
+            }
+
+
+            is UiEvent.UpdateCheckAccessPort -> _state.update {
+                it.copy(
+                    checkAccessPort = event.port,
+                    checkAccessPortValidation = _portValidator.validate(event.port)
+                )
+            }
+
+            is UiEvent.UpdateCheckAccessType -> _state.update { it.copy(checkAccessType = event.checkAccessType) }
+            is UiEvent.UpdateCheckAccessTimeout -> _state.update {
+                it.copy(
+                    checkAccessTimeout =
+                        event.timeout.coerceAtLeast(MIN_CHECK_TIMEOUT).coerceAtMost(MAX_CHECK_TIMEOUT)
+                )
+            }
+
+            UiEvent.ToggleCheckAccessPostKnock -> _state.update {
+                it.copy(checkAccessPostKnock = !it.checkAccessPostKnock)
+            }
+
+            is UiEvent.UpdateCheckAccessMaxRetries -> _state.update {
+                it.copy(
+                    checkAccessKnockRetries =
+                        event.retries.coerceAtLeast(MIN_CHECK_RETRIES).coerceAtMost(MAX_CHECK_RETRIES)
+                )
+            }
         }
     }
 
@@ -183,7 +220,17 @@ class SequenceViewModel @AssistedInject constructor(
                             ttl = sequence.ttl,
                             appName = sequence.applicationName,
                             uri = sequence.uri,
-                            order = sequence.order
+                            group = sequence.group ?: "",
+                            order = sequence.order,
+                            checkAccess = sequence.checkAccess,
+                            checkAccessType = sequence.checkType,
+                            checkAccessPort = sequence.checkPort,
+                            checkAccessHost = sequence.checkHost,
+                            checkAccessTimeout = sequence.checkTimeout
+                                .coerceAtLeast(MIN_CHECK_TIMEOUT).coerceAtMost(MAX_CHECK_TIMEOUT),
+                            checkAccessPostKnock = sequence.checkPostKnock,
+                            checkAccessKnockRetries = sequence.checkRetries
+                                .coerceAtLeast(MIN_CHECK_RETRIES).coerceAtMost(MAX_CHECK_RETRIES)
                         )
                     }
                 } ?: { sequenceId = null }
@@ -219,7 +266,15 @@ class SequenceViewModel @AssistedInject constructor(
                             ipv = it.protocolVersion,
                             ttl = it.ttl,
                             localPort = it.localPort,
-                            uri = it.uri
+                            uri = it.uri,
+                            group = it.group.trim(), // Yes, trim is by design.
+                            checkAccess = it.checkAccess,
+                            checkType = it.checkAccessType,
+                            checkPort = it.checkAccessPort,
+                            checkHost = it.checkAccessHost,
+                            checkTimeout = it.checkAccessTimeout,
+                            checkPostKnock = it.checkAccessPostKnock,
+                            checkRetries = it.checkAccessKnockRetries
                         )
                     }
                 ).also { newId ->
@@ -242,8 +297,22 @@ class SequenceViewModel @AssistedInject constructor(
 
     init {
         sequenceId?.let { loadSequence(id = it) }
-        with(repository.getAppSettings().value) {
-            _state.update { it.copy(ip4HeaderSize = ip4HeaderSize.takeIf { customIp4Header } ?: MIN_IP4_HEADER_SIZE) }
+        viewModelScope.launch {
+            combine(
+                settingsDataStore.customIp4Header,
+                settingsDataStore.ip4HeaderSize
+            ) { customIp4Header, ip4HeaderSize ->
+                if (customIp4Header) ip4HeaderSize else MIN_IP4_HEADER_SIZE
+            }.collect {
+                _state.update { state -> state.copy(ip4HeaderSize = it) }
+            }
+        }
+        viewModelScope.launch {
+            repository.getGroupList().collect {
+                _state.update { state ->
+                    state.copy(groupList = it.map { it.trim() }.filter { it.isNotEmpty() }.toPersistentList())
+                }
+            }
         }
     }
 

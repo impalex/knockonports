@@ -1,23 +1,17 @@
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.screen
@@ -28,9 +22,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,20 +49,23 @@ import com.google.accompanist.permissions.rememberPermissionState
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.POSTPONE_TIME
 import me.impa.knockonports.constants.POSTPONE_TIME_CANCEL
+import me.impa.knockonports.helper.TextResource
+import me.impa.knockonports.helper.openPlayStore
 import me.impa.knockonports.navigation.AppBarState
 import me.impa.knockonports.navigation.AppNavGraph
+import me.impa.knockonports.screen.component.main.BetaAlert
 import me.impa.knockonports.screen.component.main.DeleteSequenceAlert
 import me.impa.knockonports.screen.component.main.FocusedSequenceWatcher
 import me.impa.knockonports.screen.component.main.IntegrationAlert
 import me.impa.knockonports.screen.component.main.ReviewRequestDialog
 import me.impa.knockonports.screen.component.main.SequenceCard
 import me.impa.knockonports.screen.component.main.UpdateAppBar
-import me.impa.knockonports.screen.component.main.UpdateToV2Alert
 import me.impa.knockonports.screen.viewmodel.MainViewModel
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
 import me.impa.knockonports.screen.viewmodel.state.main.UiState
-import me.impa.knockonports.util.openPlayStore
+import me.impa.knockonports.service.resource.ResourceState
+import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import timber.log.Timber
 
@@ -145,7 +143,7 @@ fun MainScreenContent(
     state.focusedSequenceId?.let {
         highLightSequenceId = it
         LaunchedEffect(it, state.sequences) {
-            val index = state.sequences.indexOfFirst { it.id == state.focusedSequenceId }
+            val index = state.sequences.values.flatten().indexOfFirst { it.id == state.focusedSequenceId }
             if (index != -1) {
                 if (listState.layoutInfo.visibleItemsInfo.none { it.key == state.focusedSequenceId })
                     listState.animateScrollToItem(index)
@@ -158,27 +156,48 @@ fun MainScreenContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier.then(Modifier.fillMaxSize()), state = listState
     ) {
-        itemsIndexed(state.sequences, key = { index, sequence -> sequence.id ?: 0L }) { index, sequence ->
-            // Display each sequence as a card
-            SequenceCard(
-                sequence = sequence,
-                state = reorderableListState,
-                isHighLighted = highLightSequenceId == sequence.id,
-                onHighLightFinished = { highLightSequenceId = null },
-                showSequenceDetails = state.detailedList,
-                isShortcutsAvailable = state.areShortcutsAvailable,
-                modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
-                onEvent = onEvent,
-                onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
-                    && !state.disableNotificationRequest
-                ) {
-                    { checkPermission(notificationPermissionState, { onEvent(UiEvent.DisableNotificationRequest) }) }
-                } else {
-                    null
+        val firstGroup = state.sequences.keys.firstOrNull()
+        state.sequences.forEach { group, sequences ->
+            item(key = "group:$group") {
+                if (group.isNotEmpty()) {
+                    if (group == firstGroup)
+                        SequenceGroupHeader(group)
+                    else
+                        ReorderableItem(reorderableListState, key = "group:$group") { SequenceGroupHeader(group) }
                 }
-            )
+            }
+            itemsIndexed(sequences, key = { index, sequence -> sequence.id ?: 0L }) { index, sequence ->
+                // Display each sequence as a card
+                SequenceCard(
+                    sequence = sequence,
+                    resourceState = state.resourceState[sequence.id],
+                    state = reorderableListState,
+                    isHighLighted = highLightSequenceId == sequence.id,
+                    onHighLightFinished = { highLightSequenceId = null },
+                    showSequenceDetails = state.detailedList,
+                    isShortcutsAvailable = state.areShortcutsAvailable,
+                    modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
+                    onEvent = onEvent,
+                    onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
+                        && !state.disableNotificationRequest
+                    ) {
+                        { checkPermission(notificationPermissionState) { onEvent(UiEvent.DisableNotificationRequest) } }
+                    } else {
+                        null
+                    }
+                )
+            }
+
         }
     }
+}
+
+@Composable
+fun SequenceGroupHeader(group: String) {
+    Text(
+        text = group, modifier = Modifier.padding(start = 16.dp, top = 8.dp), maxLines = 1,
+        style = MaterialTheme.typography.titleLarge
+    )
 }
 
 @Composable
@@ -191,7 +210,6 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
             onConfirm = { onEvent(UiEvent.ConfirmDelete) })
 
         is UiOverlay.Automate -> IntegrationAlert(id = overlay.id, onDismiss = { onEvent(UiEvent.ClearOverlay) })
-        is UiOverlay.UpdateToV2 -> UpdateToV2Alert(onDismiss = { onEvent(UiEvent.ClearOverlay) })
         is UiOverlay.Review -> ReviewRequestDialog(
             onDismissRequest = { onEvent(UiEvent.PostponeReviewRequest(POSTPONE_TIME_CANCEL)) },
             onDecline = {
@@ -209,6 +227,8 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
                 }
             }
         )
+
+        UiOverlay.Beta -> BetaAlert(onDismiss = { onEvent(UiEvent.ConfirmBetaMessage) })
     }
 }
 
@@ -216,7 +236,7 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
 @Composable
 fun PreviewMainScreen() {
     MainScreenContent(
-        UiState(sequences = PreviewData.mockSequences),
+        UiState(sequences = PreviewData.mockGroupedSequences),
         onEvent = {},
         modifier = Modifier
     )
@@ -231,6 +251,7 @@ fun PreviewSequenceCard() {
         item {
             SequenceCard(
                 PreviewData.mockSequences[0],
+                resourceState = ResourceState.Available(),
                 state = reorderableListState,
                 isShortcutsAvailable = true,
                 showSequenceDetails = true
@@ -248,6 +269,7 @@ fun PreviewCompactSequenceCard() {
         item {
             SequenceCard(
                 PreviewData.mockSequences[2],
+                resourceState = ResourceState.Unavailable(TextResource.PlainText("Unavailable")),
                 state = reorderableListState,
                 isShortcutsAvailable = true,
                 showSequenceDetails = false

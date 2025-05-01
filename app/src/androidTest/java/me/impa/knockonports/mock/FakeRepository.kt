@@ -1,43 +1,31 @@
 /*
  * Copyright (c) 2025 Alexander Yaburov
  *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package me.impa.knockonports.mock
 
 import android.net.Uri
-import android.os.Build
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import me.impa.knockonports.data.KnocksRepository
+import me.impa.knockonports.data.db.entity.CheckAccessData
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
-import me.impa.knockonports.data.settings.AppSettings
-import me.impa.knockonports.data.settings.AppState
-import me.impa.knockonports.ui.config.DarkMode
-import me.impa.knockonports.ui.config.ThemeConfig
 
 object FakeRepository: KnocksRepository {
     override fun getSequences(): Flow<List<Sequence>> {
@@ -76,6 +64,18 @@ object FakeRepository: KnocksRepository {
         TODO("Not yet implemented")
     }
 
+    override fun getGroupList(): Flow<List<String>> {
+        return flowOf(listOf("Group 1"))
+    }
+
+    override fun getAccessResources(): Flow<List<CheckAccessData>> {
+        return flowOf(emptyList())
+    }
+
+    override suspend fun getAccessResourceById(id: Long): CheckAccessData? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun saveLogEntry(logEntry: LogEntry): Long {
         TODO("Not yet implemented")
     }
@@ -111,43 +111,4 @@ object FakeRepository: KnocksRepository {
         TODO("Not yet implemented")
     }
 
-    override fun getAppSettings(): StateFlow<AppSettings> = MutableStateFlow(AppSettings())
-
-    override fun updateAppSettings(newSettings: AppSettings) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getThemeSettings(): StateFlow<ThemeConfig> {
-        return MutableStateFlow(ThemeConfig(
-            useDynamicColors =  Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        ))
-    }
-
-    override fun updateThemeSettings(newSettings: ThemeConfig) {
-        TODO("Not yet implemented")
-    }
-
-    override fun incrementKnockCount() {
-        TODO("Not yet implemented")
-    }
-
-    override fun setDoNotAskAboutNotificationsFlag() {
-        TODO("Not yet implemented")
-
-    }
-
-    override fun postponeReviewRequest(time: Long) {
-        TODO("Not yet implemented")
-    }
-
-    override fun doNotAskForReview() {
-        TODO("Not yet implemented")
-    }
-
-    override fun clearFirstLaunchV2() {
-        TODO("Not yet implemented")
-    }
-
-    override fun getAppState(): StateFlow<AppState> =
-        MutableStateFlow(AppState())
 }

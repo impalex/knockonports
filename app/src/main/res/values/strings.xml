@@ -1,23 +1,17 @@
 <!--
   ~ Copyright (c) 2024-2025 Alexander Yaburov
   ~
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements.  See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership.  The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License.  You may obtain a copy of the License at
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
-  ~ Unless required by applicable law or agreed to in writing,
-  ~ software distributed under the License is distributed on an
-  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-  ~ KIND, either express or implied.  See the License for the
-  ~ specific language governing permissions and limitations
-  ~ under the License.
-  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
   -->
 
 <resources>
@@ -205,6 +199,11 @@
     <string name="text_settings_enable_custom_ip_hdr">Specify the IP header size on your network</string>
     <string name="title_settings_ip4_hdr_size">IPv4 Header Size</string>
     <string name="text_settings_ip4_hdr_size">%d bytes</string>
+    <string name="title_settings_resource_check_interval">Resource Check Interval</string>
+    <plurals name="text_settings_resource_check_interval">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
     <string name="title_custom_ip4hdr_alert">Warning!</string>
     <string name="text_custom_ip4hdr_alert"><![CDATA[
 ⚠️ <b>Proceed with caution!</b><br><br>
@@ -223,4 +222,33 @@ For most users: <b>do not change this setting</b>.
     <string name="title_settings_discord">Discord Server</string>
     <string name="text_settings_discord">A place where I pretend to work.</string>
     <string name="discord_invite" translatable="false">https://discord.com/invite/AXT5dXkjEQ</string>
+    <string name="field_group">Group</string>
+    <string name="field_url">URL</string>
+    <string name="title_beta_alert">Beta Version</string>
+    <string name="text_beta_alert">This beta version adds the ability to link a sequence to an external resource. If necessary, the application can monitor the availability of this resource. I will be grateful for feedback, suggestions and any bugs found. Feedback is accepted on GitHub, email or Discord - all contacts can be found in the “About” section.</string>
+    <string name="title_header_sequence_packet_cfg">Packets</string>
+    <string name="title_header_sequence_post_knock">Post-knock Actions</string>
+    <string name="title_header_sequence_access_check">Linked Resource</string>"
+    <string name="title_check_access_enable">Access Check</string>
+    <string name="text_check_access_enable">Periodically check the availability of the selected resource.</string>
+    <string name="type_check_access_url">URL</string>
+    <string name="type_check_access_port">Port</string>
+    <string name="type_check_access_ping">Ping</string>
+    <string name="title_check_access_timeout">Timeout</string>
+    <plurals name="text_check_access_timeout">
+        <item quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+    <string name="title_check_access_post_knock">Retry knocking</string>
+    <string name="text_check_access_post_knock">Retry if the resource does not become available after knocking.</string>
+    <string name="title_check_access_retries">Max Retries</string>
+    <plurals name="text_check_access_retries">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d times</item>
+    </plurals>
+    <string name="text_error_unknown">Unknown error</string>
+    <string name="text_error_http_code">HTTP error: %d</string>
+    <string name="text_error_no_response">No response</string>
+    <string name="text_resource_available">Available</string>
+    <string name="text_resource_checking">Checking…</string>
 </resources>
