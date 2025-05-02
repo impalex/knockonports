@@ -1,0 +1,79 @@
+name: Build and Publish release
+
+on:
+  release:
+    types: [published]
+    
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Git tag (e.g., v1.0.0)'
+        required: true
+
+env:
+  RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
+  BUILD_TOOLS_VERSION: ${{ vars.BUILD_TOOLS_VERSION }}
+        
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: 17
+
+    - name: Install Build Tools
+      run: |
+        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;$BUILD_TOOLS_VERSION"
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Build APK and AAB
+      run: |
+        ./gradlew assembleRelease bundleRelease
+    
+    - name: Generate Changelog
+      run: |
+        ./gradlew generateReleaseChangeLog
+    
+    - name: Sign APK
+      uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: app/build/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+        
+    - name: Sign AAB
+      uses: r0adkll/sign-android-release@v1
+      with:
+        releaseDirectory: app/build/outputs/bundle/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+        
+    - name: Rename APK and AAB
+      run: |
+        mv app/build/outputs/apk/release/app-release-unsigned-signed.apk \
+           app/build/outputs/apk/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
+        mv app/build/outputs/bundle/release/app-release.aab \
+           app/build/outputs/bundle/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
+
+    - name: Upload Release Assets
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ env.RELEASE_TAG }}
+        name: Release ${{ env.RELEASE_TAG }}
+        body_path: app/build/outputs/changelog/changelog.txt
+        files: |
+          app/build/outputs/apk/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
+          app/build/outputs/bundle/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
