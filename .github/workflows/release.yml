@@ -12,7 +12,6 @@ on:
 
 env:
   RELEASE_TAG: ${{ github.event.inputs.tag || github.ref_name }}
-  BUILD_TOOLS_VERSION: ${{ vars.BUILD_TOOLS_VERSION }}
         
 jobs:
   build:
@@ -28,12 +27,22 @@ jobs:
         distribution: 'zulu'
         java-version: 17
 
-    - name: Install Build Tools
-      run: |
-        echo "y" | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;$BUILD_TOOLS_VERSION"
-        
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    
+    - name: Decode Keystore
+      run: |
+        echo "${{ secrets.SIGNING_KEY }}" | base64 -d > keystore.jks
+        chmod 644 keystore.jks
+    
+    - name: Generate keystore.properties
+      run: |
+        KEYSTORE_PATH="$GITHUB_ACTION_PATH/keystore.jks"
+        echo "Keystore file: $KEYSTORE_PATH"
+        echo "storeFile=$KEYSTORE_PATH" > keystore.properties
+        echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}" >> keystore.properties
+        echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
+        echo "keyAlias=${{ secrets.ALIAS }}" >> keystore.properties
     
     - name: Build APK and AAB
       run: |
@@ -43,27 +52,9 @@ jobs:
       run: |
         ./gradlew generateReleaseChangeLog
     
-    - name: Sign APK
-      uses: r0adkll/sign-android-release@v1
-      with:
-        releaseDirectory: app/build/outputs/apk/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-        
-    - name: Sign AAB
-      uses: r0adkll/sign-android-release@v1
-      with:
-        releaseDirectory: app/build/outputs/bundle/release
-        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-        alias: ${{ secrets.ALIAS }}
-        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-        keyPassword: ${{ secrets.KEY_PASSWORD }}
-        
     - name: Rename APK and AAB
       run: |
-        mv app/build/outputs/apk/release/app-release-unsigned-signed.apk \
+        mv app/build/outputs/apk/release/app-release.apk \
            app/build/outputs/apk/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
         mv app/build/outputs/bundle/release/app-release.aab \
            app/build/outputs/bundle/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
