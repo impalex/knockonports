@@ -37,7 +37,7 @@ jobs:
     
     - name: Generate keystore.properties
       run: |
-        KEYSTORE_PATH="$GITHUB_ACTION_PATH/keystore.jks"
+        KEYSTORE_PATH="$GITHUB_WORKSPACE/keystore.jks"
         echo "Keystore file: $KEYSTORE_PATH"
         echo "storeFile=$KEYSTORE_PATH" > keystore.properties
         echo "storePassword=${{ secrets.KEY_STORE_PASSWORD }}" >> keystore.properties
