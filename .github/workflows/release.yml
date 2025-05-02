@@ -55,9 +55,9 @@ jobs:
     - name: Rename APK and AAB
       run: |
         mv app/build/outputs/apk/release/app-release.apk \
-           app/build/outputs/apk/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
+           app/build/outputs/apk/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
         mv app/build/outputs/bundle/release/app-release.aab \
-           app/build/outputs/bundle/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
+           app/build/outputs/bundle/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
 
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
@@ -66,5 +66,5 @@ jobs:
         name: Release ${{ env.RELEASE_TAG }}
         body_path: app/build/outputs/changelog/changelog.txt
         files: |
-          app/build/outputs/apk/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
-          app/build/outputs/bundle/release/${{ env.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
+          app/build/outputs/apk/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
+          app/build/outputs/bundle/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
