@@ -16,9 +16,12 @@
 
 package me.impa.knockonports.screen
 
+import android.provider.CalendarContract
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -41,6 +44,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -76,16 +80,11 @@ fun AppScreen(
 
         Scaffold(
             modifier = modifier,
-            contentWindowInsets = WindowInsets(0.dp),
+            contentWindowInsets = WindowInsets.safeDrawing,
             snackbarHost = { SnackbarHost(snackbarHostState) },
             topBar = {
                 TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        titleContentColor = MaterialTheme.colorScheme.onSurface,
-                        navigationIconContentColor = MaterialTheme.colorScheme.onSurface,
-                        actionIconContentColor = MaterialTheme.colorScheme.onSurface
-                    ),
+                    colors = TopAppBarDefaults.topAppBarColors(),
                     navigationIcon = {
                         if (appBarState.backAvailable) {
                             IconButton(
@@ -113,9 +112,7 @@ fun AppScreen(
             AppNavigation(
                 startDestination = startDestination, onComposing = {
                     appBarState = it
-                }, navController, modifier = Modifier
-                    .padding(paddingValues)
-                    .windowInsetsPadding(WindowInsets.navigationBars)
+                }, navController, innerPaddingValues = paddingValues, modifier = Modifier
             )
         }
     }

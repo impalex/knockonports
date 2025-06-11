@@ -19,11 +19,14 @@ package me.impa.knockonports.screen
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
@@ -105,6 +108,7 @@ private const val DRAGGABLE_LIST_OFFSET = 4
 fun SequenceScreen(
     onComposing: (AppBarState) -> Unit,
     navController: NavController,
+    innerPaddingValues: PaddingValues,
     viewModel: SequenceViewModel,
     modifier: Modifier
 ) {
@@ -116,7 +120,7 @@ fun SequenceScreen(
     val onEvent = remember(viewModel) { { event: UiEvent -> viewModel.onEvent(event) } }
 
     if (!state.isLoading) {
-        NavScaffold(modifier) { index ->
+        NavScaffold(modifier.then(Modifier.padding(innerPaddingValues))) { index ->
             val view = LocalView.current
             val listState = rememberLazyListState()
             val reorderableListState = getReorderableListState(

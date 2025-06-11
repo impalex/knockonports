@@ -36,6 +36,8 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import me.impa.knockonports.constants.EXTRA_SEQ_ID
 import me.impa.knockonports.constants.EXTRA_SOURCE
@@ -84,8 +86,14 @@ class StartKnockingActivity : ComponentActivity() {
         }
 
         setContent {
-            val widgetConfirmation by settingsDataStore.widgetConfirmation.collectAsStateWithLifecycle(initialValue = false)
-            val theme by settingsDataStore.themeSettings.collectAsStateWithLifecycle(initialValue = ThemeConfig())
+            val widgetConfirmation = runBlocking {
+                settingsDataStore.widgetConfirmation.first()
+            }
+
+            val theme = runBlocking {
+                settingsDataStore.themeSettings.first()
+            }
+
             KnockOnPortsTheme(config = theme) {
                 if (source == EXTRA_VALUE_SOURCE_WIDGET && widgetConfirmation) {
                     var sequenceName by rememberSaveable { mutableStateOf<String?>(null) }

@@ -21,6 +21,7 @@ import android.icu.text.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -57,6 +58,7 @@ import me.impa.knockonports.screen.viewmodel.LogViewModel
 @Composable
 fun LogScreen(
     onComposing: (AppBarState) -> Unit, navController: NavController,
+    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier, viewModel: LogViewModel = hiltViewModel()
 ) {
     val title = stringResource(R.string.title_screen_log)
@@ -77,7 +79,7 @@ fun LogScreen(
     }
     val events by viewModel.logEntries.collectAsState()
 
-    LogEventList(events, modifier)
+    LogEventList(events, innerPaddingValues, modifier)
 }
 
 val errorEventTypes = setOf(
@@ -107,9 +109,9 @@ fun stringResourceSafe(id: Int, formatArgs: List<Any?>): String {
 }
 
 @Composable
-fun LogEventList(events: List<LogEntry>, modifier: Modifier = Modifier) {
+fun LogEventList(events: List<LogEntry>, innerPaddingValues: PaddingValues, modifier: Modifier = Modifier) {
     val lazyState = rememberLazyListState()
-    LazyColumn(state = lazyState, modifier = modifier) {
+    LazyColumn(state = lazyState, modifier = modifier, contentPadding = innerPaddingValues) {
         itemsIndexed(items = events, key = { _, item -> item.id ?: 0L }) { index, item ->
             if (index > 0)
                 HorizontalDivider(modifier = Modifier.fillMaxWidth())
@@ -155,6 +157,7 @@ fun LogEventList(events: List<LogEntry>, modifier: Modifier = Modifier) {
 fun PreviewLogEventList() {
     LogEventList(
         PreviewData.mockLogEntries,
+        innerPaddingValues = PaddingValues.Absolute(),
         modifier = Modifier.fillMaxSize()
     )
 }

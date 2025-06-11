@@ -18,6 +18,7 @@ package me.impa.knockonports
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -25,10 +26,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import android.graphics.Color
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.screen.AppScreen
 import me.impa.knockonports.service.resource.AccessWatcher
@@ -56,20 +64,33 @@ class MainActivity : ComponentActivity() {
         lifecycle.addObserver(resourceWatcher)
         lifecycle.addObserver(shortcutWatcher)
         setContent {
-            val theme by settingsDataStore.themeSettings.collectAsStateWithLifecycle(initialValue = ThemeConfig())
-            val view = LocalView.current
+            //val theme by settingsDataStore.themeSettings.collectAsStateWithLifecycle(initialValue = ThemeConfig())
+            val theme by settingsDataStore.themeSettings.collectAsState(initial = null)
+            var themeCache by rememberSaveable { mutableStateOf(theme) }
             val isSystemInDarkTheme = isSystemInDarkTheme()
-            LaunchedEffect(theme, isSystemInDarkTheme) {
-                val window = (this@MainActivity).window
-                val darkMode = when(theme.useDarkTheme) {
-                    DarkMode.AUTO -> isSystemInDarkTheme
-                    DarkMode.LIGHT -> false
-                    DarkMode.DARK -> true
-                }
-                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkMode
+            LaunchedEffect(theme) {
+                theme?.let { themeCache = theme }
             }
-            KnockOnPortsTheme (config = theme) {
-                AppScreen(modifier = Modifier.fillMaxSize())
+            LaunchedEffect(themeCache, isSystemInDarkTheme) {
+                themeCache?.let {
+                    enableEdgeToEdge(
+                        statusBarStyle = when (it.useDarkTheme) {
+                            DarkMode.AUTO -> if (isSystemInDarkTheme) {
+                                SystemBarStyle.dark(Color.TRANSPARENT)
+                            } else {
+                                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                            }
+
+                            DarkMode.LIGHT -> SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                            DarkMode.DARK -> SystemBarStyle.dark(Color.TRANSPARENT)
+                        }
+                    )
+                }
+            }
+            themeCache?.let {
+                KnockOnPortsTheme(config = it) {
+                    AppScreen(modifier = Modifier.fillMaxSize())
+                }
             }
         }
     }

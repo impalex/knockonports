@@ -19,6 +19,7 @@ package me.impa.knockonports.navigation
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -41,7 +42,8 @@ fun AppNavigation(
     startDestination: Any = AppNavGraph.MainRoute,
     onComposing: (AppBarState) -> Unit,
     navController: NavHostController,
-    modifier: Modifier
+    innerPaddingValues: PaddingValues,
+    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController, startDestination = startDestination,
@@ -72,7 +74,7 @@ fun AppNavigation(
         composable<AppNavGraph.MainRoute>(
             deepLinks = listOf(navDeepLink { uriPattern = "${BuildConfig.APP_SCHEME}://${BuildConfig.APP_HOST}/list" })
         ) {
-            MainScreen(onComposing, navController, modifier = modifier)
+            MainScreen(onComposing, navController, innerPaddingValues, modifier = modifier)
         }
         composable<AppNavGraph.SequenceRoute>(
             deepLinks = listOf(navDeepLink {
@@ -84,13 +86,13 @@ fun AppNavigation(
             val viewModel = hiltViewModel<SequenceViewModel, SequenceViewModel.SequenceViewModelFactory> {
                 it.create(args.sequenceId)
             }
-            SequenceScreen(onComposing, navController, viewModel, modifier = modifier)
+            SequenceScreen(onComposing, navController, innerPaddingValues, viewModel, modifier = modifier)
         }
         composable<AppNavGraph.SettingsRoute> {
-            SettingsScreen(onComposing, navController, modifier = modifier)
+            SettingsScreen(onComposing, navController, innerPaddingValues, modifier = modifier)
         }
         composable<AppNavGraph.LogRoute> {
-            LogScreen(onComposing, navController, modifier = modifier)
+            LogScreen(onComposing, navController, innerPaddingValues, modifier = modifier)
         }
     }
 

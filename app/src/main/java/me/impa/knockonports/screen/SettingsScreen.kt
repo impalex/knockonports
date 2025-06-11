@@ -16,7 +16,11 @@
 
 package me.impa.knockonports.screen
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -25,6 +29,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -45,6 +50,7 @@ import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
 fun SettingsScreen(
     onComposing: (AppBarState) -> Unit,
     navController: NavController,
+    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -68,7 +74,11 @@ fun SettingsScreen(
 
     overlay?.let { ShowOverlay(it, viewModel::onEvent) }
 
-    LazyColumn(state = lazyListState, modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+        state = lazyListState,
+        contentPadding = innerPaddingValues,
+        modifier = modifier.fillMaxSize()
+    ) {
         settings?.let {
             generalSection(
                 config = it,

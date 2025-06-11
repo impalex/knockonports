@@ -16,12 +16,15 @@
 
 package me.impa.knockonports.ui.config
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 
 @Immutable
+@Parcelize
 data class ThemeConfig(
     val useDynamicColors: Boolean = true,
     val useDarkTheme: DarkMode = DarkMode.AUTO,
     val customTheme: String = "SKY_STEEL",
     val contrast: ThemeContrast = ThemeContrast.STANDARD
-)
+) : Parcelable

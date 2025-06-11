@@ -19,8 +19,15 @@ package me.impa.knockonports.screen
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -86,6 +93,7 @@ private val grantedNotificationPermission = object : PermissionState {
 @Composable
 fun MainScreen(
     onComposing: (AppBarState) -> Unit, navController: NavController,
+    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
 ) {
     navController.UpdateAppBar(onComposing, viewModel::onEvent)
@@ -104,6 +112,7 @@ fun MainScreen(
     FocusedSequenceWatcher(navController.currentBackStackEntry?.savedStateHandle, viewModel::onEvent)
     MainScreenContent(
         state,
+        innerPaddingValues = innerPaddingValues,
         modifier = modifier,
         onEvent = viewModel::onEvent
     )
@@ -120,6 +129,7 @@ private fun checkPermission(permissionState: PermissionState, turnOffRequest: ()
 @Composable
 fun MainScreenContent(
     state: UiState,
+    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
@@ -154,6 +164,7 @@ fun MainScreenContent(
 
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = innerPaddingValues,
         modifier = modifier.then(Modifier.fillMaxSize()), state = listState
     ) {
         val firstGroup = state.sequences.keys.firstOrNull()
@@ -237,6 +248,7 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
 fun PreviewMainScreen() {
     MainScreenContent(
         UiState(sequences = PreviewData.mockGroupedSequences),
+        innerPaddingValues = PaddingValues.Absolute(),
         onEvent = {},
         modifier = Modifier
     )

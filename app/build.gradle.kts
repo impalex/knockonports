@@ -25,6 +25,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.detekt.plugin)
+    id("kotlin-parcelize")
 }
 
 val appScheme = "knockonports"
@@ -65,8 +66,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 35
-        versionCode = 216
-        versionName = "2.0.8"
+        versionCode = 217
+        versionName = "2.0.9"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
