@@ -93,6 +93,7 @@ class MainViewModel @Inject constructor(
             is UiEvent.DoNotAskForReview -> _overlay.update { null }.also {
                 viewModelScope.launch { settingsDataStore.setDoNotAskForReviewFlag() }
             }
+
             is UiEvent.PostponeReviewRequest -> _overlay.update { null }.also {
                 viewModelScope.launch { settingsDataStore.postponeReviewRequest(event.interval) }
             }
@@ -103,6 +104,7 @@ class MainViewModel @Inject constructor(
             is UiEvent.DisableNotificationRequest -> viewModelScope.launch {
                 settingsDataStore.setDoNotAskForNotificationsFlag()
             }
+
             is UiEvent.Export -> exportSequences(event.uri)
             is UiEvent.Import -> importSequences(event.uri)
             is UiEvent.ConfirmBetaMessage -> viewModelScope.launch { confirmBetaMessage() }
@@ -304,8 +306,8 @@ class MainViewModel @Inject constructor(
             repository.getSequences()
                 .distinctUntilChanged()
                 .flowOn(ioDispatcher)
-                .map {
-                    it.groupBy { (it.group ?: "").trim() }
+                .map { list ->
+                    list.groupBy { (it.group ?: "").trim() }
                         .mapValues { it.value.toImmutableList() }
                         .toSortedMap()
                         .toPersistentMap()
@@ -320,14 +322,25 @@ class MainViewModel @Inject constructor(
         Timber.d("Start collecting app settings")
 
         viewModelScope.launch {
-            _state.update { it.copy(areShortcutsAvailable = deviceState.areShortcutsAvailable) }
+            _state.update {
+                it.copy(
+                    areShortcutsAvailable = deviceState.areShortcutsAvailable,
+                    isRuLangAvailable = deviceState.isRuLangAvailable
+                )
+            }
 
             combine(
+                settingsDataStore.doNotAskNotification,
                 settingsDataStore.detailedListView,
-                settingsDataStore.doNotAskNotification
-            ) { detailedView, doNotAskNotification ->
+                settingsDataStore.titleOverflow,
+                settingsDataStore.titleScale,
+                settingsDataStore.titleMultiline,
+            ) { doNotAskNotification, detailedView, titleOverflow, titleScale, titleMultiline ->
                 _state.value.copy(
                     detailedList = detailedView,
+                    titleOverflowType = titleOverflow,
+                    titleScale = titleScale,
+                    titleMultiline = titleMultiline,
                     disableNotificationRequest = doNotAskNotification
                 )
             }.collect { newState ->
@@ -339,8 +352,8 @@ class MainViewModel @Inject constructor(
     private fun startResourceStateCollection() {
         Timber.d("Start collecting resource state")
         viewModelScope.launch {
-            resourceWatcher.resourceState.distinctUntilChanged().flowOn(ioDispatcher).map {
-                it.mapKeys { requireNotNull(it.key.id) }
+            resourceWatcher.resourceState.distinctUntilChanged().flowOn(ioDispatcher).map { state ->
+                state.mapKeys { requireNotNull(it.key.id) }
             }.collect { resources ->
                 _state.update {
                     it.copy(resourceState = resources.toPersistentMap())

@@ -50,7 +50,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KnockOnPorts"
         android:usesCleartextTraffic="true"
-        tools:targetApi="33">
+        tools:targetApi="36">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -104,6 +104,20 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/knocks_widget_info" />
         </receiver>
+
+        <receiver
+            android:name=".widget.LaunchKnocksWidgetReceiver"
+            android:exported="true"
+            android:label="@string/title_selector_widget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/launch_knocks_widget_info" />
+
+        </receiver>
+
 
         <service
             android:name=".service.sequence.KnockerService"

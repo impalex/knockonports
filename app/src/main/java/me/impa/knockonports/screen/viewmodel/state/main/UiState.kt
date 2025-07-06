@@ -19,16 +19,22 @@ package me.impa.knockonports.screen.viewmodel.state.main
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
+import me.impa.knockonports.constants.DEFAULT_TITLE_FONT_SCALE
 import me.impa.knockonports.data.db.entity.Sequence
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.service.resource.ResourceState
 
 data class UiState(
     val sequences: ImmutableMap<String, ImmutableList<Sequence>> = persistentMapOf(),
     val resourceState: ImmutableMap<Long, ResourceState> = persistentMapOf(),
     val areShortcutsAvailable: Boolean = false,
+    val isRuLangAvailable: Boolean = false,
     val focusedSequenceId: Long? = null,
     val disableNotificationRequest: Boolean = false,
     val detailedList: Boolean = true,
+    val titleOverflowType: TitleOverflowType = TitleOverflowType.END,
+    val titleMultiline: Boolean = false,
+    val titleScale: Int = DEFAULT_TITLE_FONT_SCALE,
     val editMode: Boolean = false,
     val editSequenceId: Long? = null
 )

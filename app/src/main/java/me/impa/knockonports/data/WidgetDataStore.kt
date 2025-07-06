@@ -30,19 +30,15 @@ import javax.inject.Singleton
 @Singleton
 class WidgetDataStore @Inject constructor(
     private val widgetRepository: KnocksWidgetRepository
-) : DataStore<List<Sequence>> {
+) {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface WidgetDataStoreEntryPoint {
         fun widgetDataStore(): WidgetDataStore
     }
 
-    override val data: Flow<List<Sequence>>
+    val data: Flow<List<Sequence>>
         get() = widgetRepository.getSequences()
-
-    override suspend fun updateData(transform: suspend (List<Sequence>) -> List<Sequence>): List<Sequence> {
-        throw NotImplementedError()
-    }
 
     companion object {
         fun get(applicationContext: Context): WidgetDataStore {

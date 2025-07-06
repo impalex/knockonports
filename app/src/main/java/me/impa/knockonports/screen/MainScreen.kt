@@ -20,14 +20,8 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -56,6 +50,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.POSTPONE_TIME
 import me.impa.knockonports.constants.POSTPONE_TIME_CANCEL
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.helper.TextResource
 import me.impa.knockonports.helper.openPlayStore
 import me.impa.knockonports.navigation.AppBarState
@@ -96,9 +91,9 @@ fun MainScreen(
     innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
 ) {
-    navController.UpdateAppBar(onComposing, viewModel::onEvent)
-
     val state by viewModel.state.collectAsState()
+    navController.UpdateAppBar(state.isRuLangAvailable, onComposing, viewModel::onEvent)
+
     LaunchedEffect(state) {
         if (state.editMode) {
             navController.navigate(AppNavGraph.SequenceRoute(state.editSequenceId))
@@ -150,9 +145,9 @@ fun MainScreenContent(
         ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK)
     }
     var highLightSequenceId by rememberSaveable { mutableStateOf<Long?>(null) }
-    state.focusedSequenceId?.let {
-        highLightSequenceId = it
-        LaunchedEffect(it, state.sequences) {
+    state.focusedSequenceId?.let { id ->
+        highLightSequenceId = id
+        LaunchedEffect(id, state.sequences) {
             val index = state.sequences.values.flatten().indexOfFirst { it.id == state.focusedSequenceId }
             if (index != -1) {
                 if (listState.layoutInfo.visibleItemsInfo.none { it.key == state.focusedSequenceId })
@@ -188,6 +183,9 @@ fun MainScreenContent(
                     showSequenceDetails = state.detailedList,
                     isShortcutsAvailable = state.areShortcutsAvailable,
                     modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
+                    titleOverflowType = state.titleOverflowType,
+                    multilineTitle = state.titleMultiline,
+                    titleFontScale = state.titleScale,
                     onEvent = onEvent,
                     onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
                         && !state.disableNotificationRequest
@@ -266,7 +264,10 @@ fun PreviewSequenceCard() {
                 resourceState = ResourceState.Available(),
                 state = reorderableListState,
                 isShortcutsAvailable = true,
-                showSequenceDetails = true
+                titleOverflowType = TitleOverflowType.END,
+                showSequenceDetails = true,
+                titleFontScale = 100,
+                multilineTitle = false
             )
         }
     }
@@ -284,7 +285,10 @@ fun PreviewCompactSequenceCard() {
                 resourceState = ResourceState.Unavailable(TextResource.PlainText("Unavailable")),
                 state = reorderableListState,
                 isShortcutsAvailable = true,
-                showSequenceDetails = false
+                titleOverflowType = TitleOverflowType.END,
+                showSequenceDetails = false,
+                titleFontScale = 100,
+                multilineTitle = false
             )
         }
     }

@@ -14,13 +14,6 @@
   ~ limitations under the License.
   -->
 
-<!--
-    android:previewImage="@drawable/sample_action_list_preview"
-    android:maxResizeHeight="@dimen/sample_action_list_widget_max_resize_height"
-    android:maxResizeWidth="@dimen/sample_action_list_widget_max_resize_width"
-
--->
-
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:description="@string/text_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"

@@ -41,6 +41,7 @@ import me.impa.knockonports.screen.component.settings.DetectIPAlert
 import me.impa.knockonports.screen.component.settings.IPHeaderSizeAlert
 import me.impa.knockonports.screen.component.settings.aboutSection
 import me.impa.knockonports.screen.component.settings.generalSection
+import me.impa.knockonports.screen.component.settings.listSection
 import me.impa.knockonports.screen.component.settings.themeSection
 import me.impa.knockonports.screen.viewmodel.SettingsViewModel
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
@@ -56,6 +57,7 @@ fun SettingsScreen(
 ) {
     val settings by viewModel.appSettingsState.collectAsStateWithLifecycle(initialValue = null)
     val theme by viewModel.themeState.collectAsStateWithLifecycle(initialValue = null)
+    val listSettings by viewModel.listState.collectAsStateWithLifecycle(initialValue = null)
     val isPlayStoreInstallation = viewModel.isPlayStoreInstallation
     val overlay by viewModel.overlay.collectAsState()
     val title = stringResource(R.string.title_screen_settings)
@@ -81,6 +83,12 @@ fun SettingsScreen(
     ) {
         settings?.let {
             generalSection(
+                config = it,
+                onEvent = viewModel::onEvent
+            )
+        }
+        listSettings?.let {
+            listSection(
                 config = it,
                 onEvent = viewModel::onEvent
             )

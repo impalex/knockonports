@@ -42,23 +42,15 @@ import me.impa.knockonports.screen.component.common.PrefCustomProviderEditor
 import me.impa.knockonports.screen.component.common.PrefMultiSelection
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
-import me.impa.knockonports.screen.viewmodel.state.settings.SettingsUiState
+import me.impa.knockonports.screen.viewmodel.state.settings.GeneralUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 
 fun LazyListScope.generalSection(
-    config: SettingsUiState,
+    config: GeneralUiState,
     onEvent: (UiEvent) -> Unit = {}
 ) {
     item(key = "general") {
         HeaderSection(title = stringResource(R.string.title_settings_general), false)
-    }
-    item(key = "detailed_list_view") {
-        PrefSwitch(
-            title = stringResource(R.string.title_settings_detailed_list_view),
-            description = stringResource(R.string.text_settings_detailed_list_view),
-            value = config.detailedListView,
-            onClick = { onEvent(UiEvent.SetDetailedView(!config.detailedListView)) }
-        )
     }
     item(key = "widget_confirmation") {
         PrefSwitch(
@@ -118,7 +110,7 @@ fun LazyListScope.generalSection(
 }
 
 private fun LazyListScope.ipvSection(
-    config: SettingsUiState,
+    config: GeneralUiState,
     onEvent: (UiEvent) -> Unit
 ) {
     item(key = "ipv4_service") {
@@ -164,14 +156,13 @@ private fun LazyListScope.ipvSection(
 fun PreviewGeneralSection() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         generalSection(
-            SettingsUiState(
+            GeneralUiState(
                 widgetConfirmation = false,
                 detectPublicIP = false,
                 ipv4Service = PROVIDER_CUSTOM,
                 ipv6Service = PROVIDER_CUSTOM,
                 customIpv4Service = "",
                 customIpv6Service = "",
-                detailedListView = false,
                 customIp4Header = false,
                 ip4HeaderSize = 20,
                 resourceCheckPeriod = 5000

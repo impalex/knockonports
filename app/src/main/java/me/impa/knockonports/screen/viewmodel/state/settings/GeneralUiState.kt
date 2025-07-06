@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.mock
+package me.impa.knockonports.screen.viewmodel.state.settings
 
-import me.impa.knockonports.data.settings.DeviceState
+import androidx.compose.runtime.Stable
 
-object FakeDeviceState : DeviceState {
-    override val areShortcutsAvailable: Boolean
-        get() = true
-    override val isPlayStoreInstallation: Boolean
-        get() = true
-    override val isRuLangAvailable: Boolean
-        get() = false
-}
+@Stable
+data class GeneralUiState(
+    val widgetConfirmation: Boolean,
+    val detectPublicIP: Boolean,
+    val ipv4Service: String,
+    val ipv6Service: String,
+    val customIpv4Service: String,
+    val customIpv6Service: String,
+    val customIp4Header: Boolean,
+    val ip4HeaderSize: Int,
+    val resourceCheckPeriod: Int,
+)

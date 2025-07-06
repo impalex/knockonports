@@ -27,7 +27,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
-import me.impa.knockonports.screen.viewmodel.state.settings.SettingsUiState
+import me.impa.knockonports.data.type.TitleOverflowType
+import me.impa.knockonports.screen.viewmodel.state.settings.GeneralUiState
+import me.impa.knockonports.screen.viewmodel.state.settings.ListUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.ThemeUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
@@ -50,29 +52,42 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
-    val appSettingsState = combine<Any, SettingsUiState>(
+    val listState = combine<Any, ListUiState>(
+        settingsDataStore.detailedListView,
+        settingsDataStore.titleScale,
+        settingsDataStore.titleOverflow,
+        settingsDataStore.titleMultiline,
+    ) {
+        ListUiState(
+            detailedListView = it[0] as Boolean,
+            titleFontScale = it[1] as Int,
+            titleOverflow = it[2] as TitleOverflowType,
+            titleMultiline = it[3] as Boolean,
+        )
+    }
+
+
+    val appSettingsState = combine<Any, GeneralUiState>(
         settingsDataStore.widgetConfirmation,
         settingsDataStore.detectPublicIP,
         settingsDataStore.ipv4Service,
         settingsDataStore.ipv6Service,
         settingsDataStore.customIpv4Service,
         settingsDataStore.customIpv6Service,
-        settingsDataStore.detailedListView,
         settingsDataStore.customIp4Header,
         settingsDataStore.ip4HeaderSize,
         settingsDataStore.resourceCheckPeriod,
     ) {
-        SettingsUiState(
+        GeneralUiState(
             widgetConfirmation = it[0] as Boolean,
             detectPublicIP = it[1] as Boolean,
             ipv4Service = it[2] as String,
             ipv6Service = it[3] as String,
             customIpv4Service = it[4] as String,
             customIpv6Service = it[5] as String,
-            detailedListView = it[6] as Boolean,
-            customIp4Header = it[7] as Boolean,
-            ip4HeaderSize = it[8] as Int,
-            resourceCheckPeriod = it[9] as Int,
+            customIp4Header = it[6] as Boolean,
+            ip4HeaderSize = it[7] as Int,
+            resourceCheckPeriod = it[8] as Int,
         )
     }
 
@@ -107,6 +122,9 @@ class SettingsViewModel @Inject constructor(
                 .also { _overlay.update { null } }
 
             is UiEvent.SetResourceCheckPeriod -> settingsDataStore.setResourceCheckPeriod(event.period)
+            is UiEvent.SetTitleFontScale -> settingsDataStore.setTitleScale(event.scale)
+            is UiEvent.SetTitleMultiline -> settingsDataStore.setTitleMultiline(event.enabled)
+            is UiEvent.SetTitleOverflow -> settingsDataStore.setTitleOverflow(event.overflow)
         }
     }
 

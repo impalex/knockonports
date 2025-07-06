@@ -75,8 +75,8 @@ class SequenceViewModel @AssistedInject constructor(
     private val _sleepValidator = RangeValidator(MIN_SLEEP, MAX_SLEEP)
 
     private fun updateSequenceStep(stepId: Int, onUpdate: (StepUiState) -> StepUiState) {
-        _state.update {
-            it.copy(steps = it.steps.map {
+        _state.update { state ->
+            state.copy(steps = state.steps.map {
                 if (it.id == stepId) onUpdate(it) else it
             }.toPersistentList())
         }
@@ -85,18 +85,18 @@ class SequenceViewModel @AssistedInject constructor(
     @Suppress("CyclomaticComplexMethod", "LongMethod")
     fun onEvent(event: UiEvent) {
         when (event) {
-            UiEvent.AddStep -> _state.update {
-                val newStepId = it.steps.maxOfOrNull { it.id }?.plus(1) ?: 0
-                val stepType = it.steps.lastOrNull()?.type ?: SequenceStepType.UDP
-                it.copy(
+            UiEvent.AddStep -> _state.update { state ->
+                val newStepId = state.steps.maxOfOrNull { it.id }?.plus(1) ?: 0
+                val stepType = state.steps.lastOrNull()?.type ?: SequenceStepType.UDP
+                state.copy(
                     newStepId = newStepId,
-                    steps = it.steps.toMutableList().apply { add(StepUiState(id = newStepId, type = stepType)) }
+                    steps = state.steps.toMutableList().apply { add(StepUiState(id = newStepId, type = stepType)) }
                         .toPersistentList()
                 )
             }
 
-            is UiEvent.DeleteStep -> _state.update {
-                it.copy(steps = it.steps.filter { it.id != event.id }
+            is UiEvent.DeleteStep -> _state.update { state ->
+                state.copy(steps = state.steps.filter { it.id != event.id }
                     .toPersistentList())
             }
 
@@ -250,31 +250,31 @@ class SequenceViewModel @AssistedInject constructor(
             try {
 
                 repository.saveSequence(
-                    _state.value.let {
+                    _state.value.let { state ->
                         Sequence(
                             id = sequenceId,
-                            name = it.title,
-                            host = it.host,
-                            order = it.order ?: ((repository.getMaxOrder() ?: 0) + 1),
-                            delay = it.delay,
-                            application = it.appPackage,
-                            applicationName = it.appName,
-                            icmpType = it.icmpSizeType,
-                            steps = it.steps.map { it.toSequenceStep() }.toPersistentList(),
+                            name = state.title,
+                            host = state.host,
+                            order = state.order ?: ((repository.getMaxOrder() ?: 0) + 1),
+                            delay = state.delay,
+                            application = state.appPackage,
+                            applicationName = state.appName,
+                            icmpType = state.icmpSizeType,
+                            steps = state.steps.map { it.toSequenceStep() }.toPersistentList(),
                             descriptionType = null, // TODO this will be deprecated
                             pin = null, // TODO this will be deprecated
-                            ipv = it.protocolVersion,
-                            ttl = it.ttl,
-                            localPort = it.localPort,
-                            uri = it.uri,
-                            group = it.group.trim(), // Yes, trim is by design.
-                            checkAccess = it.checkAccess,
-                            checkType = it.checkAccessType,
-                            checkPort = it.checkAccessPort,
-                            checkHost = it.checkAccessHost,
-                            checkTimeout = it.checkAccessTimeout,
-                            checkPostKnock = it.checkAccessPostKnock,
-                            checkRetries = it.checkAccessKnockRetries
+                            ipv = state.protocolVersion,
+                            ttl = state.ttl,
+                            localPort = state.localPort,
+                            uri = state.uri,
+                            group = state.group.trim(), // Yes, trim is by design.
+                            checkAccess = state.checkAccess,
+                            checkType = state.checkAccessType,
+                            checkPort = state.checkAccessPort,
+                            checkHost = state.checkAccessHost,
+                            checkTimeout = state.checkAccessTimeout,
+                            checkPostKnock = state.checkAccessPostKnock,
+                            checkRetries = state.checkAccessKnockRetries
                         )
                     }
                 ).also { newId ->
@@ -308,9 +308,9 @@ class SequenceViewModel @AssistedInject constructor(
             }
         }
         viewModelScope.launch {
-            repository.getGroupList().collect {
+            repository.getGroupList().collect { list ->
                 _state.update { state ->
-                    state.copy(groupList = it.map { it.trim() }.filter { it.isNotEmpty() }.toPersistentList())
+                    state.copy(groupList = list.map { it.trim() }.filter { it.isNotEmpty() }.toPersistentList())
                 }
             }
         }

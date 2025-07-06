@@ -1,0 +1,2 @@
+• New widget
+• Advanced sequence list configuration

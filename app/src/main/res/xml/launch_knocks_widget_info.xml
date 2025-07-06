@@ -18,11 +18,11 @@
     android:description="@string/text_widget_description"
     android:initialLayout="@layout/glance_default_loading_layout"
     android:minWidth="120dp"
-    android:minHeight="115dp"
+    android:minHeight="50dp"
     android:minResizeWidth="120dp"
-    android:minResizeHeight="115dp"
-    android:previewImage="@drawable/widget_preview"
-    android:resizeMode="horizontal|vertical"
+    android:minResizeHeight="50dp"
+    android:previewImage="@drawable/launch_widget_preview"
+    android:resizeMode="horizontal"
     android:updatePeriodMillis="3600000"
     android:widgetCategory="home_screen" />
 

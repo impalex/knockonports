@@ -42,7 +42,7 @@
     <string name="title_screen_settings">Настройки</string>
     <string name="list_app_none">Нет</string>
     <string name="field_local_port">Использовать локальный UDP порт</string>
-    <string name="message_sequence_saved">Последовательность \"%s\" сохранена</string>
+    <string name="message_sequence_saved">Последовательность «%s» сохранена</string>
     <string name="action_knock">Постучать</string>
     <string name="text_unnamed_sequence">(Без имени)</string>
     <string name="text_host_not_set">(Хост не задан)</string>
@@ -70,8 +70,8 @@
     <string name="action_create_shortcut">Создать ярлык</string>
     <string name="action_integration">Автоматизация</string>
     <string name="title_delete_sequence">Удалить последовательность?</string>
-    <string name="text_delete_sequence_alert">Последовательнеость \"%s\" будет безвозвратно удалена. Вы не сможете ее восстановить.</string>
-    <string name="message_sequence_deleted">Последовательность \"%s\" удалена</string>
+    <string name="text_delete_sequence_alert">Последовательнеость «%s» будет безвозвратно удалена. Вы не сможете ее восстановить.</string>
+    <string name="message_sequence_deleted">Последовательность «%s» удалена</string>
     <plurals name="message_sequence_import">
         <item quantity="one">Добавлена %d последовательность</item>
         <item quantity="few">Добавлено %d последовательности</item>
@@ -139,13 +139,13 @@
     <string name="text_annoying_version_9">v%s: При поддержке неоплачиваемой старости и легкого пренебрежения к здравомыслию.</string>
     <string name="message_error_network_not_avail">Сеть недоступна</string>
     <string name="message_error_empty_host">В последовательности не указан хост</string>
-    <string name="message_error_empty_sequence">Последовательность \"%s\" пустая</string>
-    <string name="message_error_resolve">Не удалось разрешить хост \"%s\"</string>
-    <string name="message_error_unknown_host">Неизвестный хост \"%s\"</string>
-    <string name="message_error_app_launch">Не удалось запустить \"%s\"</string>
+    <string name="message_error_empty_sequence">Последовательность «%s» пустая</string>
+    <string name="message_error_resolve">Не удалось разрешить хост «%s»</string>
+    <string name="message_error_unknown_host">Неизвестный хост «%s»</string>
+    <string name="message_error_app_launch">Не удалось запустить «%s»</string>
     <string name="message_knocking_complete">Всё, постучали!</string>
     <string name="message_error_unknown">Неизвестная ошибка: %s</string>
-    <string name="message_start_knocking">Тук-тук-тук! \"%s\", откройся.</string>
+    <string name="message_start_knocking">Тук-тук-тук! «%s», откройся.</string>
     <string name="message_clipboard_confirmation">Скопировано</string>
     <string name="action_yes">Да</string>
     <string name="action_no">Нет</string>
@@ -153,14 +153,15 @@
     <string name="action_duplicate">Дублировать</string>
     <string name="action_close">Закрыть</string>
     <string name="title_confirm_knock_alert">Тук-тук!</string>
-    <string name="text_confirm_knock_alert">Запустить последовательность \"%s\"?</string>
+    <string name="text_confirm_knock_alert">Запустить последовательность «%s»?</string>
     <string name="channel_name">Тук-тук</string>
     <string name="channel_description">Кто там? \u1F632</string>
     <string name="notification_title">Тук-тук!</string>
-    <string name="notification_desc">Стучу в \"%s\". Есть кто дома?</string>
+    <string name="notification_desc">Стучу в «%s». Есть кто дома?</string>
     <string name="title_integration_alert">URI для автоматизации</string>
     <string name="text_integration_alert">Скопируйте эту ссылку для запуска последовательности из приложений для автоматизации, таких как Tasker или Macrodroid. Нет необходимости открывать приложение — просто откройте URI.</string>
     <string name="title_widget">Список последовательностей</string>
+    <string name="title_selector_widget">Выбор последовательности</string>
     <string name="text_widget_description">Запуск любой последовательности с домашнего экрана</string>
     <string name="text_widget_empty_list">Пустой список последовательностей</string>
     <string name="log_unknown">Неизвестное событие</string>
@@ -206,7 +207,7 @@
     <string name="field_group">Группа</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Бета-версия</string>
-    <string name="text_beta_alert">В эту бета-версию добавлена возможность связать последовательность с внешним ресурсом. При необходимости приложение может отслеживать доступность этого ресурса. Буду благодарен за фидбэк, пожелания и найденные баги. Фидбэк принимается на GitHub, емайл или Discord - все контакты можно найти в разделе \"О приложении\".</string>
+    <string name="text_beta_alert">В эту бета-версию добавлена возможность связать последовательность с внешним ресурсом. При необходимости приложение может отслеживать доступность этого ресурса. Буду благодарен за фидбэк, пожелания и найденные баги. Фидбэк принимается на GitHub, емайл или Discord - все контакты можно найти в разделе «О приложении».</string>
     <string name="title_header_sequence_packet_cfg">Пакеты</string>
     <string name="title_header_sequence_post_knock">Действия после стука</string>
     <string name="title_header_sequence_access_check">Связь с ресурсом</string>
@@ -240,5 +241,25 @@
         <item quantity="few">Каждые %d секунды</item>
         <item quantity="many">Каждые %d секунд</item>
     </plurals>
+    <string name="title_settings_list">Список последовательностей</string>
+    <string name="title_settings_multiline_title">Многострочный заголовок</string>
+    <string name="text_settings_multiline_title">Разрешить перенос заголовка последовательности на следующую строку</string>
+    <string name="title_settings_shorten_title">Сокращение заголовка</string>
+    <string name="type_shorten_start">Начало\n(например, «…ь длинный текст»)</string>
+    <string name="type_shorten_middle">Середина\n(например, «Очень д…й текст»)</string>
+    <string name="type_shorten_end">Конец\n(например, «Очень длинный т…»)</string>
+    <string name="title_settings_font_scale">Размер шрифта заголовка</string>
+    <string name="title_donate_alert">Поддержать «Knock on Ports»</string>
+    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> — <b>бесплатное, open-source приложение без рекламы и слежки</b>. Так будет всегда.<br>
+<br>Если этот инструмент экономит ваше время или решает сложные задачи — поддержите его развитие.
+<br>Ваша помощь:
+<br>→ <b>Оценит годы усилий</b> по поддержке и улучшениям,
+<br>→ <b>Поддержит создание уникальных функций</b> для узких технических задач,
+<br>→ <b>Сохранит проект независимым</b> и открытым для всех.
+<br>
+<br><i>Любая сумма мотивирует — даже на пару пельменей разработчику.</i> ☺️
+<br><i>Спасибо, что доверяете моему инструменту!</i>]]></string>
+    <string name="action_not_now">Не сейчас</string>
+    <string name="action_support">Поддержать проект</string>
 
 </resources>

@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.flowOf
 import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.DEFAULT_CHECK_PERIOD
 import me.impa.knockonports.data.settings.SettingsDataStore
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.config.ThemeContrast
@@ -122,6 +123,27 @@ object FakeSettingsDataStore : SettingsDataStore {
     }
 
     override suspend fun setResourceCheckPeriod(period: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override val titleOverflow: Flow<TitleOverflowType>
+        get() = flowOf(TitleOverflowType.END)
+
+    override suspend fun setTitleOverflow(overflowType: TitleOverflowType) {
+        TODO("Not yet implemented")
+    }
+
+    override val titleScale: Flow<Int>
+        get() = flowOf(100)
+
+    override suspend fun setTitleScale(scale: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override val titleMultiline: Flow<Boolean>
+        get() = flowOf(false)
+
+    override suspend fun setTitleMultiline(multiline: Boolean) {
         TODO("Not yet implemented")
     }
 }

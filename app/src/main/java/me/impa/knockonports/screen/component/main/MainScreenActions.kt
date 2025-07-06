@@ -18,15 +18,14 @@ package me.impa.knockonports.screen.component.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,7 +50,7 @@ import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 
 @Composable
-fun RowScope.MainScreenActions(onAction: (MainBarEvent) -> Unit = {}) {
+fun MainScreenActions(isRuLangAvailable: Boolean, onAction: (MainBarEvent) -> Unit = {}) {
     var showMenu by remember { mutableStateOf(false) }
     Row {
         if (BuildConfig.VERSION_NAME.contains("beta") && CURRENT_BETA_TEST_MESSAGE.isNotEmpty()) {
@@ -63,6 +62,9 @@ fun RowScope.MainScreenActions(onAction: (MainBarEvent) -> Unit = {}) {
             ) {
                 Icon(painterResource(R.drawable.bug_report_icon), contentDescription = null)
             }
+        }
+        if (isRuLangAvailable) {
+            DonateButton()
         }
         Button(onClick = debounced({ onAction(MainBarEvent.AddSequence) }),
             colors = ButtonDefaults.filledTonalButtonColors(
@@ -101,10 +103,21 @@ fun RowScope.MainScreenActions(onAction: (MainBarEvent) -> Unit = {}) {
 
 }
 
+@Composable
+fun DonateButton() {
+    var showDonateDialog by rememberSaveable { mutableStateOf(false) }
+    if (showDonateDialog) {
+        DonateAlert { showDonateDialog = false }
+    }
+    IconButton(onClick = debounced({ showDonateDialog = true })) {
+        Icon(Icons.Default.Favorite, contentDescription = null)
+    }
+}
+
 @Preview
 @Composable
 fun PreviewMainScreenActions() {
     Row {
-        MainScreenActions()
+        MainScreenActions(true)
     }
 }

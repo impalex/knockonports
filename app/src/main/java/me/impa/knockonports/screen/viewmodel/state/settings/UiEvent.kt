@@ -16,9 +16,12 @@
 
 package me.impa.knockonports.screen.viewmodel.state.settings
 
+import androidx.compose.runtime.Stable
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeContrast
 
+@Stable
 sealed interface UiEvent {
     data class SetDynamicMode(val dynamic: Boolean) : UiEvent
     data class SetDarkMode(val darkMode: DarkMode) : UiEvent
@@ -37,4 +40,7 @@ sealed interface UiEvent {
     data class SetCustomIPHeaderSize(val size: Int) : UiEvent
     data object ConfirmCustomIPHeaderSizeEnabled : UiEvent
     data class SetResourceCheckPeriod(val period: Int) : UiEvent
+    data class SetTitleMultiline(val enabled: Boolean) : UiEvent
+    data class SetTitleOverflow(val overflow: TitleOverflowType) : UiEvent
+    data class SetTitleFontScale(val scale: Int) : UiEvent
 }

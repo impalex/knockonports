@@ -27,6 +27,8 @@ alt="Get it on Google Play" height="80"/></a>
 
 Ethereum (ETH): `0x8848210AD76bEA6BD040BAFd931558a1372Bf0D7`
 
+Support on [CloudTips.ru](https://pay.cloudtips.ru/p/57c93be7)
+
 ## License
 
 ```

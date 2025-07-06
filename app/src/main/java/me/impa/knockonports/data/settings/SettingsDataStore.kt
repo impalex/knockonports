@@ -32,8 +32,10 @@ import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
 import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.DEFAULT_CHECK_PERIOD
+import me.impa.knockonports.constants.DEFAULT_TITLE_FONT_SCALE
 import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
 import me.impa.knockonports.constants.POSTPONE_TIME_START
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.helper.toEnum
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
@@ -96,6 +98,12 @@ interface SettingsDataStore {
     suspend fun setIp4HeaderSize(size: Int)
     val resourceCheckPeriod: Flow<Int>
     suspend fun setResourceCheckPeriod(period: Int)
+    val titleOverflow: Flow<TitleOverflowType>
+    suspend fun setTitleOverflow(overflowType: TitleOverflowType)
+    val titleScale: Flow<Int>
+    suspend fun setTitleScale(scale: Int)
+    val titleMultiline: Flow<Boolean>
+    suspend fun setTitleMultiline(multiline: Boolean)
     // endregion App settings
 
 }
@@ -320,6 +328,39 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
             preferences[resourceCheckPeriodKey] = period
         }
     }
+
+    override val titleOverflow: Flow<TitleOverflowType> = context.dataStore.data
+        .distinctUntilChangedBy { it[titleOverflowKey] }
+        .map { preferences ->
+            TitleOverflowType
+                .fromOrdinal(preferences[titleOverflowKey] ?: TitleOverflowType.END.ordinal)
+        }
+
+    override suspend fun setTitleOverflow(overflowType: TitleOverflowType) {
+        context.dataStore.edit { preferences ->
+            preferences[titleOverflowKey] = overflowType.ordinal
+        }
+    }
+
+    override val titleMultiline: Flow<Boolean> = context.dataStore.data
+        .distinctUntilChangedBy { it[titleMultilineKey] }
+        .map { preferences -> preferences[titleMultilineKey] == true }
+
+    override suspend fun setTitleMultiline(multiline: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[titleMultilineKey] = multiline
+        }
+    }
+
+    override val titleScale: Flow<Int> = context.dataStore.data
+        .distinctUntilChangedBy { it[titleScaleKey] }
+        .map { preferences -> preferences[titleScaleKey] ?: DEFAULT_TITLE_FONT_SCALE }
+
+    override suspend fun setTitleScale(scale: Int) {
+        context.dataStore.edit { preferences ->
+            preferences[titleScaleKey] = scale
+        }
+    }
     // endregion App settings
 
     companion object {
@@ -354,6 +395,10 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
         private val customIp4HeaderKey = booleanPreferencesKey("CFG_CUSTOM_IP4_HEADER")
         private val ip4HeaderSizeKey = intPreferencesKey("CFG_IP4_HEADER_SIZE")
         private val resourceCheckPeriodKey = intPreferencesKey("CFG_RESOURCE_CHECK_PERIOD")
+        private val titleOverflowKey = intPreferencesKey("CFG_TITLE_OVERFLOW")
+        private val titleScaleKey = intPreferencesKey("CFG_TITLE_SCALE")
+        private val titleMultilineKey = booleanPreferencesKey("CFG_TITLE_MULTILINE")
+
     }
 
 }

@@ -39,11 +39,11 @@ private const val ENTER_ANIMATION_DURATION = 300
 
 @Composable
 fun AppNavigation(
+    modifier: Modifier = Modifier,
     startDestination: Any = AppNavGraph.MainRoute,
     onComposing: (AppBarState) -> Unit,
     navController: NavHostController,
     innerPaddingValues: PaddingValues,
-    modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController, startDestination = startDestination,
@@ -82,7 +82,7 @@ fun AppNavigation(
                     "${BuildConfig.APP_SCHEME}://${BuildConfig.APP_HOST}/sequence/{sequenceId}"
             })
         ) {
-            var args = it.toRoute<AppNavGraph.SequenceRoute>()
+            val args = it.toRoute<AppNavGraph.SequenceRoute>()
             val viewModel = hiltViewModel<SequenceViewModel, SequenceViewModel.SequenceViewModelFactory> {
                 it.create(args.sequenceId)
             }

@@ -43,7 +43,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "me.impa.knockonports"
-    compileSdk = 35
+    compileSdk = 36
 
     if (keystoreProperties.isNotEmpty()) {
         signingConfigs {
@@ -65,9 +65,9 @@ android {
     defaultConfig {
         applicationId = "me.impa.knockonports"
         minSdk = 24
-        targetSdk = 35
-        versionCode = 217
-        versionName = "2.0.9"
+        targetSdk = 36
+        versionCode = 219
+        versionName = "2.0.10"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -114,7 +114,7 @@ android {
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
         metricsDestination = layout.buildDirectory.dir("compose_compiler")
-        stabilityConfigurationFile = rootProject.layout.projectDirectory.file("stability_config.conf")
+        stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
     }
     packaging {
         resources {
@@ -130,6 +130,12 @@ android {
     ndkVersion = "28.1.13356709"
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }
 

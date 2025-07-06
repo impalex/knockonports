@@ -23,11 +23,20 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import me.impa.knockonports.data.type.TitleOverflowType
+import me.impa.knockonports.data.type.toTextOverflow
 
+@Suppress("LongParameterList")
 @Composable
-fun RowScope.SequenceCardInfo(name: String, host: String, details: String, showDetails: Boolean ) {
+fun RowScope.SequenceCardInfo(
+    name: String, host: String, details: String, showDetails: Boolean,
+    titleOverflowType: TitleOverflowType,
+    multilineTitle: Boolean,
+    titleStyle: TextStyle
+) {
     Column(
         modifier = Modifier
             .padding(top = 8.dp, end = 8.dp, bottom = if (showDetails) 0.dp else 8.dp)
@@ -35,9 +44,9 @@ fun RowScope.SequenceCardInfo(name: String, host: String, details: String, showD
     ) {
         Text(
             text = name,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = MaterialTheme.typography.titleLarge
+            maxLines = if (multilineTitle) Int.MAX_VALUE else 1,
+            overflow = titleOverflowType.toTextOverflow(),
+            style = titleStyle
         )
         if (showDetails) {
             Text(

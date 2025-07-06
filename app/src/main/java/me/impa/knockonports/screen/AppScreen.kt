@@ -112,7 +112,7 @@ fun AppScreen(
             AppNavigation(
                 startDestination = startDestination, onComposing = {
                     appBarState = it
-                }, navController, innerPaddingValues = paddingValues, modifier = Modifier
+                }, navController = navController, innerPaddingValues = paddingValues, modifier = Modifier
             )
         }
     }

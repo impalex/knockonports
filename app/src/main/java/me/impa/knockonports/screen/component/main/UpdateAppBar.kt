@@ -28,7 +28,10 @@ import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 
 @Composable
-fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onEvent: (UiEvent) -> Unit) {
+fun NavController.UpdateAppBar(
+    isRuLangAvailable: Boolean,
+    onComposing: (AppBarState) -> Unit, onEvent: (UiEvent) -> Unit
+) {
     val title = stringResource(R.string.app_name)
     OnDestination<AppNavGraph.MainRoute> {
         LaunchedEffect(true) {
@@ -37,7 +40,7 @@ fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onEvent: (UiE
                     title = title,
                     backAvailable = false,
                     actions = {
-                        MainScreenActions(onAction = { action ->
+                        MainScreenActions(isRuLangAvailable) { action ->
                             when (action) {
                                 is MainBarEvent.AddSequence -> this@UpdateAppBar.navigate(AppNavGraph.SequenceRoute())
                                 is MainBarEvent.Import -> onEvent(UiEvent.Import(action.uri))
@@ -45,7 +48,7 @@ fun NavController.UpdateAppBar(onComposing: (AppBarState) -> Unit, onEvent: (UiE
                                 is MainBarEvent.ShowLogs -> this@UpdateAppBar.navigate(AppNavGraph.LogRoute)
                                 is MainBarEvent.Settings -> this@UpdateAppBar.navigate(AppNavGraph.SettingsRoute)
                             }
-                        })
+                        }
                     }
                 )
             )

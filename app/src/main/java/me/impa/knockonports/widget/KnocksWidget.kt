@@ -19,10 +19,12 @@ package me.impa.knockonports.widget
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import androidx.datastore.core.DataStore
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.GlanceTheme
@@ -41,19 +43,14 @@ import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
-import androidx.glance.currentState
-import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.Spacer
-import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
 import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
-import androidx.glance.state.GlanceStateDefinition
-import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import me.impa.knockonports.BuildConfig
@@ -63,31 +60,17 @@ import me.impa.knockonports.constants.EXTRA_VALUE_SOURCE_WIDGET
 import me.impa.knockonports.data.WidgetDataStore
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.screen.PreviewData
-import java.io.File
 
 class KnocksWidget : GlanceAppWidget() {
 
     override val sizeMode: SizeMode = SizeMode.Exact
 
-    override val stateDefinition: GlanceStateDefinition<List<Sequence>>?
-        get() = object : GlanceStateDefinition<List<Sequence>> {
-            override suspend fun getDataStore(
-                context: Context,
-                fileKey: String
-            ): DataStore<List<Sequence>> {
-                return WidgetDataStore.get(context)
-            }
-
-            override fun getLocation(context: Context, fileKey: String): File {
-                throw NotImplementedError()
-            }
-
-        }
-
     override suspend fun provideGlance(context: Context, id: GlanceId) {
 
         provideContent {
-            KnocksWidgetContent(currentState())
+            val repository = remember { WidgetDataStore.get(context) }
+            val sequences by repository.data.collectAsState(listOf())
+            KnocksWidgetContent(sequences)
         }
     }
 }
@@ -144,7 +127,7 @@ private fun WidgetTitleBar() {
 private fun WidgetSequenceList(sequences: List<Sequence>) {
     Box {
         if (sequences.isEmpty()) {
-            NoData()
+            WidgetEmptyListMessage()
         } else {
             SequencesList(sequences)
         }
@@ -186,36 +169,8 @@ private fun SequencesList(sequences: List<Sequence>) {
 }
 
 @Composable
-private fun NoData() {
-    val noDataText = LocalContext.current.resources.getString(R.string.text_widget_empty_list)
-    Column(
-        modifier = GlanceModifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = noDataText,
-            style = TextStyle(
-                fontWeight = FontWeight.Medium,
-                color = GlanceTheme.colors.onSurface,
-                fontSize = 16.sp
-            )
-        )
-    }
-}
-
-@Composable
 private fun showTitlebar(): Boolean =
     LocalSize.current.width > 180.dp
-
-private fun launchKnocker(context: Context, sequenceId: Long) {
-    val intent = Intent(context, StartKnockingActivity::class.java).apply {
-        putExtra("EXTRA_SEQ_ID", sequenceId)
-        putExtra("EXTRA_SOURCE", EXTRA_VALUE_SOURCE_WIDGET)
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    context.startActivity(intent)
-}
 
 @Suppress("unused")
 @OptIn(ExperimentalGlancePreviewApi::class)

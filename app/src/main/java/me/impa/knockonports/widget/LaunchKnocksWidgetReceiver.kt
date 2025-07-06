@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.mock
+package me.impa.knockonports.widget
 
-import me.impa.knockonports.data.settings.DeviceState
+import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetReceiver
 
-object FakeDeviceState : DeviceState {
-    override val areShortcutsAvailable: Boolean
-        get() = true
-    override val isPlayStoreInstallation: Boolean
-        get() = true
-    override val isRuLangAvailable: Boolean
-        get() = false
+class LaunchKnocksWidgetReceiver : GlanceAppWidgetReceiver() {
+
+    override val glanceAppWidget: GlanceAppWidget = LaunchKnocksWidget()
 }

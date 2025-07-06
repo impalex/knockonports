@@ -45,7 +45,7 @@
     <string name="list_app_none">None</string>
     <string name="field_local_port">Use local UDP port</string>
     <string name="field_ttl" translatable="false">TTL/Hop Limit</string>
-    <string name="message_sequence_saved">\"%s\" saved</string>
+    <string name="message_sequence_saved">«%s» saved</string>
     <string name="action_knock">Knock</string>
     <string name="text_unnamed_sequence">(Unnamed sequence)</string>
     <string name="text_host_not_set">(Host is not set)</string>
@@ -79,8 +79,8 @@
     <string name="action_create_shortcut">Create Shortcut</string>
     <string name="action_integration">Automation</string>
     <string name="title_delete_sequence">Delete sequence?</string>
-    <string name="text_delete_sequence_alert">This will permanently remove the sequence \"%s\". You won’t be able to recover it.</string>
-    <string name="message_sequence_deleted">\"%s\" deleted</string>
+    <string name="text_delete_sequence_alert">This will permanently remove the sequence «%s». You won’t be able to recover it.</string>
+    <string name="message_sequence_deleted">«%s» deleted</string>
     <plurals name="message_sequence_import">
         <item quantity="zero">%d sequences added</item>
         <item quantity="one">%d sequence added</item>
@@ -152,13 +152,13 @@
     <string name="text_annoying_version_9">v%s: Sponsored by unpaid passion and a slight disregard for sanity.</string>
     <string name="message_error_network_not_avail">Network not available</string>
     <string name="message_error_empty_host">Sequence has empty host</string>
-    <string name="message_error_empty_sequence">Sequence \"%s\" is empty</string>
-    <string name="message_error_resolve">Unable to resolve host \"%s\"</string>
-    <string name="message_error_unknown_host">Unknown host \"%s\"</string>
-    <string name="message_error_app_launch">Unable to launch \"%s\"</string>
+    <string name="message_error_empty_sequence">Sequence «%s» is empty</string>
+    <string name="message_error_resolve">Unable to resolve host «%s»</string>
+    <string name="message_error_unknown_host">Unknown host «%s»</string>
+    <string name="message_error_app_launch">Unable to launch «%s»</string>
     <string name="message_knocking_complete">Knocking complete!</string>
     <string name="message_error_unknown">Unknown error: %s</string>
-    <string name="message_start_knocking">Knock-knock-knockin\' on \"%s\"</string>
+    <string name="message_start_knocking">Knock-knock-knockin\' on «%s»</string>
     <string name="message_clipboard_confirmation">Copied</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
@@ -166,16 +166,17 @@
     <string name="action_duplicate">Duplicate</string>
     <string name="action_close">Close</string>
     <string name="title_confirm_knock_alert">Knock-knock!</string>
-    <string name="text_confirm_knock_alert">Do you want to execute sequence \"%s\"?</string>
+    <string name="text_confirm_knock_alert">Do you want to execute sequence «%s»?</string>
     <string name="channel_name">Knock-knock</string>
     <string name="channel_description">Who\'s there? \u1F632</string>
     <string name="notification_title">Knock-knock!</string>
-    <string name="notification_desc">Knocking on \"%s\". Is anybody there?</string>
+    <string name="notification_desc">Knocking on «%s». Is anybody there?</string>
     <string name="contact_author_mail" translatable="false">dev@impa.me</string>
     <string name="contact_subject" translatable="false">Knock on Ports</string>
     <string name="title_integration_alert">Automation URI</string>
     <string name="text_integration_alert">Copy this link to trigger the sequence from automation apps like Tasker or Macrodroid. No need to open the app — just call the URI.</string>
     <string name="title_widget">Sequence List</string>
+    <string name="title_selector_widget">Sequence Selector</string>
     <string name="text_widget_description">Launch any sequence from home screen</string>
     <string name="text_widget_empty_list">Empty sequence list</string>
     <string name="log_unknown">Unknown event</string>
@@ -251,4 +252,24 @@ For most users: <b>do not change this setting</b>.
     <string name="text_error_no_response">No response</string>
     <string name="text_resource_available">Available</string>
     <string name="text_resource_checking">Checking…</string>
+    <string name="title_settings_list">Sequence List</string>
+    <string name="title_settings_multiline_title">Multi-line Title</string>
+    <string name="text_settings_multiline_title">Allow titles to wrap across multiple lines</string>
+    <string name="title_settings_shorten_title">Shorten Title</string>
+    <string name="type_shorten_start">Start\n(eg. «…y long text»)</string>
+    <string name="type_shorten_middle">Middle\n(eg. «Very …g text»)</string>
+    <string name="type_shorten_end">End\n(eg. «Vert long t…»)</string>
+    <string name="title_settings_font_scale">Title Font Scale</string>
+    <string name="title_donate_alert">Support «Knock on Ports»</string>
+    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> is and always will be <b>free, open-source, and private</b> — no ads, no tracking, no strings attached.<br>
+<br>If this app saves you time or solves complex tasks, consider supporting its development.
+<br>Your contribution helps:
+<br>→ <b>Acknowledgе the effort</b> behind years of updates,
+<br>→ <b>Fuel future innovations</b> for niche tech needs,
+<br>→ <b>Keep the project independent</b> and community-driven.
+<br>
+<br><i>Every bit motivates, even if it’s just for coffee</i> ☕.
+<br><i>Thank you for trusting this tool!</i>]]></string>
+    <string name="action_not_now">Not Now</string>
+    <string name="action_support">Support Development</string>
 </resources>

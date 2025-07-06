@@ -16,18 +16,11 @@
 
 package me.impa.knockonports.screen.viewmodel.state.settings
 
-import androidx.compose.runtime.Stable
+import me.impa.knockonports.data.type.TitleOverflowType
 
-@Stable
-data class SettingsUiState(
-    val widgetConfirmation: Boolean,
-    val detectPublicIP: Boolean,
-    val ipv4Service: String,
-    val ipv6Service: String,
-    val customIpv4Service: String,
-    val customIpv6Service: String,
+data class ListUiState(
     val detailedListView: Boolean,
-    val customIp4Header: Boolean,
-    val ip4HeaderSize: Int,
-    val resourceCheckPeriod: Int,
+    val titleFontScale: Int,
+    val titleOverflow: TitleOverflowType,
+    val titleMultiline: Boolean,
 )

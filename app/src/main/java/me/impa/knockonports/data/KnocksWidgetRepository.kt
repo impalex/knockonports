@@ -22,6 +22,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.distinctUntilChanged
 import me.impa.knockonports.data.db.dao.SequenceDao
 import me.impa.knockonports.widget.KnocksWidget
+import me.impa.knockonports.widget.LaunchKnocksWidget
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -33,6 +34,7 @@ class KnocksWidgetRepository @Inject constructor(
 
     suspend fun updateWidget() {
         KnocksWidget().updateAll(context)
+        LaunchKnocksWidget().updateAll(context)
     }
 
     fun getSequences() = sequenceDao.findAllSequences().distinctUntilChanged()

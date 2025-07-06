@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.mock
+package me.impa.knockonports.data.type
 
-import me.impa.knockonports.data.settings.DeviceState
+import androidx.compose.ui.text.style.TextOverflow
+import me.impa.knockonports.extension.EnumCompanion
 
-object FakeDeviceState : DeviceState {
-    override val areShortcutsAvailable: Boolean
-        get() = true
-    override val isPlayStoreInstallation: Boolean
-        get() = true
-    override val isRuLangAvailable: Boolean
-        get() = false
+enum class TitleOverflowType {
+    START, MIDDLE, END;
+
+    companion object : EnumCompanion<TitleOverflowType>(
+        TitleOverflowType.entries.toTypedArray(),
+        END
+    )
+}
+
+fun TitleOverflowType.toTextOverflow() = when (this) {
+    TitleOverflowType.START -> TextOverflow.StartEllipsis
+    TitleOverflowType.MIDDLE -> TextOverflow.MiddleEllipsis
+    TitleOverflowType.END -> TextOverflow.Ellipsis
 }

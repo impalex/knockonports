@@ -23,7 +23,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -52,12 +51,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.async
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.TAG_SEQUENCE_ITEM
 import me.impa.knockonports.data.db.entity.Sequence
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.sequenceString
 import me.impa.knockonports.helper.TextResource
@@ -69,6 +70,7 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
 
+@Suppress("LongParameterList")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LazyItemScope.SequenceCard(
@@ -77,6 +79,9 @@ fun LazyItemScope.SequenceCard(
     state: ReorderableLazyListState,
     showSequenceDetails: Boolean,
     isShortcutsAvailable: Boolean,
+    titleOverflowType: TitleOverflowType,
+    titleFontScale: Int,
+    multilineTitle: Boolean,
     modifier: Modifier = Modifier,
     isHighLighted: Boolean = false,
     onHighLightFinished: () -> Unit = {},
@@ -121,12 +126,22 @@ fun LazyItemScope.SequenceCard(
         }
     }
 
+    val typography = MaterialTheme.typography
+    val titleStyle = remember(titleFontScale) {
+        typography.titleLarge.copy(
+            fontSize = typography.titleLarge.fontSize * (titleFontScale / 100f)
+        )
+    }
+
     ReorderableItem(state, key = sequence.id ?: 0L) {
         SequenceCardContent(
             sequence = sequence,
             resourceState = resourceState,
             cardColor = animatedCardColor.value,
             textColor = animatedContentColor.value,
+            titleOverflowType = titleOverflowType,
+            multilineTitle = multilineTitle,
+            titleStyle = titleStyle,
             showSequenceDetails = showSequenceDetails,
             isShortcutsAvailable = showShortcutMenu,
             modifier = modifier,
@@ -136,12 +151,16 @@ fun LazyItemScope.SequenceCard(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun ReorderableCollectionItemScope.SequenceCardContent(
     sequence: Sequence,
     resourceState: ResourceState?,
     cardColor: Color,
     textColor: Color,
+    titleOverflowType: TitleOverflowType,
+    multilineTitle: Boolean,
+    titleStyle: TextStyle,
     modifier: Modifier = Modifier,
     showSequenceDetails: Boolean = true,
     isShortcutsAvailable: Boolean = false,
@@ -179,7 +198,8 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                     SequenceCardInfo(sequence.name?.takeIf { it.isNotBlank() }
                         ?: stringResource(R.string.text_unnamed_sequence),
                         sequence.host?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_host_not_set),
-                        sequence.sequenceString() ?: stringResource(R.string.text_empty_sequence), showSequenceDetails)
+                        sequence.sequenceString() ?: stringResource(R.string.text_empty_sequence), showSequenceDetails,
+                        titleOverflowType, multilineTitle, titleStyle)
                     if (!showSequenceDetails)
                         KnockIconButton(onKnock = {
                             onPermissionRequest?.invoke()
@@ -216,8 +236,7 @@ fun StateIcon(resourceState: ResourceState, tint: Color = LocalContentColor.curr
 }
 
 @Composable
-fun ColumnScope.KnockButtonRow(resourceState: ResourceState?, onKnock: () -> Unit = {}) {
-
+fun KnockButtonRow(resourceState: ResourceState?, onKnock: () -> Unit = {}) {
 
     @Composable
     fun RowScope.ResourceStateString(time: Long, text: TextResource) {

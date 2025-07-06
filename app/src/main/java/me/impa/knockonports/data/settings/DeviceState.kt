@@ -19,6 +19,7 @@ package me.impa.knockonports.data.settings
 import android.content.Context
 import android.content.pm.ShortcutManager
 import android.os.Build
+import androidx.compose.ui.text.intl.LocaleList
 import dagger.hilt.android.qualifiers.ApplicationContext
 import me.impa.knockonports.helper.isInstalledFromPlayStore
 import javax.inject.Inject
@@ -26,6 +27,7 @@ import javax.inject.Inject
 interface DeviceState {
     val areShortcutsAvailable: Boolean
     val isPlayStoreInstallation: Boolean
+    val isRuLangAvailable: Boolean
 }
 
 class DeviceStateImpl @Inject constructor(@ApplicationContext private val context: Context) : DeviceState {
@@ -34,5 +36,9 @@ class DeviceStateImpl @Inject constructor(@ApplicationContext private val contex
             context.getSystemService(ShortcutManager::class.java)?.isRequestPinShortcutSupported == true
 
     override val isPlayStoreInstallation = isInstalledFromPlayStore(context.packageManager)
+
+    override val isRuLangAvailable by lazy {
+        LocaleList.current.localeList.any { it.language == "ru" }
+    }
 
 }
