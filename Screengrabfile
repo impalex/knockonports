@@ -9,6 +9,8 @@ tests_apk_path 'app\build\outputs\apk\androidTest\debug\app-debug-androidTest.ap
 
 locales ['en-US', 'ru-RU']
 
+use_timestamp_suffix false
+
 test_instrumentation_runner 'me.impa.knockonports.HiltTestRunner'
 
 # clear all previously generated screenshots in your local output directory before creating new ones
