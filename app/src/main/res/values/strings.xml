@@ -258,7 +258,7 @@ For most users: <b>do not change this setting</b>.
     <string name="title_settings_shorten_title">Shorten Title</string>
     <string name="type_shorten_start">Start\n(eg. «…y long text»)</string>
     <string name="type_shorten_middle">Middle\n(eg. «Very …g text»)</string>
-    <string name="type_shorten_end">End\n(eg. «Vert long t…»)</string>
+    <string name="type_shorten_end">End\n(eg. «Very long t…»)</string>
     <string name="title_settings_font_scale">Title Font Scale</string>
     <string name="title_donate_alert">Support «Knock on Ports»</string>
     <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> is and always will be <b>free, open-source, and private</b> — no ads, no tracking, no strings attached.<br>
