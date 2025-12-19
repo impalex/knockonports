@@ -53,6 +53,7 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TooltipAnchorPosition
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
 import androidx.compose.material3.rememberTooltipState
@@ -325,7 +326,9 @@ private fun RowScope.IcmpDataEditor(
             .weight(1f),
         trailingIcon = {
 
-            val positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider()
+            val positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                positioning = TooltipAnchorPosition.Above
+            )
             val state = rememberTooltipState(isPersistent = true)
             val coroutineScope = rememberCoroutineScope()
             val interactionSource = remember { MutableInteractionSource() }

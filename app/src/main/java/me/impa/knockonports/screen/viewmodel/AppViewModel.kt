@@ -17,15 +17,42 @@
 package me.impa.knockonports.screen.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import me.impa.knockonports.data.KnocksRepository
+import me.impa.knockonports.data.settings.SettingsDataStore
+import me.impa.knockonports.service.biometric.BiometricHelper
 import javax.inject.Inject
 
 @HiltViewModel
-class AppViewModel @Inject constructor(private val repository: KnocksRepository) : ViewModel() {
+class AppViewModel @Inject constructor(
+    private val repository: KnocksRepository,
+    val biometricHelper: BiometricHelper,
+    val settings: SettingsDataStore
+) : ViewModel() {
 
     val eventFlow = repository.getCurrentEventFlow()
 
+    private val _isLocked = MutableStateFlow(false)
+
+    val isLocked: StateFlow<Boolean> = _isLocked
+
     fun clearEvent() = repository.clearEvent()
+
+    fun unlock() {
+        _isLocked.value = false
+    }
+
+    init {
+        viewModelScope.launch {
+            val biometricState = biometricHelper.state.first()
+            val appLockState = settings.isAppLockEnabled.first()
+            _isLocked.value = biometricState && appLockState
+        }
+    }
 
 }

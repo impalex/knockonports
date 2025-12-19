@@ -16,13 +16,9 @@
 
 package me.impa.knockonports.screen
 
-import android.provider.CalendarContract
+import android.app.Activity
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,13 +40,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.TAG_APP_SCREEN
@@ -61,15 +56,36 @@ import me.impa.knockonports.navigation.AppNavGraph
 import me.impa.knockonports.navigation.AppNavigation
 import me.impa.knockonports.screen.viewmodel.AppViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppScreen(
     modifier: Modifier = Modifier,
     startDestination: AppNavGraph = AppNavGraph.MainRoute,
-    viewModel: AppViewModel = hiltViewModel()
+    viewModel: AppViewModel = hiltViewModel(),
+) {
+    val isLocked by viewModel.isLocked.collectAsState()
+    val currentEvent by viewModel.eventFlow.collectAsState()
+
+    if (isLocked) {
+        val context = LocalContext.current
+        viewModel.biometricHelper.launchBiometricPrompt(
+            LocalContext.current, stringResource(R.string.title_lock_app),
+            stringResource(R.string.text_lock_app), onSuccess = { viewModel.unlock() },
+            onUnavailable = { viewModel.unlock() },
+            onError = { (context as? Activity)?.finish() })
+    } else {
+        AppScreenContent(modifier, startDestination, currentEvent, viewModel::clearEvent)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppScreenContent(
+    modifier: Modifier,
+    startDestination: AppNavGraph,
+    currentEvent: AppEvent?,
+    onClearEvent: () -> Unit
 ) {
     val navController = rememberNavController()
-    val currentEvent by viewModel.eventFlow.collectAsState()
 
     Surface(
         modifier = modifier.then(Modifier.testTag(TAG_APP_SCREEN)),
@@ -107,10 +123,15 @@ fun AppScreen(
             }
         ) { paddingValues ->
             currentEvent?.let {
-                EventHandler(event = it, snackbarHostState = snackbarHostState, onEventHandled = viewModel::clearEvent)
+                EventHandler(
+                    event = it,
+                    snackbarHostState = snackbarHostState,
+                    onEventHandled = onClearEvent
+                )
             }
             AppNavigation(
                 startDestination = startDestination, onComposing = {
+                    @Suppress("AssignedValueIsNeverRead")
                     appBarState = it
                 }, navController = navController, innerPaddingValues = paddingValues, modifier = Modifier
             )

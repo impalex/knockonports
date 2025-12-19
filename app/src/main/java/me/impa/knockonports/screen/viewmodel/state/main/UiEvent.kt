@@ -38,5 +38,6 @@ sealed interface UiEvent {
     data class Export(val uri: Uri) : UiEvent
     data class Import(val uri: Uri) : UiEvent
     data object ConfirmBetaMessage : UiEvent
+    data object ToggleListMode : UiEvent
 }
 

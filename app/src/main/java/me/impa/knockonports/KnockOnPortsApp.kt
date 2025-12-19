@@ -29,10 +29,6 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class KnockOnPortsApp : Application() {
-    // TODO Delete when https://github.com/google/dagger/issues/3601 is resolved.
-    @Inject
-    @ApplicationContext
-    lateinit var context: Context
 
     override fun onCreate() {
         super.onCreate()

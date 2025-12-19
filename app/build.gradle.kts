@@ -66,8 +66,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 36
-        versionCode = 219
-        versionName = "2.0.10"
+        versionCode = 220
+        versionName = "2.0.11"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -134,6 +134,7 @@ android {
 }
 
 kotlin {
+    jvmToolchain(17)
     compilerOptions {
         freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
@@ -146,12 +147,16 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.immutable.collections)
 
+    // Biometric
+    implementation("androidx.biometric:biometric:1.1.0")
+
     // Compose
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.core)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.adaptive.navigation.suite)
     implementation(libs.accompanist.permissions)

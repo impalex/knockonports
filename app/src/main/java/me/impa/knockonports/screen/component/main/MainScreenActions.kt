@@ -50,7 +50,11 @@ import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 
 @Composable
-fun MainScreenActions(isRuLangAvailable: Boolean, onAction: (MainBarEvent) -> Unit = {}) {
+fun MainScreenActions(
+    isRuLangAvailable: Boolean,
+    isDetailedView: Boolean,
+    onAction: (MainBarEvent) -> Unit = {}
+) {
     var showMenu by remember { mutableStateOf(false) }
     Row {
         if (BuildConfig.VERSION_NAME.contains("beta") && CURRENT_BETA_TEST_MESSAGE.isNotEmpty()) {
@@ -65,6 +69,13 @@ fun MainScreenActions(isRuLangAvailable: Boolean, onAction: (MainBarEvent) -> Un
         }
         if (isRuLangAvailable) {
             DonateButton()
+        }
+        IconButton(onClick = debounced({ onAction(MainBarEvent.ToggleListMode) })) {
+            if (isDetailedView) {
+                Icon(painterResource(R.drawable.view_list), contentDescription = null)
+            } else {
+                Icon(painterResource(R.drawable.list), contentDescription = null)
+            }
         }
         Button(onClick = debounced({ onAction(MainBarEvent.AddSequence) }),
             colors = ButtonDefaults.filledTonalButtonColors(
@@ -118,6 +129,6 @@ fun DonateButton() {
 @Composable
 fun PreviewMainScreenActions() {
     Row {
-        MainScreenActions(true)
+        MainScreenActions(true, true)
     }
 }

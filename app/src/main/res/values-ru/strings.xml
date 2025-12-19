@@ -261,5 +261,11 @@
 <br><i>Спасибо, что доверяете моему инструменту!</i>]]></string>
     <string name="action_not_now">Не сейчас</string>
     <string name="action_support">Поддержать проект</string>
-
+    <string name="title_settings_app_lock">Блокировка приложения</string>
+    <string name="text_settings_app_lock_desc">Запрашивать аутентификацию при открытии приложения</string>
+    <string name="text_settings_app_lock_not_available_desc">Чтобы использовать эту функцию, сначала настройте блокировку экрана на вашем устройстве.</string>
+    <string name="title_lock_app">Требуется аутентификация</string>
+    <string name="text_lock_app">Аутентифицируйтесь для доступа к приложению.</string>
+    <string name="title_lock_config">Проверка безопасности</string>
+    <string name="text_lock_config">Требуется аутентификация для изменения настройки блокировки.</string>
 </resources>

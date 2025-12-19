@@ -30,23 +30,25 @@ import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 @Composable
 fun NavController.UpdateAppBar(
     isRuLangAvailable: Boolean,
+    isDetailedView: Boolean,
     onComposing: (AppBarState) -> Unit, onEvent: (UiEvent) -> Unit
 ) {
     val title = stringResource(R.string.app_name)
     OnDestination<AppNavGraph.MainRoute> {
-        LaunchedEffect(true) {
+        LaunchedEffect(isDetailedView) {
             onComposing(
                 AppBarState(
                     title = title,
                     backAvailable = false,
                     actions = {
-                        MainScreenActions(isRuLangAvailable) { action ->
+                        MainScreenActions(isRuLangAvailable, isDetailedView) { action ->
                             when (action) {
                                 is MainBarEvent.AddSequence -> this@UpdateAppBar.navigate(AppNavGraph.SequenceRoute())
                                 is MainBarEvent.Import -> onEvent(UiEvent.Import(action.uri))
                                 is MainBarEvent.Export -> onEvent(UiEvent.Export(action.uri))
                                 is MainBarEvent.ShowLogs -> this@UpdateAppBar.navigate(AppNavGraph.LogRoute)
                                 is MainBarEvent.Settings -> this@UpdateAppBar.navigate(AppNavGraph.SettingsRoute)
+                                is MainBarEvent.ToggleListMode -> onEvent(UiEvent.ToggleListMode)
                             }
                         }
                     }

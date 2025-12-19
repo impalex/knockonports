@@ -22,7 +22,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,6 +39,7 @@ import me.impa.knockonports.data.settings.Ipv6ProviderMap
 import me.impa.knockonports.data.settings.PROVIDER_CUSTOM
 import me.impa.knockonports.screen.component.common.HeaderSection
 import me.impa.knockonports.screen.component.common.PrefCustomProviderEditor
+import me.impa.knockonports.screen.component.common.PrefDescriptionClickable
 import me.impa.knockonports.screen.component.common.PrefMultiSelection
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
@@ -52,6 +53,7 @@ fun LazyListScope.generalSection(
     item(key = "general") {
         HeaderSection(title = stringResource(R.string.title_settings_general), false)
     }
+    appLockSection(config, onEvent)
     item(key = "widget_confirmation") {
         PrefSwitch(
             title = stringResource(R.string.title_settings_widget_confirmation),
@@ -109,12 +111,42 @@ fun LazyListScope.generalSection(
     }
 }
 
+private fun LazyListScope.appLockSection(
+    config: GeneralUiState,
+    onEvent: (UiEvent) -> Unit
+) {
+    item(key = "app_lock") {
+        val description = if (config.isBiometricAuthAvailable) {
+            stringResource(R.string.text_settings_app_lock_desc)
+        } else {
+            stringResource(R.string.text_settings_app_lock_not_available_desc)
+        }
+
+        if (config.isBiometricAuthAvailable) {
+            PrefSwitch(
+                title = stringResource(R.string.title_settings_app_lock),
+                description = description,
+                value = config.isAppLockEnabled,
+                onClick = {
+                    onEvent(UiEvent.ToggleAuth(!config.isAppLockEnabled))
+                }
+            )
+        } else {
+            PrefDescriptionClickable(
+                title = stringResource(R.string.title_settings_app_lock),
+                subtitle = stringResource(R.string.text_settings_app_lock_not_available_desc),
+                onClick = { onEvent(UiEvent.OpenSecuritySettings) }
+            )
+        }
+    }
+}
+
 private fun LazyListScope.ipvSection(
     config: GeneralUiState,
     onEvent: (UiEvent) -> Unit
 ) {
     item(key = "ipv4_service") {
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val serviceMap = remember(resources) {
             Ipv4ProviderMap.mapValues { entry -> resources.getString(entry.value) }.toPersistentMap()
         }
@@ -132,7 +164,7 @@ private fun LazyListScope.ipvSection(
         }
     }
     item(key = "ipv6_service") {
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val serviceMap = remember(resources) {
             Ipv6ProviderMap.mapValues { entry -> resources.getString(entry.value) }.toPersistentMap()
         }
@@ -157,6 +189,7 @@ fun PreviewGeneralSection() {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         generalSection(
             GeneralUiState(
+                isAppLockEnabled = true,
                 widgetConfirmation = false,
                 detectPublicIP = false,
                 ipv4Service = PROVIDER_CUSTOM,
@@ -165,7 +198,8 @@ fun PreviewGeneralSection() {
                 customIpv6Service = "",
                 customIp4Header = false,
                 ip4HeaderSize = 20,
-                resourceCheckPeriod = 5000
+                resourceCheckPeriod = 5000,
+                isBiometricAuthAvailable = true
             )
         )
     }

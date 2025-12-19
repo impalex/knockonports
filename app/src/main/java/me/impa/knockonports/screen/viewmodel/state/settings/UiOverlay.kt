@@ -19,4 +19,6 @@ package me.impa.knockonports.screen.viewmodel.state.settings
 sealed interface UiOverlay {
     data object ConfirmIPDetection : UiOverlay
     data object CustomIPHeaderAlert : UiOverlay
+    data object OpenSecuritySettings : UiOverlay
+    data class PerformAuth(val enableAuth: Boolean) : UiOverlay
 }

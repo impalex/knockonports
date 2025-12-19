@@ -20,6 +20,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 data class GeneralUiState(
+    val isAppLockEnabled: Boolean,
     val widgetConfirmation: Boolean,
     val detectPublicIP: Boolean,
     val ipv4Service: String,
@@ -29,4 +30,5 @@ data class GeneralUiState(
     val customIp4Header: Boolean,
     val ip4HeaderSize: Int,
     val resourceCheckPeriod: Int,
+    val isBiometricAuthAvailable: Boolean
 )

@@ -16,38 +16,35 @@
 
 package me.impa.knockonports
 
+import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import android.graphics.Color
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.Modifier
+import androidx.fragment.app.FragmentActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.screen.AppScreen
+import me.impa.knockonports.service.biometric.BiometricHelper
 import me.impa.knockonports.service.resource.AccessWatcher
 import me.impa.knockonports.service.shortcut.ShortcutWatcher
 import me.impa.knockonports.ui.config.DarkMode
-import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
     @Inject
     lateinit var shortcutWatcher: ShortcutWatcher
@@ -58,13 +55,23 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var settingsDataStore: SettingsDataStore
 
+    @Inject
+    lateinit var deviceState: DeviceState
+
+    @Inject
+    lateinit var biometricHelper: BiometricHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(resourceWatcher)
         lifecycle.addObserver(shortcutWatcher)
+        lifecycle.addObserver(biometricHelper)
+        intent?.data?.path?.let {
+            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        }
         setContent {
-            //val theme by settingsDataStore.themeSettings.collectAsStateWithLifecycle(initialValue = ThemeConfig())
             val theme by settingsDataStore.themeSettings.collectAsState(initial = null)
             var themeCache by rememberSaveable { mutableStateOf(theme) }
             val isSystemInDarkTheme = isSystemInDarkTheme()
@@ -87,8 +94,9 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
-            themeCache?.let {
-                KnockOnPortsTheme(config = it) {
+
+            themeCache?.let { theme ->
+                KnockOnPortsTheme(config = theme) {
                     AppScreen(modifier = Modifier.fillMaxSize())
                 }
             }
@@ -98,7 +106,8 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         lifecycle.removeObserver(resourceWatcher)
         lifecycle.removeObserver(shortcutWatcher)
+        lifecycle.removeObserver(biometricHelper)
         super.onDestroy()
     }
-}
 
+}

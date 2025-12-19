@@ -264,7 +264,7 @@ For most users: <b>do not change this setting</b>.
     <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> is and always will be <b>free, open-source, and private</b> — no ads, no tracking, no strings attached.<br>
 <br>If this app saves you time or solves complex tasks, consider supporting its development.
 <br>Your contribution helps:
-<br>→ <b>Acknowledgе the effort</b> behind years of updates,
+<br>→ <b>Acknowledge the effort</b> behind years of updates,
 <br>→ <b>Fuel future innovations</b> for niche tech needs,
 <br>→ <b>Keep the project independent</b> and community-driven.
 <br>
@@ -272,4 +272,11 @@ For most users: <b>do not change this setting</b>.
 <br><i>Thank you for trusting this tool!</i>]]></string>
     <string name="action_not_now">Not Now</string>
     <string name="action_support">Support Development</string>
+    <string name="title_settings_app_lock">App Lock</string>
+    <string name="text_settings_app_lock_desc">Require authentication to open the app</string>
+    <string name="text_settings_app_lock_not_available_desc">To use this feature, first set up a screen lock on your device.</string>
+    <string name="title_lock_app">Authentication Required</string>
+    <string name="text_lock_app">Authenticate to access the app.</string>
+    <string name="title_lock_config">Security Verification</string>
+    <string name="text_lock_config">Authenticate to change the app lock setting.</string>
 </resources>

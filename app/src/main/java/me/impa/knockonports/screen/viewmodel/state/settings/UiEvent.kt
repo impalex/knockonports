@@ -43,4 +43,7 @@ sealed interface UiEvent {
     data class SetTitleMultiline(val enabled: Boolean) : UiEvent
     data class SetTitleOverflow(val overflow: TitleOverflowType) : UiEvent
     data class SetTitleFontScale(val scale: Int) : UiEvent
+    data object OpenSecuritySettings : UiEvent
+    data class ToggleAuth(val enabled: Boolean) : UiEvent
+    data class SetAuthState(val enabled: Boolean) : UiEvent
 }

@@ -19,6 +19,9 @@ package me.impa.knockonports.data.settings
 import android.content.Context
 import android.content.pm.ShortcutManager
 import android.os.Build
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.compose.ui.text.intl.LocaleList
 import dagger.hilt.android.qualifiers.ApplicationContext
 import me.impa.knockonports.helper.isInstalledFromPlayStore

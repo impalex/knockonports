@@ -78,6 +78,8 @@ interface SettingsDataStore {
     // endregion Miscellaneous settings
 
     // region App settings
+    val isAppLockEnabled: Flow<Boolean>
+    suspend fun setAppLock(enabled: Boolean)
     val widgetConfirmation: Flow<Boolean>
     suspend fun setWidgetConfirmation(confirmation: Boolean)
     val detectPublicIP: Flow<Boolean>
@@ -221,6 +223,16 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
     // endregion Miscellaneous settings
 
     // region App settings
+    override val isAppLockEnabled: Flow<Boolean> = context.dataStore.data
+        .distinctUntilChangedBy { it[appLockKey] }
+        .map { preferences -> preferences[appLockKey] == true }
+
+    override suspend fun setAppLock(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[appLockKey] = enabled
+        }
+    }
+    
     override val widgetConfirmation = context.dataStore.data
         .distinctUntilChangedBy { it[widgetConfirmationKey] }
         .map { preferences -> preferences[widgetConfirmationKey] == true }
@@ -385,6 +397,7 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
         private val knockCountKey = longPreferencesKey("CFG_KNOCK_COUNT")
 
         // App settings
+        private val appLockKey = booleanPreferencesKey("CFG_APP_LOCK")
         private val widgetConfirmationKey = booleanPreferencesKey("CFG_CONFIRM_WIDGET")
         private val detectPublicIPKey = booleanPreferencesKey("CFG_DETECT_PUBLIC_IP")
         private val ipv4ServiceKey = stringPreferencesKey("CFG_IP4_SERVICE")

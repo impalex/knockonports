@@ -33,12 +33,14 @@ import me.impa.knockonports.screen.viewmodel.state.settings.ListUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.ThemeUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
+import me.impa.knockonports.service.biometric.BiometricHelper
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     deviceState: DeviceState,
-    private val settingsDataStore: SettingsDataStore
+    private val settingsDataStore: SettingsDataStore,
+    val biometricHelper: BiometricHelper
 ) : ViewModel() {
 
     val isPlayStoreInstallation = deviceState.isPlayStoreInstallation
@@ -68,6 +70,7 @@ class SettingsViewModel @Inject constructor(
 
 
     val appSettingsState = combine<Any, GeneralUiState>(
+        settingsDataStore.isAppLockEnabled,
         settingsDataStore.widgetConfirmation,
         settingsDataStore.detectPublicIP,
         settingsDataStore.ipv4Service,
@@ -77,17 +80,21 @@ class SettingsViewModel @Inject constructor(
         settingsDataStore.customIp4Header,
         settingsDataStore.ip4HeaderSize,
         settingsDataStore.resourceCheckPeriod,
+        biometricHelper.state
     ) {
         GeneralUiState(
-            widgetConfirmation = it[0] as Boolean,
-            detectPublicIP = it[1] as Boolean,
-            ipv4Service = it[2] as String,
-            ipv6Service = it[3] as String,
-            customIpv4Service = it[4] as String,
-            customIpv6Service = it[5] as String,
-            customIp4Header = it[6] as Boolean,
-            ip4HeaderSize = it[7] as Int,
-            resourceCheckPeriod = it[8] as Int,
+            isAppLockEnabled = it[0] as Boolean,
+            widgetConfirmation = it[1] as Boolean,
+            detectPublicIP = it[2] as Boolean,
+            ipv4Service = it[3] as String,
+            ipv6Service = it[4] as String,
+            customIpv4Service = it[5] as String,
+            customIpv6Service = it[6] as String,
+            customIp4Header = it[7] as Boolean,
+            ip4HeaderSize = it[8] as Int,
+            resourceCheckPeriod = it[9] as Int,
+            isBiometricAuthAvailable = it[10] as Boolean
+
         )
     }
 
@@ -125,6 +132,10 @@ class SettingsViewModel @Inject constructor(
             is UiEvent.SetTitleFontScale -> settingsDataStore.setTitleScale(event.scale)
             is UiEvent.SetTitleMultiline -> settingsDataStore.setTitleMultiline(event.enabled)
             is UiEvent.SetTitleOverflow -> settingsDataStore.setTitleOverflow(event.overflow)
+            is UiEvent.OpenSecuritySettings -> _overlay.update { UiOverlay.OpenSecuritySettings }
+            is UiEvent.ToggleAuth -> _overlay.update { UiOverlay.PerformAuth(event.enabled) }
+            is UiEvent.SetAuthState -> settingsDataStore.setAppLock(event.enabled)
+
         }
     }
 

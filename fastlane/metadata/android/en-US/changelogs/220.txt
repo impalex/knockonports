@@ -1,0 +1,3 @@
+• Minor interface tweaks.
+• Added a toggle button to switch the sequence list between compact and detailed view.
+• Implemented app lock using device authentication (biometrics, PIN, etc.).

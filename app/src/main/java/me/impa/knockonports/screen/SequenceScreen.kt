@@ -18,36 +18,32 @@ package me.impa.knockonports.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuAnchorType
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffoldDefaults
-import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteType
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -59,10 +55,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,17 +65,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.navigation.NavController
-import androidx.window.core.layout.WindowWidthSizeClass
 import kotlinx.collections.immutable.ImmutableList
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.MAX_CHECK_RETRIES
 import me.impa.knockonports.constants.MAX_CHECK_TIMEOUT
 import me.impa.knockonports.constants.MIN_CHECK_RETRIES
 import me.impa.knockonports.constants.MIN_CHECK_TIMEOUT
-import me.impa.knockonports.constants.TAG_EDIT_CONFIG_TAB
+import me.impa.knockonports.constants.TAG_SEQUENCE_ADVANCED_TAB
 import me.impa.knockonports.constants.TAG_EDIT_HOST
 import me.impa.knockonports.constants.TAG_EDIT_LOCAL_PORT
-import me.impa.knockonports.constants.TAG_EDIT_SEQUENCE_TAB
+import me.impa.knockonports.constants.TAG_SEQUENCE_BASIC_TAB
+import me.impa.knockonports.constants.TAG_EMPTY
 import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.extension.stringResourceId
 import me.impa.knockonports.navigation.AppBarState
@@ -118,39 +113,99 @@ fun SequenceScreen(
 
     // Stabilize lambda
     val onEvent = remember(viewModel) { { event: UiEvent -> viewModel.onEvent(event) } }
-
     if (!state.isLoading) {
-        NavScaffold(modifier.then(Modifier.padding(innerPaddingValues))) { index ->
-            val view = LocalView.current
-            val listState = rememberLazyListState()
-            val reorderableListState = getReorderableListState(
-                listState, onMove = { from, to -> onEvent(UiEvent.MoveStep(from, to)) },
-                onFeedback = {
-                    ViewCompat.performHapticFeedback(view, HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK)
-                })
-            if (index == 0) {
-                state.newStepId?.let { AutoScroller(listState = listState, state = state, onEvent = onEvent) }
-            }
+        SequenceScreenContent(
+            state = state,
+            onEvent = onEvent,
+            innerPaddingValues = innerPaddingValues,
+            modifier = modifier
+        )
+    }
+}
 
-            LazyColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun SequenceScreenContent(
+    state: UiState,
+    onEvent: (UiEvent) -> Unit,
+    innerPaddingValues: PaddingValues,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.then(
+            Modifier
+                .fillMaxSize()
+                .padding(innerPaddingValues)
+        )
+    ) {
+        var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+        val titles = listOf(R.string.title_tab_basic_settings, R.string.title_tab_advanced_settings)
+
+        val pagerState = rememberPagerState {
+            titles.size
+        }
+
+        LaunchedEffect(selectedIndex) {
+            pagerState.animateScrollToPage(selectedIndex)
+        }
+
+        LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+            if (!pagerState.isScrollInProgress)
+                selectedIndex = pagerState.currentPage
+        }
+
+        PrimaryTabRow(selectedTabIndex = selectedIndex, modifier = Modifier.fillMaxWidth()) {
+            titles.forEachIndexed { index, title ->
+                Tab(
+                    selected = selectedIndex == index,
+                    onClick = { selectedIndex = index },
+                    text = { Text(stringResource(title)) },
+                    modifier = Modifier.testTag(
+                        when (index) {
+                            0 -> TAG_SEQUENCE_BASIC_TAB
+                            1 -> TAG_SEQUENCE_ADVANCED_TAB
+                            else -> TAG_EMPTY
+                        }
+                    )
+                )
+            }
+        }
+
+        val listStates = remember {
+            List(titles.size) { LazyListState() }
+        }
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+        ) { index ->
+            val view = LocalView.current
+            val reorderableListState = getReorderableListState(
+                listStates[index],
+                onMove = { from, to -> onEvent(UiEvent.MoveStep(from, to)) },
+                onFeedback = {
+                    ViewCompat.performHapticFeedback(
+                        view,
+                        HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK
+                    )
+                })
+            if (index == 0)
+                state.newStepId?.let { AutoScroller(listStates[index], state, onEvent) }
+            LazyColumn(state = listStates[index], modifier = Modifier.fillMaxSize()) {
                 when (index) {
                     0 -> {
-                        sequenceBasicConfig(
-                            state = state,
-                            onEvent = onEvent
-                        )
+                        sequenceBasicConfig(state, innerModifier = Modifier.padding(horizontal = 8.dp),
+                            onEvent = onEvent)
                         stepList(
-                            state = state,
-                            steps = state.steps,
+                            state, state.steps,
                             reorderableListState = reorderableListState,
+                            innerModifier = Modifier.padding(horizontal = 8.dp),
                             onEvent = onEvent
                         )
                     }
 
-                    1 -> sequenceAdvancedConfig(
-                        state = state,
-                        onEvent = onEvent
-                    )
+                    1 -> sequenceAdvancedConfig(state, onEvent)
                 }
             }
         }
@@ -186,58 +241,10 @@ private fun getReorderableListState(
     onFeedback()
 }
 
-@Composable
-private fun NavScaffold(
-    modifier: Modifier = Modifier,
-    pageContent: @Composable (page: Int) -> Unit = {}
-) {
-    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
-    val windowWidthClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
-    NavigationSuiteScaffold(
-        modifier = modifier,
-        navigationSuiteItems = {
-            item(
-                selected = selectedItemIndex == 0,
-                onClick = {
-                    selectedItemIndex = 0
-                },
-                icon = {
-                    Icon(painterResource(R.drawable.double_arrow_icon), contentDescription = null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.title_nav_sequence))
-                },
-                modifier = Modifier.testTag(TAG_EDIT_SEQUENCE_TAB)
-            )
-            item(
-                selected = selectedItemIndex == 1,
-                onClick = {
-                    selectedItemIndex = 1
-                },
-                icon = {
-                    Icon(painterResource(R.drawable.tune_icon), contentDescription = null)
-                },
-                label = {
-                    Text(text = stringResource(R.string.title_nav_config))
-                },
-                modifier = Modifier.testTag(TAG_EDIT_CONFIG_TAB)
-            )
-        },
-        layoutType = when (windowWidthClass) {
-            WindowWidthSizeClass.EXPANDED -> NavigationSuiteType.NavigationDrawer
-            WindowWidthSizeClass.MEDIUM -> NavigationSuiteType.NavigationRail
-            else -> NavigationSuiteScaffoldDefaults.calculateFromAdaptiveInfo(currentWindowAdaptiveInfo())
-        }
-    ) {
-        Box(modifier = Modifier.padding(8.dp)) {
-            pageContent(selectedItemIndex)
-        }
-    }
-}
-
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 private fun LazyListScope.sequenceBasicConfig(
     state: UiState,
+    innerModifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
 
@@ -245,7 +252,8 @@ private fun LazyListScope.sequenceBasicConfig(
         ValueTextField(
             stringResource(R.string.field_name), state.title,
             onValueChange = { onEvent(UiEvent.UpdateTitle(it)) },
-            validationResult = state.titleValidation
+            validationResult = state.titleValidation,
+            modifier = innerModifier
         )
     }
     item(key = "host_edit") {
@@ -253,7 +261,7 @@ private fun LazyListScope.sequenceBasicConfig(
             stringResource(R.string.field_host), state.host,
             onValueChange = { onEvent(UiEvent.UpdateHost(it)) },
             validationResult = state.hostValidation,
-            modifier = Modifier.testTag(TAG_EDIT_HOST)
+            modifier = innerModifier.then(Modifier.testTag(TAG_EDIT_HOST))
         )
     }
     item(key = "group_edit") {
@@ -263,11 +271,14 @@ private fun LazyListScope.sequenceBasicConfig(
             if (filter.isEmpty()) state.groupList
             else state.groupList.filter { it.contains(filter, false) }
         }
-
-        ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+        @Suppress("UNUSED_EXPRESSION")
+        ExposedDropdownMenuBox(
+            expanded = expanded, onExpandedChange = { expanded = !expanded },
+            modifier = innerModifier
+        ) {
             ValueTextField(
                 stringResource(R.string.field_group), state.group,
-                modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable),
+                modifier = Modifier.menuAnchor(ExposedDropdownMenuAnchorType.PrimaryEditable),
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                 onValueChange = { onEvent(UiEvent.UpdateGroup(it)) }
             )
@@ -294,11 +305,13 @@ private fun LazyListScope.stepList(
     state: UiState,
     steps: ImmutableList<StepUiState>,
     reorderableListState: ReorderableLazyListState,
+    innerModifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
     items(steps, key = { it.id }) { step ->
         SequenceStepCard(
             step, ip4HeaderSize = state.ip4HeaderSize,
+            modifier = innerModifier,
             icmpType = state.icmpSizeType, state = reorderableListState, onEvent = onEvent
         )
     }
@@ -322,6 +335,7 @@ private fun SequenceStepsHeader(onAddNew: () -> Unit = {}) {
         modifier = Modifier
             .fillMaxWidth()
             .background(gradientBrush)
+            .padding(horizontal = 8.dp)
     ) {
         Text(
             text = stringResource(R.string.title_list_sequence_steps),
@@ -453,7 +467,7 @@ private fun LazyListScope.checkAccessConfig(state: UiState, onEvent: (UiEvent) -
     }
     if (state.checkAccess) {
         item(key = "check_access_type") {
-            val resources = LocalContext.current.resources
+            val resources = LocalResources.current
             val checkAccessTypes = remember {
                 CheckAccessType.entries.map { resources.getString(it.stringResourceId()) }
             }
@@ -497,8 +511,16 @@ private fun LazyListScope.checkAccessConfig(state: UiState, onEvent: (UiEvent) -
 
 @Preview
 @Composable
-fun PreviewNavScaffold() {
-    NavScaffold()
+fun SequenceScreenContentPreview() {
+    SequenceScreenContent(
+        state = UiState(
+            title = "My sequence",
+            host = "192.168.1.1",
+            group = "Home"
+        ),
+        onEvent = {},
+        innerPaddingValues = PaddingValues(0.dp)
+    )
 }
 
 @Preview
@@ -518,4 +540,3 @@ fun PreviewAdvancedConfig() {
         sequenceAdvancedConfig(UiState(checkAccess = true, checkAccessType = CheckAccessType.PORT))
     }
 }
-

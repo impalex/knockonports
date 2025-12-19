@@ -16,11 +16,11 @@
 
 package me.impa.knockonports.screen
 
+import android.content.Context
+import android.content.Intent
+import android.provider.Settings
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
@@ -28,9 +28,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import me.impa.knockonports.R
@@ -46,6 +46,7 @@ import me.impa.knockonports.screen.component.settings.themeSection
 import me.impa.knockonports.screen.viewmodel.SettingsViewModel
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
+import me.impa.knockonports.service.biometric.BiometricHelper
 
 @Composable
 fun SettingsScreen(
@@ -59,6 +60,7 @@ fun SettingsScreen(
     val theme by viewModel.themeState.collectAsStateWithLifecycle(initialValue = null)
     val listSettings by viewModel.listState.collectAsStateWithLifecycle(initialValue = null)
     val isPlayStoreInstallation = viewModel.isPlayStoreInstallation
+    val biometricHelper = viewModel.biometricHelper
     val overlay by viewModel.overlay.collectAsState()
     val title = stringResource(R.string.title_screen_settings)
     val lazyListState = rememberLazyListState()
@@ -74,7 +76,7 @@ fun SettingsScreen(
         }
     }
 
-    overlay?.let { ShowOverlay(it, viewModel::onEvent) }
+    overlay?.let { ShowOverlay(LocalContext.current, biometricHelper, it, viewModel::onEvent) }
 
     LazyColumn(
         state = lazyListState,
@@ -104,9 +106,21 @@ fun SettingsScreen(
 }
 
 @Composable
-fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
+fun ShowOverlay(context: Context, biometricHelper: BiometricHelper, overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
     when (overlay) {
         UiOverlay.ConfirmIPDetection -> DetectIPAlert(onEvent)
         UiOverlay.CustomIPHeaderAlert -> IPHeaderSizeAlert(onEvent)
+        UiOverlay.OpenSecuritySettings ->
+            onEvent(UiEvent.ClearOverlay).also { context.startActivity(Intent(Settings.ACTION_SECURITY_SETTINGS)) }
+
+        is  UiOverlay.PerformAuth ->
+            onEvent(UiEvent.ClearOverlay).also {
+                biometricHelper.launchBiometricPrompt(context,
+                    title = context.getString(R.string.title_lock_config),
+                    subtitle = context.getString(R.string.text_lock_config),
+                    onSuccess = { onEvent(UiEvent.SetAuthState(overlay.enableAuth)) }
+                    )
+            }
+
     }
 }

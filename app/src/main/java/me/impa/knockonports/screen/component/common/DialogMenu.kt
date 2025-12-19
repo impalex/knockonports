@@ -373,8 +373,8 @@ fun PreviewDialogItemList() {
         drawItem = @Composable { item, selected, enabled, image, onClick ->
             DialogMenuItem(item, selected, enabled, image, onClick)
         },
-        selectedItemToString = { it.toString() },
-        onItemSelected = { index, item -> },
+        selectedItemToString = { it },
+        onItemSelected = { _, _ -> },
         enableFilter = false
     )
 }

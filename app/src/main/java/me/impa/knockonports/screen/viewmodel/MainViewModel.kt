@@ -108,6 +108,9 @@ class MainViewModel @Inject constructor(
             is UiEvent.Export -> exportSequences(event.uri)
             is UiEvent.Import -> importSequences(event.uri)
             is UiEvent.ConfirmBetaMessage -> viewModelScope.launch { confirmBetaMessage() }
+            is UiEvent.ToggleListMode -> viewModelScope.launch {
+                settingsDataStore.setDetailedListView(!state.value.detailedList)
+            }
         }
     }
 
@@ -382,4 +385,3 @@ class MainViewModel @Inject constructor(
     }
 
 }
-

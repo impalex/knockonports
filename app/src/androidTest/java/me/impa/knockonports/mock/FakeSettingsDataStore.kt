@@ -45,6 +45,7 @@ object FakeSettingsDataStore : SettingsDataStore {
     override val customIp4Header: Flow<Boolean> = flowOf(false)
     override val ip4HeaderSize: Flow<Int> = flowOf(0)
     override val resourceCheckPeriod: Flow<Int> = flowOf(DEFAULT_CHECK_PERIOD)
+    override val isAppLockEnabled: Flow<Boolean> = flowOf(false)
 
     override suspend fun setDarkMode(darkMode: DarkMode) {
         TODO("Not yet implemented")
@@ -83,6 +84,10 @@ object FakeSettingsDataStore : SettingsDataStore {
     }
 
     override suspend fun setCurrentBetaMessageRead() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setAppLock(enabled: Boolean) {
         TODO("Not yet implemented")
     }
 
