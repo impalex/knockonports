@@ -35,7 +35,7 @@ jobs:
         with:
           node-version: lts/*
           cache: 'npm'
-          cache-dependency-path: '!gh-pages/package-lock.json'
+          cache-dependency-path: './!gh-pages/package-lock.json'
 
       - name: Install dependencies
         run: npm ci
