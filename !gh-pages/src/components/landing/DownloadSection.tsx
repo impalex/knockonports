@@ -1,5 +1,6 @@
 import { Download, Star, Users, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 const stores = [
   {
@@ -33,6 +34,29 @@ const stores = [
 ];
 
 const DownloadSection = () => {
+  const [latestVersion, setLatestVersion] = useState('0.0.0');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchLatestRelease = async () => {
+      try {
+        const response = await fetch(
+          'https://api.github.com/repos/impalex/knockonports/releases/latest'
+        );
+        const data = await response.json();
+        if (data.tag_name) {
+          setLatestVersion(data.tag_name);
+        }
+      } catch (error) {
+        console.error('Failed to fetch latest release:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLatestRelease();
+  }, []);	
+	
   return (
     <section id="download" className="py-24">
       <div className="container mx-auto px-4">
@@ -48,7 +72,7 @@ const DownloadSection = () => {
           
           {/* Version badge */}
           <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-secondary border border-border">
-            <span className="text-sm font-mono">v2.0.11</span>
+            <span className="text-sm font-mono">v{isLoading ? 'Loading...' : latestVersion}</span>
             <span className="text-muted-foreground">•</span>
             <span className="text-sm text-muted-foreground">Latest Release</span>
           </div>
