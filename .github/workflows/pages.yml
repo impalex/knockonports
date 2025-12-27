@@ -6,6 +6,13 @@ on:
   push:
     branches: ['gh-pages']
   
+  # Runs after new release
+  workflow_run:
+    workflows: ["Build and Publish release"]
+    types:
+      - completed
+    branches: ['main']
+
   # Allows manual run
   workflow_dispatch:
 
