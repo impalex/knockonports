@@ -1,0 +1,58 @@
+# Workflow for deploying landing page from subfolder and separate branch
+name: Deploy landing page to GitHub Pages
+
+on:
+  # Runs on pushes targeting the landing branch
+  push:
+    branches: ['gh-pages']
+  
+  # Allows manual run
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy-landing:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: 'gh-pages'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: lts/*
+          cache: 'npm'
+          cache-dependency-path: '!gh-pages/package-lock.json'
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: './!gh-pages'
+
+      - name: Build landing page
+        run: npm run build
+        working-directory: './!gh-pages'
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: './!gh-pages/dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
