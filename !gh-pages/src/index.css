@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Knock on Ports - Terminal Aesthetic Design System */
+/* Dark theme by default with blue accents */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
+
+@layer base {
+  :root {
+    /* Deep dark terminal background */
+    --background: 230 25% 5%;
+    --foreground: 210 40% 98%;
+
+    --card: 230 20% 8%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 230 20% 8%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Blue accent as primary */
+    --primary: 217 91% 60%;
+    --primary-foreground: 230 25% 5%;
+
+    --secondary: 230 15% 15%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 230 15% 12%;
+    --muted-foreground: 215 20% 55%;
+
+    --accent: 217 91% 60%;
+    --accent-foreground: 230 25% 5%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 230 15% 18%;
+    --input: 230 15% 15%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --terminal-green: 142 70% 45%;
+    --terminal-cyan: 190 95% 50%;
+    --glow: 217 91% 60%;
+
+    --sidebar-background: 230 20% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 230 25% 5%;
+    --sidebar-accent: 230 15% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 230 15% 18%;
+    --sidebar-ring: 217 91% 60%;
+  }
+
+  /* Light mode override (optional) */
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 230 25% 10%;
+    --card: 0 0% 98%;
+    --card-foreground: 230 25% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 230 25% 10%;
+    --primary: 217 91% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 230 25% 10%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 217 91% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Terminal/code font */
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+}
+
+@layer components {
+  /* Terminal cursor blink */
+  .terminal-cursor {
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Glow effect for accent elements */
+  .glow {
+    box-shadow: 0 0 20px hsl(var(--glow) / 0.3),
+                0 0 40px hsl(var(--glow) / 0.2),
+                0 0 60px hsl(var(--glow) / 0.1);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 10px hsl(var(--glow) / 0.5),
+                 0 0 20px hsl(var(--glow) / 0.3);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+  }
+
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--terminal-cyan)), hsl(var(--primary)));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  /* Floating code snippets animation */
+  .float-code {
+    animation: float 20s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    25% { transform: translateY(-20px) translateX(10px); }
+    50% { transform: translateY(-10px) translateX(-10px); }
+    75% { transform: translateY(-30px) translateX(5px); }
+  }
+
+  /* Scan line effect */
+  .scanlines::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      hsl(var(--foreground) / 0.02) 2px,
+      hsl(var(--foreground) / 0.02) 4px
+    );
+    pointer-events: none;
+  }
+}
+
+@layer utilities {
+  /* Timeline specific styles */
+  .timeline-line {
+    background: linear-gradient(180deg, 
+      transparent 0%, 
+      hsl(var(--primary)) 10%, 
+      hsl(var(--primary)) 90%, 
+      transparent 100%
+    );
+  }
+}
