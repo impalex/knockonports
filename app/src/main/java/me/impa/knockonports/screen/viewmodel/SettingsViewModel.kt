@@ -16,6 +16,9 @@
 
 package me.impa.knockonports.screen.viewmodel
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.fromColorLong
+import androidx.compose.ui.graphics.toColorLong
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,6 +28,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import me.impa.knockonports.data.event.AppEventBus
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.data.type.TitleOverflowType
@@ -33,6 +37,7 @@ import me.impa.knockonports.screen.viewmodel.state.settings.ListUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.ThemeUiState
 import me.impa.knockonports.screen.viewmodel.state.settings.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
+import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay.*
 import me.impa.knockonports.service.biometric.BiometricHelper
 import javax.inject.Inject
 
@@ -49,22 +54,29 @@ class SettingsViewModel @Inject constructor(
         ThemeUiState(
             darkMode = it.useDarkTheme,
             dynamicColors = it.useDynamicColors,
-            customTheme = it.customTheme,
             contrast = it.contrast,
+            amoledMode = it.amoledMode,
+            themeSeed = Color.fromColorLong(it.themeSeed)
         )
     }
 
     val listState = combine<Any, ListUiState>(
         settingsDataStore.detailedListView,
+        settingsDataStore.titleColorAvailable,
+        settingsDataStore.titleColorUnavailable,
         settingsDataStore.titleScale,
         settingsDataStore.titleOverflow,
         settingsDataStore.titleMultiline,
     ) {
         ListUiState(
             detailedListView = it[0] as Boolean,
-            titleFontScale = it[1] as Int,
-            titleOverflow = it[2] as TitleOverflowType,
-            titleMultiline = it[3] as Boolean,
+            titleColorAvailable = if (it[1] as Long == Color.Unspecified.toColorLong()) Color.Unspecified
+            else Color.fromColorLong(it[1] as Long),
+            titleColorUnavailable = if (it[2] as Long == Color.Unspecified.toColorLong()) Color.Unspecified
+            else Color.fromColorLong(it[2] as Long),
+            titleFontScale = it[3] as Int,
+            titleOverflow = it[4] as TitleOverflowType,
+            titleMultiline = it[5] as Boolean,
         )
     }
 
@@ -107,12 +119,13 @@ class SettingsViewModel @Inject constructor(
             UiEvent.ClearOverlay -> _overlay.update { null }
             UiEvent.ConfirmIPDetection -> settingsDataStore.setDetectPublicIP(true).also { _overlay.update { null } }
             is UiEvent.SetContrast -> settingsDataStore.setContrast(event.contrast)
-            is UiEvent.SetCustomTheme -> settingsDataStore.setCustomTheme(event.theme)
+            is UiEvent.SetThemeSeed -> settingsDataStore.setThemeSeed(event.seed)
+            is UiEvent.SetAmoledMode -> settingsDataStore.setAmoledTheme(event.amoled)
             is UiEvent.SetDarkMode -> settingsDataStore.setDarkMode(event.darkMode)
             is UiEvent.SetDetailedView -> settingsDataStore.setDetailedListView(event.detailed)
             is UiEvent.SetDynamicMode -> settingsDataStore.setDynamicColors(event.dynamic)
             is UiEvent.SetIPDetection ->
-                if (event.ipDetection) _overlay.update { UiOverlay.ConfirmIPDetection }
+                if (event.ipDetection) _overlay.update { ConfirmIPDetection }
                 else settingsDataStore.setDetectPublicIP(false)
 
             is UiEvent.SetIpv4Service -> settingsDataStore.setIpv4Service(event.service)
@@ -122,7 +135,7 @@ class SettingsViewModel @Inject constructor(
             is UiEvent.SetCustomIpv6Service -> settingsDataStore.setCustomIpv6Service(event.service)
             is UiEvent.SetCustomIPHeaderSize -> settingsDataStore.setIp4HeaderSize(event.size)
             is UiEvent.SetCustomIPHeaderSizeEnabled ->
-                if (event.enabled) _overlay.update { UiOverlay.CustomIPHeaderAlert }
+                if (event.enabled) _overlay.update { CustomIPHeaderAlert }
                 else settingsDataStore.setCustomIp4Header(false)
 
             is UiEvent.ConfirmCustomIPHeaderSizeEnabled -> settingsDataStore.setCustomIp4Header(true)
@@ -132,10 +145,11 @@ class SettingsViewModel @Inject constructor(
             is UiEvent.SetTitleFontScale -> settingsDataStore.setTitleScale(event.scale)
             is UiEvent.SetTitleMultiline -> settingsDataStore.setTitleMultiline(event.enabled)
             is UiEvent.SetTitleOverflow -> settingsDataStore.setTitleOverflow(event.overflow)
-            is UiEvent.OpenSecuritySettings -> _overlay.update { UiOverlay.OpenSecuritySettings }
-            is UiEvent.ToggleAuth -> _overlay.update { UiOverlay.PerformAuth(event.enabled) }
+            is UiEvent.OpenSecuritySettings -> _overlay.update { OpenSecuritySettings }
+            is UiEvent.ToggleAuth -> _overlay.update { PerformAuth(event.enabled) }
             is UiEvent.SetAuthState -> settingsDataStore.setAppLock(event.enabled)
-
+            is UiEvent.SetTitleColorAvailable -> settingsDataStore.setTitleColorAvailable(event.color)
+            is UiEvent.SetTitleColorUnavailable -> settingsDataStore.setTitleColorUnavailable(event.color)
         }
     }
 

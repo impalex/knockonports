@@ -41,10 +41,10 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  */
 @OptIn(ExperimentalEncodingApi::class)
 fun ContentEncodingType.decode(data: String?) = when (this) {
-    // NOTE: silent fallback to empty ByteArray is intended behaviour
+    // NOTE: silent fallback to empty ByteArray is intended behavior
     ContentEncodingType.RAW -> (data ?: "").toByteArray()
     ContentEncodingType.BASE64 -> try {
-        Base64.Default.withPadding(Base64.PaddingOption.PRESENT_OPTIONAL).decode((data ?: "").toByteArray())
+        Base64.withPadding(Base64.PaddingOption.PRESENT_OPTIONAL).decode((data ?: "").toByteArray())
     } catch (_: Exception) {
         byteArrayOf()
     }

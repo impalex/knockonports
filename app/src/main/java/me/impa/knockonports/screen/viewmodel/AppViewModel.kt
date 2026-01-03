@@ -23,25 +23,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import me.impa.knockonports.data.KnocksRepository
+import me.impa.knockonports.data.event.AppEventBus
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.service.biometric.BiometricHelper
 import javax.inject.Inject
 
 @HiltViewModel
 class AppViewModel @Inject constructor(
-    private val repository: KnocksRepository,
     val biometricHelper: BiometricHelper,
-    val settings: SettingsDataStore
+    val settings: SettingsDataStore,
+    val eventBus: AppEventBus
 ) : ViewModel() {
-
-    val eventFlow = repository.getCurrentEventFlow()
 
     private val _isLocked = MutableStateFlow(false)
 
     val isLocked: StateFlow<Boolean> = _isLocked
-
-    fun clearEvent() = repository.clearEvent()
 
     fun unlock() {
         _isLocked.value = false

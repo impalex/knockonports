@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.ui.theme.variant
+package me.impa.knockonports.navigation
 
-import androidx.compose.material3.ColorScheme
-import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.Color
-import me.impa.knockonports.ui.config.DarkMode
-import me.impa.knockonports.ui.config.ThemeContrast
+import android.net.Uri
 
-@Immutable
-sealed interface AppColorScheme {
-    val name: String
-    val theme: Map<DarkMode, Map<ThemeContrast, ColorScheme>>
-
-    val colorPrimary: Color
-    val colorSecondary: Color
-    val colorTetriary: Color
+class DeepLinkRequest(val uri: Uri) {
+    val pathSegments: List<String> = uri.pathSegments
+    val queries = buildMap {
+        uri.queryParameterNames.forEach { argName ->
+            put(argName, uri.getQueryParameter(argName)!!)
+        }
+    }
 }

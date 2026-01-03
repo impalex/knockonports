@@ -114,8 +114,7 @@ class ShortcutWatcher @Inject constructor(
         val updateShortcuts = mutableListOf<ShortcutInfo>()
 
         for (shortcut in pinnedShortcuts) {
-            val action = checkShortcut(shortcut, sequences)
-            when (action) {
+            when (val action = checkShortcut(shortcut, sequences)) {
                 is Action.Enable -> enableShortcuts.add(shortcut.id)
                 is Action.Disable -> disableShortcuts.add(shortcut.id)
                 is Action.Update -> updateShortcuts.add(action.info)

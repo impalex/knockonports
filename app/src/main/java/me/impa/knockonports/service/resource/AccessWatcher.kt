@@ -117,8 +117,8 @@ class AccessWatcher @Inject constructor(
                     is ResourceState.Unavailable -> it.value.date + period < timer
                 }
             }.map { it.key }
-        }.cancellable().collect {
-            it.takeIf { it.isNotEmpty() }?.let { checkResources(it) }
+        }.cancellable().collect { data ->
+            data.takeIf { it.isNotEmpty() }?.let { checkResources(it) }
         }
     }
 
@@ -307,9 +307,7 @@ class AccessWatcher @Inject constructor(
         defaultScope.launch {
             trackResources.distinctUntilChanged().flowOn(ioDispatcher).collect { resources ->
                 _resourceState.update { state ->
-                    resources.associate {
-                        it to state.getOrElse(it) { ResourceState.Unknown() }
-                    }.toPersistentMap()
+                    resources.associateWith { state.getOrElse(it) { ResourceState.Unknown() } }.toPersistentMap()
                 }
             }
         }

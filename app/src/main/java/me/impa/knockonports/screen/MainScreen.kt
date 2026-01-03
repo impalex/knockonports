@@ -19,7 +19,6 @@ package me.impa.knockonports.screen
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,14 +34,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.PermissionStatus
@@ -51,21 +51,28 @@ import me.impa.knockonports.R
 import me.impa.knockonports.constants.POSTPONE_TIME
 import me.impa.knockonports.constants.POSTPONE_TIME_CANCEL
 import me.impa.knockonports.data.type.TitleOverflowType
+import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.helper.TextResource
 import me.impa.knockonports.helper.openPlayStore
-import me.impa.knockonports.navigation.AppBarState
-import me.impa.knockonports.navigation.AppNavGraph
+import me.impa.knockonports.navigation.LogRoute
+import me.impa.knockonports.navigation.MainRoute
+import me.impa.knockonports.navigation.SequenceRoute
+import me.impa.knockonports.navigation.SettingsRoute
+import me.impa.knockonports.screen.component.common.LocalAppEventBus
+import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
+import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.main.BetaAlert
 import me.impa.knockonports.screen.component.main.DeleteSequenceAlert
-import me.impa.knockonports.screen.component.main.FocusedSequenceWatcher
 import me.impa.knockonports.screen.component.main.IntegrationAlert
+import me.impa.knockonports.screen.component.main.MainScreenActions
 import me.impa.knockonports.screen.component.main.ReviewRequestDialog
 import me.impa.knockonports.screen.component.main.SequenceCard
-import me.impa.knockonports.screen.component.main.UpdateAppBar
 import me.impa.knockonports.screen.viewmodel.MainViewModel
+import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
 import me.impa.knockonports.screen.viewmodel.state.main.UiState
+import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
 import me.impa.knockonports.service.resource.ResourceState
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
@@ -86,28 +93,36 @@ private val grantedNotificationPermission = object : PermissionState {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainScreen(
-    onComposing: (AppBarState) -> Unit, navController: NavController,
-    innerPaddingValues: PaddingValues,
-    modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
+fun MainScreen(modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
-    navController.UpdateAppBar(state.isRuLangAvailable, state.detailedList, onComposing, viewModel::onEvent)
+    val eventBus = LocalAppEventBus.current
 
-    LaunchedEffect(state) {
-        if (state.editMode) {
-            navController.navigate(AppNavGraph.SequenceRoute(state.editSequenceId))
-            viewModel.onEvent(UiEvent.ResetEditMode)
+    RegisterAppBar<MainRoute>(title = stringResource(R.string.app_name), showBackButton = false) {
+        MainScreenActions(state.isRuLangAvailable, state.detailedList) { action ->
+            when (action) {
+                MainBarEvent.AddSequence -> eventBus.navigate(SequenceRoute())
+                is MainBarEvent.Export -> viewModel.onEvent(UiEvent.Export(action.uri))
+                is MainBarEvent.Import -> viewModel.onEvent(UiEvent.Import(action.uri))
+                MainBarEvent.Settings -> eventBus.navigate(SettingsRoute)
+                MainBarEvent.ShowLogs -> eventBus.navigate(LogRoute)
+                MainBarEvent.ToggleListMode -> viewModel.onEvent(UiEvent.ToggleListMode)
+            }
         }
     }
 
     val overlay by viewModel.overlay.collectAsState()
     overlay?.let { ShowOverlay(it, viewModel::onEvent) }
 
-    FocusedSequenceWatcher(navController.currentBackStackEntry?.savedStateHandle, viewModel::onEvent)
+    LaunchedEffect(eventBus) {
+        eventBus.getEventFlow<SavedSequenceHandle>().collect {
+            it as SavedSequenceHandle
+            viewModel.onEvent(UiEvent.Focus((it.sequenceId)))
+        }
+    }
+
     MainScreenContent(
         state,
-        innerPaddingValues = innerPaddingValues,
         modifier = modifier,
         onEvent = viewModel::onEvent
     )
@@ -124,7 +139,6 @@ private fun checkPermission(permissionState: PermissionState, turnOffRequest: ()
 @Composable
 fun MainScreenContent(
     state: UiState,
-    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
@@ -157,13 +171,15 @@ fun MainScreenContent(
         }
     }
 
+    val paddings = LocalInnerPaddingValues.current
+
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = innerPaddingValues,
+        contentPadding = paddings,
         modifier = modifier.then(Modifier.fillMaxSize()), state = listState
     ) {
         val firstGroup = state.sequences.keys.firstOrNull()
-        state.sequences.forEach { group, sequences ->
+        state.sequences.forEach { (group, sequences) ->
             item(key = "group:$group") {
                 if (group.isNotEmpty()) {
                     if (group == firstGroup)
@@ -172,7 +188,7 @@ fun MainScreenContent(
                         ReorderableItem(reorderableListState, key = "group:$group") { SequenceGroupHeader(group) }
                 }
             }
-            itemsIndexed(sequences, key = { index, sequence -> sequence.id ?: 0L }) { index, sequence ->
+            itemsIndexed(sequences, key = { _, sequence -> sequence.id ?: 0L }) { index, sequence ->
                 // Display each sequence as a card
                 SequenceCard(
                     sequence = sequence,
@@ -186,6 +202,8 @@ fun MainScreenContent(
                     titleOverflowType = state.titleOverflowType,
                     multilineTitle = state.titleMultiline,
                     titleFontScale = state.titleScale,
+                    onlineColor = state.onlineColor,
+                    offlineColor = state.offlineColor,
                     onEvent = onEvent,
                     onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
                         && !state.disableNotificationRequest
@@ -246,7 +264,6 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
 fun PreviewMainScreen() {
     MainScreenContent(
         UiState(sequences = PreviewData.mockGroupedSequences),
-        innerPaddingValues = PaddingValues.Absolute(),
         onEvent = {},
         modifier = Modifier
     )
@@ -267,6 +284,8 @@ fun PreviewSequenceCard() {
                 titleOverflowType = TitleOverflowType.END,
                 showSequenceDetails = true,
                 titleFontScale = 100,
+                onlineColor = Color.Unspecified,
+                offlineColor = Color.Unspecified,
                 multilineTitle = false
             )
         }
@@ -288,6 +307,8 @@ fun PreviewCompactSequenceCard() {
                 titleOverflowType = TitleOverflowType.END,
                 showSequenceDetails = false,
                 titleFontScale = 100,
+                onlineColor = Color.Unspecified,
+                offlineColor = Color.Unspecified,
                 multilineTitle = false
             )
         }

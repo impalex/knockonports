@@ -24,8 +24,6 @@ import me.impa.knockonports.data.db.dao.SequenceDao
 import me.impa.knockonports.data.db.entity.CheckAccessData
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
-import me.impa.knockonports.data.event.AppEvent
-import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
 import javax.inject.Inject
 
@@ -39,7 +37,6 @@ import javax.inject.Inject
  * @property sequenceDao DAO for accessing and managing sequence data in the database.
  * @property fileRepository Repository for handling file-related operations, specifically reading and
  *           writing sequences to/from files.
- * @property eventHolder Holds and manages shared events within the application.
  * @property widgetRepository Repository for interacting with the Knocks widget (updating its state).
  */
 @Suppress("TooManyFunctions")
@@ -47,7 +44,6 @@ class KnocksRepositoryImpl @Inject constructor(
     private val logEntryDao: LogEntryDao,
     private val sequenceDao: SequenceDao,
     private val fileRepository: FileRepository,
-    private val eventHolder: SharedEventHolder,
     private val widgetRepository: KnocksWidgetRepository
 ): KnocksRepository {
 
@@ -103,11 +99,4 @@ class KnocksRepositoryImpl @Inject constructor(
         fileRepository.writeSequencesToFile(uri, sequences)
     // endregion
 
-    // region Events
-    override fun getCurrentEventFlow() = eventHolder.currentEventFlow
-
-    override fun sendEvent(appEvent: AppEvent) = eventHolder.sendEvent(appEvent)
-
-    override fun clearEvent() = eventHolder.clearEvent()
-    // endregion
 }

@@ -18,7 +18,7 @@ package me.impa.knockonports.screen.component.sequence
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import me.impa.knockonports.R
 import me.impa.knockonports.data.type.IcmpType
@@ -28,7 +28,7 @@ import me.impa.knockonports.screen.component.common.DialogMenu
 
 @Composable
 fun SelectIcmpSizeType(value: IcmpType, onUpdate: (IcmpType) -> Unit) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val icmpSizeTypeList = remember(resources) {
         IcmpType.entries.associateBy({ it }, {resources.getString(it.stringResourceId()) })
     }

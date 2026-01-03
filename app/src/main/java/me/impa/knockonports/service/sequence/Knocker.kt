@@ -279,6 +279,7 @@ class Knocker @Inject constructor(
     private suspend fun getAddresses(sequence: Sequence) = withContext(ioDispatcher) {
         try {
             InetAddress.getAllByName(sequence.host)
+                .asSequence()
                 .distinctBy { it is Inet4Address }
                 .filter {
                     when (sequence.ipv) {

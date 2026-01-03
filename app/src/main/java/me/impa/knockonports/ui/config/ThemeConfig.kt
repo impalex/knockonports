@@ -17,14 +17,27 @@
 package me.impa.knockonports.ui.config
 
 import android.os.Parcelable
+import androidx.annotation.ColorLong
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import kotlinx.parcelize.Parcelize
+
+// Old themes
+@Suppress("MagicNumber")
+val defaultThemes = mapOf(
+    "SKY_STEEL" to Color(0xFF5A93FF).toColorLong(),
+    "BLUSH_STONE" to Color(0xFFFFBEC3).toColorLong(),
+    "GOLDEN_DUSK" to Color(0xFFE3CD00).toColorLong(),
+    "NEON_MOSS" to Color(0xFF00E24E).toColorLong()
+)
 
 @Immutable
 @Parcelize
 data class ThemeConfig(
     val useDynamicColors: Boolean = true,
     val useDarkTheme: DarkMode = DarkMode.AUTO,
-    val customTheme: String = "SKY_STEEL",
-    val contrast: ThemeContrast = ThemeContrast.STANDARD
+    val contrast: ThemeContrast = ThemeContrast.STANDARD,
+    val amoledMode: Boolean = false,
+    @ColorLong val themeSeed: Long = requireNotNull(defaultThemes["SKY_STEEL"])
 ) : Parcelable

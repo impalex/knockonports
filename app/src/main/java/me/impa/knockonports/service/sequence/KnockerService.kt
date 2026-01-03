@@ -133,7 +133,7 @@ class KnockerService : Service() {
                     setContentText(
                         resources.getString(
                             R.string.notification_desc,
-                            if (it.isEmpty()) resources.getString(R.string.text_unnamed_sequence) else it
+                            it.ifEmpty { resources.getString(R.string.text_unnamed_sequence) }
                         )
                     )
                 }

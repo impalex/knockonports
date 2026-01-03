@@ -28,7 +28,6 @@
     <string name="title_screen_log">Журнал</string>
     <string name="title_tab_basic_settings">Настройки</string>
     <string name="title_tab_advanced_settings">Дополнительно</string>
-    <string name="title_nav_config">Конфигурация</string>
     <string name="title_review_request">Нравится %s?</string>"
     <string name="text_review_request">Если у вас есть минутка, я буду рад вашему отзыву! Честные оценки помогают мне улучшать приложение и делать его лучше. Спасибо за вашу поддержку!</string>
     <string name="action_rate_now">Оценить приложение</string>
@@ -48,7 +47,6 @@
     <string name="text_host_not_set">(Хост не задан)</string>
     <string name="text_empty_sequence">(Пустая последовательность)</string>
     <string name="hint_reorder">Изменить порядок</string>
-    <string name="hint_delete">Удалить</string>
     <string name="field_port">Порт</string>
     <string name="field_data">Данные</string>
     <string name="field_size">Размер</string>
@@ -179,7 +177,6 @@
     <string name="log_error_import">Импорт из %1$s: %2$s</string>
     <string name="text_error_general">Ошибка: %s</string>
     <string name="title_settings_rate_app">Оценить приложение</string>
-    <string name="title_nav_sequence">Последовательность</string>
     <string name="text_error_empty_value">Не указано значение</string>
     <string name="text_error_invalid_range">Значение должно быть в диапазоне от %1$d до %2$d</string>
     <string name="text_error_number_only">Значение должно быть числом</string>
@@ -211,7 +208,7 @@
     <string name="title_header_sequence_packet_cfg">Пакеты</string>
     <string name="title_header_sequence_post_knock">Действия после стука</string>
     <string name="title_header_sequence_access_check">Связь с ресурсом</string>
-    <string name="title_check_access_enable">Проверять доступ</string>
+    <string name="title_check_access_enable">Проверка доступа</string>
     <string name="text_check_access_enable">Периодически проверять доступность ресурса.</string>
     <string name="type_check_access_url">URL</string>
     <string name="type_check_access_port">Порт</string>
@@ -268,4 +265,10 @@
     <string name="text_lock_app">Аутентифицируйтесь для доступа к приложению.</string>
     <string name="title_lock_config">Проверка безопасности</string>
     <string name="text_lock_config">Требуется аутентификация для изменения настройки блокировки.</string>
+    <string name="title_settings_amoled_theme">Режим OLED</string>
+    <string name="text_settings_amoled_theme">Использовать чистый чёрный цвет в тёмной теме для экономии заряда на OLED/AMOLED-экранах</string>
+    <string name="title_settings_title_available_color">Цвет доступности</string>
+    <string name="text_settings_title_available_color">Цвет названия последовательности, когда ресурс доступен</string>
+    <string name="title_settings_title_unavailable_color">Цвет недоступности</string>
+    <string name="text_settings_title_unavailable_color">Цвет названия последовательности, когда ресурс недоступен</string>
 </resources>

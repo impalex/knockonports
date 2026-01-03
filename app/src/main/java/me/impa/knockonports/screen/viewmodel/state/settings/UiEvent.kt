@@ -16,6 +16,7 @@
 
 package me.impa.knockonports.screen.viewmodel.state.settings
 
+import androidx.annotation.ColorLong
 import androidx.compose.runtime.Stable
 import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.ui.config.DarkMode
@@ -26,11 +27,14 @@ sealed interface UiEvent {
     data class SetDynamicMode(val dynamic: Boolean) : UiEvent
     data class SetDarkMode(val darkMode: DarkMode) : UiEvent
     data class SetContrast(val contrast: ThemeContrast) : UiEvent
-    data class SetCustomTheme(val theme: String) : UiEvent
+    data class SetAmoledMode(val amoled: Boolean) : UiEvent
+    data class SetThemeSeed(@ColorLong val seed: Long) : UiEvent
     data class SetWidgetConfirmation(val confirmation: Boolean) : UiEvent
     data class SetIPDetection(val ipDetection: Boolean) : UiEvent
     data object ConfirmIPDetection : UiEvent
     data class SetDetailedView(val detailed: Boolean) : UiEvent
+    data class SetTitleColorAvailable(@ColorLong val color: Long) : UiEvent
+    data class SetTitleColorUnavailable(@ColorLong val color: Long) : UiEvent
     data class SetIpv4Service(val service: String) : UiEvent
     data class SetIpv6Service(val service: String) : UiEvent
     data class SetCustomIpv4Service(val service: String) : UiEvent

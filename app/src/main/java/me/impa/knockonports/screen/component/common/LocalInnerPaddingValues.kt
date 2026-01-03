@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Alexander Yaburov
+ * Copyright (c) 2025 Alexander Yaburov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.navigation
+package me.impa.knockonports.screen.component.common
 
-import kotlinx.serialization.Serializable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.staticCompositionLocalOf
 
-interface AppNavGraph {
-    @Serializable
-    data object MainRoute : AppNavGraph
-
-    @Serializable
-    data object SettingsRoute : AppNavGraph
-
-    @Serializable
-    data class SequenceRoute(val sequenceId: Long? = null) : AppNavGraph
-
-    @Serializable
-    data object LogRoute : AppNavGraph
-}
+val LocalInnerPaddingValues = staticCompositionLocalOf<PaddingValues> { PaddingValues.Absolute() }

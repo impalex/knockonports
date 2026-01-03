@@ -16,8 +16,18 @@
 
 package me.impa.knockonports.ui.config
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
+
 enum class DarkMode {
     AUTO,
     LIGHT,
     DARK
+}
+
+@Composable
+fun DarkMode.isDark() = when (this) {
+    DarkMode.AUTO -> isSystemInDarkTheme()
+    DarkMode.LIGHT -> false
+    DarkMode.DARK -> true
 }

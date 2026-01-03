@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024-2025 Alexander Yaburov
+ * Copyright (c) 2026 Alexander Yaburov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.navigation
+package me.impa.knockonports.extension
 
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.runtime.Composable
+import me.impa.knockonports.data.event.AppEventBus
+import me.impa.knockonports.navigation.NAV_BUS
 
-data class AppBarState(
-    val title: String = "",
-    val backAvailable: Boolean = false,
-    val actions: (@Composable RowScope.() -> Unit)? = null
-)
+fun AppEventBus.navigate(route: Any) = this.sendEvent(NAV_BUS, route)

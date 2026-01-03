@@ -33,37 +33,45 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation3.runtime.NavKey
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.TAG_APP_SCREEN
 import me.impa.knockonports.constants.TAG_BACK_BUTTON
 import me.impa.knockonports.data.event.AppEvent
-import me.impa.knockonports.navigation.AppBarState
-import me.impa.knockonports.navigation.AppNavGraph
 import me.impa.knockonports.navigation.AppNavigation
+import me.impa.knockonports.navigation.NAV_BUS
+import me.impa.knockonports.navigation.NavigateUp
+import me.impa.knockonports.navigation.Navigator
+import me.impa.knockonports.navigation.rememberNavigationState
+import me.impa.knockonports.screen.component.common.AppTopBar
+import me.impa.knockonports.screen.component.common.AppTopBarRegistry
+import me.impa.knockonports.screen.component.common.LocalAppBarRegistry
+import me.impa.knockonports.screen.component.common.LocalAppEventBus
+import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.viewmodel.AppViewModel
 
 @Composable
 fun AppScreen(
+    backStack: List<NavKey>,
     modifier: Modifier = Modifier,
-    startDestination: AppNavGraph = AppNavGraph.MainRoute,
     viewModel: AppViewModel = hiltViewModel(),
 ) {
     val isLocked by viewModel.isLocked.collectAsState()
-    val currentEvent by viewModel.eventFlow.collectAsState()
 
     if (isLocked) {
         val context = LocalContext.current
@@ -73,96 +81,154 @@ fun AppScreen(
             onUnavailable = { viewModel.unlock() },
             onError = { (context as? Activity)?.finish() })
     } else {
-        AppScreenContent(modifier, startDestination, currentEvent, viewModel::clearEvent)
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AppScreenContent(
-    modifier: Modifier,
-    startDestination: AppNavGraph,
-    currentEvent: AppEvent?,
-    onClearEvent: () -> Unit
-) {
-    val navController = rememberNavController()
-
-    Surface(
-        modifier = modifier.then(Modifier.testTag(TAG_APP_SCREEN)),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        var appBarState by remember { mutableStateOf(AppBarState()) }
-        val snackbarHostState = remember { SnackbarHostState() }
-
-        Scaffold(
-            modifier = modifier,
-            contentWindowInsets = WindowInsets.safeDrawing,
-            snackbarHost = { SnackbarHost(snackbarHostState) },
-            topBar = {
-                TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(),
-                    navigationIcon = {
-                        if (appBarState.backAvailable) {
-                            IconButton(
-                                onClick = {
-                                    navController.popBackStack()
-                                },
-                                modifier = Modifier.testTag(TAG_BACK_BUTTON)
-                            ) {
-                                Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-                            }
-                        }
-                    },
-                    title = {
-                        Text(text = appBarState.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    },
-                    actions = {
-                        appBarState.actions?.invoke(this)
-                    }
-                )
-            }
-        ) { paddingValues ->
-            currentEvent?.let {
-                EventHandler(
-                    event = it,
-                    snackbarHostState = snackbarHostState,
-                    onEventHandled = onClearEvent
-                )
-            }
-            AppNavigation(
-                startDestination = startDestination, onComposing = {
-                    @Suppress("AssignedValueIsNeverRead")
-                    appBarState = it
-                }, navController = navController, innerPaddingValues = paddingValues, modifier = Modifier
-            )
+        CompositionLocalProvider(LocalAppEventBus provides viewModel.eventBus) {
+            AppScreenContent(modifier, backStack)
         }
     }
 }
 
 @Composable
-fun EventHandler(event: AppEvent, snackbarHostState: SnackbarHostState, onEventHandled: () -> Unit) {
-    val message = when (event) {
-        is AppEvent.SequenceSaved -> stringResource(
-            R.string.message_sequence_saved,
-            event.sequenceName?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_unnamed_sequence)
-        )
+private fun AppScreenContent(
+    modifier: Modifier,
+    backStack: List<NavKey>
+) {
+    val navigationState = rememberNavigationState(backStack)
+    val navigator = remember { Navigator(navigationState) }
 
-        is AppEvent.SequenceRemoved -> stringResource(
-            R.string.message_sequence_deleted,
-            event.sequenceName?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_unnamed_sequence)
-        )
+    NavigationEffects(navigator)
 
-        is AppEvent.SequenceListExported ->
-            pluralStringResource(R.plurals.message_sequence_export, event.count, event.count)
+    Surface(
+        modifier = modifier.then(Modifier.testTag(TAG_APP_SCREEN)),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        val snackbarHostState = remember { SnackbarHostState() }
+        val appBarConfigs = remember { mutableStateMapOf<String, AppTopBar>() }
+        val appBarRegistry = remember {
+            object : AppTopBarRegistry {
+                override fun registerAppBar(key: String, topBar: AppTopBar) {
+                    appBarConfigs[key] = topBar
+                }
 
-        is AppEvent.SequenceListImported ->
-            pluralStringResource(R.plurals.message_sequence_import, event.count, event.count)
+                override fun unregisterAppBar(key: String) {
+                    appBarConfigs.remove(key)
+                }
+            }
+        }
 
-        is AppEvent.GeneralError -> stringResource(R.string.text_error_general, event.error.asString())
-        is AppEvent.GeneralMessage -> event.message.asString()
+        CompositionLocalProvider(LocalAppBarRegistry provides appBarRegistry) {
+            Scaffold(
+                modifier = modifier,
+                contentWindowInsets = WindowInsets.safeDrawing,
+                snackbarHost = { SnackbarHost(snackbarHostState) },
+                topBar = {
+                    AppScreenTopBar(
+                        currentRoute = navigationState.backStack.lastOrNull(),
+                        appBarConfigs = appBarConfigs,
+                        onNavigateUp = { navigator.goBack() }
+                    )
+                }
+            ) { paddingValues ->
+                EventHandler(snackbarHostState = snackbarHostState)
+
+                CompositionLocalProvider(LocalInnerPaddingValues provides paddingValues) {
+                    AppNavigation(navigator, navigationState)
+                }
+            }
+        }
     }
-    LaunchedEffect(message) {
-        snackbarHostState.showSnackbar(message)
-        onEventHandled()
+}
+
+@Composable
+private fun NavigationEffects(navigator: Navigator) {
+    val eventBus = LocalAppEventBus.current
+    LaunchedEffect(eventBus.channelMap[NAV_BUS]) {
+        eventBus.getEventFlow<Any>(NAV_BUS).collect { event ->
+            when (event) {
+                is NavigateUp -> navigator.goBack()
+                is NavKey -> navigator.navigate(event)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AppScreenTopBar(
+    currentRoute: NavKey?,
+    appBarConfigs: Map<String, AppTopBar>,
+    onNavigateUp: () -> Unit,
+) {
+    var cachedBarConfig by remember { mutableStateOf<AppTopBar?>(null) }
+    val currentBar = currentRoute?.let {
+        appBarConfigs[it::class.toString()]
+    } ?: cachedBarConfig
+
+    @Suppress("AssignedValueIsNeverRead")
+    cachedBarConfig = currentBar
+
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(),
+        navigationIcon = {
+            if (currentBar?.showBack == true) {
+                IconButton(
+                    onClick = onNavigateUp,
+                    modifier = Modifier.testTag(TAG_BACK_BUTTON)
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+        title = {
+            currentBar?.let {
+                Text(text = it.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        },
+        actions = {
+            currentBar?.actions?.invoke(this)
+        }
+    )
+}
+
+@Composable
+fun EventHandler(snackbarHostState: SnackbarHostState) {
+    val eventBus = LocalAppEventBus.current
+
+    val resources = LocalResources.current
+
+    val context = LocalContext.current
+
+    LaunchedEffect(eventBus) {
+        eventBus.getEventFlow<AppEvent>().collect { currentEvent ->
+            val message = when (val event = currentEvent as AppEvent) {
+                is AppEvent.SequenceSaved -> resources.getString(
+                    R.string.message_sequence_saved,
+                    event.sequenceName?.takeIf { it.isNotBlank() }
+                        ?: resources.getString(R.string.text_unnamed_sequence)
+                )
+
+                is AppEvent.SequenceRemoved -> resources.getString(
+                    R.string.message_sequence_deleted,
+                    event.sequenceName?.takeIf { it.isNotBlank() }
+                        ?: resources.getString(R.string.text_unnamed_sequence)
+                )
+
+                is AppEvent.SequenceListExported ->
+                    resources.getQuantityString(R.plurals.message_sequence_export, event.count, event.count)
+
+                is AppEvent.SequenceListImported ->
+                    resources.getQuantityString(R.plurals.message_sequence_import, event.count, event.count)
+
+                is AppEvent.GeneralError -> resources.getString(
+                    R.string.text_error_general,
+                    event.error.asString(context)
+                )
+
+                is AppEvent.GeneralMessage -> event.message.asString(context)
+            }
+            snackbarHostState.showSnackbar(message)
+        }
     }
 }

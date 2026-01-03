@@ -16,10 +16,13 @@
 
 package me.impa.knockonports.screen.viewmodel.state.settings
 
+import androidx.compose.ui.graphics.Color
 import me.impa.knockonports.data.type.TitleOverflowType
 
 data class ListUiState(
     val detailedListView: Boolean,
+    val titleColorAvailable: Color,
+    val titleColorUnavailable: Color,
     val titleFontScale: Int,
     val titleOverflow: TitleOverflowType,
     val titleMultiline: Boolean,

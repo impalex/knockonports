@@ -55,8 +55,6 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
-import me.impa.knockonports.StartKnockingActivity
-import me.impa.knockonports.constants.EXTRA_VALUE_SOURCE_WIDGET
 import me.impa.knockonports.data.WidgetDataStore
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.screen.PreviewData
@@ -80,7 +78,7 @@ private fun KnocksWidgetContent(sequences: List<Sequence>) {
     GlanceTheme {
         Scaffold(
             backgroundColor = GlanceTheme.colors.widgetBackground,
-            titleBar = { if (showTitlebar()) WidgetTitleBar() else null },
+            titleBar = { if (showTitlebar()) WidgetTitleBar() else Unit },
             modifier = GlanceModifier.padding(
                 bottom = 14.dp,
                 top = if (showTitlebar()) 0.dp else 14.dp

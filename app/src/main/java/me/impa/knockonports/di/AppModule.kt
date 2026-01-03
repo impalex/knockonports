@@ -54,7 +54,6 @@ import me.impa.knockonports.data.db.Migrations.Migration8To9
 import me.impa.knockonports.data.db.Migrations.Migration9To10
 import me.impa.knockonports.data.db.dao.LogEntryDao
 import me.impa.knockonports.data.db.dao.SequenceDao
-import me.impa.knockonports.data.event.SharedEventHolder
 import me.impa.knockonports.data.file.FileRepository
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.DeviceStateImpl
@@ -121,14 +120,12 @@ object AppModule {
         logEntryDao: LogEntryDao,
         sequenceDao: SequenceDao,
         fileRepository: FileRepository,
-        eventHolder: SharedEventHolder,
         widgetRepository: KnocksWidgetRepository
     ): KnocksRepository {
         return KnocksRepositoryImpl(
             logEntryDao = logEntryDao,
             sequenceDao = sequenceDao,
             fileRepository = fileRepository,
-            eventHolder = eventHolder,
             widgetRepository = widgetRepository
         )
     }

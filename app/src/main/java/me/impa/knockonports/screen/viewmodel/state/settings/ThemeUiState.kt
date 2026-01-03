@@ -17,6 +17,7 @@
 package me.impa.knockonports.screen.viewmodel.state.settings
 
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.graphics.Color
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeContrast
 
@@ -24,6 +25,7 @@ import me.impa.knockonports.ui.config.ThemeContrast
 data class ThemeUiState(
     val darkMode: DarkMode,
     val dynamicColors: Boolean,
-    val customTheme: String,
     val contrast: ThemeContrast,
+    val amoledMode: Boolean,
+    val themeSeed: Color
 )

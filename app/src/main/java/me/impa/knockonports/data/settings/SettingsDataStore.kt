@@ -18,6 +18,9 @@ package me.impa.knockonports.data.settings
 
 import android.content.Context
 import android.os.Build
+import androidx.annotation.ColorLong
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -40,8 +43,7 @@ import me.impa.knockonports.helper.toEnum
 import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.config.ThemeContrast
-import me.impa.knockonports.ui.theme.themeMap
-import timber.log.Timber
+import me.impa.knockonports.ui.config.defaultThemes
 import javax.inject.Singleton
 
 /**
@@ -60,6 +62,8 @@ interface SettingsDataStore {
     suspend fun setDynamicColors(useDynamicColors: Boolean)
     suspend fun setCustomTheme(customTheme: String)
     suspend fun setContrast(contrast: ThemeContrast)
+    suspend fun setThemeSeed(@ColorLong seed: Long)
+    suspend fun setAmoledTheme(enabled: Boolean)
     // endregion Theme settings
 
     // region Miscellaneous settings
@@ -106,6 +110,10 @@ interface SettingsDataStore {
     suspend fun setTitleScale(scale: Int)
     val titleMultiline: Flow<Boolean>
     suspend fun setTitleMultiline(multiline: Boolean)
+    val titleColorAvailable: Flow<Long>
+    suspend fun setTitleColorAvailable(@ColorLong color: Long)
+    val titleColorUnavailable: Flow<Long>
+    suspend fun setTitleColorUnavailable(@ColorLong color: Long)
     // endregion App settings
 
 }
@@ -119,18 +127,18 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
         .distinctUntilChanged { first, second ->
             first[useDarkThemeKey] == second[useDarkThemeKey] &&
                     first[useDynamicColorsKey] == second[useDynamicColorsKey] &&
-                    first[customThemeKey] == second[customThemeKey] &&
-                    first[contrastKey] == second[contrastKey]
+                    first[contrastKey] == second[contrastKey] &&
+                    first[amoledThemeKey] == second[amoledThemeKey] &&
+                    first[themeSeedKey] == second[themeSeedKey]
         }
         .map { preferences ->
             ThemeConfig(
                 useDarkTheme = (preferences[useDarkThemeKey] ?: "").toEnum(DarkMode.AUTO),
                 useDynamicColors = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) &&
                         (preferences[useDynamicColorsKey] != false),
-                customTheme = (preferences[customThemeKey] ?: "").let {
-                    if (themeMap.keys.contains(it)) it else themeMap.keys.first()
-                },
-                contrast = (preferences[contrastKey] ?: "").toEnum(ThemeContrast.STANDARD)
+                contrast = (preferences[contrastKey] ?: "").toEnum(ThemeContrast.STANDARD),
+                amoledMode = preferences[amoledThemeKey] == true,
+                themeSeed = preferences[themeSeedKey] ?: requireNotNull(defaultThemes["SKY_STEEL"])
             )
         }
 
@@ -155,6 +163,18 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
     override suspend fun setContrast(contrast: ThemeContrast) {
         context.dataStore.edit { preferences ->
             preferences[contrastKey] = contrast.name
+        }
+    }
+
+    override suspend fun setThemeSeed(seed: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[themeSeedKey] = seed
+        }
+    }
+
+    override suspend fun setAmoledTheme(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[amoledThemeKey] = enabled
         }
     }
     // endregion Theme settings
@@ -232,7 +252,7 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
             preferences[appLockKey] = enabled
         }
     }
-    
+
     override val widgetConfirmation = context.dataStore.data
         .distinctUntilChangedBy { it[widgetConfirmationKey] }
         .map { preferences -> preferences[widgetConfirmationKey] == true }
@@ -373,45 +393,71 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
             preferences[titleScaleKey] = scale
         }
     }
+
+    override val titleColorAvailable: Flow<Long> = context.dataStore.data
+        .distinctUntilChangedBy { it[titleColorAvailableKey] }
+        .map { preferences -> preferences[titleColorAvailableKey] ?: Color.Unspecified.toColorLong() }
+
+    override suspend fun setTitleColorAvailable(@ColorLong color: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[titleColorAvailableKey] = color
+         }
+    }
+
+    override val titleColorUnavailable: Flow<Long> = context.dataStore.data
+        .distinctUntilChangedBy { it[titleColorUnavailableKey] }
+        .map { preferences -> preferences[titleColorUnavailableKey] ?: Color.Unspecified.toColorLong() }
+
+    override suspend fun setTitleColorUnavailable(@ColorLong color: Long) {
+        context.dataStore.edit { preferences ->
+            preferences[titleColorUnavailableKey] = color
+        }
+    }
     // endregion App settings
 
     companion object {
         private val Context.dataStore by preferencesDataStore(name = "settings", produceMigrations = { context ->
-            listOf(SharedPreferencesMigration(context, "me.impa.knockonports_preferences"))
+            listOf(
+                SharedPreferencesMigration(context, "me.impa.knockonports_preferences"),
+                themeMigration
+            )
         })
 
         // Theme settings
-        private val useDarkThemeKey = stringPreferencesKey("CFG_DARK_MODE")
-        private val useDynamicColorsKey = booleanPreferencesKey("CFG_DYNAMIC_THEME")
-        private val customThemeKey = stringPreferencesKey("CFG_APP_THEME")
-        private val contrastKey = stringPreferencesKey("CFG_CONTRAST")
+        val useDarkThemeKey = stringPreferencesKey("CFG_DARK_MODE")
+        val useDynamicColorsKey = booleanPreferencesKey("CFG_DYNAMIC_THEME")
+        val amoledThemeKey = booleanPreferencesKey("CFG_AMOLED_THEME")
+        // Deprecated
+        val customThemeKey = stringPreferencesKey("CFG_APP_THEME")
+        val contrastKey = stringPreferencesKey("CFG_CONTRAST")
+        val themeSeedKey = longPreferencesKey("CFG_THEME_SEED")
 
         // Miscellaneous settings
-        private val firstLaunchKey = longPreferencesKey("CFG_FIRST_LAUNCH")
+        val firstLaunchKey = longPreferencesKey("CFG_FIRST_LAUNCH")
 
-        // private val firstLaunchV2Key = longPreferencesKey("CFG_FIRST_LAUNCH_V2") -- delete it later
-        private val doNotAskBeforeKey = longPreferencesKey("CFG_DO_NOT_ASK_BEFORE")
-        private val doNotAskReviewKey = booleanPreferencesKey("CFG_DO_NOT_ASK_REVIEW")
-        private val doNotAskNotificationKey = booleanPreferencesKey("CFG_DO_NOT_ASK_NOTIFICATION")
-        private val betaMessageStateKey = stringPreferencesKey("CFG_BETA_MESSAGE_STATE")
-        private val knockCountKey = longPreferencesKey("CFG_KNOCK_COUNT")
+        val doNotAskBeforeKey = longPreferencesKey("CFG_DO_NOT_ASK_BEFORE")
+        val doNotAskReviewKey = booleanPreferencesKey("CFG_DO_NOT_ASK_REVIEW")
+        val doNotAskNotificationKey = booleanPreferencesKey("CFG_DO_NOT_ASK_NOTIFICATION")
+        val betaMessageStateKey = stringPreferencesKey("CFG_BETA_MESSAGE_STATE")
+        val knockCountKey = longPreferencesKey("CFG_KNOCK_COUNT")
 
         // App settings
-        private val appLockKey = booleanPreferencesKey("CFG_APP_LOCK")
-        private val widgetConfirmationKey = booleanPreferencesKey("CFG_CONFIRM_WIDGET")
-        private val detectPublicIPKey = booleanPreferencesKey("CFG_DETECT_PUBLIC_IP")
-        private val ipv4ServiceKey = stringPreferencesKey("CFG_IP4_SERVICE")
-        private val ipv6ServiceKey = stringPreferencesKey("CFG_IP6_SERVICE")
-        private val customIpv4ServiceKey = stringPreferencesKey("CFG_IP4_CUSTOM_SERVICE")
-        private val customIpv6ServiceKey = stringPreferencesKey("CFG_IP6_CUSTOM_SERVICE")
-        private val detailedListViewKey = booleanPreferencesKey("CFG_DETAILED_LIST_VIEW")
-        private val customIp4HeaderKey = booleanPreferencesKey("CFG_CUSTOM_IP4_HEADER")
-        private val ip4HeaderSizeKey = intPreferencesKey("CFG_IP4_HEADER_SIZE")
-        private val resourceCheckPeriodKey = intPreferencesKey("CFG_RESOURCE_CHECK_PERIOD")
-        private val titleOverflowKey = intPreferencesKey("CFG_TITLE_OVERFLOW")
-        private val titleScaleKey = intPreferencesKey("CFG_TITLE_SCALE")
-        private val titleMultilineKey = booleanPreferencesKey("CFG_TITLE_MULTILINE")
-
+        val appLockKey = booleanPreferencesKey("CFG_APP_LOCK")
+        val widgetConfirmationKey = booleanPreferencesKey("CFG_CONFIRM_WIDGET")
+        val detectPublicIPKey = booleanPreferencesKey("CFG_DETECT_PUBLIC_IP")
+        val ipv4ServiceKey = stringPreferencesKey("CFG_IP4_SERVICE")
+        val ipv6ServiceKey = stringPreferencesKey("CFG_IP6_SERVICE")
+        val customIpv4ServiceKey = stringPreferencesKey("CFG_IP4_CUSTOM_SERVICE")
+        val customIpv6ServiceKey = stringPreferencesKey("CFG_IP6_CUSTOM_SERVICE")
+        val detailedListViewKey = booleanPreferencesKey("CFG_DETAILED_LIST_VIEW")
+        val customIp4HeaderKey = booleanPreferencesKey("CFG_CUSTOM_IP4_HEADER")
+        val ip4HeaderSizeKey = intPreferencesKey("CFG_IP4_HEADER_SIZE")
+        val resourceCheckPeriodKey = intPreferencesKey("CFG_RESOURCE_CHECK_PERIOD")
+        val titleOverflowKey = intPreferencesKey("CFG_TITLE_OVERFLOW")
+        val titleScaleKey = intPreferencesKey("CFG_TITLE_SCALE")
+        val titleMultilineKey = booleanPreferencesKey("CFG_TITLE_MULTILINE")
+        val titleColorAvailableKey = longPreferencesKey("CFG_TITLE_COLOR_AVAILABLE")
+        val titleColorUnavailableKey = longPreferencesKey("CFG_TITLE_COLOR_UNAVAILABLE")
     }
 
 }

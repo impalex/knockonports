@@ -34,7 +34,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toDrawable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -51,7 +50,6 @@ import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.shortcutId
 import me.impa.knockonports.service.sequence.KnockHelper
-import me.impa.knockonports.ui.config.ThemeConfig
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import timber.log.Timber
 import javax.inject.Inject

@@ -19,12 +19,10 @@ package me.impa.knockonports.screen
 import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -32,11 +30,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import me.impa.knockonports.R
-import me.impa.knockonports.extension.OnDestination
-import me.impa.knockonports.navigation.AppBarState
-import me.impa.knockonports.navigation.AppNavGraph
+import me.impa.knockonports.navigation.SettingsRoute
+import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
+import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.settings.DetectIPAlert
 import me.impa.knockonports.screen.component.settings.IPHeaderSizeAlert
 import me.impa.knockonports.screen.component.settings.aboutSection
@@ -49,10 +46,8 @@ import me.impa.knockonports.screen.viewmodel.state.settings.UiOverlay
 import me.impa.knockonports.service.biometric.BiometricHelper
 
 @Composable
+@Suppress("ReturnCount")
 fun SettingsScreen(
-    onComposing: (AppBarState) -> Unit,
-    navController: NavController,
-    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -64,23 +59,21 @@ fun SettingsScreen(
     val overlay by viewModel.overlay.collectAsState()
     val title = stringResource(R.string.title_screen_settings)
     val lazyListState = rememberLazyListState()
-    navController.OnDestination<AppNavGraph.SettingsRoute> {
-        LaunchedEffect(key1 = true) {
-            onComposing(
-                AppBarState(
-                    title = title,
-                    backAvailable = true,
-                    actions = null
-                )
-            )
-        }
-    }
+
+    RegisterAppBar<SettingsRoute>(title = title, showBackButton = true)
 
     overlay?.let { ShowOverlay(LocalContext.current, biometricHelper, it, viewModel::onEvent) }
 
+    // Wait for data
+    settings ?: return
+    theme ?: return
+    listSettings ?: return
+
+    val paddings = LocalInnerPaddingValues.current
+
     LazyColumn(
         state = lazyListState,
-        contentPadding = innerPaddingValues,
+        contentPadding = paddings,
         modifier = modifier.fillMaxSize()
     ) {
         settings?.let {

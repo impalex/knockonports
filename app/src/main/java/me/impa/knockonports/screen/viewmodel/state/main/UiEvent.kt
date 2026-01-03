@@ -20,7 +20,6 @@ import android.net.Uri
 
 sealed interface UiEvent {
     data class Edit(val sequenceId: Long?) : UiEvent
-    data object ResetEditMode : UiEvent
     data class Duplicate(val sequenceId: Long) : UiEvent
     data class Move(val from: Int, val to: Int) : UiEvent
     data object ConfirmReorder : UiEvent

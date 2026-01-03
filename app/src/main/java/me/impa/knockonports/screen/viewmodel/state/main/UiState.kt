@@ -16,6 +16,7 @@
 
 package me.impa.knockonports.screen.viewmodel.state.main
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
@@ -32,9 +33,9 @@ data class UiState(
     val focusedSequenceId: Long? = null,
     val disableNotificationRequest: Boolean = false,
     val detailedList: Boolean = true,
+    val onlineColor: Color = Color.Unspecified,
+    val offlineColor: Color = Color.Unspecified,
     val titleOverflowType: TitleOverflowType = TitleOverflowType.END,
     val titleMultiline: Boolean = false,
     val titleScale: Int = DEFAULT_TITLE_FONT_SCALE,
-    val editMode: Boolean = false,
-    val editSequenceId: Long? = null
 )

@@ -21,7 +21,6 @@ import android.icu.text.DateFormat
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -36,7 +35,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,41 +43,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import me.impa.knockonports.R
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.type.EventType
-import me.impa.knockonports.extension.OnDestination
 import me.impa.knockonports.extension.stringResourceId
-import me.impa.knockonports.navigation.AppBarState
-import me.impa.knockonports.navigation.AppNavGraph
+import me.impa.knockonports.navigation.LogRoute
+import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
+import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.viewmodel.LogViewModel
 
 @Composable
-fun LogScreen(
-    onComposing: (AppBarState) -> Unit, navController: NavController,
-    innerPaddingValues: PaddingValues,
-    modifier: Modifier = Modifier, viewModel: LogViewModel = hiltViewModel()
+fun LogScreen(modifier: Modifier = Modifier, viewModel: LogViewModel = hiltViewModel()
 ) {
     val title = stringResource(R.string.title_screen_log)
-    navController.OnDestination<AppNavGraph.LogRoute> {
-        LaunchedEffect(true) {
-            onComposing(
-                AppBarState(
-                    title = title,
-                    backAvailable = true,
-                    actions = {
-                        IconButton(onClick = { viewModel.clearLog() }) {
-                            Icon(Icons.Default.Delete, contentDescription = null)
-                        }
-                    }
-                )
-            )
+    RegisterAppBar<LogRoute>(title = title, showBackButton = true) {
+        IconButton(onClick = { viewModel.clearLog() }) {
+            Icon(Icons.Default.Delete, contentDescription = null)
         }
     }
     val events by viewModel.logEntries.collectAsState()
 
-    LogEventList(events, innerPaddingValues, modifier)
+    LogEventList(events, modifier)
 }
 
 val errorEventTypes = setOf(
@@ -109,9 +93,10 @@ fun stringResourceSafe(id: Int, formatArgs: List<Any?>): String {
 }
 
 @Composable
-fun LogEventList(events: List<LogEntry>, innerPaddingValues: PaddingValues, modifier: Modifier = Modifier) {
+fun LogEventList(events: List<LogEntry>, modifier: Modifier = Modifier) {
     val lazyState = rememberLazyListState()
-    LazyColumn(state = lazyState, modifier = modifier, contentPadding = innerPaddingValues) {
+    val paddings = LocalInnerPaddingValues.current
+    LazyColumn(state = lazyState, modifier = modifier, contentPadding = paddings) {
         itemsIndexed(items = events, key = { _, item -> item.id ?: 0L }) { index, item ->
             if (index > 0)
                 HorizontalDivider(modifier = Modifier.fillMaxWidth())
@@ -157,7 +142,6 @@ fun LogEventList(events: List<LogEntry>, innerPaddingValues: PaddingValues, modi
 fun PreviewLogEventList() {
     LogEventList(
         PreviewData.mockLogEntries,
-        innerPaddingValues = PaddingValues.Absolute(),
         modifier = Modifier.fillMaxSize()
     )
 }

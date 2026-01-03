@@ -44,13 +44,17 @@ import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
+import me.impa.knockonports.data.event.AppEventBus
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.data.type.EventType
 import me.impa.knockonports.data.type.IcmpType
 import me.impa.knockonports.data.type.ProtocolVersionType
 import me.impa.knockonports.data.type.SequenceStepType
+import me.impa.knockonports.extension.navigate
+import me.impa.knockonports.navigation.NavigateUp
 import me.impa.knockonports.screen.validate.NotEmptyStringValidator
 import me.impa.knockonports.screen.validate.RangeValidator
+import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
 import me.impa.knockonports.screen.viewmodel.state.sequence.StepUiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.sequence.UiState
@@ -63,7 +67,8 @@ import timber.log.Timber
 class SequenceViewModel @AssistedInject constructor(
     @Assisted private var sequenceId: Long?,
     val repository: KnocksRepository,
-    val settingsDataStore: SettingsDataStore
+    val settingsDataStore: SettingsDataStore,
+    val eventBus: AppEventBus
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
@@ -279,6 +284,9 @@ class SequenceViewModel @AssistedInject constructor(
                     }
                 ).also { newId ->
                     _state.update { it.copy(savedSequenceId = newId) }
+                    eventBus.navigate(NavigateUp)
+                    eventBus.sendEvent(event = SavedSequenceHandle(newId))
+                    eventBus.sendEvent<AppEvent>(event = AppEvent.SequenceSaved(sequenceName = _state.value.title))
                 }
                 repository.saveLogEntry(
                     LogEntry(
@@ -286,7 +294,6 @@ class SequenceViewModel @AssistedInject constructor(
                         data = listOf(_state.value.title)
                     )
                 )
-                repository.sendEvent(AppEvent.SequenceSaved(sequenceName = _state.value.title))
             } catch (e: Exception) {
                 Timber.e(e)
             } finally {

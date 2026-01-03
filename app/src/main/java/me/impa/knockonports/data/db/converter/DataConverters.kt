@@ -29,7 +29,7 @@ import me.impa.knockonports.data.type.SequenceStepType
 import java.net.URLDecoder
 import java.net.URLEncoder
 
-@Suppress("unused", "TooManyFunctions")
+@Suppress( "TooManyFunctions")
 class DataConverters {
 
     @TypeConverter

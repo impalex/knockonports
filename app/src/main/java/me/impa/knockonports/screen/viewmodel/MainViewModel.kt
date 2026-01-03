@@ -17,6 +17,9 @@
 package me.impa.knockonports.screen.viewmodel
 
 import android.net.Uri
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.fromColorLong
+import androidx.compose.ui.graphics.toColorLong
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,11 +44,15 @@ import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.event.AppEvent
+import me.impa.knockonports.data.event.AppEventBus
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.data.type.EventType
+import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.di.IoDispatcher
+import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.helper.TextResource
+import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay.Automate
@@ -58,13 +65,15 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
+@Suppress("LongParameterList")
 class MainViewModel @Inject constructor(
     private val repository: KnocksRepository,
     private val knockHelper: KnockHelper,
     private val resourceWatcher: AccessWatcher,
     private val settingsDataStore: SettingsDataStore,
     private val deviceState: DeviceState,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    val eventBus: AppEventBus
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<UiState> = MutableStateFlow(UiState())
@@ -76,8 +85,7 @@ class MainViewModel @Inject constructor(
     @Suppress("ComplexMethod")
     fun onEvent(event: UiEvent) {
         when (event) {
-            is UiEvent.Edit -> _state.update { it.copy(editMode = true, editSequenceId = event.sequenceId) }
-            is UiEvent.ResetEditMode -> _state.update { it.copy(editMode = false, editSequenceId = null) }
+            is UiEvent.Edit -> eventBus.navigate(SequenceRoute(event.sequenceId))
             is UiEvent.Duplicate -> cloneSequence(event.sequenceId)
             is UiEvent.Move -> moveSequence(event.from, event.to)
             is UiEvent.ConfirmReorder -> confirmReorder()
@@ -130,7 +138,7 @@ class MainViewModel @Inject constructor(
                         data = listOf(uri.toString(), orderedSequences.size.toString())
                     )
                 )
-                repository.sendEvent(AppEvent.SequenceListImported(orderedSequences.size))
+                eventBus.sendEvent<AppEvent>(event = AppEvent.SequenceListImported(orderedSequences.size))
                 Timber.d("Imported ${orderedSequences.size} sequences")
             } catch (e: Exception) {
                 Timber.e(e)
@@ -156,7 +164,7 @@ class MainViewModel @Inject constructor(
                         data = listOf(uri.toString(), flatSequences.size.toString())
                     )
                 )
-                repository.sendEvent(AppEvent.SequenceListExported(flatSequences.size))
+                eventBus.sendEvent<AppEvent>(event = AppEvent.SequenceListExported(flatSequences.size))
                 Timber.d("Exported ${flatSequences.size} sequences")
             } catch (e: Exception) {
                 Timber.e(e)
@@ -175,7 +183,7 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch {
                 repository.deleteSequenceById(it.id)
                 repository.saveLogEntry(LogEntry(event = EventType.SEQUENCE_DELETED, data = listOf(it.name)))
-                repository.sendEvent(AppEvent.SequenceRemoved(it.name))
+                eventBus.sendEvent<AppEvent>(event = AppEvent.SequenceRemoved(it.name))
             }
         }
     }
@@ -282,10 +290,10 @@ class MainViewModel @Inject constructor(
     }
 
     private fun sendErrorEvent(errorText: String) =
-        repository.sendEvent(AppEvent.GeneralError(TextResource.PlainText(errorText)))
+        eventBus.sendEvent<AppEvent>(event = AppEvent.GeneralError(TextResource.PlainText(errorText)))
 
     private fun sendMessageEvent(resourceId: Int) =
-        repository.sendEvent(AppEvent.GeneralMessage(TextResource.DynamicText(resourceId)))
+        eventBus.sendEvent<AppEvent>(event = AppEvent.GeneralMessage(TextResource.DynamicText(resourceId)))
 
     private suspend fun checkReviewRequest() {
         @Suppress("ComplexCondition")
@@ -332,19 +340,25 @@ class MainViewModel @Inject constructor(
                 )
             }
 
-            combine(
+            combine<Any, UiState>(
                 settingsDataStore.doNotAskNotification,
                 settingsDataStore.detailedListView,
                 settingsDataStore.titleOverflow,
                 settingsDataStore.titleScale,
                 settingsDataStore.titleMultiline,
-            ) { doNotAskNotification, detailedView, titleOverflow, titleScale, titleMultiline ->
+                settingsDataStore.titleColorAvailable,
+                settingsDataStore.titleColorUnavailable,
+            ) { config ->
                 _state.value.copy(
-                    detailedList = detailedView,
-                    titleOverflowType = titleOverflow,
-                    titleScale = titleScale,
-                    titleMultiline = titleMultiline,
-                    disableNotificationRequest = doNotAskNotification
+                    disableNotificationRequest = config[0] as Boolean,
+                    detailedList = config[1] as Boolean,
+                    titleOverflowType = config[2] as TitleOverflowType,
+                    titleScale = config[3] as Int,
+                    titleMultiline = config[4] as Boolean,
+                    onlineColor = if (config[5] as Long == Color.Unspecified.toColorLong()) Color.Unspecified
+                    else Color.fromColorLong(config[5] as Long),
+                    offlineColor = if (config[6] as Long == Color.Unspecified.toColorLong()) Color.Unspecified
+                    else Color.fromColorLong(config[6] as Long),
                 )
             }.collect { newState ->
                 _state.update { newState }

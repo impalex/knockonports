@@ -18,11 +18,9 @@ package me.impa.knockonports.data
 
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 import me.impa.knockonports.data.db.entity.CheckAccessData
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
-import me.impa.knockonports.data.event.AppEvent
 
 @Suppress("TooManyFunctions")
 interface KnocksRepository {
@@ -44,7 +42,4 @@ interface KnocksRepository {
     suspend fun cleanupLogEntries(keepCount: Int): Int
     suspend fun readSequencesFromFile(uri: Uri): List<Sequence>
     suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>)
-    fun getCurrentEventFlow(): StateFlow<AppEvent?>
-    fun sendEvent(appEvent: AppEvent)
-    fun clearEvent()
 }

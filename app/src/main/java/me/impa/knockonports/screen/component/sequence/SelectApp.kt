@@ -43,7 +43,7 @@ fun SelectApp(appPackage: String?, appName: String?, onUpdate: (String?, String?
                 if (appList == null) {
                     appList = withContext(Dispatchers.Default) { AppData.loadInstalledApps(context) }
                 }
-                appList ?: listOf<AppData>()
+                appList ?: listOf()
             },
             selectedIndex = {
                 appList?.indexOfFirst { it.app == appPackage } ?: -1

@@ -29,8 +29,6 @@
     <string name="title_screen_log">Log</string>
     <string name="title_tab_basic_settings">Settings</string>
     <string name="title_tab_advanced_settings">Advanced</string>
-    <string name="title_nav_sequence">Sequence</string>
-    <string name="title_nav_config">Config</string>
     <string name="title_review_request">Enjoying %s?</string>"
     <string name="text_review_request">If you have a moment, I\'d appreciate your feedback! Honest ratings help me improve and keep the app evolving. Thanks for being part of the journey!</string>
     <string name="action_rate_now">Rate Now</string>
@@ -51,7 +49,6 @@
     <string name="text_host_not_set">(Host is not set)</string>
     <string name="text_empty_sequence">(Empty sequence)</string>
     <string name="hint_reorder">Reorder</string>
-    <string name="hint_delete">Delete</string>
     <string name="field_port">Port</string>
     <string name="field_data">Data</string>
     <string name="field_size">Size</string>
@@ -279,4 +276,11 @@ For most users: <b>do not change this setting</b>.
     <string name="text_lock_app">Authenticate to access the app.</string>
     <string name="title_lock_config">Security Verification</string>
     <string name="text_lock_config">Authenticate to change the app lock setting.</string>
+    <string name="title_settings_amoled_theme">OLED Dark Mode</string>
+    <string name="text_settings_amoled_theme">Uses true black for dark themes to save power on OLED/AMOLED displays</string>
+    <string name="title_settings_title_available_color">Online Color</string>
+    <string name="text_settings_title_available_color">Sequence name color if the resource check succeeds</string>
+    <string name="title_settings_title_unavailable_color">Offline Color</string>
+    <string name="text_settings_title_unavailable_color">Sequence name color if the resource check fails</string>
+
 </resources>

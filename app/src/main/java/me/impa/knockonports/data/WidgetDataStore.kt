@@ -17,7 +17,6 @@
 package me.impa.knockonports.data
 
 import android.content.Context
-import androidx.datastore.core.DataStore
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
 import dagger.hilt.InstallIn

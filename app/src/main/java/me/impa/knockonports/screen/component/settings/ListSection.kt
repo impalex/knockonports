@@ -17,8 +17,11 @@
 package me.impa.knockonports.screen.component.settings
 
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import kotlinx.collections.immutable.persistentMapOf
 import me.impa.knockonports.R
@@ -27,6 +30,7 @@ import me.impa.knockonports.constants.MIN_TITLE_FONT_SCALE
 import me.impa.knockonports.constants.TITLE_FONT_SCALE_STEP
 import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.screen.component.common.HeaderSection
+import me.impa.knockonports.screen.component.common.PrefCustomColorSelection
 import me.impa.knockonports.screen.component.common.PrefMultiSelection
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
@@ -49,6 +53,30 @@ fun LazyListScope.listSection(
             onClick = { onEvent(UiEvent.SetDetailedView(!config.detailedListView)) }
         )
     }
+    item(key = "available_color") {
+        PrefCustomColorSelection(
+            title = stringResource(R.string.title_settings_title_available_color),
+            subtitle = stringResource(R.string.text_settings_title_available_color),
+            value = if (config.titleColorAvailable.toColorLong() == Color.Unspecified.toColorLong())
+                CardDefaults.cardColors().contentColor
+            else config.titleColorAvailable,
+            defaultValue = CardDefaults.cardColors().contentColor,
+            showAlpha = true,
+            onChanged = { onEvent(UiEvent.SetTitleColorAvailable(it.toColorLong())) }
+        )
+    }
+    item(key = "unavailable_color") {
+        PrefCustomColorSelection(
+            title = stringResource(R.string.title_settings_title_unavailable_color),
+            subtitle = stringResource(R.string.text_settings_title_unavailable_color),
+            value = if (config.titleColorUnavailable.toColorLong() == Color.Unspecified.toColorLong())
+                CardDefaults.cardColors().contentColor
+            else config.titleColorUnavailable,
+            defaultValue = CardDefaults.cardColors().contentColor,
+            showAlpha = true,
+            onChanged = { onEvent(UiEvent.SetTitleColorUnavailable(it.toColorLong())) }
+        )
+    }
     item(key = "multiline_title") {
         PrefSwitch(
             title = stringResource(R.string.title_settings_multiline_title),
@@ -58,7 +86,7 @@ fun LazyListScope.listSection(
         )
     }
     item(key = "shorten_title") {
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val options = remember {
             persistentMapOf(
                 TitleOverflowType.START.name to resources.getString(R.string.type_shorten_start),

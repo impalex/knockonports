@@ -39,7 +39,7 @@ fun ValueTextField(
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit = { },
     validationResult: ValidationResult = ValidationResult.Valid,
-    keyboardType: KeyboardType = KeyboardType.Companion.Text,
+    keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     val currentValue = remember(key1 = value) { mutableStateOf(value) }
@@ -78,7 +78,7 @@ fun ValueTextField(
     modifier: Modifier = Modifier,
     onValueChange: (Int?) -> Unit = { },
     validationResult: ValidationResult = ValidationResult.Valid,
-    keyboardType: KeyboardType = KeyboardType.Companion.Number,
+    keyboardType: KeyboardType = KeyboardType.Number,
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     var localValidation by remember { mutableStateOf<ValidationResult?>(null) }

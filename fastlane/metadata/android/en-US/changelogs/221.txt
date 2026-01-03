@@ -1,0 +1,4 @@
+• Edge-to-edge improvements.
+• Custom themes: choose any base color to generate your own theme.
+• Added a pure black mode for AMOLED screens (works with custom themes).
+• Set custom colors for sequence names based on resource availability status.

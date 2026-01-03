@@ -129,6 +129,6 @@ fun DonateButton() {
 @Composable
 fun PreviewMainScreenActions() {
     Row {
-        MainScreenActions(true, true)
+        MainScreenActions(isRuLangAvailable = true, isDetailedView = true)
     }
 }

@@ -18,14 +18,11 @@ package me.impa.knockonports.mock
 
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.CheckAccessData
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
-import me.impa.knockonports.data.event.AppEvent
 
 object FakeRepository: KnocksRepository {
     override fun getSequences(): Flow<List<Sequence>> {
@@ -98,16 +95,6 @@ object FakeRepository: KnocksRepository {
         uri: Uri,
         sequences: List<Sequence>
     ) {
-        TODO("Not yet implemented")
-    }
-
-    override fun getCurrentEventFlow(): StateFlow<AppEvent?> = MutableStateFlow(null)
-
-    override fun sendEvent(appEvent: AppEvent) {
-        TODO("Not yet implemented")
-    }
-
-    override fun clearEvent() {
         TODO("Not yet implemented")
     }
 

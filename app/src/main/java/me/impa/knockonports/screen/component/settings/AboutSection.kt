@@ -37,13 +37,14 @@ import me.impa.knockonports.helper.openPlayStore
 import me.impa.knockonports.screen.component.common.PrefDescriptionClickable
 import timber.log.Timber
 import kotlin.random.Random
+import androidx.compose.ui.platform.LocalResources
 
 fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
 
     item { HeaderSection(stringResource(R.string.title_settings_about)) }
 
     item(key = "app_version") {
-        val resources = LocalContext.current.resources
+        val resources = LocalResources.current
         val annoyingVersion = rememberSaveable { getAnnoyingVersion(resources) }
         PrefDescriptionClickable(
             title = stringResource(R.string.title_settings_version),
@@ -67,7 +68,7 @@ fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
         PrefDescriptionClickable(
             title = stringResource(R.string.title_settings_privacy_policy),
             subtitle = stringResource(R.string.text_settings_privacy_policy),
-            onClick = { uriHandler.openUri("https://knocker.impa.me/policy.html") }
+            onClick = { uriHandler.openUri("https://impalex.github.io/knockonports/policy.html") }
         )
     }
 

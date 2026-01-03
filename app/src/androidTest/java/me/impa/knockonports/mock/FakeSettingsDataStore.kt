@@ -16,6 +16,8 @@
 
 package me.impa.knockonports.mock
 
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
@@ -46,6 +48,8 @@ object FakeSettingsDataStore : SettingsDataStore {
     override val ip4HeaderSize: Flow<Int> = flowOf(0)
     override val resourceCheckPeriod: Flow<Int> = flowOf(DEFAULT_CHECK_PERIOD)
     override val isAppLockEnabled: Flow<Boolean> = flowOf(false)
+    override val titleColorAvailable: Flow<Long> = flowOf(Color.Unspecified.toColorLong())
+    override val titleColorUnavailable: Flow<Long> = flowOf(Color.Unspecified.toColorLong())
 
     override suspend fun setDarkMode(darkMode: DarkMode) {
         TODO("Not yet implemented")
@@ -60,6 +64,14 @@ object FakeSettingsDataStore : SettingsDataStore {
     }
 
     override suspend fun setContrast(contrast: ThemeContrast) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setThemeSeed(seed: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setAmoledTheme(enabled: Boolean) {
         TODO("Not yet implemented")
     }
 
@@ -149,6 +161,14 @@ object FakeSettingsDataStore : SettingsDataStore {
         get() = flowOf(false)
 
     override suspend fun setTitleMultiline(multiline: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setTitleColorAvailable(color: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun setTitleColorUnavailable(color: Long) {
         TODO("Not yet implemented")
     }
 }

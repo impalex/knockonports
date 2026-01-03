@@ -82,6 +82,8 @@ fun LazyItemScope.SequenceCard(
     titleOverflowType: TitleOverflowType,
     titleFontScale: Int,
     multilineTitle: Boolean,
+    onlineColor: Color,
+    offlineColor: Color,
     modifier: Modifier = Modifier,
     isHighLighted: Boolean = false,
     onHighLightFinished: () -> Unit = {},
@@ -142,6 +144,8 @@ fun LazyItemScope.SequenceCard(
             titleOverflowType = titleOverflowType,
             multilineTitle = multilineTitle,
             titleStyle = titleStyle,
+            onlineColor = onlineColor,
+            offlineColor = offlineColor,
             showSequenceDetails = showSequenceDetails,
             isShortcutsAvailable = showShortcutMenu,
             modifier = modifier,
@@ -158,6 +162,8 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
     resourceState: ResourceState?,
     cardColor: Color,
     textColor: Color,
+    onlineColor: Color,
+    offlineColor: Color,
     titleOverflowType: TitleOverflowType,
     multilineTitle: Boolean,
     titleStyle: TextStyle,
@@ -169,6 +175,13 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
+    val nameColor = remember(resourceState) {
+        when(resourceState) {
+            is ResourceState.Available -> onlineColor
+            is ResourceState.Unavailable -> offlineColor
+            else -> Color.Unspecified
+        }
+    }
     OutlinedCard(
         colors = CardDefaults.cardColors(
             containerColor = cardColor,
@@ -199,7 +212,7 @@ private fun ReorderableCollectionItemScope.SequenceCardContent(
                         ?: stringResource(R.string.text_unnamed_sequence),
                         sequence.host?.takeIf { it.isNotBlank() } ?: stringResource(R.string.text_host_not_set),
                         sequence.sequenceString() ?: stringResource(R.string.text_empty_sequence), showSequenceDetails,
-                        titleOverflowType, multilineTitle, titleStyle)
+                        titleOverflowType, multilineTitle, titleStyle, nameColor)
                     if (!showSequenceDetails)
                         KnockIconButton(onKnock = {
                             onPermissionRequest?.invoke()

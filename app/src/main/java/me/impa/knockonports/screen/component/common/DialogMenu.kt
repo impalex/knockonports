@@ -224,7 +224,7 @@ fun <T> DialogItemList(
                         modifier = Modifier.fillMaxWidth(),
                         state = listState
                     ) {
-                        itemsIndexed(filteredItems, key = { index, item -> item.hashCode() }) { index, item ->
+                        itemsIndexed(filteredItems, key = { _, item -> item.hashCode() }) { index, item ->
                             val isSelected = index == selectedIndex
                             var imageData by remember {
                                 mutableStateOf<IconData?>(imageProvider?.let { IconData.PlaceHolder })
@@ -351,7 +351,7 @@ sealed interface IconData {
 @Composable
 @Preview
 fun PreviewDialogMenuItem() {
-    DialogMenuItem("Item 1", false, true, null) {}
+    DialogMenuItem("Item 1", selected = false, enabled = true, iconData = null) {}
 }
 
 @Composable
@@ -360,7 +360,7 @@ fun PreviewDialogMenu() {
     DialogMenu(
         label = "Select an item",
         itemsSource = DialogItemsSource.ListItems(listOf("Item1", "Item2"), 1),
-        onItemSelected = { index, item -> }
+        onItemSelected = { _, _ -> }
     )
 }
 

@@ -19,13 +19,10 @@ package me.impa.knockonports
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ApplicationContext
 import me.impa.knockonports.service.sequence.KnockerService
 import timber.log.Timber
-import javax.inject.Inject
 
 @HiltAndroidApp
 class KnockOnPortsApp : Application() {

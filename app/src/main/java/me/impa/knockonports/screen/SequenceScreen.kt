@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -30,13 +32,18 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SegmentedButton
@@ -55,6 +62,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
@@ -64,30 +72,31 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
 import androidx.core.view.ViewCompat
-import androidx.navigation.NavController
 import kotlinx.collections.immutable.ImmutableList
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.MAX_CHECK_RETRIES
 import me.impa.knockonports.constants.MAX_CHECK_TIMEOUT
 import me.impa.knockonports.constants.MIN_CHECK_RETRIES
 import me.impa.knockonports.constants.MIN_CHECK_TIMEOUT
-import me.impa.knockonports.constants.TAG_SEQUENCE_ADVANCED_TAB
 import me.impa.knockonports.constants.TAG_EDIT_HOST
 import me.impa.knockonports.constants.TAG_EDIT_LOCAL_PORT
-import me.impa.knockonports.constants.TAG_SEQUENCE_BASIC_TAB
 import me.impa.knockonports.constants.TAG_EMPTY
+import me.impa.knockonports.constants.TAG_SEQUENCE_ADVANCED_TAB
+import me.impa.knockonports.constants.TAG_SEQUENCE_BASIC_TAB
 import me.impa.knockonports.data.type.CheckAccessType
+import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.stringResourceId
-import me.impa.knockonports.navigation.AppBarState
+import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.screen.component.common.HeaderSection
+import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
+import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.common.ValueTextField
 import me.impa.knockonports.screen.component.sequence.SelectApp
 import me.impa.knockonports.screen.component.sequence.SelectIcmpSizeType
 import me.impa.knockonports.screen.component.sequence.SelectProtocolVersion
 import me.impa.knockonports.screen.component.sequence.SequenceStepCard
-import me.impa.knockonports.screen.component.sequence.UpdateAppBar
 import me.impa.knockonports.screen.viewmodel.SequenceViewModel
 import me.impa.knockonports.screen.viewmodel.state.sequence.StepUiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.UiEvent
@@ -95,21 +104,26 @@ import me.impa.knockonports.screen.viewmodel.state.sequence.UiState
 import me.impa.knockonports.ui.theme.Typography
 import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import timber.log.Timber
 
 private const val DRAGGABLE_LIST_OFFSET = 4
 
 @Composable
 fun SequenceScreen(
-    onComposing: (AppBarState) -> Unit,
-    navController: NavController,
-    innerPaddingValues: PaddingValues,
     viewModel: SequenceViewModel,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     val state by viewModel.state.collectAsState()
-    state.savedSequenceId?.let { navController.NavigateUpAfterSave(it) }
-    navController.UpdateAppBar(onComposing, viewModel::saveSequence)
+    RegisterAppBar<SequenceRoute>(title = stringResource(R.string.title_screen_sequence), showBackButton = true) {
+        Button(
+            onClick = debounced({ viewModel.saveSequence() }),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                contentColor = MaterialTheme.colorScheme.onSurface
+            )
+        ) {
+            Icon(imageVector = Icons.Default.Done, contentDescription = null)
+        }
+    }
 
     // Stabilize lambda
     val onEvent = remember(viewModel) { { event: UiEvent -> viewModel.onEvent(event) } }
@@ -117,7 +131,6 @@ fun SequenceScreen(
         SequenceScreenContent(
             state = state,
             onEvent = onEvent,
-            innerPaddingValues = innerPaddingValues,
             modifier = modifier
         )
     }
@@ -128,97 +141,144 @@ fun SequenceScreen(
 fun SequenceScreenContent(
     state: UiState,
     onEvent: (UiEvent) -> Unit,
-    innerPaddingValues: PaddingValues,
     modifier: Modifier = Modifier,
 ) {
+    val paddings = LocalInnerPaddingValues.current
+    val titles = listOf(R.string.title_tab_basic_settings, R.string.title_tab_advanced_settings)
+    var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
+    val pagerState = rememberPagerState { titles.size }
+
+    LaunchedEffect(selectedIndex) {
+        pagerState.animateScrollToPage(selectedIndex)
+    }
+
+    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
+        if (!pagerState.isScrollInProgress)
+            selectedIndex = pagerState.currentPage
+    }
+
     Column(
         modifier = modifier.then(
             Modifier
                 .fillMaxSize()
-                .padding(innerPaddingValues)
+                .padding(
+                    start = paddings.calculateStartPadding(LocalLayoutDirection.current),
+                    end = paddings.calculateEndPadding(LocalLayoutDirection.current)
+                )
         )
     ) {
-        var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
-        val titles = listOf(R.string.title_tab_basic_settings, R.string.title_tab_advanced_settings)
+        SequenceScreenTabs(
+            selectedIndex = selectedIndex,
+            titles = titles,
+            onTabSelected = { selectedIndex = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = paddings.calculateTopPadding())
+        )
 
-        val pagerState = rememberPagerState {
-            titles.size
-        }
-
-        LaunchedEffect(selectedIndex) {
-            pagerState.animateScrollToPage(selectedIndex)
-        }
-
-        LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-            if (!pagerState.isScrollInProgress)
-                selectedIndex = pagerState.currentPage
-        }
-
-        PrimaryTabRow(selectedTabIndex = selectedIndex, modifier = Modifier.fillMaxWidth()) {
-            titles.forEachIndexed { index, title ->
-                Tab(
-                    selected = selectedIndex == index,
-                    onClick = { selectedIndex = index },
-                    text = { Text(stringResource(title)) },
-                    modifier = Modifier.testTag(
-                        when (index) {
-                            0 -> TAG_SEQUENCE_BASIC_TAB
-                            1 -> TAG_SEQUENCE_ADVANCED_TAB
-                            else -> TAG_EMPTY
-                        }
-                    )
-                )
-            }
-        }
-
-        val listStates = remember {
-            List(titles.size) { LazyListState() }
-        }
-        HorizontalPager(
-            state = pagerState,
+        SequencePager(
+            pagerState = pagerState,
+            paddings = paddings,
+            state = state,
+            onEvent = onEvent,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
-        ) { index ->
-            val view = LocalView.current
-            val reorderableListState = getReorderableListState(
-                listStates[index],
-                onMove = { from, to -> onEvent(UiEvent.MoveStep(from, to)) },
-                onFeedback = {
-                    ViewCompat.performHapticFeedback(
-                        view,
-                        HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK
-                    )
-                })
-            if (index == 0)
-                state.newStepId?.let { AutoScroller(listStates[index], state, onEvent) }
-            LazyColumn(state = listStates[index], modifier = Modifier.fillMaxSize()) {
-                when (index) {
-                    0 -> {
-                        sequenceBasicConfig(state, innerModifier = Modifier.padding(horizontal = 8.dp),
-                            onEvent = onEvent)
-                        stepList(
-                            state, state.steps,
-                            reorderableListState = reorderableListState,
-                            innerModifier = Modifier.padding(horizontal = 8.dp),
-                            onEvent = onEvent
-                        )
-                    }
+        )
+    }
+}
 
-                    1 -> sequenceAdvancedConfig(state, onEvent)
-                }
+@Composable
+private fun SequenceScreenTabs(
+    selectedIndex: Int,
+    titles: List<Int>,
+    onTabSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    PrimaryTabRow(selectedTabIndex = selectedIndex, modifier = modifier) {
+        titles.forEachIndexed { index, title ->
+            Tab(
+                selected = selectedIndex == index,
+                onClick = { onTabSelected(index) },
+                text = { Text(stringResource(title)) },
+                modifier = Modifier.testTag(
+                    when (index) {
+                        0 -> TAG_SEQUENCE_BASIC_TAB
+                        1 -> TAG_SEQUENCE_ADVANCED_TAB
+                        else -> TAG_EMPTY
+                    }
+                )
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SequencePager(
+    pagerState: PagerState,
+    paddings: PaddingValues,
+    state: UiState,
+    onEvent: (UiEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val listStates = remember {
+        List(pagerState.pageCount) { LazyListState() }
+    }
+
+    HorizontalPager(
+        state = pagerState,
+        modifier = modifier
+    ) { index ->
+        val view = LocalView.current
+        val reorderableListState = getReorderableListState(
+            listStates[index],
+            onMove = { from, to -> onEvent(UiEvent.MoveStep(from, to)) },
+            onFeedback = {
+                ViewCompat.performHapticFeedback(
+                    view,
+                    HapticFeedbackConstantsCompat.SEGMENT_FREQUENT_TICK
+                )
+            })
+
+        if (index == 0)
+            state.newStepId?.let { AutoScroller(listStates[index], state, onEvent) }
+
+        LazyColumn(
+            state = listStates[index],
+            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
+            contentPadding = PaddingValues(bottom = paddings.calculateBottomPadding())
+        ) {
+            when (index) {
+                0 -> basicSettingsPageContent(state, reorderableListState, onEvent)
+                1 -> advancedSettingsPageContent(state, onEvent)
             }
         }
     }
 }
 
-@Composable
-private fun NavController.NavigateUpAfterSave(sequenceId: Long) {
-    LaunchedEffect(sequenceId) {
-        Timber.d("Saved sequence id: $sequenceId")
-        previousBackStackEntry?.savedStateHandle?.set(FOCUSED_SEQUENCE_ID, sequenceId)
-        navigateUp()
-    }
+@OptIn(ExperimentalFoundationApi::class)
+private fun LazyListScope.basicSettingsPageContent(
+    state: UiState,
+    reorderableListState: ReorderableLazyListState,
+    onEvent: (UiEvent) -> Unit
+) {
+    sequenceBasicConfig(
+        state,
+        onEvent = onEvent
+    )
+    stepList(
+        state, state.steps,
+        reorderableListState = reorderableListState,
+        onEvent = onEvent
+    )
+}
+
+private fun LazyListScope.advancedSettingsPageContent(
+    state: UiState,
+    onEvent: (UiEvent) -> Unit
+) {
+    sequenceAdvancedConfig(state, onEvent)
 }
 
 @Composable
@@ -244,7 +304,6 @@ private fun getReorderableListState(
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 private fun LazyListScope.sequenceBasicConfig(
     state: UiState,
-    innerModifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
 
@@ -253,7 +312,6 @@ private fun LazyListScope.sequenceBasicConfig(
             stringResource(R.string.field_name), state.title,
             onValueChange = { onEvent(UiEvent.UpdateTitle(it)) },
             validationResult = state.titleValidation,
-            modifier = innerModifier
         )
     }
     item(key = "host_edit") {
@@ -261,7 +319,7 @@ private fun LazyListScope.sequenceBasicConfig(
             stringResource(R.string.field_host), state.host,
             onValueChange = { onEvent(UiEvent.UpdateHost(it)) },
             validationResult = state.hostValidation,
-            modifier = innerModifier.then(Modifier.testTag(TAG_EDIT_HOST))
+            modifier = Modifier.testTag(TAG_EDIT_HOST)
         )
     }
     item(key = "group_edit") {
@@ -274,7 +332,6 @@ private fun LazyListScope.sequenceBasicConfig(
         @Suppress("UNUSED_EXPRESSION")
         ExposedDropdownMenuBox(
             expanded = expanded, onExpandedChange = { expanded = !expanded },
-            modifier = innerModifier
         ) {
             ValueTextField(
                 stringResource(R.string.field_group), state.group,
@@ -305,13 +362,11 @@ private fun LazyListScope.stepList(
     state: UiState,
     steps: ImmutableList<StepUiState>,
     reorderableListState: ReorderableLazyListState,
-    innerModifier: Modifier = Modifier,
     onEvent: (UiEvent) -> Unit = {}
 ) {
     items(steps, key = { it.id }) { step ->
         SequenceStepCard(
             step, ip4HeaderSize = state.ip4HeaderSize,
-            modifier = innerModifier,
             icmpType = state.icmpSizeType, state = reorderableListState, onEvent = onEvent
         )
     }
@@ -519,7 +574,6 @@ fun SequenceScreenContentPreview() {
             group = "Home"
         ),
         onEvent = {},
-        innerPaddingValues = PaddingValues(0.dp)
     )
 }
 

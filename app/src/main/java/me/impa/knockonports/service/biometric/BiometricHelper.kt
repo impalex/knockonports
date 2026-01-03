@@ -18,12 +18,10 @@ package me.impa.knockonports.service.biometric
 
 import android.content.Context
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -32,7 +30,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import me.impa.knockonports.extension.findFragmentActivity
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.getValue
 
 /**
  * A singleton helper class for managing biometric authentication within the application.

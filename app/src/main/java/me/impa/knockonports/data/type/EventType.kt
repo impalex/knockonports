@@ -16,7 +16,6 @@
 
 package me.impa.knockonports.data.type
 
-import me.impa.knockonports.R
 import me.impa.knockonports.extension.EnumCompanion
 
 enum class EventType {

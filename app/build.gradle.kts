@@ -32,11 +32,11 @@ val appScheme = "knockonports"
 val appHost = "app"
 val knockHost = "knock"
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File? = rootProject.file("keystore.properties")
 
 val keystoreProperties = Properties()
 
-if (keystorePropertiesFile.exists()) {
+if (keystorePropertiesFile?.exists() == true) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
@@ -66,8 +66,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 36
-        versionCode = 220
-        versionName = "2.0.11"
+        versionCode = 221
+        versionName = "2.0.12"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -148,7 +148,7 @@ dependencies {
     implementation(libs.kotlinx.immutable.collections)
 
     // Biometric
-    implementation("androidx.biometric:biometric:1.1.0")
+    implementation(libs.androidx.biometric)
 
     // Compose
     implementation(libs.androidx.activity.compose)
@@ -157,8 +157,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.core)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.adaptive.navigation.suite)
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.ui.tooling)
 
@@ -184,6 +185,8 @@ dependencies {
     // Utils
     implementation(libs.calvin.reorderable)
     implementation(libs.timber)
+    implementation(libs.material.kolor)
+    implementation(libs.color.picker)
 
     // Tests
     testImplementation(libs.junit)

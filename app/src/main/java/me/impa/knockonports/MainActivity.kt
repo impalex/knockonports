@@ -16,13 +16,10 @@
 
 package me.impa.knockonports
 
-import android.content.Intent
-import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -32,14 +29,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.fragment.app.FragmentActivity
+import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.AndroidEntryPoint
 import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
+import me.impa.knockonports.navigation.DeepLinkMatcher
+import me.impa.knockonports.navigation.DeepLinkRequest
+import me.impa.knockonports.navigation.KeyDecoder
+import me.impa.knockonports.navigation.MainRoute
+import me.impa.knockonports.navigation.buildBackStack
+import me.impa.knockonports.navigation.deepLinkPatterns
 import me.impa.knockonports.screen.AppScreen
 import me.impa.knockonports.service.biometric.BiometricHelper
 import me.impa.knockonports.service.resource.AccessWatcher
 import me.impa.knockonports.service.shortcut.ShortcutWatcher
-import me.impa.knockonports.ui.config.DarkMode
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import javax.inject.Inject
 
@@ -68,36 +71,29 @@ class MainActivity : FragmentActivity() {
         lifecycle.addObserver(resourceWatcher)
         lifecycle.addObserver(shortcutWatcher)
         lifecycle.addObserver(biometricHelper)
-        intent?.data?.path?.let {
-            intent = intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        }
+
+        val uri: Uri? = intent.data
+        val key: NavKey = uri?.let {
+            val request = DeepLinkRequest(it)
+            val match = deepLinkPatterns.firstNotNullOfOrNull { pattern ->
+                DeepLinkMatcher(request, pattern).match()
+            }
+            match?.let {
+                KeyDecoder(match.args).decodeSerializableValue(match.serializer)
+            }
+        } ?: MainRoute
+
+        val synthBackStack = buildBackStack(key)
+
         setContent {
             val theme by settingsDataStore.themeSettings.collectAsState(initial = null)
             var themeCache by rememberSaveable { mutableStateOf(theme) }
-            val isSystemInDarkTheme = isSystemInDarkTheme()
             LaunchedEffect(theme) {
                 theme?.let { themeCache = theme }
             }
-            LaunchedEffect(themeCache, isSystemInDarkTheme) {
-                themeCache?.let {
-                    enableEdgeToEdge(
-                        statusBarStyle = when (it.useDarkTheme) {
-                            DarkMode.AUTO -> if (isSystemInDarkTheme) {
-                                SystemBarStyle.dark(Color.TRANSPARENT)
-                            } else {
-                                SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-                            }
-
-                            DarkMode.LIGHT -> SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-                            DarkMode.DARK -> SystemBarStyle.dark(Color.TRANSPARENT)
-                        }
-                    )
-                }
-            }
-
             themeCache?.let { theme ->
                 KnockOnPortsTheme(config = theme) {
-                    AppScreen(modifier = Modifier.fillMaxSize())
+                    AppScreen(synthBackStack, modifier = Modifier.fillMaxSize())
                 }
             }
         }

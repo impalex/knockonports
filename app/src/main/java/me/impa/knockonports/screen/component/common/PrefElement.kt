@@ -16,8 +16,8 @@
 
 package me.impa.knockonports.screen.component.common
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -27,10 +27,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.systemGestureExclusion
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -44,8 +42,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toColorLong
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,11 +54,12 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toImmutableList
 import me.impa.knockonports.R
+import me.impa.knockonports.extension.navigate
+import me.impa.knockonports.navigation.ColorPickerRoute
 import me.impa.knockonports.screen.component.settings.CustomServiceDialog
-import me.impa.knockonports.screen.component.settings.DividedCircle
-import me.impa.knockonports.ui.theme.themeMap
-import me.impa.knockonports.ui.theme.variant.AppColorScheme
+import me.impa.knockonports.screen.viewmodel.state.colorpicker.ColorResult
 import kotlin.math.roundToInt
+import kotlin.uuid.ExperimentalUuidApi
 
 
 @Composable
@@ -132,8 +133,8 @@ fun PrefStepSlider(
         PrefDescription(title = title, subtitle = description, modifier = Modifier.fillMaxWidth())
         Slider(
             value = value.toFloat(),
-            onValueChange = {
-                it.roundToInt().takeIf { it != value }?.let { onChanged(it) }
+            onValueChange = { newValue ->
+                newValue.roundToInt().takeIf { it != value }?.let { onChanged(it) }
             },
             valueRange = minValue.toFloat()..maxValue.toFloat(),
             steps = steps - 1,
@@ -196,83 +197,54 @@ fun PrefCustomProviderEditor(title: String, value: String, onChanged: (String) -
         })
 
     PrefDescriptionClickable(
-        title, if (value.isNotBlank()) value else stringResource(R.string.text_custom_provider_not_specified),
+        title, value.ifBlank { stringResource(R.string.text_custom_provider_not_specified) },
         onClick = { showDialog = true })
 }
 
-private const val SELECTED_SCALE = 1.2f
-
+@OptIn(ExperimentalUuidApi::class)
 @Composable
-fun PrefColorSelection(
-    title: String, description: String, value: String, modifier: Modifier = Modifier,
-    onChanged: (String) -> Unit = {}
-) {
-    val themeKeys = remember(themeMap) { themeMap.keys.toImmutableList() }
-    Column(modifier = modifier) {
-        PrefDescription(title = title, subtitle = description, modifier = Modifier.fillMaxWidth())
-        Row(modifier = Modifier.fillMaxWidth()) {
-            themeKeys.forEach {
-                ColorItem(
-                    it, themeMap[it]!!, value == it, onSelected = { onChanged(it) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ColorItem(
-    tag: String, theme: AppColorScheme, isSelected: Boolean,
+fun PrefCustomColorSelection(
+    title: String, subtitle: String, value: Color,
+    defaultValue: Color,
+    showAlpha: Boolean,
     modifier: Modifier = Modifier,
-    onSelected: (String) -> Unit = {}
+    interactionSource: MutableInteractionSource? = null,
+    onChanged: (Color) -> Unit = {}
 ) {
-    Box(
-        modifier = modifier.then(
-            Modifier
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    onClick = {
-                        if (!isSelected)
-                            onSelected(tag)
-                    }
-                )),
-        contentAlignment = Alignment.Center) {
+    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
 
-        val scale = if (isSelected) SELECTED_SCALE else 1f
-        val animateScale by animateFloatAsState(
-            targetValue = scale, label = "",
-            animationSpec = spring()
+    val uid = remember(title) { title.hashCode().toString() }
+
+    ResultEventEffect<ColorResult>(key = uid) {
+        onChanged(it.color)
+    }
+    val bus = LocalAppEventBus.current
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically, modifier = modifier.then(
+            Modifier.clickable(interactionSource = interactionSource, onClick = {
+                bus.navigate(
+                    ColorPickerRoute(
+                        value.toColorLong(),
+                        defaultValue.toColorLong(),
+                        showAlpha,
+                        uid
+                    )
+                )
+            })
         )
-        DividedCircle(
-            topColor = theme.colorPrimary,
-            bottomLeftColor = theme.colorSecondary,
-            bottomRightColor = theme.colorTetriary,
-            outlineColor = MaterialTheme.colorScheme.onSurface,
+    ) {
+        PrefDescription(title = title, subtitle = subtitle, modifier = Modifier.weight(1f))
+        Box(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(horizontal = 8.dp)
                 .size(32.dp)
-                .scale(animateScale)
-        )
-        if (isSelected) {
-            Icon(
-                imageVector = Icons.Default.Check, contentDescription = null,
-                tint = MaterialTheme.colorScheme.onSurface
-            )
+                .clip(CircleShape)
+                .background(value)
+                .border(1.dp, MaterialTheme.colorScheme.outline, shape = CircleShape)
+        ) {
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewPrefColorSelection() {
-    PrefColorSelection(
-        title = "Title",
-        description = "Description",
-        value = "SKY_STEEL",
-        modifier = Modifier.fillMaxWidth()
-    )
 }
 
 @Preview
@@ -294,7 +266,7 @@ fun PreviewPrefStepSlider() {
 @Composable
 fun PreviewPrefDescription() {
     PrefMultiSelection(
-        "Multi Selection", "1", persistentMapOf<String, String>("1" to "First Value", "2" to "Second Value"),
+        "Multi Selection", "1", persistentMapOf("1" to "First Value", "2" to "Second Value"),
         onChanged = {})
 }
 
@@ -302,4 +274,15 @@ fun PreviewPrefDescription() {
 @Composable
 fun PreviewConfigTextItem() {
     PrefDescription(title = "Title", subtitle = "Subtitle", modifier = Modifier.fillMaxWidth())
+}
+
+@Preview
+@Composable
+fun PreviewCustomColorSelection() {
+    PrefCustomColorSelection(
+        title = "Title", subtitle = "Description", value = Color.Green,
+        defaultValue = Color.Unspecified,
+        showAlpha = true,
+        modifier = Modifier.fillMaxWidth()
+    )
 }

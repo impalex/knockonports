@@ -66,7 +66,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
@@ -96,6 +95,7 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
+import androidx.compose.ui.platform.LocalResources
 
 private const val ANIMATION_DURATION = 300
 
@@ -201,7 +201,7 @@ private fun TypeSelector(
     onUpdateType: (Int, SequenceStepType) -> Unit = { _, _ -> },
     onDelete: (Int) -> Unit = {}
 ) {
-    val resources = LocalContext.current.resources
+    val resources = LocalResources.current
     val stateList =
         remember(resources) { SequenceStepType.entries.map { resources.getString(it.stringResourceId()) } }
 
@@ -225,7 +225,7 @@ private fun TypeSelector(
 }
 
 @Composable
-private fun RowScope.ExpandAdvanced(isExpanded: Boolean, onStateChanged: () -> Unit) {
+private fun ExpandAdvanced(isExpanded: Boolean, onStateChanged: () -> Unit) {
     ExpandableIconButton(
         isExpanded = isExpanded,
         onStateChanged = onStateChanged,

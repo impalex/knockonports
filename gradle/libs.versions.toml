@@ -6,12 +6,11 @@ junit = "4.13.2"
 junitVersion = "1.3.0"
 espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
-activityCompose = "1.12.1"
-composeBom = "2025.12.00"
+activityCompose = "1.12.2"
+composeBom = "2025.12.01"
 room = "2.8.4"
 kspVersion = "2.3.4"
 hiltVersion = "2.57.2"
-navigationCompose = "2.9.6"
 kotlinxSerializationJson = "1.9.0"
 hiltNavigationCompose = "1.3.0"
 glance = "1.1.1"
@@ -26,6 +25,10 @@ datastorePrefs = "1.2.0"
 ui = "1.10.0"
 materialIconsCore = "1.7.8"
 biometric = "1.1.0"
+nav3Core = "1.0.0"
+lifecycleViewmodelNav3 = "2.10.0"
+materialKolor = "4.0.5"
+colorPicker = "1.1.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -55,8 +58,9 @@ hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hiltVersion"}
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hiltVersion"}
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanistPermissions" }
-androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-androidx-adaptive-navigation-suite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite"}
+androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
+androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
+androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 detekt-formatting = { group = "io.gitlab.arturbosch.detekt", name = "detekt-formatting", version.ref = "detekt" }
@@ -66,6 +70,8 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 rebugger = { group = "io.github.theapache64", name = "rebugger", version.ref = "rebugger" }
 screengrab = { group = "tools.fastlane", name = "screengrab", version.ref = "screengrab" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePrefs" }
+material-kolor = { module = "com.materialkolor:material-kolor", version.ref = "materialKolor" }
+color-picker = { module = "com.github.skydoves:colorpicker-compose", version.ref = "colorPicker" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

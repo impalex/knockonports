@@ -30,7 +30,7 @@ import me.impa.knockonports.data.json.LegacySequencesData
 object LegacySequencesDataDeserializer : KSerializer<LegacySequencesData> {
 
     private val delegateSerializer =
-        ListSerializer<LegacySequenceEntryData>(LegacySequenceEntryData::class.serializer())
+        ListSerializer(LegacySequenceEntryData::class.serializer())
 
     override val descriptor: SerialDescriptor
         get() = SerialDescriptor(

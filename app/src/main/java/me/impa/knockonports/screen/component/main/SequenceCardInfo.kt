@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -35,7 +36,8 @@ fun RowScope.SequenceCardInfo(
     name: String, host: String, details: String, showDetails: Boolean,
     titleOverflowType: TitleOverflowType,
     multilineTitle: Boolean,
-    titleStyle: TextStyle
+    titleStyle: TextStyle,
+    customNameColor: Color
 ) {
     Column(
         modifier = Modifier
@@ -46,6 +48,7 @@ fun RowScope.SequenceCardInfo(
             text = name,
             maxLines = if (multilineTitle) Int.MAX_VALUE else 1,
             overflow = titleOverflowType.toTextOverflow(),
+            color = customNameColor,
             style = titleStyle
         )
         if (showDetails) {

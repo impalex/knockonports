@@ -18,45 +18,26 @@ package me.impa.knockonports.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.fromColorLong
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import kotlinx.collections.immutable.persistentMapOf
-import me.impa.knockonports.ui.config.DarkMode
+import com.materialkolor.Contrast
+import com.materialkolor.dynamicColorScheme
 import me.impa.knockonports.ui.config.ThemeConfig
-import me.impa.knockonports.ui.theme.variant.SkySteelScheme
-import me.impa.knockonports.ui.theme.variant.GoldenDuskScheme
-import me.impa.knockonports.ui.theme.variant.BlushStoneScheme
-import me.impa.knockonports.ui.theme.variant.NeonMossScheme
-
-val themeMap = persistentMapOf(
-    "SKY_STEEL" to SkySteelScheme,
-    "BLUSH_STONE" to BlushStoneScheme,
-    "GOLDEN_DUSK" to GoldenDuskScheme,
-    "NEON_MOSS" to NeonMossScheme
-)
+import me.impa.knockonports.ui.config.ThemeContrast
+import me.impa.knockonports.ui.config.isDark
 
 val LocalThemeConfig = compositionLocalOf { ThemeConfig() }
-
-private fun selectTheme(
-    darkMode: DarkMode, systemDark: Boolean,
-    lightScheme: ColorScheme, darkScheme: ColorScheme
-): ColorScheme {
-    return when (darkMode) {
-        DarkMode.AUTO -> if (systemDark) darkScheme else lightScheme
-        DarkMode.DARK -> darkScheme
-        DarkMode.LIGHT -> lightScheme
-    }
-}
 
 @Composable
 fun KnockOnPortsTheme(
@@ -64,28 +45,37 @@ fun KnockOnPortsTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(LocalThemeConfig provides config) {
-        val currentConfig = LocalThemeConfig.current
-        val systemDark = isSystemInDarkTheme()
+        val view = LocalView.current
+        val useDarkTheme = config.useDarkTheme.isDark()
 
-        val lightScheme = themeMap.getOrElse(currentConfig.customTheme) { themeMap.values.first() }
-            .theme[DarkMode.LIGHT]!![currentConfig.contrast]!!
-        val darkScheme = themeMap.getOrElse(currentConfig.customTheme) { themeMap.values.first() }
-            .theme[DarkMode.DARK]!![currentConfig.contrast]!!
+        if (!view.isInEditMode) {
+            SideEffect {
+                val window = (view.context as Activity).window
+                WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !useDarkTheme
+            }
+        }
+        val context = LocalContext.current
 
-        val colorScheme = if (currentConfig.useDynamicColors && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)) {
-            selectTheme(
-                currentConfig.useDarkTheme, systemDark,
-                dynamicLightColorScheme(LocalContext.current), dynamicDarkColorScheme(LocalContext.current)
-            )
-        } else {
-            selectTheme(currentConfig.useDarkTheme, systemDark, lightScheme, darkScheme)
+        val scheme = remember(config) {
+            if (config.useDynamicColors && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)) {
+                if (useDarkTheme) dynamicDarkColorScheme(context)
+                else dynamicLightColorScheme(context)
+            } else {
+                dynamicColorScheme(
+                    seedColor = Color.fromColorLong(config.themeSeed),
+                    isDark = useDarkTheme,
+                    isAmoled = config.amoledMode,
+                    contrastLevel = when (config.contrast) {
+                        ThemeContrast.STANDARD -> Contrast.Default.value
+                        ThemeContrast.MEDIUM -> Contrast.Medium.value
+                        ThemeContrast.HIGH -> Contrast.High.value
+                    }
+                )
+            }
         }
 
-        MaterialTheme(
-            colorScheme = colorScheme,
-            typography = Typography,
-            content = content
-        )
+        MaterialTheme(colorScheme = scheme, content = content)
+
     }
 
 }

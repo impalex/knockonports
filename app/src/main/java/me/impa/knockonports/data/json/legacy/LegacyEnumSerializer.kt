@@ -56,7 +56,7 @@ inline fun <reified T : Enum<T>> legacyEnumSerializer() = object : KSerializer<T
 
     override fun deserialize(decoder: Decoder): T =
         // This is not an error!
-        // Fallback to the first value is a behaviour designed to support the old format.
+        // Fallback to the first value is a behavior designed to support the old format.
         if (decoder.decodeNotNullMark()) values.getOrNull(decoder.decodeInt()) ?: values[0] else {
             decoder.decodeNull()
             values[0]
