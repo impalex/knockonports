@@ -20,7 +20,10 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.scene.DialogSceneStrategy
 import androidx.navigation3.ui.NavDisplay
 
 @Composable
@@ -29,9 +32,13 @@ fun AppNavigation(
     navigationState: NavigationState,
     modifier: Modifier = Modifier
 ) {
+
+    val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
+
     NavDisplay(
         entries = navigationState.toEntries(entryProvider = entryProvider),
         onBack = { navigator.goBack() },
+        sceneStrategy = dialogSceneStrategy,
         modifier = modifier,
         transitionSpec = {
             slideInHorizontally(initialOffsetX = { it }) togetherWith

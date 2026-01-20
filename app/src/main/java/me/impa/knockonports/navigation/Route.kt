@@ -19,19 +19,24 @@ package me.impa.knockonports.navigation
 import androidx.annotation.ColorLong
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toColorLong
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.scene.DialogSceneStrategy
 import kotlinx.serialization.Serializable
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.screen.ColorPickerScreen
+import me.impa.knockonports.screen.ImportKnockdConfScreen
 import me.impa.knockonports.screen.LogScreen
 import me.impa.knockonports.screen.MainScreen
 import me.impa.knockonports.screen.SequenceScreen
 import me.impa.knockonports.screen.SettingsScreen
 import me.impa.knockonports.screen.viewmodel.ColorPickerViewModel
+import me.impa.knockonports.screen.viewmodel.ImportKnockdConfViewModel
 import me.impa.knockonports.screen.viewmodel.SequenceViewModel
+import me.impa.knockonports.screen.viewmodel.state.importknockd.UiState
 
 sealed interface NavDeepLinkKey {
     val parent: NavKey
@@ -64,6 +69,12 @@ data class ColorPickerRoute(
 ) : NavKey
 
 @Serializable
+data class ImportFromKnockdRoute(
+    val uri: String,
+    val singleChoice: Boolean
+) : NavKey
+
+@Serializable
 data object NavigateUp
 
 val entryProvider = entryProvider {
@@ -82,11 +93,26 @@ val entryProvider = entryProvider {
     entry<LogRoute> {
         LogScreen()
     }
-    entry<ColorPickerRoute> { key ->
+    entry<ColorPickerRoute>(
+        metadata = DialogSceneStrategy.dialog(
+            dialogProperties = DialogProperties()
+        )
+    ) { key ->
         val viewModel = hiltViewModel<ColorPickerViewModel, ColorPickerViewModel.ColorPickerViewModelFactory> {
             it.create(key.initialColor, key.defaultColor)
         }
         ColorPickerScreen(resultChannel = key.resultChannel, showAlpha = key.showAlpha, viewModel = viewModel)
+    }
+    entry<ImportFromKnockdRoute>(
+        metadata = DialogSceneStrategy.dialog(
+            dialogProperties = DialogProperties()
+        )
+    ) { key ->
+        val viewModel =
+            hiltViewModel<ImportKnockdConfViewModel, ImportKnockdConfViewModel.ImportKnockdConfViewModelFactory> {
+                it.create(key.uri, key.singleChoice)
+            }
+        ImportKnockdConfScreen(viewModel = viewModel)
     }
 }
 

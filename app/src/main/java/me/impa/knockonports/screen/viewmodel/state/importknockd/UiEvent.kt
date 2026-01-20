@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2025 Alexander Yaburov
+ * Copyright (c) 2026 Alexander Yaburov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,11 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.data.type
+package me.impa.knockonports.screen.viewmodel.state.importknockd
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-import me.impa.knockonports.extension.EnumCompanion
-
-@Serializable
-enum class SequenceStepType {
-    @SerialName("udp")
-    UDP,
-    @SerialName("tcp")
-    TCP,
-    @SerialName("icmp")
-    ICMP;
-    companion object : EnumCompanion<SequenceStepType>(SequenceStepType.entries.toTypedArray())
+sealed interface UiEvent {
+    data class SelectSequence(val id: Long, val state: Boolean): UiEvent
+    data object ImportMultiple : UiEvent
+    data class ImportSingle(val id: Long): UiEvent
+    data class ChangeHost(val host: String): UiEvent
 }

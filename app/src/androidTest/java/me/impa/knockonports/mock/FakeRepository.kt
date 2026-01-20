@@ -98,4 +98,8 @@ object FakeRepository: KnocksRepository {
         TODO("Not yet implemented")
     }
 
+    override suspend fun readSequencesFromKnockdConf(uri: Uri): List<Sequence> {
+        TODO("Not yet implemented")
+    }
+
 }

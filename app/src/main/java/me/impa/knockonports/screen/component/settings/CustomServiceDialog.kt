@@ -32,6 +32,7 @@ import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import me.impa.knockonports.R
+import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 
 @Composable
 fun CustomServiceDialog(initialValue: String, onDismissRequest: () -> Unit = {}, onConfirm: (String) -> Unit = {}) {
@@ -68,5 +69,7 @@ fun CustomServiceDialog(initialValue: String, onDismissRequest: () -> Unit = {},
 @Preview
 @Composable
 fun PreviewCustomServiceDialog() {
-    CustomServiceDialog("https://localhost.domain")
+    KnockOnPortsTheme {
+        CustomServiceDialog("https://localhost.domain")
+    }
 }

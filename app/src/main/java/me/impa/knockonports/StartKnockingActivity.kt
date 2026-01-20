@@ -21,7 +21,6 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -34,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
@@ -71,8 +71,9 @@ class StartKnockingActivity : ComponentActivity() {
     lateinit var settingsDataStore: SettingsDataStore
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM)
+            WindowCompat.enableEdgeToEdge(window)
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         window.setBackgroundDrawable(0.toDrawable())
         // Get sequence id from deeplink (high priority) or extras (low priority)
         val sequenceId = intent.data?.lastPathSegment?.toLongOrNull()

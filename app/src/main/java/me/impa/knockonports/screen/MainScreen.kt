@@ -53,7 +53,8 @@ import me.impa.knockonports.constants.POSTPONE_TIME_CANCEL
 import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.helper.TextResource
-import me.impa.knockonports.helper.openPlayStore
+import me.impa.knockonports.helper.openPlayStoreAppPage
+import me.impa.knockonports.navigation.ImportFromKnockdRoute
 import me.impa.knockonports.navigation.LogRoute
 import me.impa.knockonports.navigation.MainRoute
 import me.impa.knockonports.navigation.SequenceRoute
@@ -70,6 +71,7 @@ import me.impa.knockonports.screen.component.main.SequenceCard
 import me.impa.knockonports.screen.viewmodel.MainViewModel
 import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
+import me.impa.knockonports.screen.viewmodel.state.main.UiEvent.*
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
 import me.impa.knockonports.screen.viewmodel.state.main.UiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
@@ -93,7 +95,8 @@ private val grantedNotificationPermission = object : PermissionState {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
+fun MainScreen(
+    modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val eventBus = LocalAppEventBus.current
@@ -102,11 +105,13 @@ fun MainScreen(modifier: Modifier = Modifier, viewModel: MainViewModel = hiltVie
         MainScreenActions(state.isRuLangAvailable, state.detailedList) { action ->
             when (action) {
                 MainBarEvent.AddSequence -> eventBus.navigate(SequenceRoute())
-                is MainBarEvent.Export -> viewModel.onEvent(UiEvent.Export(action.uri))
-                is MainBarEvent.Import -> viewModel.onEvent(UiEvent.Import(action.uri))
+                is MainBarEvent.Export -> viewModel.onEvent(Export(action.uri))
+                is MainBarEvent.Import -> viewModel.onEvent(Import(action.uri))
                 MainBarEvent.Settings -> eventBus.navigate(SettingsRoute)
                 MainBarEvent.ShowLogs -> eventBus.navigate(LogRoute)
-                MainBarEvent.ToggleListMode -> viewModel.onEvent(UiEvent.ToggleListMode)
+                MainBarEvent.ToggleListMode -> viewModel.onEvent(ToggleListMode)
+                is MainBarEvent.ImportKnockdConf ->
+                    eventBus.navigate(ImportFromKnockdRoute(action.uri.toString(), false))
             }
         }
     }
@@ -247,7 +252,7 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
             onRateNow = {
                 onEvent(UiEvent.DoNotAskForReview)
                 try {
-                    openPlayStore(context)
+                    openPlayStoreAppPage(context)
                 } catch (e: Exception) {
                     Timber.e(e)
                     onEvent(UiEvent.ShowError(e.message ?: ""))

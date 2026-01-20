@@ -271,4 +271,12 @@
     <string name="text_settings_title_available_color">Цвет названия последовательности, когда ресурс доступен</string>
     <string name="title_settings_title_unavailable_color">Цвет недоступности</string>
     <string name="text_settings_title_unavailable_color">Цвет названия последовательности, когда ресурс недоступен</string>
+    <string name="action_default">По-умолчанию</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_import_knockd_conf">Импорт из knockd.conf</string>
+    <string name="title_import_from_knockd_conf">Импорт из knockd.conf</string>
+    <string name="text_loading_data">Загрузка данных...</string>
+    <string name="text_sequences_to_import">Последовательности для импорта</string>
+    <string name="title_settings_developer_page">Страница разработчика</string>
+    <string name="text_settings_developer_page">Другие мои приложения. Некоторые работают.</string>
 </resources>

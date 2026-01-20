@@ -16,6 +16,10 @@
 
 package me.impa.knockonports.screen
 
+import android.app.Activity
+import android.content.Intent
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -35,6 +39,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -44,6 +49,7 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.SegmentedButton
@@ -60,12 +66,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,9 +93,12 @@ import me.impa.knockonports.constants.TAG_SEQUENCE_ADVANCED_TAB
 import me.impa.knockonports.constants.TAG_SEQUENCE_BASIC_TAB
 import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.extension.debounced
+import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.extension.stringResourceId
+import me.impa.knockonports.navigation.ImportFromKnockdRoute
 import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.screen.component.common.HeaderSection
+import me.impa.knockonports.screen.component.common.LocalAppEventBus
 import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
@@ -246,7 +257,9 @@ private fun SequencePager(
 
         LazyColumn(
             state = listStates[index],
-            modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp),
             contentPadding = PaddingValues(bottom = paddings.calculateBottomPadding())
         ) {
             when (index) {
@@ -386,18 +399,39 @@ private fun SequenceStepsHeader(onAddNew: () -> Unit = {}) {
             )
         )
     }
+
+    val eventBus = LocalAppEventBus.current
+    val openFileLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.also { uri ->
+                eventBus.navigate(ImportFromKnockdRoute(uri.toString(), true))
+            }
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .background(gradientBrush)
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
             text = stringResource(R.string.title_list_sequence_steps),
             style = Typography.titleMedium,
-            modifier = Modifier.alignByBaseline()
         )
         Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = {
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "*/*"
+            }
+            openFileLauncher.launch(intent)
+        }) {
+            Icon(painterResource(R.drawable.download_icon), contentDescription = null)
+        }
         Button(
             onClick = {
                 onAddNew()
@@ -405,7 +439,7 @@ private fun SequenceStepsHeader(onAddNew: () -> Unit = {}) {
                 .padding(4.dp)
                 .alignByBaseline()
         ) {
-            Text(text = stringResource(R.string.action_add))
+            Icon(Icons.Default.Add, contentDescription = null)
         }
     }
 }

@@ -33,11 +33,12 @@ import androidx.core.net.toUri
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
 import me.impa.knockonports.screen.component.common.HeaderSection
-import me.impa.knockonports.helper.openPlayStore
+import me.impa.knockonports.helper.openPlayStoreAppPage
 import me.impa.knockonports.screen.component.common.PrefDescriptionClickable
 import timber.log.Timber
 import kotlin.random.Random
 import androidx.compose.ui.platform.LocalResources
+import me.impa.knockonports.helper.openPlayStoreDevPage
 
 fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
 
@@ -58,7 +59,15 @@ fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
             PrefDescriptionClickable(
                 title = stringResource(R.string.title_settings_rate_app),
                 subtitle = stringResource(R.string.text_settings_rate_app),
-                onClick = { openPlayStore(context) }
+                onClick = { openPlayStoreAppPage(context) }
+            )
+        }
+        item(key = "dev_page") {
+            val context = LocalContext.current
+            PrefDescriptionClickable(
+                title = stringResource(R.string.title_settings_developer_page),
+                subtitle = stringResource(R.string.text_settings_developer_page),
+                onClick = { openPlayStoreDevPage(context) }
             )
         }
     }

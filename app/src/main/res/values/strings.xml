@@ -282,5 +282,13 @@ For most users: <b>do not change this setting</b>.
     <string name="text_settings_title_available_color">Sequence name color if the resource check succeeds</string>
     <string name="title_settings_title_unavailable_color">Offline Color</string>
     <string name="text_settings_title_unavailable_color">Sequence name color if the resource check fails</string>
+    <string name="action_default">Default</string>
+    <string name="action_save">Save</string>
+    <string name="action_import_knockd_conf">Import from knockd.conf</string>
+    <string name="title_import_from_knockd_conf">Import from knockd.conf</string>
+    <string name="text_loading_data">Loading data...</string>
+    <string name="text_sequences_to_import">Sequences to import</string>
+    <string name="title_settings_developer_page">Developer Page</string>
+    <string name="text_settings_developer_page">Other apps I’ve made. Some on purpose.</string>
 
 </resources>

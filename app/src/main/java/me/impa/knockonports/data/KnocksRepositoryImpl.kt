@@ -97,6 +97,8 @@ class KnocksRepositoryImpl @Inject constructor(
 
     override suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>) =
         fileRepository.writeSequencesToFile(uri, sequences)
+
+    override suspend fun readSequencesFromKnockdConf(uri: Uri) = fileRepository.readSequencesFromKnockdConf(uri)
     // endregion
 
 }

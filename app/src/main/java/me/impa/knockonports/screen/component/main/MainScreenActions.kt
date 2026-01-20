@@ -77,11 +77,13 @@ fun MainScreenActions(
                 Icon(painterResource(R.drawable.list), contentDescription = null)
             }
         }
-        Button(onClick = debounced({ onAction(MainBarEvent.AddSequence) }),
+        Button(
+            onClick = debounced({ onAction(MainBarEvent.AddSequence) }),
             colors = ButtonDefaults.filledTonalButtonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainer,
                 contentColor = MaterialTheme.colorScheme.onSurface
-            )) {
+            )
+        ) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
 
@@ -94,7 +96,13 @@ fun MainScreenActions(
             }
             DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
                 ExportMenuItem(onExport = { onAction(MainBarEvent.Export(it)) }, onDismiss = { showMenu = false })
-                ImportMenuItem(onImport = { onAction(MainBarEvent.Import(it)) }, onDismiss = { showMenu = false })
+                ImportMenuItem(
+                    label = stringResource(R.string.action_import),
+                    onImport = { onAction(MainBarEvent.Import(it)) }, onDismiss = { showMenu = false })
+                ImportMenuItem(
+                    label = stringResource(R.string.action_import_knockd_conf),
+                    onImport = { onAction(MainBarEvent.ImportKnockdConf(it)) }, onDismiss = { showMenu = false }
+                )
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.action_show_log)) },
                     onClick = {

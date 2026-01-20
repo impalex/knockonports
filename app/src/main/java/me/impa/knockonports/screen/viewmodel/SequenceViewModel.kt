@@ -23,6 +23,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,6 +55,7 @@ import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.navigation.NavigateUp
 import me.impa.knockonports.screen.validate.NotEmptyStringValidator
 import me.impa.knockonports.screen.validate.RangeValidator
+import me.impa.knockonports.screen.viewmodel.state.main.KnockdImportResults
 import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
 import me.impa.knockonports.screen.viewmodel.state.sequence.StepUiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.UiEvent
@@ -318,6 +320,19 @@ class SequenceViewModel @AssistedInject constructor(
             repository.getGroupList().collect { list ->
                 _state.update { state ->
                     state.copy(groupList = list.map { it.trim() }.filter { it.isNotEmpty() }.toPersistentList())
+                }
+            }
+        }
+        viewModelScope.launch {
+            eventBus.getEventFlow<KnockdImportResults>().collect { result ->
+                result as KnockdImportResults
+                _state.update { state ->
+                    var idx = 0
+                    state.copy(
+                        steps = result.steps.map { (port, type) ->
+                            StepUiState(id = idx++, port = port, type = type)
+                        }.toPersistentList()
+                    )
                 }
             }
         }

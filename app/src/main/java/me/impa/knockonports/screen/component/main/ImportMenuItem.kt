@@ -24,11 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import me.impa.knockonports.R
 
 @Composable
-fun ImportMenuItem(onImport: (Uri) -> Unit = {}, onDismiss: () -> Unit = {}) {
+fun ImportMenuItem(label: String, onImport: (Uri) -> Unit = {}, onDismiss: () -> Unit = {}) {
     val openFileLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -41,9 +39,7 @@ fun ImportMenuItem(onImport: (Uri) -> Unit = {}, onDismiss: () -> Unit = {}) {
     }
 
     DropdownMenuItem(
-        text = {
-            Text(stringResource(R.string.action_import))
-        },
+        text = { Text(label) },
         onClick = {
             val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                 addCategory(Intent.CATEGORY_OPENABLE)

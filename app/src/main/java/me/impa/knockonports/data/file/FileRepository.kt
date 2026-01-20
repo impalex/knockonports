@@ -18,11 +18,13 @@ package me.impa.knockonports.data.file
 
 import android.content.ContentResolver
 import android.net.Uri
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.json.SequencesData
+import me.impa.knockonports.di.IoDispatcher
 import me.impa.knockonports.extension.asJsonData
 import me.impa.knockonports.extension.asSequenceList
 import timber.log.Timber
@@ -38,32 +40,38 @@ import javax.inject.Singleton
  * @property contentResolver The ContentResolver used to access files.  Injected via Hilt.
  */
 @Singleton
-class FileRepository @Inject constructor(private val contentResolver: ContentResolver) {
+class FileRepository @Inject constructor(
+    private val contentResolver: ContentResolver,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
+) {
 
     private val jsonCoder = Json { ignoreUnknownKeys = true }
 
-    suspend fun readSequencesFromFile(uri: Uri): List<Sequence> = withContext(Dispatchers.IO) {
-
-        val fileContent = try {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                inputStream.reader().readText()
-            }
-        } catch (e: Exception) {
-            Timber.e(e)
-            null
-        }
-
-        return@withContext try {
-            val list = jsonCoder.decodeFromString<SequencesData>(fileContent ?: "")
-            list.asSequenceList()
-        } catch (e: Exception) {
-            Timber.e(e)
-            throw e
+    private suspend fun readFileContent(uri: Uri): String? = withContext(dispatcher) {
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            inputStream.reader().readText()
         }
     }
 
+    suspend fun readSequencesFromKnockdConf(uri: Uri): List<Sequence> = try {
+        KnockdConfDecoder.decode(readFileContent(uri) ?: "")
+    } catch (e: Exception) {
+        Timber.e(e)
+        throw e
+    }
+
+
+    suspend fun readSequencesFromFile(uri: Uri): List<Sequence> = try {
+        val list = jsonCoder.decodeFromString<SequencesData>(readFileContent(uri) ?: "")
+        list.asSequenceList()
+    } catch (e: Exception) {
+        Timber.e(e)
+        throw e
+    }
+
+
     suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>) {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             val data = sequences.asJsonData()
             val jsonString = jsonCoder.encodeToString(SequencesData.serializer(), data)
             try {

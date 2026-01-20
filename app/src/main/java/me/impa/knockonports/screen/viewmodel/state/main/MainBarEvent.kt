@@ -22,6 +22,7 @@ sealed interface MainBarEvent {
     data object AddSequence : MainBarEvent
     data object ToggleListMode : MainBarEvent
     data class Import(val uri: Uri) : MainBarEvent
+    data class ImportKnockdConf(val uri: Uri) : MainBarEvent
     data class Export(val uri: Uri) : MainBarEvent
     data object ShowLogs : MainBarEvent
     data object Settings : MainBarEvent

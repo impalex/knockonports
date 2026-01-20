@@ -17,9 +17,9 @@
 package me.impa.knockonports
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,10 +28,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation3.runtime.NavKey
 import dagger.hilt.android.AndroidEntryPoint
-import me.impa.knockonports.data.settings.DeviceState
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.navigation.DeepLinkMatcher
 import me.impa.knockonports.navigation.DeepLinkRequest
@@ -59,13 +59,11 @@ class MainActivity : FragmentActivity() {
     lateinit var settingsDataStore: SettingsDataStore
 
     @Inject
-    lateinit var deviceState: DeviceState
-
-    @Inject
     lateinit var biometricHelper: BiometricHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM)
+            WindowCompat.enableEdgeToEdge(window)
 
         super.onCreate(savedInstanceState)
         lifecycle.addObserver(resourceWatcher)

@@ -28,8 +28,17 @@ import me.impa.knockonports.BuildConfig
  *
  * @param context The context of the application or activity.  This is required to launch the Intent.
  */
-fun openPlayStore(context: Context) {
+fun openPlayStoreAppPage(context: Context) {
     context.startActivity(Intent(Intent.ACTION_VIEW, "market://details?id=${context.packageName}".toUri()))
+}
+
+/**
+ * Opens the Google Play Store app and searches for all applications published by a specific developer.
+ *
+ * @param context The context of the application or activity. This is required to launch the Intent.
+ */
+fun openPlayStoreDevPage(context: Context) {
+    context.startActivity(Intent(Intent.ACTION_VIEW, "market://search?q=pub:Alexander+Yaburov".toUri()))
 }
 
 /**

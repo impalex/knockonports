@@ -119,6 +119,7 @@ class MainViewModel @Inject constructor(
             is UiEvent.ToggleListMode -> viewModelScope.launch {
                 settingsDataStore.setDetailedListView(!state.value.detailedList)
             }
+
         }
     }
 

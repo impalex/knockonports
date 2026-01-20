@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.TAG_CLOSE_BUTTON
+import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,5 +106,7 @@ fun IntegrationAlert(id: Long, onDismiss: () -> Unit = {}) {
 @Preview
 @Composable
 fun PreviewIntegrationAlert() {
-    IntegrationAlert(777)
+    KnockOnPortsTheme {
+        IntegrationAlert(777)
+    }
 }

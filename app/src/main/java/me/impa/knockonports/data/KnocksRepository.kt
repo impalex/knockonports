@@ -42,4 +42,5 @@ interface KnocksRepository {
     suspend fun cleanupLogEntries(keepCount: Int): Int
     suspend fun readSequencesFromFile(uri: Uri): List<Sequence>
     suspend fun writeSequencesToFile(uri: Uri, sequences: List<Sequence>)
+    suspend fun readSequencesFromKnockdConf(uri: Uri): List<Sequence>
 }
