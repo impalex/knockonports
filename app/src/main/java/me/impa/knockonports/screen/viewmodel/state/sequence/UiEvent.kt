@@ -36,6 +36,7 @@ sealed interface UiEvent {
     data class UpdateStepIcmpSize(val id: Int, val size: Int?) : UiEvent
     data class UpdateStepIcmpCount(val id: Int, val count: Int?) : UiEvent
     data class UpdateStepEncoding(val id: Int, val encoding: ContentEncodingType) : UiEvent
+    data class UpdateStepUdpPayloadSize(val id: Int, val size: Int?) : UiEvent
     data class UpdateDelay(val delay: Int?) : UiEvent
     data class UpdateApp(val appPackage: String?, val appName: String?) : UiEvent
     data class UpdateLocalPort(val port: Int?) : UiEvent

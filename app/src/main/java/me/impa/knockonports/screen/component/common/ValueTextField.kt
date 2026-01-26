@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import kotlinx.coroutines.FlowPreview
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.screen.validate.NumberValidator
@@ -41,6 +42,7 @@ fun ValueTextField(
     validationResult: ValidationResult = ValidationResult.Valid,
     keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null
 ) {
     val currentValue = remember(key1 = value) { mutableStateOf(value) }
 
@@ -53,7 +55,7 @@ fun ValueTextField(
         onValueChange = {
             currentValue.value = it
         },
-        label = { Text(label) },
+        label = { Text(label, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             keyboardType = keyboardType
@@ -65,6 +67,7 @@ fun ValueTextField(
                 Text(validationResult.message.asString())
             }
         },
+        placeholder = placeholder,
         trailingIcon = trailingIcon,
         modifier = modifier.then(Modifier.fillMaxWidth())
     )
@@ -79,7 +82,8 @@ fun ValueTextField(
     onValueChange: (Int?) -> Unit = { },
     validationResult: ValidationResult = ValidationResult.Valid,
     keyboardType: KeyboardType = KeyboardType.Number,
-    trailingIcon: @Composable (() -> Unit)? = null
+    trailingIcon: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null
 ) {
     var localValidation by remember { mutableStateOf<ValidationResult?>(null) }
     ValueTextField(label, value?.toString() ?: "", modifier, { newValue ->
@@ -87,5 +91,5 @@ fun ValueTextField(
         if (localValidation == null) {
             if (newValue.isBlank()) onValueChange(null) else newValue.toIntOrNull()?.let { onValueChange(it) }
         }
-    }, localValidation ?: validationResult, keyboardType, trailingIcon)
+    }, localValidation ?: validationResult, keyboardType, trailingIcon, placeholder)
 }

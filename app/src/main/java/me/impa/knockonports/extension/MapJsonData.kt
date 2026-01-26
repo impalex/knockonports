@@ -76,7 +76,9 @@ fun List<Sequence>.asJsonData(): SequencesData = SequencesDataV1(
                     port = step.port,
                     icmpSize = step.icmpSize,
                     icmpCount = step.icmpCount,
-                    content = step.content
+                    content = step.content,
+                    encoding = step.encoding,
+                    udpPayloadSize = step.udpPayloadSize
                 )
             } ?: listOf()
         )
@@ -123,7 +125,8 @@ private fun legacyToSequenceList(legacySequencesData: LegacySequencesData): List
                     port = step.port,
                     icmpSize = step.icmpSize,
                     icmpCount = step.icmpCount,
-                    content = step.content
+                    content = step.content,
+                    encoding = step.encoding
                 )
             }
         )
@@ -171,7 +174,9 @@ private fun v1ToSequenceList(v1SequencesData: SequencesDataV1): List<Sequence> =
                     port = step.port,
                     icmpSize = step.icmpSize,
                     icmpCount = step.icmpCount,
-                    content = step.content
+                    content = step.content,
+                    encoding = step.encoding,
+                    udpPayloadSize = step.udpPayloadSize
                 )
             }
         )

@@ -279,4 +279,7 @@
     <string name="text_sequences_to_import">Последовательности для импорта</string>
     <string name="title_settings_developer_page">Страница разработчика</string>
     <string name="text_settings_developer_page">Другие мои приложения. Некоторые работают.</string>
+    <string name="field_payload_size">Размер payload</string>
+    <string name="text_auto">Авто</string>
+    <string name="text_tooltip_udp_payload">Общий размер пакета включает в себя IP-заголовок (20-60 байт), UDP-заголовок (8 байт) и указанный размер полезной нагрузки.</string>
 </resources>

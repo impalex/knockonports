@@ -32,5 +32,7 @@ data class SequenceStepDataV1(
     @SerialName("icmp_count")
     val icmpCount: Int? = null,
     val content: String? = null,
-    val encoding: ContentEncodingType? = null
+    val encoding: ContentEncodingType? = null,
+    @SerialName("udp_payload_size")
+    val udpPayloadSize: Int? = null
 )

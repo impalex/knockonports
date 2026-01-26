@@ -28,4 +28,5 @@ data class SequenceStep(
     val icmpCount: Int? = null,
     val content: String? = null,
     val encoding: ContentEncodingType? = ContentEncodingType.RAW,
+    val udpPayloadSize: Int? = null,
 )

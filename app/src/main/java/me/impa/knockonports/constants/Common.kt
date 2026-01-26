@@ -42,6 +42,7 @@ const val MIN_IP4_HEADER_SIZE = 20
 const val MAX_IP4_HEADER_SIZE = 60
 const val IP6_HEADER_SIZE = 40
 const val ICMP_HEADER_SIZE = 8
+const val UDP_HEADER_SIZE = 8
 const val MAX_PACKET_SIZE = 65535
 const val RADIX_BASE16 = 16
 const val MIN_CHECK_TIMEOUT = 1

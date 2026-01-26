@@ -67,6 +67,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -95,7 +96,6 @@ import sh.calvin.reorderable.ReorderableCollectionItemScope
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.ReorderableLazyListState
 import sh.calvin.reorderable.rememberReorderableLazyListState
-import androidx.compose.ui.platform.LocalResources
 
 private const val ANIMATION_DURATION = 300
 
@@ -117,6 +117,7 @@ fun LazyItemScope.SequenceStepCard(
     val encoding = step.encoding
     val data = step.content ?: ""
     val portValidation = step.portValidation
+    val udpPayloadSize = step.udpPayloadSize
 
     StepCardCover(id, state, modifier) {
         DragHandle()
@@ -149,6 +150,15 @@ fun LazyItemScope.SequenceStepCard(
                             { onEvent(UiEvent.UpdateStepPort(id, it)) },
                             modifier = Modifier.weight(1f)
                         )
+                        if (state == SequenceStepType.UDP) {
+                            UdpPayloadSizeEditor(
+                                udpPayloadSize,
+                                { onEvent(UiEvent.UpdateStepUdpPayloadSize(id, it)) },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(start = 8.dp)
+                            )
+                        }
                     }
                     // Button to expand/collapse advanced configuration for UDP and ICMP.
                     if (state != SequenceStepType.TCP)
@@ -309,6 +319,50 @@ private fun IcmpUdpAdvancedConfig(
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RowScope.UdpPayloadSizeEditor(
+    udpPayloadSize: Int?,
+    onUpdate: (Int?) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    ValueTextField(
+        label = stringResource(R.string.field_payload_size),
+        value = udpPayloadSize,
+        onValueChange = onUpdate,
+        modifier = modifier,
+        placeholder = { Text(text = stringResource(R.string.text_auto)) },
+        trailingIcon = {
+            val positionProvider = TooltipDefaults.rememberTooltipPositionProvider(
+                positioning = TooltipAnchorPosition.Above
+            )
+            val state = rememberTooltipState(isPersistent = true)
+            val coroutineScope = rememberCoroutineScope()
+            val interactionSource = remember { MutableInteractionSource() }
+
+            TooltipBox(
+                positionProvider = positionProvider,
+                tooltip = {
+                    RichTooltip(title = { Text(stringResource(R.string.field_payload_size)) }) {
+                        Text(stringResource(R.string.text_tooltip_udp_payload))
+                    }
+                },
+                state = state
+            ) {
+                Icon(
+                    Icons.Default.Info, contentDescription = null,
+                    modifier = Modifier.clickable(
+                        onClick = { coroutineScope.launch { state.show() } },
+                        indication = null,
+                        interactionSource = interactionSource
+                    )
+                )
+            }
+        }
+    )
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable

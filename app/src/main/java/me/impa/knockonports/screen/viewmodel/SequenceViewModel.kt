@@ -132,6 +132,8 @@ class SequenceViewModel @AssistedInject constructor(
                 )
             }
 
+            is UiEvent.UpdateStepUdpPayloadSize -> updateSequenceStep(event.id) { it.copy(udpPayloadSize = event.size) }
+
             is UiEvent.UpdateStepType -> updateSequenceStep(event.id) { it.copy(type = event.type) }
             is UiEvent.UpdateTitle -> _state.update {
                 it.copy(

@@ -290,5 +290,8 @@ For most users: <b>do not change this setting</b>.
     <string name="text_sequences_to_import">Sequences to import</string>
     <string name="title_settings_developer_page">Developer Page</string>
     <string name="text_settings_developer_page">Other apps I’ve made. Some on purpose.</string>
+    <string name="field_payload_size">Payload Size</string>
+    <string name="text_auto">Auto</string>
+    <string name="text_tooltip_udp_payload">The total packet size includes the IP header (20-60 bytes), the UDP header (8 bytes), and the specified payload size.</string>
 
 </resources>

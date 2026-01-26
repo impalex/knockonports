@@ -29,7 +29,8 @@ data class StepUiState(
     val content: String? = null,
     val encoding: ContentEncodingType = ContentEncodingType.RAW,
     val id: Int,
-    val portValidation: ValidationResult = ValidationResult.Valid
+    val portValidation: ValidationResult = ValidationResult.Valid,
+    val udpPayloadSize: Int? = null
 )
 
 fun SequenceStep.toStepUiState(id: Int) = StepUiState(
@@ -39,7 +40,8 @@ fun SequenceStep.toStepUiState(id: Int) = StepUiState(
     icmpSize = icmpSize,
     icmpCount = icmpCount,
     content = content,
-    encoding = encoding ?: ContentEncodingType.RAW
+    encoding = encoding ?: ContentEncodingType.RAW,
+    udpPayloadSize = udpPayloadSize
 )
 
 fun StepUiState.toSequenceStep() = SequenceStep(
@@ -48,5 +50,6 @@ fun StepUiState.toSequenceStep() = SequenceStep(
     icmpSize = icmpSize,
     icmpCount = icmpCount,
     content = content,
-    encoding = encoding
+    encoding = encoding,
+    udpPayloadSize = udpPayloadSize
 )

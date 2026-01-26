@@ -1,0 +1,2 @@
+• Bug fixes and stability improvements.
+• New option to set UDP payload size separately from its content.

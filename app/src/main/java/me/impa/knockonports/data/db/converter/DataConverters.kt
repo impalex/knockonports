@@ -44,7 +44,8 @@ class DataConverters {
                             ?: byteArrayOf(),
                         Base64.NO_PADDING or Base64.NO_WRAP
                     ) + VALUE_SEPARATOR +
-                    (it.encoding?.ordinal?.toString() ?: "")
+                    (it.encoding?.ordinal?.toString() ?: "") + VALUE_SEPARATOR +
+                    (it.udpPayloadSize?.toString() ?: "")
         }
 
     @TypeConverter
@@ -61,6 +62,7 @@ class DataConverters {
                     String(Base64.decode(it, Base64.NO_WRAP or Base64.NO_PADDING), Charsets.UTF_8)
                 },
                 ContentEncodingType.fromOrdinal(s.getOrNull(5)?.toIntOrNull() ?: ContentEncodingType.RAW.ordinal),
+                s.getOrNull(6)?.toIntOrNull()
             )
         }?.toList() ?: listOf()
 

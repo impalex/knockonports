@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "9.0.0"
 kotlin = "2.3.0"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -10,8 +10,8 @@ activityCompose = "1.12.2"
 composeBom = "2026.01.00"
 room = "2.8.4"
 kspVersion = "2.3.4"
-hiltVersion = "2.58"
-kotlinxSerializationJson = "1.9.0"
+hiltVersion = "2.59"
+kotlinxSerializationJson = "1.10.0"
 hiltNavigationCompose = "1.3.0"
 glance = "1.1.1"
 detekt = "1.23.8"
@@ -75,7 +75,6 @@ color-picker = { module = "com.github.skydoves:colorpicker-compose", version.ref
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "kspVersion" }
 hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

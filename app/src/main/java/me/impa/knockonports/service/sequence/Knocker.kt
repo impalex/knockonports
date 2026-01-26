@@ -31,6 +31,8 @@ import kotlinx.coroutines.withContext
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.MAX_CHECK_RETRIES
+import me.impa.knockonports.constants.MAX_IP4_HEADER_SIZE
+import me.impa.knockonports.constants.MAX_PACKET_SIZE
 import me.impa.knockonports.constants.MAX_PORT
 import me.impa.knockonports.constants.MAX_SLEEP
 import me.impa.knockonports.constants.MAX_TTL
@@ -38,6 +40,7 @@ import me.impa.knockonports.constants.MIN_CHECK_RETRIES
 import me.impa.knockonports.constants.MIN_PORT
 import me.impa.knockonports.constants.MIN_SLEEP
 import me.impa.knockonports.constants.MIN_TTL
+import me.impa.knockonports.constants.UDP_HEADER_SIZE
 import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.db.entity.Sequence
@@ -262,11 +265,19 @@ class Knocker @Inject constructor(
      * @param step The sequence step object containing the content and encoding information.
      * @return A byte array representing the packet data, which may be empty.
      */
+    @Suppress("NestedBlockDepth")
     private fun getPacket(type: SequenceStepType?, step: SequenceStep) =
         if (type == SequenceStepType.TCP || step.content.isNullOrBlank()) {
             ByteArray(0)
         } else {
-            step.encoding?.decode(step.content) ?: ByteArray(0)
+            (step.encoding?.decode(step.content) ?: ByteArray(0)).let { packet ->
+                step.udpPayloadSize?.takeIf { step.type == SequenceStepType.UDP }?.let {
+                    // Resize UDP packet to payload size
+                    val size = it.coerceAtMost(MAX_PACKET_SIZE - UDP_HEADER_SIZE - MAX_IP4_HEADER_SIZE)
+                    if (size >= 0) packet.copyOf(size)
+                    else packet
+                } ?: packet
+            }
         }
 
     /**

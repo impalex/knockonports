@@ -20,7 +20,6 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.kotlin.serialization)
@@ -67,8 +66,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 36
-        versionCode = 223
-        versionName = "2.0.13"
+        versionCode = 224
+        versionName = "2.0.14"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -112,11 +111,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
-    composeCompiler {
-        reportsDestination = layout.buildDirectory.dir("compose_compiler")
-        metricsDestination = layout.buildDirectory.dir("compose_compiler")
-        stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -129,9 +123,6 @@ android {
         }
     }
     ndkVersion = "28.1.13356709"
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
 }
 
 kotlin {
@@ -139,6 +130,14 @@ kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.add("-Xannotation-default-target=param-property")
+    }
+    composeCompiler {
+        reportsDestination = layout.buildDirectory.dir("compose_compiler")
+        metricsDestination = layout.buildDirectory.dir("compose_compiler")
+        stabilityConfigurationFiles.add(rootProject.layout.projectDirectory.file("stability_config.conf"))
+    }
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
 
