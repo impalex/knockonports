@@ -267,7 +267,7 @@ class Knocker @Inject constructor(
      */
     @Suppress("NestedBlockDepth")
     private fun getPacket(type: SequenceStepType?, step: SequenceStep) =
-        if (type == SequenceStepType.TCP || step.content.isNullOrBlank()) {
+        if (type == SequenceStepType.TCP) {
             ByteArray(0)
         } else {
             (step.encoding?.decode(step.content) ?: ByteArray(0)).let { packet ->

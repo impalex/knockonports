@@ -66,8 +66,8 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 36
-        versionCode = 224
-        versionName = "2.0.14"
+        versionCode = 225
+        versionName = "2.0.15-beta01"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
