@@ -272,3 +272,12 @@ tasks.register("generateReleaseChangeLog") {
         }
     }
 }
+
+tasks.register("exportVersionCode") {
+    doLast {
+        file("fdroid-version.txt").writeText("versionCode=${android.defaultConfig.versionCode}\n" +
+                "versionName=${android.defaultConfig.versionName}")
+    }
+}
+
+tasks.named("preBuild") { dependsOn("exportVersionCode") }
