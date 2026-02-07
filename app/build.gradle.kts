@@ -28,9 +28,9 @@ plugins {
     id("kotlin-parcelize")
 }
 
-val appScheme = "knockonports"
-val appHost = "app"
-val knockHost = "knock"
+val appScheme: String by rootProject.extra
+val appHost: String by rootProject.extra
+val knockHost: String by rootProject.extra
 
 val keystorePropertiesFile: File? = rootProject.file("keystore.properties")
 
@@ -44,6 +44,19 @@ if (keystorePropertiesFile?.exists() == true) {
 android {
     namespace = "me.impa.knockonports"
     compileSdk = 36
+
+    flavorDimensions += listOf("store")
+
+    productFlavors {
+        create("google") {
+            isDefault = true
+            dimension = "store"
+        }
+        create("foss") {
+            dimension = "store"
+        }
+    }
+
 
     if (keystoreProperties.isNotEmpty()) {
         signingConfigs {
@@ -66,8 +79,12 @@ android {
         applicationId = "me.impa.knockonports"
         minSdk = 24
         targetSdk = 36
-        versionCode = 225
-        versionName = "2.0.15-beta01"
+
+        val productVersion: Int by rootProject.extra
+        val releaseVersion: Int by rootProject.extra
+
+        versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00
+        versionName = "2.1.0"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -79,6 +96,15 @@ android {
                 arguments("-DANDROID_STL=c++_shared")
             }
         }
+        val knocklordCapName: String by rootProject.extra
+        val knockletCapName: String by rootProject.extra
+        val wearSeqDataPath: String by rootProject.extra
+        val wearKnockDataPath: String by rootProject.extra
+        resValue("string", "cap_app_installed", knocklordCapName)
+        buildConfigField("String", "CAP_KNOCKLORD_INSTALLED", "\"$knocklordCapName\"")
+        buildConfigField("String", "CAP_KNOCKLET_INSTALLED", "\"$knockletCapName\"")
+        buildConfigField("String", "WEAR_PATH_SEQUENCE_LIST", "\"$wearSeqDataPath\"")
+        buildConfigField("String", "WEAR_PATH_KNOCK_STATUS", "\"$wearKnockDataPath\"")
         buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
         buildConfigField("String", "APP_HOST", "\"$appHost\"")
         buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
@@ -90,6 +116,7 @@ android {
     }
 
     buildFeatures {
+        resValues = true
         buildConfig = true
     }
 
@@ -129,7 +156,7 @@ kotlin {
     jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
+        freeCompilerArgs.addAll("-Xannotation-default-target=param-property", "-Xexplicit-backing-fields")
     }
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
@@ -172,6 +199,11 @@ dependencies {
     // Datastore
     implementation(libs.datastore.preferences)
 
+    // Google Play Services
+    "googleImplementation"(libs.play.services.wearable)
+    "googleImplementation"(libs.androidx.wear.remote.interactions)
+    "googleImplementation"(libs.kotlinx.coroutines.play.services)
+
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
@@ -188,6 +220,7 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.material.kolor)
     implementation(libs.color.picker)
+    "googleImplementation"(project(":shared"))
 
     // Tests
     testImplementation(libs.junit)

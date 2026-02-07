@@ -25,11 +25,21 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.flow.cancellable
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import me.impa.knockonports.R
 import me.impa.knockonports.constants.INVALID_SEQ_ID
 import me.impa.knockonports.data.KnocksRepository
 import me.impa.knockonports.di.IoDispatcher
+import me.impa.knockonports.di.MainDispatcher
+import me.impa.knockonports.service.wear.WearConnectionManager
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
@@ -53,8 +63,15 @@ class KnockerService : Service() {
     @Inject
     lateinit var ioDispatcher: CoroutineDispatcher
 
+    @MainDispatcher
+    @Inject
+    lateinit var mainDispatcher: CoroutineDispatcher
+
     @Inject
     lateinit var knocker: Knocker
+
+    @Inject
+    lateinit var wearConnectionManager: WearConnectionManager
 
     private var knockerJob: Job? = null
 
@@ -98,13 +115,24 @@ class KnockerService : Service() {
                 val sequenceId = sequenceQueue.removeFirstOrNull() ?: INVALID_SEQ_ID
                 Timber.d("Sequence ID: $sequenceId")
                 if (sequenceId != INVALID_SEQ_ID) {
-                    updateNotification(repository.getSequenceName(sequenceId))
+                    val notifJob = knocker.knockStatus.filterNotNull().onEach {
+                        if (wearConnectionManager.isCompanionReady.value)
+                            wearConnectionManager.sendStatus(it)
+                        updateNotification(it)
+                    }.onCompletion {
+                        if (wearConnectionManager.isCompanionReady.value)
+                            wearConnectionManager.sendStatus(null)
+                    }.launchIn(CoroutineScope(mainDispatcher) + SupervisorJob())
+
                     try {
                         knocker.knock(sequenceId)
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Exception) {
                         Timber.e(e, "Error while knocking")
+                    }
+                    finally {
+                        notifJob.cancelAndJoin()
                     }
                 }
             }
@@ -117,25 +145,43 @@ class KnockerService : Service() {
     }
 
     /**
-     * Builds a notification for the ongoing service.
+     * Builds the notification for the foreground service.
      *
-     * @param sequenceName The name of the sequence being executed, or null if no sequence is active.
-     *                     If an empty string is provided, it will be displayed as "Unnamed Sequence".
-     * @return A [android.app.Notification] object configured for the ongoing service.
+     * This notification informs the user that a knocking sequence is in progress.
+     *
+     * @param knockState The current status of the knocking process. Used to update notification content.
+     * @return A configured [android.app.Notification] object for the foreground service.
      */
-    private fun getNotification(sequenceName: String? = null) =
+    private fun getNotification(knockState: KnockState? = null) =
         NotificationCompat.Builder(this, CHANNEL_ID)
             .setOngoing(true)
             .setSmallIcon(R.drawable.ic_knock_notif)
             .setContentTitle(resources.getString(R.string.notification_title))
             .apply {
-                sequenceName?.let {
+                knockState?.let { state ->
                     setContentText(
-                        resources.getString(
-                            R.string.notification_desc,
-                            it.ifEmpty { resources.getString(R.string.text_unnamed_sequence) }
-                        )
+                        buildString {
+                            if (state.maxAttempts > 1) {
+                                append(
+                                    resources.getString(
+                                        R.string.notification_desc_attempt,
+                                        state.attempt, state.maxAttempts
+                                    )
+                                )
+                                append(" ")
+                            }
+                            if (state.isWaitingForResource) {
+                                append(resources.getString(R.string.notification_desc_waiting_for_resource))
+                            } else {
+                                append(state.sequenceName.ifEmpty {
+                                    resources.getString(R.string.text_unnamed_sequence)
+                                })
+                            }
+                        }
                     )
+                    if (state.maxSteps > 0) {
+                        setProgress(state.maxSteps, state.step, false)
+                    }
                 }
             }.build()
 
@@ -144,20 +190,19 @@ class KnockerService : Service() {
     }
 
     /**
-     * Updates the foreground notification displayed to the user.
+     * Updates the foreground notification with the current status.
      *
      * This function retrieves the `NotificationManager` system service and checks if notifications
-     * are enabled for the app. If both conditions are true, it updates the notification with the
-     * specified sequence name. If notifications are disabled or the `NotificationManager` cannot be
-     * retrieved, the function does nothing.
+     * are enabled for the app. If they are, it updates the existing foreground notification
+     * using the information from the provided [KnockState].
      *
-     * @param sequenceName The name of the current sequence being processed.  This name will be displayed
-     * in the notification's content title.
+     * @param knockState The current status of the knocking sequence, containing information
+     * to display in the notification.
      */
-    private fun updateNotification(sequenceName: String?) {
+    private fun updateNotification(knockState: KnockState?) {
         getSystemService(NotificationManager::class.java)
             ?.takeIf { it.areNotificationsEnabled() }
-            ?.notify(FOREGROUND_ID, getNotification(sequenceName))
+            ?.notify(FOREGROUND_ID, getNotification(knockState))
     }
 
     companion object {

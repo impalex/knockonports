@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.systemGestureExclusion
@@ -61,7 +62,6 @@ import me.impa.knockonports.R
 import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.navigation.NavigateUp
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.viewmodel.ColorPickerViewModel
 import me.impa.knockonports.screen.viewmodel.state.colorpicker.ColorResult
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
@@ -74,7 +74,6 @@ fun ColorPickerScreen(
 
     val controller = rememberColorPickerController()
     val color by viewModel.selectedColor.collectAsState()
-    val paddings = LocalInnerPaddingValues.current
 
     LaunchedEffect(Unit) {
         @Suppress("MagicNumber")
@@ -101,7 +100,7 @@ fun ColorPickerScreen(
         showDefaultButton = viewModel.defaultColor != Color.Unspecified.toColorLong(),
         onSave = onSave,
         onDefault = onDefault,
-        modifier = modifier.then(Modifier.padding(paddings)),
+        modifier = modifier.then(Modifier.safeContentPadding()),
     )
 }
 

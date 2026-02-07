@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option java_package = "me.impa.knockonports.shared.data";
+option java_multiple_files = true;
+
+message SequenceInfo {
+  int64 id = 1;
+  string name = 2;
+}
+
+message SequenceList {
+  repeated SequenceInfo items = 1;
+}
+
+message KnockStatus {
+  bool is_active = 1;
+  int64 id = 2;
+  string sequence_name = 3;
+  int32 attempt = 4;
+  int32 max_attempts = 5;
+  int32 step = 6;
+  int32 max_steps = 7;
+  bool is_waiting_for_resource = 8;
+}

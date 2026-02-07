@@ -177,7 +177,7 @@ complexity:
     ignoreDeprecated: true
     ignorePrivate: true
     ignoreOverridden: true
-    ignoreAnnotatedFunctions: ['Preview']
+    ignoreAnnotatedFunctions: ['Preview', 'WearPreviewDevices']
 
 coroutines:
   active: true
@@ -758,7 +758,7 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ''
-    ignoreAnnotated: ['Preview']
+    ignoreAnnotated: ['Preview', 'WearPreviewDevices']
   UnusedPrivateProperty:
     active: true
     allowedNames: '_|ignored|expected|serialVersionUID'

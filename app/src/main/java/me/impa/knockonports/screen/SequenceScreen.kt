@@ -96,11 +96,11 @@ import me.impa.knockonports.data.type.CheckAccessType
 import me.impa.knockonports.extension.debounced
 import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.extension.stringResourceId
+import me.impa.knockonports.helper.safeBottomContentPadding
 import me.impa.knockonports.navigation.ImportFromKnockdRoute
 import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.screen.component.common.HeaderSection
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.PrefStepSlider
 import me.impa.knockonports.screen.component.common.PrefSwitch
 import me.impa.knockonports.screen.component.common.RegisterAppBar
@@ -143,7 +143,7 @@ fun SequenceScreen(
         SequenceScreenContent(
             state = state,
             onEvent = onEvent,
-            modifier = modifier.then(Modifier.imePadding())
+            modifier = modifier
         )
     }
 }
@@ -155,7 +155,6 @@ fun SequenceScreenContent(
     onEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val paddings = LocalInnerPaddingValues.current
     val titles = listOf(R.string.title_tab_basic_settings, R.string.title_tab_advanced_settings)
     var selectedIndex by rememberSaveable { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { titles.size }
@@ -173,10 +172,6 @@ fun SequenceScreenContent(
         modifier = modifier.then(
             Modifier
                 .fillMaxSize()
-                .padding(
-                    start = paddings.calculateStartPadding(LocalLayoutDirection.current),
-                    end = paddings.calculateEndPadding(LocalLayoutDirection.current)
-                )
         )
     ) {
         SequenceScreenTabs(
@@ -185,12 +180,10 @@ fun SequenceScreenContent(
             onTabSelected = { selectedIndex = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = paddings.calculateTopPadding())
         )
 
         SequencePager(
             pagerState = pagerState,
-            paddings = paddings,
             state = state,
             onEvent = onEvent,
             modifier = Modifier
@@ -229,7 +222,6 @@ private fun SequenceScreenTabs(
 @Composable
 private fun SequencePager(
     pagerState: PagerState,
-    paddings: PaddingValues,
     state: UiState,
     onEvent: (UiEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -261,7 +253,7 @@ private fun SequencePager(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(horizontal = 8.dp),
-            contentPadding = PaddingValues(bottom = paddings.calculateBottomPadding())
+            contentPadding = safeBottomContentPadding()
         ) {
             when (index) {
                 0 -> basicSettingsPageContent(state, reorderableListState, onEvent)
@@ -326,6 +318,7 @@ private fun LazyListScope.sequenceBasicConfig(
             stringResource(R.string.field_name), state.title,
             onValueChange = { onEvent(UiEvent.UpdateTitle(it)) },
             validationResult = state.titleValidation,
+            modifier = Modifier
         )
     }
     item(key = "host_edit") {
@@ -381,6 +374,7 @@ private fun LazyListScope.stepList(
     items(steps, key = { it.id }) { step ->
         SequenceStepCard(
             step, ip4HeaderSize = state.ip4HeaderSize,
+            modifier = Modifier,
             icmpType = state.icmpSizeType, state = reorderableListState, onEvent = onEvent
         )
     }

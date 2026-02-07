@@ -31,8 +31,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import me.impa.knockonports.R
+import me.impa.knockonports.helper.safeBottomContentPadding
 import me.impa.knockonports.navigation.SettingsRoute
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.settings.DetectIPAlert
 import me.impa.knockonports.screen.component.settings.IPHeaderSizeAlert
@@ -69,11 +69,9 @@ fun SettingsScreen(
     theme ?: return
     listSettings ?: return
 
-    val paddings = LocalInnerPaddingValues.current
-
     LazyColumn(
         state = lazyListState,
-        contentPadding = paddings,
+        contentPadding = safeBottomContentPadding(),
         modifier = modifier.fillMaxSize()
     ) {
         settings?.let {

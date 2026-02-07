@@ -53,6 +53,7 @@ import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 fun MainScreenActions(
     isRuLangAvailable: Boolean,
     isDetailedView: Boolean,
+    isWearAvailable: Boolean,
     onAction: (MainBarEvent) -> Unit = {}
 ) {
     var showMenu by remember { mutableStateOf(false) }
@@ -109,6 +110,11 @@ fun MainScreenActions(
                         onAction(MainBarEvent.ShowLogs)
                         showMenu = false
                     })
+                if (isWearAvailable) {
+                    WearActions {
+                        showMenu = false
+                    }
+                }
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.action_settings)) },
                     modifier = Modifier.testTag(TAG_SETTINGS_MENU_ITEM),
@@ -137,6 +143,6 @@ fun DonateButton() {
 @Composable
 fun PreviewMainScreenActions() {
     Row {
-        MainScreenActions(isRuLangAvailable = true, isDetailedView = true)
+        MainScreenActions(isRuLangAvailable = true, isWearAvailable = true, isDetailedView = true)
     }
 }

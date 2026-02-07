@@ -114,6 +114,7 @@ val entryProvider = entryProvider {
             }
         ImportKnockdConfScreen(viewModel = viewModel)
     }
+    wearExtension()
 }
 
 val deepLinkPatterns: List<DeepLinkPattern<out NavKey>> = listOf(

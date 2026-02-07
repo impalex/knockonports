@@ -24,12 +24,15 @@ import me.impa.knockonports.constants.DEFAULT_TITLE_FONT_SCALE
 import me.impa.knockonports.data.db.entity.Sequence
 import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.service.resource.ResourceState
+import me.impa.knockonports.service.wear.WearConnectionStatus
 
 data class UiState(
     val sequences: ImmutableMap<String, ImmutableList<Sequence>> = persistentMapOf(),
     val resourceState: ImmutableMap<Long, ResourceState> = persistentMapOf(),
     val areShortcutsAvailable: Boolean = false,
     val isRuLangAvailable: Boolean = false,
+    val isFromPlayStore: Boolean = false,
+    val wearStatus: WearConnectionStatus = WearConnectionStatus.Checking,
     val focusedSequenceId: Long? = null,
     val disableNotificationRequest: Boolean = false,
     val detailedList: Boolean = true,

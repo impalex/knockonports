@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  - Copyright (c) 2025 Alexander Yaburov
+  -
+  - Licensed under the Apache License, Version 2.0 (the "License");
+  - you may not use this file except in compliance with the License.
+  - You may obtain a copy of the License at
+  -
+  - http://www.apache.org/licenses/LICENSE-2.0
+  -
+  - Unless required by applicable law or agreed to in writing, software
+  - distributed under the License is distributed on an "AS IS" BASIS,
+  - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  - See the License for the specific language governing permissions and
+  - limitations under the License.
+  -->
+
+<svg
+   width="112"
+   height="112"
+   viewBox="0 0 112 112"
+   fill="none"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="knocker_white_large.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="10.419643"
+     inkscape:cx="55.952014"
+     inkscape:cy="56"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg3" />
+  <path
+     d="M 29.656667,17.397139 H 82.343554 L 64.781309,41.274467 H 47.218913 Z"
+     fill="#ffffff"
+     stroke="#ffffff"
+     stroke-width="2.17912"
+     stroke-linejoin="round"
+     id="path1" />
+  <path
+     d="m 78.057934,33.957565 c 4.503159,4.2619 7.596144,9.731598 8.883812,15.709938 1.287819,5.97849 0.711768,12.194185 -1.654286,17.853048 -2.366054,5.658712 -6.414769,10.503568 -11.628945,13.91558 -5.214026,3.411862 -11.356759,5.235795 -17.643016,5.238798 -6.286257,0.003 -12.430791,-1.815076 -17.64827,-5.221983 C 33.149599,78.046038 29.09593,73.204935 26.724171,67.548475 24.352412,61.891865 23.770207,55.676619 25.05187,49.697078 26.333532,43.717387 29.421112,38.244837 33.919768,33.978583"
+     stroke="#ffffff"
+     stroke-width="5.06507"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path2" />
+  <path
+     d="m 56.000036,94.602861 c 4.903106,0 8.877806,-4.045712 8.877806,-9.036495 0,-4.990632 -3.9747,-9.036344 -8.877806,-9.036344 -4.903107,0 -8.877957,4.045712 -8.877957,9.036344 0,4.990783 3.97485,9.036495 8.877957,9.036495 z"
+     fill="#ffffff"
+     stroke="#ffffff"
+     stroke-width="2.17912"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="path3" />
+</svg>

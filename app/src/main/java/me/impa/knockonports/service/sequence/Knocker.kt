@@ -26,7 +26,10 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
@@ -80,6 +83,9 @@ class Knocker @Inject constructor(
     private val settingsDataStore: SettingsDataStore
 ) {
 
+    val knockStatus: StateFlow<KnockState?>
+        field = MutableStateFlow(null)
+
     /**
      * Executes a port knocking sequence.
      *
@@ -98,19 +104,38 @@ class Knocker @Inject constructor(
 
         val ipDetectionTasks = launchPublicIpDetection(addresses)
 
-        val maxTries = if (sequence.checkPostKnock)
-            sequence.checkRetries.coerceAtLeast(MIN_CHECK_RETRIES).coerceAtMost(MAX_CHECK_RETRIES) else 0
+        val maxTries = if (sequence.checkPostKnock && sequence.checkAccess)
+            sequence.checkRetries.coerceAtLeast(MIN_CHECK_RETRIES)
+                .coerceAtMost(MAX_CHECK_RETRIES) else 1
 
-        for (i in 0 until maxTries + 1) {
+        showToast(R.string.message_start_knocking, sequence.name)
+
+        for (i in 1 until maxTries + 1) {
             Timber.d("Attempt $i of $maxTries")
+            knockStatus.update {
+                KnockState(
+                    id = sequence.id ?: 0,
+                    sequenceName = sequence.name ?: "",
+                    attempt = i,
+                    maxAttempts = maxTries,
+                    isWaitingForResource = false,
+                    step = 0,
+                    maxSteps = 0,
+                )
+            }
             launchSequence(sequence, steps, addresses)
 
             Timber.i("Knocking to \"${sequence.name}\" complete")
-            showToast(R.string.message_knocking_complete)
-            val resourceState = if (sequence.checkAccess) accessWatcher.checkResource(sequenceId) else null
+            val resourceState = if (sequence.checkAccess) {
+                knockStatus.update { it?.copy(isWaitingForResource = true) }
+                accessWatcher.checkResource(sequenceId).also {
+                    knockStatus.update { it?.copy(isWaitingForResource = false) }
+                }
+            } else null
             if (!sequence.checkPostKnock || resourceState is ResourceState.Available)
                 break
         }
+        showToast(R.string.message_knocking_complete)
 
         launchApp(sequence)
 
@@ -121,13 +146,14 @@ class Knocker @Inject constructor(
         log(EventType.KNOCK, listOf(sequence.name, sequence.host, publicIps, addresses.joinToString()))
 
         settingsDataStore.incrementKnockCount()
+        knockStatus.update { null }
     }
 
     /**
      * Retrieves a sequence from the repository and performs validation.
      *
      * @param sequenceId The ID of the sequence to retrieve.
-     * @return The retrieved [me.impa.knockonports.data.db.entity.Sequence] object.
+     * @return The retrieved [Sequence] object.
      * @throws IllegalArgumentException if the sequence is not found or has an empty host.
      */
     private suspend fun prepareSequence(sequenceId: Long): Sequence {
@@ -151,7 +177,7 @@ class Knocker @Inject constructor(
      * Prepares a list of valid sequence steps from a given [Sequence].
      *
      * @param sequence The [Sequence] object containing the steps to be prepared.
-     * @return A list of [me.impa.knockonports.data.model.SequenceStep] objects representing the
+     * @return A list of [SequenceStep] objects representing the
      *         valid steps in the sequence.
      * @throws IllegalStateException if the sequence contains no valid steps. The exception message
      *  will indicate the name of the empty sequence.
@@ -169,14 +195,18 @@ class Knocker @Inject constructor(
 
     private suspend fun launchSequence(sequence: Sequence, steps: List<SequenceStep>, addresses: List<InetAddress>) {
 
-        showToast(R.string.message_start_knocking, sequence.name)
-
         val delay = (sequence.delay ?: 0).coerceAtLeast(MIN_SLEEP).coerceAtMost(MAX_SLEEP).toLong()
 
         try {
             var cnt = 0
             steps.forEach {
                 cnt++
+                knockStatus.update { status ->
+                    status?.copy(
+                        step = cnt,
+                        maxSteps = steps.size
+                    )
+                }
                 Timber.d("Step $cnt")
                 withContext(ioDispatcher) {
                     sendPackets(

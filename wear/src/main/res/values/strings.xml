@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name" translatable="false">Knock on Ports</string>
+    <string name="title_install_app">Install the app on your phone</string>
+    <string name="text_install_app">To use the app on your watch, please install the main app on your smartphone.</string>
+    <string name="action_open_market">Open Play Store</string>
+    <string name="title_sequences">Sequences</string>
+    <string name="title_knocking">Knocking</string>
+    <string name="title_no_name_sequence">(Unnamed sequence)</string>
+    <string name="text_attempts">Attempt %1$d/%2$d</string>
+    <string name="text_empty_list">Empty list</string>
+</resources>

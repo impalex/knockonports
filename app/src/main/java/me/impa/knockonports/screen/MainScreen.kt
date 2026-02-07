@@ -54,13 +54,13 @@ import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.helper.TextResource
 import me.impa.knockonports.helper.openPlayStoreAppPage
+import me.impa.knockonports.helper.safeBottomContentPadding
 import me.impa.knockonports.navigation.ImportFromKnockdRoute
 import me.impa.knockonports.navigation.LogRoute
 import me.impa.knockonports.navigation.MainRoute
 import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.navigation.SettingsRoute
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.main.BetaAlert
 import me.impa.knockonports.screen.component.main.DeleteSequenceAlert
@@ -71,16 +71,15 @@ import me.impa.knockonports.screen.component.main.SequenceCard
 import me.impa.knockonports.screen.viewmodel.MainViewModel
 import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 import me.impa.knockonports.screen.viewmodel.state.main.UiEvent
-import me.impa.knockonports.screen.viewmodel.state.main.UiEvent.*
 import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay
 import me.impa.knockonports.screen.viewmodel.state.main.UiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
 import me.impa.knockonports.service.resource.ResourceState
+import me.impa.knockonports.service.wear.WearConnectionStatus
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import timber.log.Timber
 
-const val FOCUSED_SEQUENCE_ID = "focusedSequenceId"
 const val ANIMATION_DURATION = 200
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -102,14 +101,17 @@ fun MainScreen(
     val eventBus = LocalAppEventBus.current
 
     RegisterAppBar<MainRoute>(title = stringResource(R.string.app_name), showBackButton = false) {
-        MainScreenActions(state.isRuLangAvailable, state.detailedList) { action ->
+        MainScreenActions(
+            state.isRuLangAvailable, state.detailedList,
+            isWearAvailable = state.wearStatus !is WearConnectionStatus.NotAvailable,
+        ) { action ->
             when (action) {
                 MainBarEvent.AddSequence -> eventBus.navigate(SequenceRoute())
-                is MainBarEvent.Export -> viewModel.onEvent(Export(action.uri))
-                is MainBarEvent.Import -> viewModel.onEvent(Import(action.uri))
+                is MainBarEvent.Export -> viewModel.onEvent(UiEvent.Export(action.uri))
+                is MainBarEvent.Import -> viewModel.onEvent(UiEvent.Import(action.uri))
                 MainBarEvent.Settings -> eventBus.navigate(SettingsRoute)
                 MainBarEvent.ShowLogs -> eventBus.navigate(LogRoute)
-                MainBarEvent.ToggleListMode -> viewModel.onEvent(ToggleListMode)
+                MainBarEvent.ToggleListMode -> viewModel.onEvent(UiEvent.ToggleListMode)
                 is MainBarEvent.ImportKnockdConf ->
                     eventBus.navigate(ImportFromKnockdRoute(action.uri.toString(), false))
             }
@@ -176,11 +178,9 @@ fun MainScreenContent(
         }
     }
 
-    val paddings = LocalInnerPaddingValues.current
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = paddings,
+        contentPadding = safeBottomContentPadding(),
         modifier = modifier.then(Modifier.fillMaxSize()), state = listState
     ) {
         val firstGroup = state.sequences.keys.firstOrNull()

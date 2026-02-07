@@ -282,4 +282,15 @@
     <string name="field_payload_size">Размер payload</string>
     <string name="text_auto">Авто</string>
     <string name="text_tooltip_udp_payload">Общий размер пакета включает в себя IP-заголовок (20-60 байт), UDP-заголовок (8 байт) и указанный размер полезной нагрузки.</string>
+    <string name="action_wear_companion">Компаньон</string>
+    <string name="title_screen_wear">Компаньон</string>
+    <string name="title_companion_not_installed">Приложение не установлено на часах</string>
+    <string name="text_companion_not_installed">Мы нашли ваши часы, но приложение для Wear OS на них не установлено. Установите его, чтобы продолжить.</string>
+    <string name="action_companion_open_market">Установить на часы</string>
+    <string name="title_companion_lost">Потеряно соединение с часами</string>
+    <string name="text_companion_lost">Связь с часами была прервана. Убедитесь, что часы рядом и подключены к телефону.</string>
+    <string name="title_companion_connected">Все готово</string>
+    <string name="text_companion_connected">Приложение на телефоне и часах успешно подключено.</string>
+    <string name="notification_desc_attempt">Попытка [%1$d/%2$d]:</string>
+    <string name="notification_desc_waiting_for_resource">Проверка доступности ресурса</string>
 </resources>

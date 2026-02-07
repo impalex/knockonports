@@ -40,3 +40,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Knock On Ports"
 include(":app")
+include(":wear")
+include(":shared")

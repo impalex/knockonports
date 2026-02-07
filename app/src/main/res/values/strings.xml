@@ -168,6 +168,7 @@
     <string name="channel_description">Who\'s there? \u1F632</string>
     <string name="notification_title">Knock-knock!</string>
     <string name="notification_desc">Knocking on «%s». Is anybody there?</string>
+    <string name="notification_desc_attempt">Attempt [%1$d/%2$d]:</string>
     <string name="contact_author_mail" translatable="false">dev@impa.me</string>
     <string name="contact_subject" translatable="false">Knock on Ports</string>
     <string name="title_integration_alert">Automation URI</string>
@@ -286,12 +287,22 @@ For most users: <b>do not change this setting</b>.
     <string name="action_save">Save</string>
     <string name="action_import_knockd_conf">Import from knockd.conf</string>
     <string name="title_import_from_knockd_conf">Import from knockd.conf</string>
-    <string name="text_loading_data">Loading data...</string>
+    <string name="text_loading_data">Loading data…</string>
     <string name="text_sequences_to_import">Sequences to import</string>
     <string name="title_settings_developer_page">Developer Page</string>
     <string name="text_settings_developer_page">Other apps I’ve made. Some on purpose.</string>
     <string name="field_payload_size">Payload Size</string>
     <string name="text_auto">Auto</string>
-    <string name="text_tooltip_udp_payload">The total packet size includes the IP header (20-60 bytes), the UDP header (8 bytes), and the specified payload size.</string>
+    <string name="text_tooltip_udp_payload">The total packet size includes the IP header (20–60 bytes), the UDP header (8 bytes), and the specified payload size.</string>
+    <string name="action_wear_companion">Companion</string>
+    <string name="title_screen_wear">Companion</string>
+    <string name="title_companion_not_installed">App not installed on your watch</string>
+    <string name="text_companion_not_installed">We found your watch, but the Wear OS companion app is not installed. Install it to continue.</string>
+    <string name="action_companion_open_market">Install on watch</string>
+    <string name="title_companion_lost">Connection to watch lost</string>
+    <string name="text_companion_lost">The connection to your watch was interrupted. Make sure the watch is nearby and connected to your phone.</string>
+    <string name="title_companion_connected">All set</string>
+    <string name="text_companion_connected">The app on your phone and watch is connected successfully.</string>
+    <string name="notification_desc_waiting_for_resource">Checking resource availability</string>
 
 </resources>

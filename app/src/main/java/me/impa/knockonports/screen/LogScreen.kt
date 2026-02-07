@@ -47,8 +47,8 @@ import me.impa.knockonports.R
 import me.impa.knockonports.data.db.entity.LogEntry
 import me.impa.knockonports.data.type.EventType
 import me.impa.knockonports.extension.stringResourceId
+import me.impa.knockonports.helper.safeBottomContentPadding
 import me.impa.knockonports.navigation.LogRoute
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.viewmodel.LogViewModel
 
@@ -95,8 +95,7 @@ fun stringResourceSafe(id: Int, formatArgs: List<Any?>): String {
 @Composable
 fun LogEventList(events: List<LogEntry>, modifier: Modifier = Modifier) {
     val lazyState = rememberLazyListState()
-    val paddings = LocalInnerPaddingValues.current
-    LazyColumn(state = lazyState, modifier = modifier, contentPadding = paddings) {
+    LazyColumn(state = lazyState, modifier = modifier, contentPadding = safeBottomContentPadding()) {
         itemsIndexed(items = events, key = { _, item -> item.id ?: 0L }) { index, item ->
             if (index > 0)
                 HorizontalDivider(modifier = Modifier.fillMaxWidth())

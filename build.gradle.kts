@@ -1,3 +1,5 @@
+import org.gradle.internal.extensions.core.extra
+
 /*
  * Copyright (c) 2024-2025 Alexander Yaburov
  *
@@ -21,4 +23,17 @@ plugins {
     alias(libs.plugins.hiltAndroid) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.detekt.plugin) apply false
+    alias(libs.plugins.squareup.wire) apply false
+    alias(libs.plugins.android.library) apply false
 }
+
+val productVersion: Int by extra(1)
+val releaseVersion: Int by extra(3)
+
+val knockletCapName: String by extra("knocklet_installed")
+val knocklordCapName: String by extra("knocklord_installed")
+val wearSeqDataPath: String by extra("/sequence_list")
+val wearKnockDataPath: String by extra("/knock_status")
+val appScheme: String by extra("knockonports")
+val appHost: String by extra("app")
+val knockHost: String by extra("knock")

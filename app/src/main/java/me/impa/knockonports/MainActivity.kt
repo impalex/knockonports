@@ -43,6 +43,7 @@ import me.impa.knockonports.screen.AppScreen
 import me.impa.knockonports.service.biometric.BiometricHelper
 import me.impa.knockonports.service.resource.AccessWatcher
 import me.impa.knockonports.service.shortcut.ShortcutWatcher
+import me.impa.knockonports.service.wear.WearDataManager
 import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import javax.inject.Inject
 
@@ -61,6 +62,9 @@ class MainActivity : FragmentActivity() {
     @Inject
     lateinit var biometricHelper: BiometricHelper
 
+    @Inject
+    lateinit var wearDataManager: WearDataManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM)
             WindowCompat.enableEdgeToEdge(window)
@@ -69,6 +73,7 @@ class MainActivity : FragmentActivity() {
         lifecycle.addObserver(resourceWatcher)
         lifecycle.addObserver(shortcutWatcher)
         lifecycle.addObserver(biometricHelper)
+        lifecycle.addObserver(wearDataManager)
 
         val uri: Uri? = intent.data
         val key: NavKey = uri?.let {
@@ -101,6 +106,7 @@ class MainActivity : FragmentActivity() {
         lifecycle.removeObserver(resourceWatcher)
         lifecycle.removeObserver(shortcutWatcher)
         lifecycle.removeObserver(biometricHelper)
+        lifecycle.removeObserver(wearDataManager)
         super.onDestroy()
     }
 

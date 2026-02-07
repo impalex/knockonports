@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Alexander Yaburov
+ * Copyright (c) 2026 Alexander Yaburov
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-package me.impa.knockonports.screen.component.common
+package me.impa.knockonports.navigation
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.runtime.staticCompositionLocalOf
-
-val LocalInnerPaddingValues = staticCompositionLocalOf<PaddingValues> { PaddingValues.Absolute() }
+fun wearExtension() = Unit

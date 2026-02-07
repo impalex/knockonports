@@ -61,6 +61,8 @@ import me.impa.knockonports.screen.viewmodel.state.main.UiOverlay.Review
 import me.impa.knockonports.screen.viewmodel.state.main.UiState
 import me.impa.knockonports.service.resource.AccessWatcher
 import me.impa.knockonports.service.sequence.KnockHelper
+import me.impa.knockonports.service.wear.WearConnectionManager
+import me.impa.knockonports.service.wear.WearConnectionStatus
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -72,6 +74,7 @@ class MainViewModel @Inject constructor(
     private val resourceWatcher: AccessWatcher,
     private val settingsDataStore: SettingsDataStore,
     private val deviceState: DeviceState,
+    private val wearConnectionManager: WearConnectionManager,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     val eventBus: AppEventBus
 ) : ViewModel() {
@@ -337,7 +340,11 @@ class MainViewModel @Inject constructor(
             _state.update {
                 it.copy(
                     areShortcutsAvailable = deviceState.areShortcutsAvailable,
-                    isRuLangAvailable = deviceState.isRuLangAvailable
+                    isRuLangAvailable = deviceState.isRuLangAvailable,
+                    wearStatus = if (deviceState.isPlayStoreInstallation || BuildConfig.DEBUG)
+                        wearConnectionManager.getStatus()
+                    else WearConnectionStatus.NotAvailable,
+                    isFromPlayStore = deviceState.isPlayStoreInstallation
                 )
             }
 

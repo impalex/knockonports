@@ -17,7 +17,11 @@
 package me.impa.knockonports.screen
 
 import android.app.Activity
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -43,6 +47,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -62,7 +67,6 @@ import me.impa.knockonports.screen.component.common.AppTopBar
 import me.impa.knockonports.screen.component.common.AppTopBarRegistry
 import me.impa.knockonports.screen.component.common.LocalAppBarRegistry
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
-import me.impa.knockonports.screen.component.common.LocalInnerPaddingValues
 import me.impa.knockonports.screen.viewmodel.AppViewModel
 
 @Composable
@@ -130,9 +134,18 @@ private fun AppScreenContent(
             ) { paddingValues ->
                 EventHandler(snackbarHostState = snackbarHostState)
 
-                CompositionLocalProvider(LocalInnerPaddingValues provides paddingValues) {
-                    AppNavigation(navigator, navigationState)
-                }
+                val paddings = PaddingValues(
+                    top = paddingValues.calculateTopPadding(),
+                    start = paddingValues.calculateLeftPadding(LocalLayoutDirection.current),
+                    end = paddingValues.calculateRightPadding(LocalLayoutDirection.current),
+                )
+                AppNavigation(
+                    navigator, navigationState,
+                    modifier = Modifier
+                        .padding(paddings)
+                        .consumeWindowInsets(paddings)
+                        .imePadding()
+                )
             }
         }
     }
