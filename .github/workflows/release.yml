@@ -46,7 +46,7 @@ jobs:
     
     - name: Build APK
       run: |
-        ./gradlew assembleGoogleRelease
+        ./gradlew assembleFossRelease
     
     - name: Generate Changelog
       run: |
@@ -54,8 +54,8 @@ jobs:
     
     - name: Rename APK
       run: |
-        mv app/build/outputs/apk/google/release/app-google-release.apk \
-           app/build/outputs/apk/google/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
+        mv app/build/outputs/apk/foss/release/app-foss-release.apk \
+           app/build/outputs/apk/foss/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
 
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
@@ -64,4 +64,4 @@ jobs:
         name: Release ${{ env.RELEASE_TAG }}
         body_path: app/build/outputs/changelog/changelog.txt
         files: |
-          app/build/outputs/apk/google/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
+          app/build/outputs/apk/foss/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
