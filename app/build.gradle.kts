@@ -108,11 +108,13 @@ android {
         buildConfigField("String", "APP_SCHEME", "\"$appScheme\"")
         buildConfigField("String", "APP_HOST", "\"$appHost\"")
         buildConfigField("String", "KNOCK_HOST", "\"$knockHost\"")
-        manifestPlaceholders.putAll(mapOf(
-            "appScheme" to appScheme,
-            "appHost" to appHost,
-            "knockHost" to knockHost
-        ))
+        manifestPlaceholders.putAll(
+            mapOf(
+                "appScheme" to appScheme,
+                "appHost" to appHost,
+                "knockHost" to knockHost
+            )
+        )
     }
 
     buildFeatures {
@@ -252,32 +254,33 @@ tasks {
     withType<JavaCompile> {
         options.compilerArgs.add("-Xlint:deprecation")
     }
-}
-
-tasks.register("generateReleaseChangeLog") {
-    doLast {
-        val changeLogFile = File("$rootDir/fastlane/metadata/android/en-US/changelogs/" +
-                "${android.defaultConfig.versionCode}.txt")
-        println("Generating changelog for version ${android.defaultConfig.versionCode} from $changeLogFile")
-        val outputDir = File("${layout.buildDirectory.get()}/outputs/changelog")
-        val outputFileName = "changelog.txt"
-        outputDir.mkdirs()
-        if (changeLogFile.exists()) {
-            changeLogFile.copyTo(File(outputDir, outputFileName), overwrite = true)
-            println("Copied changelog from $changeLogFile to $outputDir/$outputFileName")
-        } else {
-            val outputFile = File(outputDir, outputFileName)
-            outputFile.writeText("No changelog found for this version.")
-            println("No changelog found for this version. Generated empty changelog in $outputDir/$outputFileName")
+    register("generateReleaseChangeLog") {
+        doLast {
+            val changeLogFile = File(
+                "$rootDir/fastlane/metadata/android/en-US/changelogs/" +
+                        "${android.defaultConfig.versionCode}.txt"
+            )
+            println("Generating changelog for version ${android.defaultConfig.versionCode} from $changeLogFile")
+            val outputDir = File("${layout.buildDirectory.get()}/outputs/changelog")
+            val outputFileName = "changelog.txt"
+            outputDir.mkdirs()
+            if (changeLogFile.exists()) {
+                changeLogFile.copyTo(File(outputDir, outputFileName), overwrite = true)
+                println("Copied changelog from $changeLogFile to $outputDir/$outputFileName")
+            } else {
+                val outputFile = File(outputDir, outputFileName)
+                outputFile.writeText("No changelog found for this version.")
+                println("No changelog found for this version. Generated empty changelog in $outputDir/$outputFileName")
+            }
         }
     }
-}
-
-tasks.register("exportVersionCode") {
-    doLast {
-        file("fdroid-version.txt").writeText("versionCode=${android.defaultConfig.versionCode}\n" +
-                "versionName=${android.defaultConfig.versionName}")
+    register("exportVersionCode") {
+        doLast {
+            file("fdroid-version.txt").writeText(
+                "versionCode=${android.defaultConfig.versionCode}\n" +
+                        "versionName=${android.defaultConfig.versionName}"
+            )
+        }
     }
+    named("preBuild") { dependsOn("exportVersionCode") }
 }
-
-tasks.named("preBuild") { dependsOn("exportVersionCode") }

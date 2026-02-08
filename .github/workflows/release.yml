@@ -44,20 +44,18 @@ jobs:
         echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> keystore.properties
         echo "keyAlias=${{ secrets.ALIAS }}" >> keystore.properties
     
-    - name: Build APK and AAB
+    - name: Build APK
       run: |
-        ./gradlew assembleRelease bundleRelease
+        ./gradlew assembleGoogleRelease
     
     - name: Generate Changelog
       run: |
         ./gradlew generateReleaseChangeLog
     
-    - name: Rename APK and AAB
+    - name: Rename APK
       run: |
-        mv app/build/outputs/apk/release/app-release.apk \
-           app/build/outputs/apk/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
-        mv app/build/outputs/bundle/release/app-release.aab \
-           app/build/outputs/bundle/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
+        mv app/build/outputs/apk/google/release/app-google-release.apk \
+           app/build/outputs/apk/google/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
 
     - name: Upload Release Assets
       uses: softprops/action-gh-release@v1
@@ -66,5 +64,4 @@ jobs:
         name: Release ${{ env.RELEASE_TAG }}
         body_path: app/build/outputs/changelog/changelog.txt
         files: |
-          app/build/outputs/apk/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.apk
-          app/build/outputs/bundle/release/${{ vars.BUILD_NAME }}.v${{ env.RELEASE_TAG }}.aab
+          app/build/outputs/apk/google/release/${{ vars.BUILD_NAME }}.FOSS.v${{ env.RELEASE_TAG }}.apk
