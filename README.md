@@ -6,6 +6,7 @@ Key Features:
 - Sequences: UDP/TCP/ICMP protocols with IPv4/IPv6 support
 - Packet fine-tuning: Customize UDP/ICMP content and TTL/Hop Limit for all packet types
 - Post-knock automation: Launch apps, websites, or custom URIs after a sequence
+- Wear OS Support: Execute your knock sequences directly from your smartwatch
 - External app integration: Trigger sequences via URI
 - Flexible timing: Configure interpacket delays for precise control
 - Quick access: Create shortcuts on the home screen for sequence execution with a single tap
@@ -14,6 +15,11 @@ Key Features:
 - Data management: Export/import configurations for backups or sharing
 - Widget: Launch sequences directly from the home screen
 - No ads, open source: Free to use, transparent codebase
+
+>[!IMPORTANT]
+> Wear OS functionality requires Google Mobile Services (GMS). Therefore, the app is distributed in two variants:
+> - **Google Play variant:** Includes GMS and full Wear OS support.
+> - **FOSS variant:** No GMS dependencies and no Wear OS support. Available via GitHub Releases and other third-party stores.
 
 <a href="https://play.google.com/store/apps/details?id=me.impa.knockonports&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1" target="_blank">
 <img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" 
