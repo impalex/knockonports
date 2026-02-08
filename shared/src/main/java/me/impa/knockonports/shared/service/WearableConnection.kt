@@ -22,10 +22,14 @@ import androidx.core.net.toUri
 import androidx.wear.remote.interactions.RemoteActivityHelper
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.common.api.AvailabilityException
+import com.google.android.gms.common.api.GoogleApi
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -44,7 +48,28 @@ class WearableConnection(
     private val nodeClient by lazy { Wearable.getNodeClient(context) }
     private val remoteActivityHelper by lazy { RemoteActivityHelper(context) }
 
+    val isWearAvailable = CoroutineScope(Dispatchers.Default).async(start = CoroutineStart.LAZY) {
+        val gapi = GoogleApiAvailability.getInstance()
+        val isGmsAvailable = gapi.isGooglePlayServicesAvailable(appContext) == ConnectionResult.SUCCESS
+        if (!isGmsAvailable)
+            return@async false
+
+        val wearableClient = Wearable.getDataClient(appContext)
+        var wearAvailability = try {
+            gapi.checkApiAvailability(wearableClient).await()
+            true
+        } catch (_: AvailabilityException) {
+            false
+        }
+        wearAvailability
+    }
+
     val companionReady: StateFlow<Boolean> = channelFlow {
+        if (!isWearAvailable.await()) {
+            trySend(false)
+            return@channelFlow
+        }
+
         // Initial state
         try {
             capabilityClient.getCapability(capability, CapabilityClient.FILTER_ALL).await()
@@ -66,8 +91,7 @@ class WearableConnection(
 
     @Suppress("ReturnCount")
     suspend fun checkStatus(): ConnectionStatus {
-        val gmsResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(appContext)
-        if (gmsResult != ConnectionResult.SUCCESS)
+        if (!isWearAvailable.await())
             return ConnectionStatus.NoPlayServices
 
         val nodes = try {

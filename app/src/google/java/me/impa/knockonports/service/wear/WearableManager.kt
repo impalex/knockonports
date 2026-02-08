@@ -59,6 +59,8 @@ class WearableManager @Inject constructor(
     }
 
     override suspend fun sendSequences(sequenceList: List<Sequence>) {
+        if (!wearableConnection.isWearAvailable.await())
+            return
         val list = SequenceList(
             items = sequenceList.map {
                 SequenceInfo(
@@ -76,6 +78,8 @@ class WearableManager @Inject constructor(
     }
 
     override suspend fun sendStatus(status: KnockState?) {
+        if (!wearableConnection.isWearAvailable.await())
+            return
         val knockData = status.toWearData()
         val dataBytes = knockData.encode()
         val request = PutDataRequest.create(BuildConfig.WEAR_PATH_KNOCK_STATUS).apply {
