@@ -50,6 +50,8 @@ import androidx.wear.compose.material3.lazy.TransformationSpec
 import androidx.wear.compose.material3.lazy.rememberTransformationSpec
 import androidx.wear.compose.material3.lazy.transformedHeight
 import androidx.wear.compose.ui.tooling.preview.WearPreviewDevices
+import com.google.android.horologist.compose.layout.ColumnItemType
+import com.google.android.horologist.compose.layout.rememberResponsiveColumnPadding
 import me.impa.knockonports.R
 import me.impa.knockonports.presentation.theme.KnockOnPortsTheme
 import me.impa.knockonports.shared.data.KnockStatus
@@ -99,7 +101,13 @@ fun MainScreenContent(
 @Composable
 fun ReadyScaffold(listState: TransformingLazyColumnState, sequences: SequenceList, onExecute: (Long) -> Unit) {
     val transformationSpec = rememberTransformationSpec()
-    ScreenScaffold(scrollState = listState) { contentPadding ->
+
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.Button,
+    )
+    ScreenScaffold(scrollState = listState,
+        contentPadding = contentPadding) { contentPadding ->
         TransformingLazyColumn(contentPadding = contentPadding, state = listState) {
             item(key = "ready_header") {
                 ListHeader(
@@ -117,6 +125,11 @@ fun ReadyScaffold(listState: TransformingLazyColumnState, sequences: SequenceLis
 @Composable
 fun KnockingScaffold(listState: TransformingLazyColumnState, knockStatus: KnockStatus) {
     val transformationSpec = rememberTransformationSpec()
+
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.BodyText,
+    )
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         if (knockStatus.is_active && knockStatus.max_steps > 1) {
             val animatedProgress by animateFloatAsState(
@@ -138,7 +151,7 @@ fun KnockingScaffold(listState: TransformingLazyColumnState, knockStatus: KnockS
                 endAngle = 244.5f,
             )
         }
-        ScreenScaffold(scrollState = listState) { contentPadding ->
+        ScreenScaffold(scrollState = listState, contentPadding = contentPadding) { contentPadding ->
             TransformingLazyColumn(contentPadding = contentPadding, state = listState) {
                 item(key = "knocking_header") {
                     ListHeader(
@@ -156,8 +169,13 @@ fun KnockingScaffold(listState: TransformingLazyColumnState, knockStatus: KnockS
 
 @Composable
 fun NoConnectionScaffold(listState: TransformingLazyColumnState, onOpenMarket: () -> Unit) {
+
+    val contentPadding = rememberResponsiveColumnPadding(
+        first = ColumnItemType.ListHeader,
+        last = ColumnItemType.Button,
+    )
     val transformationSpec = rememberTransformationSpec()
-    ScreenScaffold(scrollState = listState) { contentPadding ->
+    ScreenScaffold(scrollState = listState, contentPadding = contentPadding) { contentPadding ->
         TransformingLazyColumn(contentPadding = contentPadding, state = listState) {
             item(key = "no_connection_header") {
                 ListHeader(
@@ -247,10 +265,12 @@ fun TransformingLazyColumnScope.sequenceList(
                     .transformedHeight(this, transformationSpec),
                 transformation = SurfaceTransformation(transformationSpec)
             ) {
-                Text(text = stringResource(R.string.text_empty_list),
+                Text(
+                    text = stringResource(R.string.text_empty_list),
                     modifier = Modifier.fillMaxWidth(),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center)
+                    textAlign = TextAlign.Center
+                )
             }
         }
     }
@@ -263,8 +283,8 @@ private fun PreviewMainScreenContent() {
         isCompanionReady = true,
         sequences = SequenceList(
             listOf(
-                //SequenceInfo(1, "Sequence 1"),
-                //SequenceInfo(2, "Sequence 2"),
+                SequenceInfo(1, "Sequence 1"),
+                SequenceInfo(2, "Sequence 2"),
             )
         ),
         knockStatus = KnockStatus(),

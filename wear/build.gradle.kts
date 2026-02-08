@@ -139,6 +139,9 @@ dependencies {
     implementation(libs.androidx.wear.remote.interactions)
     implementation(libs.androidx.wear.tooling.preview)
 
+    // Horologist
+    implementation(libs.horologist.compose.layout)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.play.services)
 
