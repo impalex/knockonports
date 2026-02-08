@@ -1,0 +1,3 @@
+• Wear OS support (GMS version only)
+• Extended progress information in notifications
+• Bugfixes
