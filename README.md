@@ -27,6 +27,18 @@ alt="Get it on Google Play" height="80"/></a>
 <a href="https://f-droid.org/packages/me.impa.knockonports/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
 
+### Translations
+
+[![Translation status](https://hosted.weblate.org/widget/knock-on-ports/svg-badge.svg)](https://hosted.weblate.org/engage/knock-on-ports/)
+
+We use [Weblate](https://weblate.org/) for managing translations.
+
+**How to help:**
+
+You can help translate the app by visiting our [Weblate project](https://hosted.weblate.org/engage/knock-on-ports/).
+
+Help us translate the app into your language! All contributions are welcome.
+
 ## Like "Knock on Ports"?
 
 "Knock on Ports" is free and open-sourced. If you value the developer's efforts and want to help him to push this tool further, you can send him a small donation. Your help is very much appreciated!
