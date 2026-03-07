@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright (c) 2024-2025 Alexander Yaburov
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,9 +13,7 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
-
-<resources>
+  --><resources>
     <string name="type_protocol_prefer_ipv4">предпочитать IPv4</string>
     <string name="type_protocol_prefer_ipv6">предпочитать IPv6</string>
     <string name="type_protocol_only_ipv4">только IPv4</string>
@@ -25,7 +24,7 @@
     <string name="action_settings">Настройки</string>
     <string name="action_show_log">Журнал</string>
     <string name="title_screen_sequence">Последовательность</string>
-    <string name="title_screen_log">Журнал</string>
+    <string name="title_screen_log">Журнал событий</string>
     <string name="title_tab_basic_settings">Настройки</string>
     <string name="title_tab_advanced_settings">Дополнительно</string>
     <string name="title_review_request">Нравится %s?</string>"
