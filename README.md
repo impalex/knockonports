@@ -27,7 +27,7 @@ alt="Get it on Google Play" height="80"/></a>
 <a href="https://f-droid.org/packages/me.impa.knockonports/" target="_blank">
 <img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="80"/></a>
 
-### Translations
+## Translations
 
 [![Translation status](https://hosted.weblate.org/widget/knock-on-ports/svg-badge.svg)](https://hosted.weblate.org/engage/knock-on-ports/)
 
