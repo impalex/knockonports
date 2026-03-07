@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="type_protocol_prefer_ipv4">优先使用 IPv4 网络</string>
+    <string name="type_protocol_prefer_ipv6">优先使用 IPv6 网络</string>
+    <string name="type_protocol_only_ipv4">仅使用 IPv4 网络</string>
+    <string name="type_protocol_only_ipv6">仅使用 IPv6 网络</string>
+    <string name="type_protocol_both_ipv4_ipv6">同时使用 IPv4 和 IPv6 网络</string>
+    <string name="action_export">导出</string>
+    <string name="action_import">导入</string>
+    <string name="action_settings">设置</string>
+    <string name="action_show_log">查看日志</string>
+    <string name="title_screen_sequence">敲门序列</string>
+    <string name="title_screen_log">日志</string>
+    <string name="title_tab_basic_settings">设置</string>
 </resources>
