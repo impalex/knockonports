@@ -31,9 +31,9 @@ alt="Get it on Google Play" height="80"/></a>
 
 [![Translation status](https://hosted.weblate.org/widget/knock-on-ports/svg-badge.svg)](https://hosted.weblate.org/engage/knock-on-ports/)
 
-We use [Weblate](https://weblate.org/) for managing translations.
+[![Translation status](https://hosted.weblate.org/widget/knock-on-ports/multi-auto.svg)](https://hosted.weblate.org/engage/knock-on-ports/)
 
-**How to help:**
+We use [Weblate](https://weblate.org/) for managing translations.
 
 You can help translate the app by visiting our [Weblate project](https://hosted.weblate.org/engage/knock-on-ports/).
 
