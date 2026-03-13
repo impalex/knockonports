@@ -187,7 +187,7 @@
     <string name="title_settings_discord">Discord 社区</string>
     <string name="text_settings_discord">一个我假装在努力工作的地方。</string>
     <string name="field_group">分组管理</string>
-    <string name="field_url">URL</string>
+    <string name="field_url">URL 地址</string>
     <string name="title_beta_alert">测试版</string>
     <string name="text_beta_alert">此测试版新增序列关联外部资源功能，应用可在必要时自动检测该资源的可用状态。欢迎您通过 GitHub、邮件或 Discord 提交反馈、建议或 Bug 报告，具体联系方式请见\"关于\"页面。</string>
     <string name="title_header_sequence_packet_cfg">数据包设置</string>
@@ -195,7 +195,7 @@
     <string name="title_header_sequence_access_check">链接的资源</string>"
     <string name="title_check_access_enable">可用性检测</string>
     <string name="text_check_access_enable">定时检测关联资源的可用状态。</string>
-    <string name="type_check_access_url">URL</string>
+    <string name="type_check_access_url">URL 地址</string>
     <string name="type_check_access_port">端口</string>
     <string name="type_check_access_ping">Ping 检测</string>
     <string name="title_check_access_timeout">检测超时</string>
@@ -221,4 +221,50 @@
     <string name="type_shorten_middle">中间省略\n（如 «很长…文本»）</string>
     <string name="type_shorten_end">结尾省略\n（如 «很长…»）</string>
     <string name="title_settings_font_scale">标题字体大小</string>
+    <string name="title_donate_alert">支持 «Knock on Ports»</string>
+    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> 始终坚持 <b>免费、开源、保护隐私</b> 的理念 — 无广告、不追踪、无任何附加条件。<br>
+<br>如果本应用为您节省了时间或解决了棘手问题，欢迎考虑支持开发者。
+<br>您的支持将用于：
+<br>→ <b>肯定多年持续更新维护的付出</b>，
+<br>→ <b>推动小众技术场景的功能创新</b>，
+<br>→ <b>保持项目独立运营</b>，坚持社区驱动模式。
+<br>
+<br><i>无论多少都是鼓励，哪怕只是一杯咖啡的心意</i> ☕。
+<br><i>感谢您的信任与支持！</i>]]></string>
+    <string name="title_settings_app_lock">应用锁</string>
+    <string name="text_settings_app_lock_desc">打开应用时需验证身份</string>
+    <string name="text_settings_app_lock_not_available_desc">启用此功能前，请先在您的设备上设置屏幕锁。</string>
+    <string name="title_lock_app">需要验证身份</string>
+    <string name="text_lock_app">请验证身份以继续使用本应用。</string>
+    <string name="title_lock_config">安全验证</string>
+    <string name="text_lock_config">更改应用锁设置前请先验证身份。</string>
+    <string name="title_settings_amoled_theme">OLED 纯黑模式</string>
+    <string name="text_settings_amoled_theme">深色模式下使用纯黑色背景，可降低 OLED/AMOLED 屏幕功耗</string>
+    <string name="title_settings_title_available_color">在线状态颜色</string>
+    <string name="text_settings_title_available_color">资源检查成功时显示的序列名称颜色</string>
+    <string name="title_settings_title_unavailable_color">离线状态颜色</string>
+    <string name="text_settings_title_unavailable_color">资源检查失败时显示的序列名称颜色</string>
+    <string name="action_default">恢复默认</string>
+    <string name="action_save">保存</string>
+    <string name="action_import_knockd_conf">从 knockd.conf 导入配置</string>
+    <string name="title_import_from_knockd_conf">从 knockd.conf 导入配置</string>
+    <string name="text_loading_data">正在加载数据…</string>
+    <string name="text_sequences_to_import">选择要导入的序列</string>
+    <string name="title_settings_developer_page">开发者主页</string>
+    <string name="text_settings_developer_page">我开发的其他应用，有些是有意为之，有些则是意外之作。</string>
+    <string name="field_payload_size">数据载荷大小</string>
+    <string name="text_auto">自动</string>
+    <string name="text_tooltip_udp_payload">数据包总大小包含 IP 头部（20–60 字节）、UDP 头部（8 字节）及数据载荷。</string>
+    <string name="action_wear_companion">配套工具</string>
+    <string name="title_screen_wear">配套工具</string>
+    <string name="title_companion_not_installed">手表端未安装本应用</string>
+    <string name="text_companion_not_installed">已检测到您的手表，但尚未安装 Wear OS 配套应用，安装后即可继续使用。</string>
+    <string name="action_companion_open_market">安装至手表</string>
+    <string name="title_companion_lost">与手表的连接已断开</string>
+    <string name="text_companion_lost">与手表的连接已中断，请确保手表在附近且已与手机配对连接。</string>
+    <string name="title_companion_connected">准备就绪</string>
+    <string name="text_companion_connected">手机端与手表端应用已成功建立连接。</string>
+    <string name="notification_desc_waiting_for_resource">正在检测资源可用性</string>
+    <string name="action_not_now">稍后再说</string>
+    <string name="action_support">支持项目开发</string>
 </resources>
