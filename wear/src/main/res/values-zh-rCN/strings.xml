@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="title_install_app">在您的手机上安装该应用。</string>
-    <string name="text_install_app">如需在手表端使用本应用，请先在智能手机上安装主程序</string>
+    <string name="title_install_app">在您的手机上安装该应用</string>
+    <string name="text_install_app">如需在手表端使用本应用，请先在智能手机上安装主程序。</string>
     <string name="action_open_market">打开 Google Play 商店</string>
     <string name="title_sequences">敲门序列</string>
-    <string name="title_knocking">正在敲门...</string>
+    <string name="title_knocking">正在敲门</string>
     <string name="title_no_name_sequence">（未命名序列）</string>
     <string name="text_attempts">尝试 %1$d/%2$d</string>
     <string name="text_empty_list">暂无序列</string>
