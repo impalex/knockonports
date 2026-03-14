@@ -5,6 +5,7 @@ Key Features:
 • Protocol Flexibility: Create sequences with UDP, TCP, or ICMP packets. Fine-tune parameters including destination ports, inter-packet delays, TTL, Hop Limit, and packet payload data.
 • Automation & Integration: Automatically launch applications (e.g., SSH clients) or open URLs upon a successful knock. Supports integration with other tools via a custom URI scheme for advanced automation.
 • Dual-Stack Support: Full compatibility with IPv4 and IPv6 networks.
+• Wear OS Support: Execute your knock sequences directly from your smartwatch.
 • Quick Access: Utilize home screen shortcuts and a widget for immediate execution of configured sequences.
 • Customization: Adjust the interface with dynamic color themes (Android 12+), custom accents, and light/dark modes. Includes options for improved contrast.
 • Configuration Management: Export and import your knocking sequences for backup or transfer.
