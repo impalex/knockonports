@@ -47,6 +47,14 @@ Submit a new Beta Build to the Google Play
 
 Submit a new Alpha Build to the Google Play
 
+### android internal
+
+```sh
+[bundle exec] fastlane android internal
+```
+
+Submit a new Internal Build to the Google Play
+
 ### android screenshots
 
 ```sh

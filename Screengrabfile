@@ -4,10 +4,10 @@ app_package_name 'me.impa.knockonports'
 # use_tests_in_packages ['screengrab']
 # use_tests_in_classes ['ScreenshotTest']
 
-app_apk_path 'app\build\outputs\apk\debug\app-debug.apk'
-tests_apk_path 'app\build\outputs\apk\androidTest\debug\app-debug-androidTest.apk'
+app_apk_path 'app\build\outputs\apk\google\debug\app-google-debug.apk'
+tests_apk_path 'app\build\outputs\apk\androidTest\google\debug\app-google-debug-androidTest.apk'
 
-locales ['en-US', 'ru-RU']
+locales ['en-US', 'ru-RU', 'zh-CN']
 
 use_timestamp_suffix false
 

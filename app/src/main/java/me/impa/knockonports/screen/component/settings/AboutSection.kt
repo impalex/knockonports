@@ -38,7 +38,10 @@ import me.impa.knockonports.screen.component.common.PrefDescriptionClickable
 import timber.log.Timber
 import kotlin.random.Random
 import androidx.compose.ui.platform.LocalResources
+import me.impa.knockonports.extension.navigate
 import me.impa.knockonports.helper.openPlayStoreDevPage
+import me.impa.knockonports.navigation.TranslateRoute
+import me.impa.knockonports.screen.component.common.LocalAppEventBus
 
 fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
 
@@ -70,6 +73,15 @@ fun LazyListScope.aboutSection(isInstalledFromPlayStore: Boolean = false) {
                 onClick = { openPlayStoreDevPage(context) }
             )
         }
+    }
+
+    item(key = "translate_app") {
+        val eventBus = LocalAppEventBus.current
+        PrefDescriptionClickable(
+            title = stringResource(R.string.title_settings_translation),
+            subtitle = stringResource(R.string.text_settings_translation),
+            onClick = { eventBus.navigate(TranslateRoute) }
+        )
     }
 
     item(key = "privacy_policy") {

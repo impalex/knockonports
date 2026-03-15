@@ -758,7 +758,7 @@ style:
   UnusedPrivateMember:
     active: true
     allowedNames: ''
-    ignoreAnnotated: ['Preview', 'WearPreviewDevices']
+    ignoreAnnotated: ['Preview', 'WearPreviewDevices', 'PreviewLightDark']
   UnusedPrivateProperty:
     active: true
     allowedNames: '_|ignored|expected|serialVersionUID'

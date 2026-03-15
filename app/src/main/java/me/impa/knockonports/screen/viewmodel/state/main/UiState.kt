@@ -41,4 +41,5 @@ data class UiState(
     val titleOverflowType: TitleOverflowType = TitleOverflowType.END,
     val titleMultiline: Boolean = false,
     val titleScale: Int = DEFAULT_TITLE_FONT_SCALE,
+    val showKitty: Boolean = false
 )

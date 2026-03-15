@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
+import me.impa.knockonports.constants.DEFAULT_SLEEP
 import me.impa.knockonports.constants.MAX_CHECK_RETRIES
 import me.impa.knockonports.constants.MAX_IP4_HEADER_SIZE
 import me.impa.knockonports.constants.MAX_PACKET_SIZE
@@ -195,7 +196,7 @@ class Knocker @Inject constructor(
 
     private suspend fun launchSequence(sequence: Sequence, steps: List<SequenceStep>, addresses: List<InetAddress>) {
 
-        val delay = (sequence.delay ?: 0).coerceAtLeast(MIN_SLEEP).coerceAtMost(MAX_SLEEP).toLong()
+        val delay = (sequence.delay ?: DEFAULT_SLEEP).coerceIn(MIN_SLEEP, MAX_SLEEP).toLong()
 
         try {
             var cnt = 0

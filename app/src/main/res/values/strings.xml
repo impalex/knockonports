@@ -16,6 +16,14 @@
 
 <resources>
     <string name="app_name" translatable="false">Knock on Ports</string>
+    <string-array name="translators" translatable="false">
+        <item>\@FBI_ggh</item>
+        <item>\@impalex</item>
+    </string-array>
+    <string-array name="translators_profiles" translatable="false">
+        <item>https://hosted.weblate.org/user/FBI_ggh/</item>
+        <item>https://hosted.weblate.org/user/impalex/</item>
+    </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
     <string name="type_protocol_only_ipv4">only IPv4</string>
@@ -304,5 +312,18 @@ For most users: <b>do not change this setting</b>.
     <string name="title_companion_connected">All set</string>
     <string name="text_companion_connected">The app on your phone and watch is connected successfully.</string>
     <string name="notification_desc_waiting_for_resource">Checking resource availability</string>
-
+    <string name="title_lang_en">English</string>
+    <string name="title_lang_ru">Russian</string>
+    <string name="title_lang_zh">Chinese (Simplified)</string>
+    <string name="title_help_translate">Help us translate!</string>
+    <string name="text_help_translate">This project is hosted on Weblate. Your contribution helps make this app accessible to everyone around the world.</string>
+    <string name="action_translate">Go to Weblate</string>
+    <string name="title_screen_translation">Translation</string>
+    <string name="title_settings_translation">Translations</string>
+    <string name="text_settings_translation">Multilingual magic brought to you by volunteers who probably need more coffee. See who helped &amp; add your language!</string>
+    <string name="title_supported_languages">Supported Languages</string>
+    <string name="title_our_translators">Our Translators</string>
+    <string name="text_special_thanks">Special thanks to our contributors:</string>
+    <string name="text_kitty_help">Help us translate the app!</string>
+    <string name="action_how">How?</string>
 </resources>

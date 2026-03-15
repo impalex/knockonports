@@ -28,7 +28,7 @@ plugins {
 }
 
 val productVersion: Int by extra(1)
-val releaseVersion: Int by extra(5)
+val releaseVersion: Int by extra(7)
 
 val knockletCapName: String by extra("knocklet_installed")
 val knocklordCapName: String by extra("knocklord_installed")

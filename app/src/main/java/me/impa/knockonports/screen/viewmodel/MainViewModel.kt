@@ -33,7 +33,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.impa.knockonports.BuildConfig
@@ -122,6 +124,12 @@ class MainViewModel @Inject constructor(
             is UiEvent.ToggleListMode -> viewModelScope.launch {
                 settingsDataStore.setDetailedListView(!state.value.detailedList)
             }
+
+            UiEvent.HideKitty -> viewModelScope.launch {
+                settingsDataStore.hideKitty()
+                _state.update { it.copy(showKitty = false) }
+            }
+
 
         }
     }
@@ -317,20 +325,18 @@ class MainViewModel @Inject constructor(
 
     private fun startSequenceCollection() {
         Timber.d("Start collecting sequences")
-        viewModelScope.launch {
-            repository.getSequences()
-                .distinctUntilChanged()
-                .flowOn(ioDispatcher)
-                .map { list ->
-                    list.groupBy { (it.group ?: "").trim() }
-                        .mapValues { it.value.toImmutableList() }
-                        .toSortedMap()
-                        .toPersistentMap()
-                }
-                .collect { sequences ->
-                    _state.update { it.copy(sequences = sequences) }
-                }
-        }
+        repository.getSequences()
+            .distinctUntilChanged()
+            .flowOn(ioDispatcher)
+            .map { list ->
+                list.groupBy { (it.group ?: "").trim() }
+                    .mapValues { it.value.toImmutableList() }
+                    .toSortedMap()
+                    .toPersistentMap()
+            }
+            .onEach { sequences ->
+                _state.update { it.copy(sequences = sequences) }
+            }.launchIn(viewModelScope)
     }
 
     private fun startConfigCollection() {
@@ -376,15 +382,13 @@ class MainViewModel @Inject constructor(
 
     private fun startResourceStateCollection() {
         Timber.d("Start collecting resource state")
-        viewModelScope.launch {
-            resourceWatcher.resourceState.distinctUntilChanged().flowOn(ioDispatcher).map { state ->
-                state.mapKeys { requireNotNull(it.key.id) }
-            }.collect { resources ->
-                _state.update {
-                    it.copy(resourceState = resources.toPersistentMap())
-                }
+        resourceWatcher.resourceState.distinctUntilChanged().flowOn(ioDispatcher).map { state ->
+            state.mapKeys { requireNotNull(it.key.id) }
+        }.onEach { resources ->
+            _state.update {
+                it.copy(resourceState = resources.toPersistentMap())
             }
-        }
+        }.launchIn(viewModelScope)
     }
 
     init {
@@ -403,7 +407,8 @@ class MainViewModel @Inject constructor(
 
                 else -> checkReviewRequest()
             }
+            if (settingsDataStore.showKitty.first())
+                _state.update { it.copy(showKitty = true) }
         }
     }
-
 }

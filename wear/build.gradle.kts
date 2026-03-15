@@ -51,7 +51,7 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00 + 3
-        versionName = "1.0.0"
+        versionName = "1.0.1"
         val knocklordCapName: String by rootProject.extra
         val knockletCapName: String by rootProject.extra
         val wearSeqDataPath: String by rootProject.extra

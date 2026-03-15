@@ -267,4 +267,5 @@
     <string name="notification_desc_waiting_for_resource">正在检测资源可用性</string>
     <string name="action_not_now">稍后再说</string>
     <string name="action_support">支持项目开发</string>
+    <string name="title_lang_zh">简体中文</string>
 </resources>

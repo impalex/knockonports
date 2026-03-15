@@ -37,6 +37,7 @@ const val MAX_PORT = 65535
 const val MIN_TTL = 0
 const val MAX_TTL = 255
 const val MIN_SLEEP = 0
+const val DEFAULT_SLEEP = 500
 const val MAX_SLEEP = 15000
 const val MIN_IP4_HEADER_SIZE = 20
 const val MAX_IP4_HEADER_SIZE = 60

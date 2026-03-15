@@ -24,7 +24,8 @@ platform :android do
   desc "Submit a new Production Build to the Google Play"
   lane :release do
     gradle(
-	  task: "clean bundleRelease"
+	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
+	  flags: "--no-daemon"
 	)
     supply(
       skip_upload_images: 'false',
@@ -33,39 +34,94 @@ platform :android do
 	  skip_upload_changelogs: 'false',
       track: 'production',
       package_name: 'me.impa.knockonports',
-      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+      aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
+    )
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'true',
+      track: 'wear:production',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
     )
   end
 
   desc "Submit a new Beta Build to the Google Play"
   lane :beta do
     gradle(
-	  task: "clean bundleRelease"
+	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
+	  flags: "--no-daemon"
 	)
+    supply(
+      skip_upload_images: 'false',
+      skip_upload_screenshots: 'false',
+	  skip_upload_metadata: 'false',
+	  skip_upload_changelogs: 'false',
+      track: 'beta',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
+    )
     supply(
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
-	  skip_upload_changelogs: 'false',
-      track: 'beta',
+	  skip_upload_changelogs: 'true',
+      track: 'wear:beta',
       package_name: 'me.impa.knockonports',
-      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
     )
   end
 
   desc "Submit a new Alpha Build to the Google Play"
   lane :alpha do
     gradle(
-	  task: "clean bundleRelease"
+	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
+	  flags: "--no-daemon"
+	)
+    supply(
+      skip_upload_images: 'false',
+      skip_upload_screenshots: 'false',
+	  skip_upload_metadata: 'false',
+	  skip_upload_changelogs: 'false',
+      track: 'alpha',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
+    )
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'true',
+      track: 'wear:alpha',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
+    )
+  end
+
+  desc "Submit a new Internal Build to the Google Play"
+  lane :internal do
+    gradle(
+	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
+	  flags: "--no-daemon"
 	)
     supply(
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
 	  skip_upload_changelogs: 'true',
-      track: 'alpha',
+      track: 'internal',
       package_name: 'me.impa.knockonports',
-      aab_paths: ["app/build/outputs/bundle/release/app-release.aab"]
+      aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
+    )
+    supply(
+      skip_upload_images: 'true',
+      skip_upload_screenshots: 'true',
+	  skip_upload_metadata: 'true',
+	  skip_upload_changelogs: 'true',
+      track: 'wear:internal',
+      package_name: 'me.impa.knockonports',
+      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
     )
   end
 

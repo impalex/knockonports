@@ -38,7 +38,7 @@ data class UiState(
     val host: String = "",
     val hostValidation: ValidationResult = ValidationResult.Valid,
     val steps: ImmutableList<StepUiState> = persistentListOf(),
-    val delay: Int? = null,
+    val delay: Int? = 500,
     val delayValidation: ValidationResult = ValidationResult.Valid,
     val localPort: Int? = null,
     val localPortValidation: ValidationResult = ValidationResult.Valid,

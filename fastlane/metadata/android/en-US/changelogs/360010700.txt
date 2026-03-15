@@ -1,0 +1,3 @@
+• New language localization: Simplified Chinese
+• The default inter-packet delay is set to 500 ms
+• Bug fixes

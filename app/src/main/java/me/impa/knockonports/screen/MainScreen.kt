@@ -18,13 +18,26 @@ package me.impa.knockonports.screen
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,7 +50,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat
@@ -60,6 +75,7 @@ import me.impa.knockonports.navigation.LogRoute
 import me.impa.knockonports.navigation.MainRoute
 import me.impa.knockonports.navigation.SequenceRoute
 import me.impa.knockonports.navigation.SettingsRoute
+import me.impa.knockonports.navigation.TranslateRoute
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
 import me.impa.knockonports.screen.component.common.RegisterAppBar
 import me.impa.knockonports.screen.component.main.BetaAlert
@@ -76,6 +92,7 @@ import me.impa.knockonports.screen.viewmodel.state.main.UiState
 import me.impa.knockonports.screen.viewmodel.state.sequence.SavedSequenceHandle
 import me.impa.knockonports.service.resource.ResourceState
 import me.impa.knockonports.service.wear.WearConnectionStatus
+import me.impa.knockonports.ui.theme.KnockOnPortsTheme
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 import timber.log.Timber
@@ -177,49 +194,56 @@ fun MainScreenContent(
             }
         }
     }
+    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        AnimatedVisibility(visible = state.showKitty) {
+            TranslateCard(onEvent)
+        }
 
-    LazyColumn(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = safeBottomContentPadding(),
-        modifier = modifier.then(Modifier.fillMaxSize()), state = listState
-    ) {
-        val firstGroup = state.sequences.keys.firstOrNull()
-        state.sequences.forEach { (group, sequences) ->
-            item(key = "group:$group") {
-                if (group.isNotEmpty()) {
-                    if (group == firstGroup)
-                        SequenceGroupHeader(group)
-                    else
-                        ReorderableItem(reorderableListState, key = "group:$group") { SequenceGroupHeader(group) }
-                }
-            }
-            itemsIndexed(sequences, key = { _, sequence -> sequence.id ?: 0L }) { index, sequence ->
-                // Display each sequence as a card
-                SequenceCard(
-                    sequence = sequence,
-                    resourceState = state.resourceState[sequence.id],
-                    state = reorderableListState,
-                    isHighLighted = highLightSequenceId == sequence.id,
-                    onHighLightFinished = { highLightSequenceId = null },
-                    showSequenceDetails = state.detailedList,
-                    isShortcutsAvailable = state.areShortcutsAvailable,
-                    modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
-                    titleOverflowType = state.titleOverflowType,
-                    multilineTitle = state.titleMultiline,
-                    titleFontScale = state.titleScale,
-                    onlineColor = state.onlineColor,
-                    offlineColor = state.offlineColor,
-                    onEvent = onEvent,
-                    onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
-                        && !state.disableNotificationRequest
-                    ) {
-                        { checkPermission(notificationPermissionState) { onEvent(UiEvent.DisableNotificationRequest) } }
-                    } else {
-                        null
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = safeBottomContentPadding(),
+            modifier = modifier.then(Modifier
+                .weight(1f)
+                .fillMaxWidth()), state = listState
+        ) {
+            val firstGroup = state.sequences.keys.firstOrNull()
+            state.sequences.forEach { (group, sequences) ->
+                item(key = "group:$group") {
+                    if (group.isNotEmpty()) {
+                        if (group == firstGroup)
+                            SequenceGroupHeader(group)
+                        else
+                            ReorderableItem(reorderableListState, key = "group:$group") { SequenceGroupHeader(group) }
                     }
-                )
-            }
+                }
+                itemsIndexed(sequences, key = { _, sequence -> sequence.id ?: 0L }) { index, sequence ->
+                    // Display each sequence as a card
+                    SequenceCard(
+                        sequence = sequence,
+                        resourceState = state.resourceState[sequence.id],
+                        state = reorderableListState,
+                        isHighLighted = highLightSequenceId == sequence.id,
+                        onHighLightFinished = { highLightSequenceId = null },
+                        showSequenceDetails = state.detailedList,
+                        isShortcutsAvailable = state.areShortcutsAvailable,
+                        modifier = Modifier.padding(top = if (index == 0) 8.dp else 0.dp),
+                        titleOverflowType = state.titleOverflowType,
+                        multilineTitle = state.titleMultiline,
+                        titleFontScale = state.titleScale,
+                        onlineColor = state.onlineColor,
+                        offlineColor = state.offlineColor,
+                        onEvent = onEvent,
+                        onPermissionRequest = if (notificationPermissionState.status is PermissionStatus.Denied
+                            && !state.disableNotificationRequest
+                        ) {
+                            { checkPermission(notificationPermissionState) { onEvent(UiEvent.DisableNotificationRequest) } }
+                        } else {
+                            null
+                        }
+                    )
+                }
 
+            }
         }
     }
 }
@@ -230,6 +254,47 @@ fun SequenceGroupHeader(group: String) {
         text = group, modifier = Modifier.padding(start = 16.dp, top = 8.dp), maxLines = 1,
         style = MaterialTheme.typography.titleLarge
     )
+}
+
+@Composable
+fun TranslateCard(onEvent: (UiEvent) -> Unit) {
+    val eventBus = LocalAppEventBus.current
+    ElevatedCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+    ) {
+        Row(modifier = Modifier
+            .padding(16.dp)
+            .height(IntrinsicSize.Min)) {
+            Image(
+                painterResource(R.drawable.kitty),
+                contentDescription = null,
+                modifier = Modifier.size(128.dp)
+            )
+            Column(modifier = Modifier
+                .weight(1f)
+                .fillMaxHeight()) {
+                Text(text = stringResource(R.string.text_kitty_help),
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center)
+                Spacer(modifier = Modifier.weight(1f))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    OutlinedButton(onClick = { onEvent(UiEvent.HideKitty)}) {
+                        Text(text = stringResource(R.string.action_close))
+                    }
+                    Button(onClick = {
+                        onEvent(UiEvent.HideKitty)
+                        eventBus.navigate(TranslateRoute)
+                    }) {
+                        Text(text = stringResource(R.string.action_how))
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -320,3 +385,12 @@ fun PreviewCompactSequenceCard() {
     }
 }
 
+@Preview
+@Composable
+fun PreviewKittyCard() {
+    KnockOnPortsTheme {
+        Surface {
+            TranslateCard({})
+        }
+    }
+}

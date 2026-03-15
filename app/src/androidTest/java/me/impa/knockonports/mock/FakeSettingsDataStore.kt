@@ -50,6 +50,8 @@ object FakeSettingsDataStore : SettingsDataStore {
     override val isAppLockEnabled: Flow<Boolean> = flowOf(false)
     override val titleColorAvailable: Flow<Long> = flowOf(Color.Unspecified.toColorLong())
     override val titleColorUnavailable: Flow<Long> = flowOf(Color.Unspecified.toColorLong())
+    override val showKitty: Flow<Boolean> = flowOf(false)
+
 
     override suspend fun setDarkMode(darkMode: DarkMode) {
         TODO("Not yet implemented")
@@ -96,6 +98,10 @@ object FakeSettingsDataStore : SettingsDataStore {
     }
 
     override suspend fun setCurrentBetaMessageRead() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun hideKitty() {
         TODO("Not yet implemented")
     }
 

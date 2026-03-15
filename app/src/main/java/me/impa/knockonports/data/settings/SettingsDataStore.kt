@@ -79,6 +79,8 @@ interface SettingsDataStore {
     suspend fun setDoNotAskForNotificationsFlag()
     val betaMessageState: Flow<String?>
     suspend fun setCurrentBetaMessageRead()
+    val showKitty: Flow<Boolean>
+    suspend fun hideKitty()
     // endregion Miscellaneous settings
 
     // region App settings
@@ -240,6 +242,17 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
             preferences[betaMessageStateKey] = CURRENT_BETA_TEST_MESSAGE
         }
     }
+
+    override val showKitty: Flow<Boolean> = context.dataStore.data
+        .distinctUntilChangedBy { it[kittyStateKey] }
+        .map { preferences -> preferences[kittyStateKey] != false }
+
+    override suspend fun hideKitty() {
+        context.dataStore.edit { preferences ->
+            preferences[kittyStateKey] = false
+        }
+    }
+
     // endregion Miscellaneous settings
 
     // region App settings
@@ -440,6 +453,7 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
         val doNotAskNotificationKey = booleanPreferencesKey("CFG_DO_NOT_ASK_NOTIFICATION")
         val betaMessageStateKey = stringPreferencesKey("CFG_BETA_MESSAGE_STATE")
         val knockCountKey = longPreferencesKey("CFG_KNOCK_COUNT")
+        val kittyStateKey = booleanPreferencesKey("CFG_KITTY_STATE")
 
         // App settings
         val appLockKey = booleanPreferencesKey("CFG_APP_LOCK")

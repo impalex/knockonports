@@ -84,7 +84,7 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00
-        versionName = "2.1.0"
+        versionName = "2.1.1"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -238,7 +238,6 @@ dependencies {
 
     // Debug
     debugImplementation(libs.androidx.ui.test.manifest)
-    debugImplementation(libs.rebugger)
     detektPlugins(libs.detekt.formatting)
 }
 

@@ -17,6 +17,8 @@
 package me.impa.knockonports.navigation
 
 import androidx.annotation.ColorLong
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toColorLong
 import androidx.compose.ui.window.DialogProperties
@@ -33,6 +35,7 @@ import me.impa.knockonports.screen.LogScreen
 import me.impa.knockonports.screen.MainScreen
 import me.impa.knockonports.screen.SequenceScreen
 import me.impa.knockonports.screen.SettingsScreen
+import me.impa.knockonports.screen.TranslateScreen
 import me.impa.knockonports.screen.viewmodel.ColorPickerViewModel
 import me.impa.knockonports.screen.viewmodel.ImportKnockdConfViewModel
 import me.impa.knockonports.screen.viewmodel.SequenceViewModel
@@ -58,6 +61,11 @@ data class SequenceRoute(val sequenceId: Long? = null) : NavKey, NavDeepLinkKey 
 @Serializable
 data object LogRoute : NavKey, NavDeepLinkKey {
     override val parent: NavKey = MainRoute
+}
+
+@Serializable
+data object TranslateRoute : NavKey, NavDeepLinkKey {
+    override val parent: NavKey = SettingsRoute
 }
 
 @Serializable
@@ -113,6 +121,9 @@ val entryProvider = entryProvider {
                 it.create(key.uri, key.singleChoice)
             }
         ImportKnockdConfScreen(viewModel = viewModel)
+    }
+    entry<TranslateRoute> {
+        TranslateScreen(modifier = Modifier.fillMaxSize())
     }
     wearExtension()
 }
