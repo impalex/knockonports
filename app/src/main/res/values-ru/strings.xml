@@ -242,7 +242,7 @@
     <string name="text_settings_multiline_title">Разрешить перенос заголовка последовательности на следующую строку</string>
     <string name="title_settings_shorten_title">Сокращение заголовка</string>
     <string name="type_shorten_start">Начало\n(например, «…ь длинный текст»)</string>
-    <string name="type_shorten_middle">Середина (например, «Очень д…й текст»)</string>
+    <string name="type_shorten_middle">Середина\n(например, «Очень д…й текст»)</string>
     <string name="type_shorten_end">Конец\n(например, «Очень длинный т…»)</string>
     <string name="title_settings_font_scale">Размер шрифта заголовка</string>
     <string name="title_donate_alert">Поддержать «Knock on Ports»</string>
