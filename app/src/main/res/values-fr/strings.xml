@@ -1,3 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="type_protocol_prefer_ipv4">Privilégier IPv4</string>
+    <string name="type_protocol_prefer_ipv6">Privilégier IPv6</string>
+    <string name="type_protocol_only_ipv4">Uniquement IPv4</string>
+    <string name="type_protocol_only_ipv6">Uniquement IPv6</string>
+    <string name="action_export">Exporter</string>
+    <string name="action_import">Importer</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="action_show_log">Lire les journaux</string>
+    <string name="title_screen_sequence">Séquence</string>
+    <string name="title_screen_log">Journal</string>
+    <string name="title_tab_basic_settings">Paramètres</string>
+    <string name="title_tab_advanced_settings">Paramètres avancés</string>
+    <string name="action_rate_now">Évaluer maintenant</string>
+    <string name="action_remind_later">Rappelez-moi plus tard</string>
+    <string name="action_no_thanks">Non merci</string>
+    <string name="field_name">Nom</string>
+    <string name="field_host">Hôte</string>
+    <string name="field_delay">Délai entre les paquets (ms)</string>
+    <string name="title_screen_settings">Paramètres</string>
+    <string name="text_review_request">Si vous avez un moment, j\'apprécierais votre avis ! Vos notes sincères m\'aident à m\'améliorer et à faire évoluer l\'application. Merci de m\'accompagner dans cette aventure !</string>
+    <string name="type_protocol_both_ipv4_ipv6">A la fois IPv4 et IPv6</string>
+    <string name="text_review_decline">Très bien ! Si tu changes d\'avis, n\'hésite pas à me faire part de ton opinion quand tu veux.</string>
+    <string name="list_app_none">Aucun</string>
+    <string name="field_local_port">Utiliser un port UDP local</string>
+    <string name="title_review_request">Tu apprécies %s ?</string>"
+    <string name="field_ip_version">Version de l\'IP</string>
+    <string name="message_sequence_saved">«%s» sauvegardé</string>
+    <string name="text_host_not_set">(L\'hôte n\'est pas défini)</string>
+    <string name="text_empty_sequence">(Séquence vide)</string>
+    <string name="text_unnamed_sequence">(Séquence sans nom)</string>
+    <string name="action_knock">Toquer</string>
+    <string name="hint_reorder">Réorganiser</string>
+    <string name="field_port">Port</string>
+    <string name="field_data">Donnée</string>
+    <string name="field_size">Taille</string>
+    <string name="field_count">Quantité</string>
+    <string name="hint_collapse">Réduire</string>
+    <string name="hint_expand">Développer</string>
+    <string name="action_add">Ajouter</string>
 </resources>
