@@ -1,0 +1,1 @@
+Výkonný klient pro správu a spouštění sekvencí pro klepání na porty

@@ -1,0 +1,12 @@
+Nástroj pro diskrétní spuštění sekvencí pro blokování portů, které umožňují přístup ke službám chráněným firewally. Konfigurace vlastních sekvencí pomocí paketů UDP, TCP nebo ICMP s podporou IPv4 i IPv6.
+
+Klíčové vlastnosti:
+
+• Flexibilita protokolu: Vytvářejte sekvence s pakety UDP, TCP nebo ICMP. Dolaďte parametry včetně cílových portů, zpoždění mezi pakety, TTL, limitu hopů a dat o obsahu paketů.
+• Automatizace a integrace: Automatické spouštění aplikací (např. SSH klientů) nebo otevírání URL adres po úspěšném připojení. Podporuje integraci s dalšími nástroji prostřednictvím vlastního schématu URI pro pokročilou automatizaci.
+• Podpora duálního stackování: Plná kompatibilita se sítěmi IPv4 a IPv6.
+• Podpora Wear OS: Spouštějte sekvence klepání přímo z chytrých hodinek.
+• Rychlý přístup: Využijte zkratky na domovské obrazovce a widget pro okamžité spuštění nakonfigurovaných sekvencí.
+• Přizpůsobení: Upravte rozhraní pomocí dynamických barevných motivů (Android 12+), vlastních akcentů a režimů světla/tmy. Zahrnuje možnosti pro vylepšení kontrastu.
+• Správa konfigurace: Exportujte a importujte sekvence klepání pro zálohování nebo přenos.
+• Žádné reklamy, otevřený zdrojový kód: Bezplatná a transparentní aplikace zaměřená na soukromí a kontrolu uživatelů.
