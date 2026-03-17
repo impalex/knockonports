@@ -1,0 +1,1 @@
+Potężne narzędzie do zarządzania i wykonywania sekwencji port-knocking
