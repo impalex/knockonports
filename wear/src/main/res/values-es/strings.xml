@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_install_app">Instalar la Aplicación en su teléfono</string>
+    <string name="text_install_app">"Para utilizar la aplicación en su  reloj. Por favor instale la aplicación en su teléfono."</string>
 </resources>
