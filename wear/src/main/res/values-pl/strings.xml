@@ -2,4 +2,10 @@
 <resources>
     <string name="title_install_app">Zainstaluj aplikację na swoim telefonie</string>
     <string name="text_install_app">Aby używać aplikacji na swoim zegarku, zainstaluj główną aplikację na swoim telefonie.</string>
+    <string name="action_open_market">Otwórz Sklep Play</string>
+    <string name="title_sequences">Sekwencje</string>
+    <string name="title_knocking">Pukanie</string>
+    <string name="title_no_name_sequence">(Sekwencja bez nazwy)</string>
+    <string name="text_attempts">Próba %1$d/%2$d</string>
+    <string name="text_empty_list">Pusta lista</string>
 </resources>
