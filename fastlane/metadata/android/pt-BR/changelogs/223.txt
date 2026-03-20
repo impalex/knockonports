@@ -1,0 +1,1 @@
+• Importação de sequências de batidas à partir de arquivos de configuração knockd.conf

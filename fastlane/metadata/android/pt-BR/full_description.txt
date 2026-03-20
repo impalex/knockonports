@@ -1,0 +1,12 @@
+Um utilitário para executar sequências de batidas para discretamente liberar acesso à serviços protegidos por firewalls. Configure sequências personalizadas usando pacotes UDP, TCP ou ICMP com suporte para IPv4 e IPv6.
+
+Funcionalidades chave:
+
+• Flexibilidade de protocolos: Crie sequências com pacotes UDP, TCP ou ICMP. Faça ajustes finos em parametros como portas de destino, tempo entre pacotes, TTL, limites de saltos, e dados de carga dos pacotes.
+• Automação e integração: Execute aplicações automaticamente (ex: clientes SSH) ou abra URLs após "batidas" bem sucedidas. Suporta integração com outras ferramentas via esquema de URI personalizada para automações avançadas.
+• Suporte à stack dupla: Compatibilidade total com redes IPv4 e IPv6.
+• Suporte à Wear OS: Execute suas sequências de batidas diretamente do seu smartwatch.
+• Acesso rápido: Utilize atalhos na tela inicial e widgets para execução imediata das sequências configuradas.
+• Customização: Ajuste a interface com temas de cores dinâmicas (Android 12+), tons personalizados e temas claros/escuros. Inclui opções de contraste melhorado.
+• Gerênciamento de configurações: Exporte e importe suas sequências para backups ou transferências.
+• Sem anúncios, código aberto: Uma aplicação gratuita e transparente focada em privacidade e controle pelo usuário.

@@ -1,0 +1,3 @@
+• Pequenos ajustes na interface.
+• Adicionado botão para alternar a lista entre os modos de visualização detalhada e compacta.
+• Implementada trava de aplicativo utilizando a autênticação do dispositivo (biometria, PIN, etc.).

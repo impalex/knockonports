@@ -1,0 +1,8 @@
+• Habilidade de configurar o tamanho do pacote ICMP considerando o cabeçalho IP
+• Configuração de tamanho do cabeçalho IP na rede
+• Para pacotes ICMP você pode visualizar informações detalhadas sobre seu formato
+• Adicionados validadores no editor de sequências
+• O modo retrato está de volta
+• Pequeno redesign no editor de sequências
+• Suporte para ícones adaptativos (Android 8.0+)
+• Suporte para dispositivos com páginas de memória de 16KB

@@ -1,0 +1,3 @@
+Monitoramento de recursos. Víncule sequências à recursos externos (ping, porta, URL) com validações de disponibilidade automáticas. Se o recurso permanecer indisponível após o disparo da sequência, o aplicativo irá realizar a tentativa novamente (configurável).
+Grupos de sequências. Organize configurações em grupos para um melhor gerênciamento.
+Suporte ponta-a-porta para telas sem bordas em dispositivos com designs de tela cheia.

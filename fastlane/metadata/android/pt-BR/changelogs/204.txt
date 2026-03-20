@@ -1,0 +1,7 @@
+• Reconstrução completa: Reescrito para estabilidade, requer Android 7.0+.
+• UI/UX: Lista de sequências compacta, temas dinâmicos (Android 12+), customizações de cor e contraste.
+• Automação: Executar via URI (substitui Tasker), ações URI pós disparos (ex: abrir apps/sites).
+• Sequências: Duplique com um toque.
+• Controle de pacotes: Especifique portas UDP de origem, configure TTL/limite de saltos para os pacotes.
+• Widget: Novo.
+• Detecção de IP: Configurações atualizadas – verifique se usar.
