@@ -92,7 +92,7 @@
     <string name="text_settings_detect_ip">Permite o app detectar seu IP público</string>
     <string name="action_allow">Permitir</string>
     <string name="action_confirm">Confirmar</string>
-    <string name="title_settings_ipv4_lookup_provider">Provedor de pesquisas IPv4</string>
+    <string name="title_settings_ipv4_lookup_provider">Provedor de pesquisa IPv4</string>
     <string name="title_settings_ipv6_lookup_provider">Provedor de pesquisas IPv6</string>
     <string name="type_provider_custom">Customizado</string>
     <string name="title_custom_service_dialog">Serviço de pesquisa de IP customizado</string>
@@ -292,4 +292,10 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="action_how">Como?</string>
     <string name="text_settings_ip4_hdr_size">%d bytes</string>
     <string name="title_lang_pt_br">Português (Brasil)</string>
+    <string name="title_lang_cs">Tcheco</string>
+    <string name="title_lang_es">Espanhol</string>
+    <string name="title_lang_fr">Francês</string>
+    <string name="title_lang_it">Italiano</string>
+    <string name="title_lang_pl">Polonês</string>
+    <string name="title_lang_sq">Albanês</string>
 </resources>
