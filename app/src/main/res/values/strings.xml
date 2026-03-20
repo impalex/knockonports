@@ -19,10 +19,14 @@
     <string-array name="translators" translatable="false">
         <item>\@FBI_ggh</item>
         <item>\@impalex</item>
+        <item>\@michal-volf</item>
+        <item>\@r4263</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
         <item>https://hosted.weblate.org/user/FBI_ggh/</item>
         <item>https://hosted.weblate.org/user/impalex/</item>
+        <item>https://hosted.weblate.org/user/michal-volf/</item>
+        <item>https://hosted.weblate.org/user/r4263/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
@@ -315,6 +319,13 @@ For most users: <b>do not change this setting</b>.
     <string name="title_lang_en">English</string>
     <string name="title_lang_ru">Russian</string>
     <string name="title_lang_zh">Chinese (Simplified)</string>
+    <string name="title_lang_cs">Czech</string>
+    <string name="title_lang_pt_br">Portuguese (Brazil)</string>
+    <string name="title_lang_es">Spanish</string>
+    <string name="title_lang_fr">French</string>
+    <string name="title_lang_it">Italian</string>
+    <string name="title_lang_pl">Polish</string>
+    <string name="title_lang_sq">Albanian</string>
     <string name="title_help_translate">Help us translate!</string>
     <string name="text_help_translate">This project is hosted on Weblate. Your contribution helps make this app accessible to everyone around the world.</string>
     <string name="action_translate">Go to Weblate</string>

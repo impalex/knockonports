@@ -51,7 +51,8 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00 + 3
-        versionName = "1.0.1"
+        versionName = "1.0.2"
+
         val knocklordCapName: String by rootProject.extra
         val knockletCapName: String by rootProject.extra
         val wearSeqDataPath: String by rootProject.extra
@@ -71,6 +72,12 @@ android {
             "wearSeqDataPath" to wearSeqDataPath,
             "wearKnockDataPath" to wearKnockDataPath,
         ))
+    }
+
+    androidResources {
+        val locales: List<String> by rootProject.extra
+        @Suppress("UnstableApiUsage")
+        localeFilters += locales
     }
 
     buildFeatures {

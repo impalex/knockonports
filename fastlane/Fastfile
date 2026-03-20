@@ -10,12 +10,42 @@
 #     https://docs.fastlane.tools/plugins/available-plugins
 #
 
+require 'fileutils'
+
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
 default_platform(:android)
 
 platform :android do
+
+  lane :prepare_metadata do
+    original_path = "metadata/android"
+    temp_path     = "metadata_upload"
+
+    FileUtils.rm_rf(temp_path)
+	FileUtils.cp_r(original_path, temp_path)
+
+    required_files = ["title.txt", "short_description.txt", "full_description.txt"]
+
+    Dir.glob("#{temp_path}/*").each do |locale_dir|
+      next unless File.directory?(locale_dir)
+
+      locale = File.basename(locale_dir)
+      missing = required_files.select do |file|
+        path = "#{locale_dir}/#{file}"
+        !File.exist?(path) || File.read(path).strip.empty?
+      end
+
+      if missing.any?
+        UI.message("Skip incomplete #{locale} (missing: #{missing.join(', ')})")
+        FileUtils.rm_rf(locale_dir)
+      else
+        UI.message("#{locale} is ready to upload")
+      end
+    end
+  end
+
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
@@ -23,11 +53,13 @@ platform :android do
 
   desc "Submit a new Production Build to the Google Play"
   lane :release do
+    prepare_metadata
     gradle(
 	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
 	  flags: "--no-daemon"
 	)
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'false',
       skip_upload_screenshots: 'false',
 	  skip_upload_metadata: 'false',
@@ -37,6 +69,7 @@ platform :android do
       aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
     )
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
@@ -49,11 +82,13 @@ platform :android do
 
   desc "Submit a new Beta Build to the Google Play"
   lane :beta do
+    prepare_metadata
     gradle(
 	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
 	  flags: "--no-daemon"
 	)
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'false',
       skip_upload_screenshots: 'false',
 	  skip_upload_metadata: 'false',
@@ -63,6 +98,7 @@ platform :android do
       aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
     )
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
@@ -75,11 +111,13 @@ platform :android do
 
   desc "Submit a new Alpha Build to the Google Play"
   lane :alpha do
+    prepare_metadata
     gradle(
 	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
 	  flags: "--no-daemon"
 	)
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'false',
       skip_upload_screenshots: 'false',
 	  skip_upload_metadata: 'false',
@@ -89,6 +127,7 @@ platform :android do
       aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
     )
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
@@ -101,11 +140,13 @@ platform :android do
 
   desc "Submit a new Internal Build to the Google Play"
   lane :internal do
+    prepare_metadata
     gradle(
 	  task: "clean app:bundleGoogleRelease app:bundleFossRelease wear:bundleRelease",
 	  flags: "--no-daemon"
 	)
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',
@@ -115,6 +156,7 @@ platform :android do
       aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
     )
     supply(
+	  metadata_path: "fastlane/metadata_upload",
       skip_upload_images: 'true',
       skip_upload_screenshots: 'true',
 	  skip_upload_metadata: 'true',

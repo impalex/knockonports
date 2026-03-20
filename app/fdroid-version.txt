@@ -1,2 +1,2 @@
-versionCode=360010700
-versionName=2.1.1
+versionCode=360010800
+versionName=2.1.2

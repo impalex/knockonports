@@ -1,0 +1,2 @@
+• New language localization: Czech (credit to @michal-volf)
+• New language localization: Portuguese (Brazil) (credit to @r4263)

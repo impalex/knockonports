@@ -180,4 +180,5 @@
     <string name="text_settings_source_code">Zawiera magiczny open-source. Ostrzeżenie: może zawierać kod napisany pod wpływem kofeiny.</string>
     <string name="text_settings_report_issue">Znalazłeś błąd? Nie panikuj, zgłoś go tutaj. Może naprawię go przed rokiem 3025.</string>
     <string name="text_settings_contact_author">Zgłoś błędy, zasugeruj nowe funkcje albo po prostu się przywitaj. 👋</string>
+    <string name="title_lang_pl">Polski</string>
 </resources>

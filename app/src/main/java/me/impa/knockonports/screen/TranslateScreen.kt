@@ -64,9 +64,11 @@ fun TranslateScreen(modifier: Modifier = Modifier) {
 }
 
 private val langs = mapOf(
-    Locale.ENGLISH to R.string.title_lang_en,
+    Locale.forLanguageTag("cs") to R.string.title_lang_cs,
+    Locale.forLanguageTag("en") to R.string.title_lang_en,
+    Locale.forLanguageTag("pt-BR") to R.string.title_lang_pt_br,
     Locale.forLanguageTag("ru-RU") to R.string.title_lang_ru,
-    Locale.SIMPLIFIED_CHINESE to R.string.title_lang_zh
+    Locale.forLanguageTag("zh-CN") to R.string.title_lang_zh,
 )
 
 @Composable

@@ -297,6 +297,7 @@
     <string name="title_lang_zh">Китайский (упрощённый)</string>
     <string name="text_help_translate">Этот проект размещен на Weblate. Ваш вклад поможет сделать приложение доступным для всех пользователей по всему миру.</string>
     <string name="action_translate">Открыть Weblate</string>
+    <string name="title_lang_sq">Албанский</string>
     <string name="title_help_translate">Помогите нам с переводом!</string>
     <string name="title_screen_translation">Перевод</string>
     <string name="title_settings_translation">Переводы</string>
@@ -306,4 +307,10 @@
     <string name="text_special_thanks">Особая признательность нашим переводчикам:</string>
     <string name="text_kitty_help">Помогите нам с переводом приложения!</string>
     <string name="action_how">Как?</string>
+    <string name="title_lang_cs">Чешский</string>
+    <string name="title_lang_pt_br">Португальский (Бразилия)</string>
+    <string name="title_lang_es">Испанский</string>
+    <string name="title_lang_fr">Французский</string>
+    <string name="title_lang_it">Итальянский</string>
+    <string name="title_lang_pl">Польский</string>
 </resources>
