@@ -1,0 +1,7 @@
+• Komplette Neuentwicklung: Im Hinblick auf Stabilität neu programmiert, erfordert Android 7.0+.
+• UI/UX: Kompakte Sequenzliste, dynamische Designs (Android 12+), Anpassung von Farbe und Kontrast.
+• Automatisierung: Start über URI (ersetzt Tasker), URI-Aktionen nach dem Klopfen (z. B. Apps/Websites öffnen).
+• Sequenzen: Mit einem Fingertipp duplizieren.
+• Paketsteuerung: UDP-Quellports festlegen, TTL/Hop-Limit für alle Pakete konfigurieren.
+• Widget: Neu.
+• IP-Erkennung: Aktualisierte Einstellungen – bitte prüfen, ob verwendet.

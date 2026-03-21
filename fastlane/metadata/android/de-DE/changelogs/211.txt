@@ -1,0 +1,8 @@
+• Möglichkeit, die Größe von ICMP-Paketen unter Berücksichtigung des IP-Headers festzulegen
+• Konfiguration der IP-Header-Größe im Netzwerk
+• Für ICMP-Pakete werden detaillierte Informationen zum Format angezeigt
+• Validatoren im Sequenz-Editor hinzugefügt
+• Der Hochformatmodus ist wieder verfügbar
+• Leichte Neugestaltung des Sequenz-Editors
+• Unterstützung für adaptive Symbole (Android 8.0+)
+• Unterstützung für Geräte mit einer Speicherseitengröße von 16 KB

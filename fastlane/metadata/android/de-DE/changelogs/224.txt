@@ -1,0 +1,2 @@
+• Fehlerbehebungen und Stabilitätsverbesserungen.
+• Neue Option, um die Größe der UDP-Nutzdaten unabhängig vom Inhalt festzulegen.

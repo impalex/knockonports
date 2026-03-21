@@ -1,0 +1,4 @@
+• Durchgängige Verbesserungen.
+• Benutzerdefinierte Designs: Wählen Sie eine beliebige Grundfarbe, um Ihr eigenes Design zu erstellen.
+• Ein Dark Modus für AMOLED-Bildschirme wurde hinzugefügt (funktioniert mit benutzerdefinierten Designs).
+• Legen Sie benutzerdefinierte Farben für Sequenznamen fest, je nach Status der Ressourcenverfügbarkeit.

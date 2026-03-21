@@ -1,0 +1,3 @@
+• Neue Sprache: Vereinfachtes Chinesisch
+• Die Standard-Verzögerung zwischen den Paketen wurde auf 500 ms festgelegt
+• Fehlerbehebungen

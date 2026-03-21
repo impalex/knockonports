@@ -1,0 +1,3 @@
+• Kleinere Anpassungen an der Benutzeroberfläche.
+• Es wurde eine Umschaltfläche hinzugefügt, mit der man zwischen der kompakten und der detaillierten Ansicht der Sequenzliste wechseln kann.
+• Es wurde eine App-Sperre mittels Geräteauthentifizierung (Biometrie, PIN usw.) implementiert.

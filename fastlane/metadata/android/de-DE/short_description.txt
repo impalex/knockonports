@@ -1,0 +1,1 @@
+Ein mächtiger Client um Port Knocking Sequenzen zu verwalten und auszuführen

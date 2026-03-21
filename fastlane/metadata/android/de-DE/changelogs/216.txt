@@ -1,0 +1,3 @@
+Ressourcenüberwachung. Verknüpfen Sie Sequenzen mit externen Ressourcen (Ping, Port, URL) und automatischen Verfügbarkeitsprüfungen. Bleibt die Ressource nach dem ersten Versuch weiterhin nicht erreichbar, führt die App einen erneuten Versuch durch (konfigurierbar).
+Sequenzgruppen. Organisieren Sie Konfigurationen in Gruppen, um die Verwaltung zu vereinfachen.
+Vollbildunterstützung für eine nahtlose Darstellung auf Geräten mit Vollbild-Designs.

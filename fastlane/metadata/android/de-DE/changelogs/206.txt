@@ -1,0 +1,3 @@
+Hotfix: Start-Schaltfläche im Kompaktlistenmodus behoben
+Neu: Suche in der Anwendungsliste
+Geändert: Beim Exportieren wurde das alte Dateinamenformat wiederhergestellt
