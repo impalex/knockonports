@@ -175,13 +175,13 @@
     </plurals>
     <string name="title_custom_ip4hdr_alert">Warnung!</string>
     <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ Fortsetzen Sie mit Vorsicht!
-Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in Ihrem Netzwerk verwendet wird.
-Wichtige Hinweise:
-• Dies ändert NICHT die tatsächliche Header-Größe – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.
-• Eine falsche Konfiguration kann dazu führen, dass sich die App nicht korrekt verhält.
-• Passen Sie diese Einstellung nur an, wenn Sie sicher sind, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).
-Für die meisten Benutzer gilt: Ändern Sie diese Einstellung nicht.
+⚠️ <b>Fortsetzen Sie mit Vorsicht!</b><br><br>
+Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in <i>Ihrem Netzwerk</i> verwendet wird.<br><br>
+<b>Wichtige Hinweise:</b><br><br>
+• <b>Dies ändert NICHT die tatsächliche Header-Größe</b> – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.<br>
+• Eine falsche Konfiguration <b>kann</b> dazu führen, dass sich die App nicht korrekt verhält.<br>
+• Passen Sie diese Einstellung nur an, <b>wenn Sie sicher sind</b>, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).<br><br>
+Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     ]]></string>
     <string name="action_understand">Ich verstehe</string>
     <string name="title_icmp_size_tooltip">ICMP Packet Gesamtgröße</string>
@@ -227,14 +227,15 @@ Für die meisten Benutzer gilt: Ändern Sie diese Einstellung nicht.
     <string name="type_shorten_end">Ende\n(z. B. „Sehr langes t…“)</string>
     <string name="title_settings_font_scale">Schriftgröße der Überschrift</string>
     <string name="title_donate_alert">«Knock on Ports» unterstützen</string>
-    <string name="text_donate_alert"><![CDATA[„Knock on Ports“ ist und bleibt kostenlos, Open Source und privat – keine Werbung, kein Tracking, keine versteckten Bedingungen.
-Wenn diese App dir Zeit spart oder komplexe Aufgaben löst, erwäge bitte, ihre Entwicklung zu unterstützen.
-Dein Beitrag hilft dabei:
-→ B den Aufwand anzuerkennenB , der hinter jahrelangen Updates steckt,
-→ B zukünftige Innovationen voranzutreibenB  für Nischenanforderungen im Tech-Bereich,
-→ B das Projekt unabhängig zu haltenB und von der Community getragen.
-Jeder noch so kleine Beitrag motiviert, selbst wenn er nur für einen Kaffee reicht ☕.
-Vielen Dank für Ihr Vertrauen in dieses Tool!]]></string>
+    <string name="text_donate_alert"><![CDATA[<b>„Knock on Ports"</b> ist und bleibt <b>kostenlos, Open Source und privat</b> – keine Werbung, kein Tracking, keine versteckten Bedingungen.<br>
+<br>Wenn diese App dir Zeit spart oder komplexe Aufgaben löst, erwäge bitte, ihre Entwicklung zu unterstützen.
+<br>Dein Beitrag hilft dabei:
+<br>→ <b>den Aufwand anzuerkennen</b>, der hinter jahrelangen Updates steckt,
+<br>→ <b>zukünftige Innovationen voranzutreiben</b> für Nischenanforderungen im Tech-Bereich,
+<br>→ <b>das Projekt unabhängig zu halten</b> und von der Community getragen.
+<br>
+<br><i>Jeder noch so kleine Beitrag motiviert, selbst wenn er nur für einen Kaffee reicht</i> ☕.
+<br><i>Vielen Dank für Ihr Vertrauen in dieses Tool!</i>]]></string>
     <string name="action_not_now">Nicht jetzt</string>
     <string name="action_support">Entwicklung unterstützen</string>
     <string name="title_settings_app_lock">App-Sperre</string>
