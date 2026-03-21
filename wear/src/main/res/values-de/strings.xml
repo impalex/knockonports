@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_install_app">Installiere die App auf deinem Telefon</string>
+    <string name="text_install_app">Um die App auf deiner Uhr zu nutzen, installiere die App auf deinem Telefon.</string>
+    <string name="action_open_market">Öffne den Play Store</string>
+    <string name="title_sequences">Sequenzen</string>
+    <string name="title_knocking">Klopfen</string>
+    <string name="title_no_name_sequence">(Unbenannte Sequenz)</string>
+    <string name="text_attempts">Versuch %1$d/%2$d</string>
+    <string name="text_empty_list">Leere Liste</string>
 </resources>
