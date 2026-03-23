@@ -297,4 +297,10 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="text_kitty_help">Pomozte nám přeložit aplikaci!</string>
     <string name="action_how">Jak?</string>
     <string name="title_lang_cs">Čeština</string>
+    <string name="title_lang_pt_br">Portugalsky (Brazílie)</string>
+    <string name="title_lang_es">Španělsky</string>
+    <string name="title_lang_fr">Francouzsky</string>
+    <string name="title_lang_it">Italsky</string>
+    <string name="title_lang_pl">Polsky</string>
+    <string name="title_lang_sq">Albánsky</string>
 </resources>
