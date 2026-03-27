@@ -20,12 +20,14 @@
         <item>\@FBI_ggh</item>
         <item>\@impalex</item>
         <item>\@michal-volf</item>
+        <item>\@MoisAlexander</item>
         <item>\@r4263</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
         <item>https://hosted.weblate.org/user/FBI_ggh/</item>
         <item>https://hosted.weblate.org/user/impalex/</item>
         <item>https://hosted.weblate.org/user/michal-volf/</item>
+        <item>https://hosted.weblate.org/user/MoisAlexander/</item>
         <item>https://hosted.weblate.org/user/r4263/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
@@ -306,8 +308,8 @@ For most users: <b>do not change this setting</b>.
     <string name="field_payload_size">Payload Size</string>
     <string name="text_auto">Auto</string>
     <string name="text_tooltip_udp_payload">The total packet size includes the IP header (20–60 bytes), the UDP header (8 bytes), and the specified payload size.</string>
-    <string name="action_wear_companion">Companion</string>
-    <string name="title_screen_wear">Companion</string>
+    <string name="action_wear_companion">Wear OS App</string>
+    <string name="title_screen_wear">Wear OS Companion App Status</string>
     <string name="title_companion_not_installed">App not installed on your watch</string>
     <string name="text_companion_not_installed">We found your watch, but the Wear OS companion app is not installed. Install it to continue.</string>
     <string name="action_companion_open_market">Install on watch</string>
@@ -318,6 +320,7 @@ For most users: <b>do not change this setting</b>.
     <string name="notification_desc_waiting_for_resource">Checking resource availability</string>
     <string name="title_lang_en">English</string>
     <string name="title_lang_ru">Russian</string>
+    <string name="title_lang_de">German</string>
     <string name="title_lang_zh">Chinese (Simplified)</string>
     <string name="title_lang_cs">Czech</string>
     <string name="title_lang_pt_br">Portuguese (Brazil)</string>

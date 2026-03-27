@@ -46,7 +46,6 @@ import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import me.impa.knockonports.R
@@ -63,8 +62,9 @@ fun TranslateScreen(modifier: Modifier = Modifier) {
     TranslateScreenContent(modifier)
 }
 
-private val langs = mapOf(
+private val languages = mapOf(
     Locale.forLanguageTag("cs") to R.string.title_lang_cs,
+    Locale.forLanguageTag("de") to R.string.title_lang_de,
     Locale.forLanguageTag("en") to R.string.title_lang_en,
     Locale.forLanguageTag("pt-BR") to R.string.title_lang_pt_br,
     Locale.forLanguageTag("ru-RU") to R.string.title_lang_ru,
@@ -98,7 +98,7 @@ private fun SupportedLangSection() {
     Text(text = stringResource(R.string.title_supported_languages), style = MaterialTheme.typography.titleSmall,
         modifier = Modifier.padding(vertical = 8.dp),
         color = MaterialTheme.colorScheme.onSurfaceVariant)
-    langs.forEach { (locale, resId) ->
+    languages.forEach { (locale, resId) ->
 
         // NOTE This is a very expensive operation. It would make sense to implement caching in the future.
         val context = LocalContext.current
@@ -141,8 +141,7 @@ private fun TranslatorsSection() {
     val translators = usernames.zip(profiles).toMap()
     val uriHandler = LocalUriHandler.current
     FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         translators.forEach { (username, profile) ->
             SuggestionChip(
@@ -156,7 +155,7 @@ private fun TranslatorsSection() {
 @Composable
 private fun ContributeCard() {
     val uriHandler = LocalUriHandler.current
-    ElevatedCard() {
+    ElevatedCard {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = stringResource(R.string.title_help_translate),
                 style = MaterialTheme.typography.headlineSmall)

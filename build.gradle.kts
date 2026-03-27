@@ -28,7 +28,7 @@ plugins {
 }
 
 val productVersion: Int by extra(1)
-val releaseVersion: Int by extra(8)
+val releaseVersion: Int by extra(9)
 
 val knockletCapName: String by extra("knocklet_installed")
 val knocklordCapName: String by extra("knocklord_installed")
@@ -38,4 +38,4 @@ val appScheme: String by extra("knockonports")
 val appHost: String by extra("app")
 val knockHost: String by extra("knock")
 
-val locales: List<String> by extra(listOf("en", "ru", "zh-rCN", "pt-rBR", "cs"))
+val locales: List<String> by extra(listOf("en", "ru", "zh-rCN", "pt-rBR", "cs", "de"))

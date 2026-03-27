@@ -274,6 +274,7 @@ Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     <string name="notification_desc_waiting_for_resource">Verfügbarkeit von Ressourcen prüfen</string>
     <string name="title_lang_en">Englisch</string>
     <string name="title_lang_ru">Russisch</string>
+    <string name="title_lang_de">Deutsch</string>
     <string name="title_lang_zh">Chinesisch (vereinfacht)</string>
     <string name="title_lang_cs">Tschechisch</string>
     <string name="title_lang_pt_br">Portugiesisch (Brasilien)</string>
