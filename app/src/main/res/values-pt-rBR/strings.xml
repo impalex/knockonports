@@ -266,8 +266,8 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="field_payload_size">Tamanho da carga</string>
     <string name="text_auto">Automático</string>
     <string name="text_tooltip_udp_payload">O tamanho total do pacote inclui o cabeçalho IP (20-60 bytes), o cabeçalho UDP (8 bytes), e o tamanho da carga especificada.</string>
-    <string name="action_wear_companion">Companheiro</string>
-    <string name="title_screen_wear">Companheiro</string>
+    <string name="action_wear_companion">Aplicativo Wear OS</string>
+    <string name="title_screen_wear">Status da aplicação do Wear OS</string>
     <string name="title_companion_not_installed">Aplicativo não instalado em seu relógio</string>
     <string name="text_companion_not_installed">Encontramos seu relógio, mas o aplicativo companheiro Wear OS não está instalado. Instale para prosseguir.</string>
     <string name="action_companion_open_market">Instalar no relógio</string>
@@ -298,4 +298,5 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="title_lang_it">Italiano</string>
     <string name="title_lang_pl">Polonês</string>
     <string name="title_lang_sq">Albanês</string>
+    <string name="title_lang_de">Alemão</string>
 </resources>
