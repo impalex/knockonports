@@ -262,7 +262,7 @@ Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     <string name="field_payload_size">Payload Größe</string>
     <string name="text_auto">Auto</string>
     <string name="text_tooltip_udp_payload">Die Gesamtpaketgröße umfasst den IP-Header (20–60 Byte), den UDP-Header (8 Byte) und die angegebene Nutzdatengröße.</string>
-    <string name="action_wear_companion">Companion</string>
+    <string name="action_wear_companion">Wear OS App</string>
     <string name="title_screen_wear">Companion</string>
     <string name="title_companion_not_installed">Die App ist nicht auf Ihrer Uhr installiert</string>
     <string name="text_companion_not_installed">Wir haben Ihre Uhr gefunden, aber die Wear OS-App ist nicht installiert. Installieren Sie sie, um fortzufahren.</string>
