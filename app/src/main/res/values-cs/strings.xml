@@ -272,8 +272,8 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="field_payload_size">Velikost payloadu</string>
     <string name="text_auto">Automaticky</string>
     <string name="text_tooltip_udp_payload">Celková velikost paketu zahrnuje IP hlavičku (20–60 bajtů), UDP hlavičku (8 bajtů) a zadanou velikost payloadu.</string>
-    <string name="action_wear_companion">Společník</string>
-    <string name="title_screen_wear">Společník</string>
+    <string name="action_wear_companion">Wear OS Aplikace</string>
+    <string name="title_screen_wear">Wear OS stav společné aplikace</string>
     <string name="title_companion_not_installed">Aplikace není nainstalována na hodinkách</string>
     <string name="text_companion_not_installed">Našli jsme vaše hodinky, ale doprovodná aplikace Wear OS není nainstalována. Nainstalujte ji a pokračujte.</string>
     <string name="action_companion_open_market">Instalovat na hodinky</string>
@@ -303,4 +303,5 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="title_lang_it">Italsky</string>
     <string name="title_lang_pl">Polsky</string>
     <string name="title_lang_sq">Albánsky</string>
+    <string name="title_lang_de">Německy</string>
 </resources>
