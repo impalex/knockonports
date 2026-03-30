@@ -4,4 +4,8 @@
     <string name="text_install_app">Chcete-li aplikaci používat na hodinkách, nainstalujte si hlavní aplikaci do smartphonu.</string>
     <string name="action_open_market">Otevři obchod Play</string>
     <string name="title_sequences">Sekvence</string>
+    <string name="title_knocking">Klepu</string>
+    <string name="title_no_name_sequence">(Sekvence bez názvu)</string>
+    <string name="text_attempts">Pokus %1$d/%2$d</string>
+    <string name="text_empty_list">Prázdný seznam</string>
 </resources>
