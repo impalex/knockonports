@@ -1,0 +1,7 @@
+• Refonte complète : Réécriture pour une stabilité accrue (Android 7.0+ requis)
+• Interface : Liste de séquences compacte, thèmes dynamiques (Android 12+), personnalisation des couleurs et du contraste
+• Automatisation : Lancement via URI (remplace Tasker), actions post-lancement d'URI (ex. ouverture d'app. ou de sites web)
+• Séquences : Duplication en un clic
+• Gestion des paquets : Spécification des ports sources UDP, config. du TTL et du nombre de sauts
+• Widget
+• Détection d'adresse IP.

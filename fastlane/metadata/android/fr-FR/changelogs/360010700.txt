@@ -1,0 +1,3 @@
+• Nouvelle langue : Chinois simplifié
+• Le délai inter-paquets par défaut est de 500 ms
+• Correction de bugs

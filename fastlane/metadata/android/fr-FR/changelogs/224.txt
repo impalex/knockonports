@@ -1,0 +1,2 @@
+• Correction de bugs et amélioration de la stabilité.
+• Nouvelle option permettant de définir la taille de la charge utile UDP indépendamment de son contenu.

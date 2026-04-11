@@ -1,0 +1,3 @@
+• Améliorations mineures de l'interface.
+• Ajout d'un bouton permettant de basculer entre l'affichage compact et détaillé de la liste des séquences.
+• Implémentation du verrouillage de l'application par authentification (biométrie, code PIN, etc.).

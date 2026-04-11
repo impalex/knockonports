@@ -1,0 +1,8 @@
+• Possibilité de définir la taille des paquets ICMP en tenant compte de l'en-tête IP
+• Configuration de la taille de l'en-tête IP sur le réseau
+• Affichage d'informations détaillées sur le format des paquets ICMP
+• Ajout de validateurs dans l'éditeur de séquences
+• Retour du mode portrait
+• Légère refonte de l'éditeur de séquences
+• Prise en charge des icônes adaptatives (Android 8.0 et versions ultérieures)
+• Prise en charge des appareils avec une taille de page mémoire de 16 Ko

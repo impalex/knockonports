@@ -1,0 +1,3 @@
+Correctif : Correction du bouton Démarrer en mode liste compacte
+Nouveau : Recherche dans la liste des applications
+Modifié : Restauration de l’ancien format de nom de fichier lors de l’exportation

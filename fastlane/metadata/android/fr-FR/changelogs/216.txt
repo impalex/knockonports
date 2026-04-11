@@ -1,0 +1,3 @@
+Surveillance des ressources. Associez des séquences à des ressources externes (ping, port, URL) avec vérification automatique de leur disponibilité. Si la ressource reste indisponible après une nouvelle tentative, l'application réessaiera (configurable).
+Groupes de séquences. Organisez vos configurations en groupes pour une meilleure gestion.
+Prise en charge de l'affichage bord à bord pour un rendu optimal sur les appareils plein écran.

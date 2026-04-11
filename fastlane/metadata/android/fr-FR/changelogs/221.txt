@@ -1,0 +1,4 @@
+• Améliorations de la gestion bord à bord.
+• Thèmes personnalisés : choisissez une couleur de base pour créer votre propre thème.
+• Ajout d'un mode noir pur pour les écrans AMOLED (compatible avec les thèmes personnalisés).
+• Possibilité de définir des couleurs personnalisées pour les noms de séquences en fonction de la disponibilité des ressources.
