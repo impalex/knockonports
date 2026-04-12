@@ -17,18 +17,22 @@
 <resources>
     <string name="app_name" translatable="false">Knock on Ports</string>
     <string-array name="translators" translatable="false">
+        <item>\@Acide-Burn</item>
         <item>\@FBI_ggh</item>
         <item>\@impalex</item>
         <item>\@michal-volf</item>
         <item>\@MoisAlexander</item>
         <item>\@r4263</item>
+        <item>\@renaud38</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
+        <item>https://hosted.weblate.org/user/Acide-Burn/</item>
         <item>https://hosted.weblate.org/user/FBI_ggh/</item>
         <item>https://hosted.weblate.org/user/impalex/</item>
         <item>https://hosted.weblate.org/user/michal-volf/</item>
         <item>https://hosted.weblate.org/user/MoisAlexander/</item>
         <item>https://hosted.weblate.org/user/r4263/</item>
+        <item>https://hosted.weblate.org/user/renaud38/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>

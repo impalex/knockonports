@@ -66,6 +66,7 @@ private val languages = mapOf(
     Locale.forLanguageTag("cs") to R.string.title_lang_cs,
     Locale.forLanguageTag("de") to R.string.title_lang_de,
     Locale.forLanguageTag("en") to R.string.title_lang_en,
+    Locale.forLanguageTag("fr") to R.string.title_lang_fr,
     Locale.forLanguageTag("pt-BR") to R.string.title_lang_pt_br,
     Locale.forLanguageTag("ru-RU") to R.string.title_lang_ru,
     Locale.forLanguageTag("zh-CN") to R.string.title_lang_zh,
@@ -138,7 +139,7 @@ private fun TranslatorsSection() {
     Text(text = stringResource(R.string.text_special_thanks))
     val usernames = stringArrayResource(R.array.translators)
     val profiles = stringArrayResource(R.array.translators_profiles)
-    val translators = usernames.zip(profiles).toMap()
+    val translators = usernames.zip(profiles).toMap().toSortedMap()
     val uriHandler = LocalUriHandler.current
     FlowRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp)

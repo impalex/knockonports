@@ -84,7 +84,7 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00
-        versionName = "2.1.3"
+        versionName = "2.1.4"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {

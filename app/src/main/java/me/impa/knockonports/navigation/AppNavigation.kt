@@ -36,9 +36,10 @@ fun AppNavigation(
     val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
 
     NavDisplay(
-        entries = navigationState.toEntries(entryProvider = entryProvider),
+        backStack = navigationState.backStack,
         onBack = { navigator.goBack() },
-        sceneStrategy = dialogSceneStrategy,
+        entryProvider = entryProvider,
+        sceneStrategies = listOf(dialogSceneStrategy),
         modifier = modifier,
         transitionSpec = {
             slideInHorizontally(initialOffsetX = { it }) togetherWith
