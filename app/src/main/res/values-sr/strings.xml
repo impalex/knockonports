@@ -1,3 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="type_protocol_prefer_ipv4">preferiraj IPv4</string>
+    <string name="type_protocol_prefer_ipv6">preferiraj IPv6</string>
+    <string name="type_protocol_only_ipv4">samo IPv4</string>
+    <string name="type_protocol_only_ipv6">samo IPv6</string>
+    <string name="type_protocol_both_ipv4_ipv6">i IPv4 i IPv6</string>
+    <string name="action_export">Izvoz</string>
+    <string name="action_import">Uvoz</string>
+    <string name="action_settings">Podešavanja</string>
+    <string name="action_show_log">Pogledaj Dnevnik</string>
+    <string name="title_screen_sequence">Sekvenca</string>
+    <string name="title_screen_log">Dnevnik</string>
+    <string name="title_tab_basic_settings">Podešavanja</string>
+    <string name="title_tab_advanced_settings">Napredno</string>
+    <string name="title_review_request">Voliš %s?</string>"
+    <string name="text_review_request">Ukoliko imaš momenat, značila bi mi povratna informacija. Iskrena ocena pomaže mi da unapredim i nastavim sa razvojem aplikacije. Hvala što si deo ovog putovanja!</string>
+    <string name="action_rate_now">Oceni sada</string>
+    <string name="action_remind_later">Podseti me kasnije</string>
+    <string name="action_no_thanks">Ne, hvala</string>
+    <string name="text_review_decline">U redu! Ukoliko promeniš mišljenje, prihvatam tvoje mišljenje u bilo kom trenutku.</string>
+    <string name="field_name">Naziv</string>
+    <string name="field_host">Host</string>
 </resources>
