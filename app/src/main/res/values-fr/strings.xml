@@ -7,13 +7,13 @@
     <string name="action_export">Exporter</string>
     <string name="action_import">Importer</string>
     <string name="action_settings">Paramètres</string>
-    <string name="action_show_log">Lire les journaux</string>
+    <string name="action_show_log">Voir les journaux</string>
     <string name="title_screen_sequence">Séquence</string>
     <string name="title_screen_log">Journal</string>
     <string name="title_tab_basic_settings">Paramètres</string>
     <string name="title_tab_advanced_settings">Paramètres avancés</string>
     <string name="action_rate_now">Évaluer maintenant</string>
-    <string name="action_remind_later">Rappelez-moi plus tard</string>
+    <string name="action_remind_later">Me le rappeler plus tard</string>
     <string name="action_no_thanks">Non merci</string>
     <string name="field_name">Nom</string>
     <string name="field_host">Hôte</string>
@@ -44,8 +44,8 @@
     <string name="type_icmp_size_with_icmp_header">données + entête ICMP</string>
     <string name="type_icmp_size_all_headers">données + entêtes IP &amp; ICMP</string>
     <string name="field_icmp_packet_size">la taille de paquet ICMP inclut …</string>
-    <string name="field_launch_app">Exécuter une app après toquage</string>
-    <string name="field_launch_uri">Ouvrir une URI après toquage</string>
+    <string name="field_launch_app">Exécuter une application après avoir toqué</string>
+    <string name="field_launch_uri">Ouvrir une URI après avoir toqué</string>
     <string name="field_search">Chercher</string>
     <string name="action_edit">Editer</string>
     <string name="action_delete">Effacer</string>
@@ -120,7 +120,7 @@
     <string name="message_error_resolve">Impossible de résoudre le nom d\'hôte « %s »</string>
     <string name="message_error_unknown_host">Nom d\'hôte « %s » inconnu</string>
     <string name="message_error_app_launch">Impossible de lancer « %s »</string>
-    <string name="message_knocking_complete">Toquage fini !</string>
+    <string name="message_knocking_complete">Séquence de tocs terminée !</string>
     <string name="message_error_unknown">Erreur inconnue : %s</string>
     <string name="message_start_knocking">Toc-toc-toc « %s »</string>
     <string name="message_clipboard_confirmation">Copié</string>
@@ -134,7 +134,7 @@
     <string name="channel_name">Toc-toc</string>
     <string name="channel_description">Qui est là ? ὣ2</string>
     <string name="notification_title">Toc-toc !</string>
-    <string name="notification_desc">Toc-toc « %s ». Est-ce que quelqu\'un est là ?</string>
+    <string name="notification_desc">Toc-toc « %s », il y a quelqu\'un ?</string>
     <string name="notification_desc_attempt">Tentative [%1$d/%2$d] :</string>
     <string name="title_integration_alert">URI d\'automatisation</string>
     <string name="text_integration_alert">Copier ce lien pour lancer la séquence depuis une application d\'automatisation telle que Tasker ou Macrodroid. Pas besoin d\'ouvrir l\'application — il suffit d\'appeler l\'URI.</string>
@@ -176,7 +176,7 @@
     <string name="log_error_resolve_host">Impossible de résoudre %1$s : %2$s</string>
     <string name="log_error_empty_sequence">Séquence \'%s\' vide</string>
     <string name="log_error_unknown">Erreur inconnue : %s</string>
-    <string name="log_sequence_saved">Séquence \'%s\' enregistrée</string>
+    <string name="log_sequence_saved">Séquence \'%s\' sauvegardée</string>
     <string name="log_sequence_deleted">Séquence \'%s\' effacée</string>
     <string name="log_export">Exportation vers %1$s (%2$s séquences)</string>
     <string name="log_import">Importation depuis %1$s (%2$s séquences)</string>
@@ -205,7 +205,7 @@ Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée s
 • Une mauvaise configuration <b>peut</b> entraîner un dysfonctionnement de l’application.<br>
 • Modifiez ce paramètre <b>uniquement si vous êtes certain</b> que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).<br><br>
 Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
-    ]]></string>
+]]></string>
     <string name="action_understand">Je comprends</string>
     <string name="title_icmp_size_tooltip">Taille totale du paquet ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4 : %1$d octets (En-tête IP — %2$d, En-tête ICMP — %3$d, données — %4$d)</string>
@@ -231,7 +231,7 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
         <item quantity="other">%d secondes</item>
     </plurals>
     <string name="title_check_access_post_knock">Ré-essayer de toquer</string>
-    <string name="text_check_access_post_knock">Ré-essayer si la ressource ne devient pas disponible après toc.</string>
+    <string name="text_check_access_post_knock">Ré-essayer si la ressource ne devient pas disponible après avoir toqué.</string>
     <string name="title_check_access_retries">Nombre maximum de ré-essais</string>
     <plurals name="text_check_access_retries">
         <item quantity="one">%d fois</item>
@@ -246,12 +246,12 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
     <string name="title_settings_list">Liste de séquences</string>
     <string name="title_settings_multiline_title">Titre multi-ligne</string>
     <string name="text_settings_multiline_title">Autoriser le retour à la ligne des titres</string>
-    <string name="title_settings_shorten_title">Titre court</string>
-    <string name="type_shorten_start">Début\n(ex. « …votre long texte »)</string>
-    <string name="type_shorten_middle">Moyen\n(ex. « Texte très…g »)</string>
-    <string name="type_shorten_end">Fin\n(ex. « Très long t… »)</string>
+    <string name="title_settings_shorten_title">Raccourcissement du titre</string>
+    <string name="type_shorten_start">Au début\n(ex. « …votre long texte »)</string>
+    <string name="type_shorten_middle">Au milieu\n(ex. « Texte … long »)</string>
+    <string name="type_shorten_end">À la fin\n(ex. « Très long t… »)</string>
     <string name="title_settings_font_scale">Taille de la police du titre</string>
-    <string name="title_donate_alert">Aider « Toc aux ports »</string>
+    <string name="title_donate_alert">Aider « Knock on Ports »</string>
     <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> est et restera toujours <b>gratuit, open source et privé</b> — sans publicité, sans suivi, sans aucune condition.<br>
 <br>Si cette application vous fait gagner du temps ou résout des tâches complexes, pensez à soutenir son développement.
 <br>Votre contribution permet de :
