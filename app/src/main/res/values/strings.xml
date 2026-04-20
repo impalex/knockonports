@@ -333,6 +333,7 @@ For most users: <b>do not change this setting</b>.
     <string name="title_lang_it">Italian</string>
     <string name="title_lang_pl">Polish</string>
     <string name="title_lang_sq">Albanian</string>
+    <string name="title_lang_sr">Serbian</string>
     <string name="title_help_translate">Help us translate!</string>
     <string name="text_help_translate">This project is hosted on Weblate. Your contribution helps make this app accessible to everyone around the world.</string>
     <string name="action_translate">Go to Weblate</string>

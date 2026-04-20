@@ -307,6 +307,7 @@ class SequenceViewModel @AssistedInject constructor(
     }
 
     init {
+        Timber.d("Edit sequence $sequenceId")
         sequenceId?.let { loadSequence(id = it) }
         viewModelScope.launch {
             combine(

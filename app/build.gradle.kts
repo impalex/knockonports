@@ -32,11 +32,11 @@ val appScheme: String by rootProject.extra
 val appHost: String by rootProject.extra
 val knockHost: String by rootProject.extra
 
-val keystorePropertiesFile: File? = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 
 val keystoreProperties = Properties()
 
-if (keystorePropertiesFile?.exists() == true) {
+if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
@@ -84,7 +84,7 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00
-        versionName = "2.1.4"
+        versionName = "2.1.5"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {

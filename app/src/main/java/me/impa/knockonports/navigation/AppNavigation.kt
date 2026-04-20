@@ -36,9 +36,8 @@ fun AppNavigation(
     val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
 
     NavDisplay(
-        backStack = navigationState.backStack,
+        entries = navigationState.toEntries(entryProvider = entryProvider),
         onBack = { navigator.goBack() },
-        entryProvider = entryProvider,
         sceneStrategies = listOf(dialogSceneStrategy),
         modifier = modifier,
         transitionSpec = {
