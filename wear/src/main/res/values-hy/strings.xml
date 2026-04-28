@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="title_install_app">Տեղադրեք հավելվածը ձեր հեռախոսի վրա</string>
+    <string name="text_install_app">Հավելվածը ձեր ժամացույցի վրա օգտագործելու համար, խնդրում ենք տեղադրել հիմնական հավելվածը ձեր սմարթֆոնի վրա։</string>
+    <string name="action_open_market">Բացել Play Store-ը</string>
+    <string name="title_sequences">Հաջորդականություններ</string>
+    <string name="title_knocking">Թակոց</string>
+    <string name="title_no_name_sequence">(Անանուն հաջորդականություն)</string>
+    <string name="text_attempts">Փորձ %1$d/%2$d</string>
+    <string name="text_empty_list">Դատարկ ցուցակ</string>
 </resources>
