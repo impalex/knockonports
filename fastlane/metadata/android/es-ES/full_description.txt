@@ -1,0 +1,1 @@
+Un programa que ejecuta secuencias de toques a puertos de red con el fin de abrir discretamente servicios protegidos por cortafuegos. Configura secuencias usando paquetes UDP, TCP, o ICMP con soporte para IPv4 o IPv6.
