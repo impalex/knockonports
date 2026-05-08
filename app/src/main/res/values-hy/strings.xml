@@ -276,6 +276,7 @@
     <string name="title_lang_pl">Լեհերեն</string>
     <string name="title_lang_sq">Ալբաներեն</string>
     <string name="title_lang_sr">Սերբերեն</string>
+    <string name="title_lang_am">Հայերեն</string>
     <string name="title_help_translate">Օգնեք մեզ թարգմանել։</string>
     <string name="text_help_translate">Այս նախագիծը տեղակայված է Weblate-ում: Ձեր ներդրումը նպաստում է այս հավելվածը հասանելի դարձնելուն աշխարհի բոլորի համար:</string>
     <string name="action_translate">Անցնել Weblate-ին</string>

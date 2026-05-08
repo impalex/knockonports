@@ -67,6 +67,7 @@ private val languages = mapOf(
     Locale.forLanguageTag("de") to R.string.title_lang_de,
     Locale.forLanguageTag("en") to R.string.title_lang_en,
     Locale.forLanguageTag("fr") to R.string.title_lang_fr,
+    Locale.forLanguageTag("hy-AM") to R.string.title_lang_am,
     Locale.forLanguageTag("pt-BR") to R.string.title_lang_pt_br,
     Locale.forLanguageTag("ru-RU") to R.string.title_lang_ru,
     Locale.forLanguageTag("zh-CN") to R.string.title_lang_zh,

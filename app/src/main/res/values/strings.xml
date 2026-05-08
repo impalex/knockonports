@@ -24,6 +24,7 @@
         <item>\@MoisAlexander</item>
         <item>\@r4263</item>
         <item>\@renaud38</item>
+        <item>\@PazikLend</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
         <item>https://hosted.weblate.org/user/Acide-Burn/</item>
@@ -33,6 +34,7 @@
         <item>https://hosted.weblate.org/user/MoisAlexander/</item>
         <item>https://hosted.weblate.org/user/r4263/</item>
         <item>https://hosted.weblate.org/user/renaud38/</item>
+        <item>https://hosted.weblate.org/user/PazikLend/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
@@ -334,6 +336,7 @@ For most users: <b>do not change this setting</b>.
     <string name="title_lang_pl">Polish</string>
     <string name="title_lang_sq">Albanian</string>
     <string name="title_lang_sr">Serbian</string>
+    <string name="title_lang_am">Armenian</string>
     <string name="title_help_translate">Help us translate!</string>
     <string name="text_help_translate">This project is hosted on Weblate. Your contribution helps make this app accessible to everyone around the world.</string>
     <string name="action_translate">Go to Weblate</string>

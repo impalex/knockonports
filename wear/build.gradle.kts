@@ -51,7 +51,7 @@ android {
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00 + 3
-        versionName = "1.0.4"
+        versionName = "1.0.5"
 
         val knocklordCapName: String by rootProject.extra
         val knockletCapName: String by rootProject.extra
@@ -94,6 +94,7 @@ android {
         release {
             signingConfig = signingConfigs.findByName("release")
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             buildConfigField("Boolean", "DEBUG", "false")
         }

@@ -68,9 +68,11 @@ fun MainScreenActions(
                 Icon(painterResource(R.drawable.bug_report_icon), contentDescription = null)
             }
         }
+        /*
+        Just... whatever...
         if (isRuLangAvailable) {
             DonateButton()
-        }
+        }*/
         IconButton(onClick = debounced({ onAction(MainBarEvent.ToggleListMode) })) {
             if (isDetailedView) {
                 Icon(painterResource(R.drawable.view_list), contentDescription = null)

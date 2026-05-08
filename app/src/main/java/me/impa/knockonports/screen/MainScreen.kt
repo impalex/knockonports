@@ -195,9 +195,12 @@ fun MainScreenContent(
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        /*
+        Enough...
         AnimatedVisibility(visible = state.showKitty) {
             TranslateCard(onEvent)
         }
+         */
 
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
