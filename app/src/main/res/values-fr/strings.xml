@@ -205,7 +205,7 @@ Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée s
 • Une mauvaise configuration <b>peut</b> entraîner un dysfonctionnement de l’application.<br>
 • Modifiez ce paramètre <b>uniquement si vous êtes certain</b> que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).<br><br>
 Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
-]]></string>
+    ]]></string>
     <string name="action_understand">Je comprends</string>
     <string name="title_icmp_size_tooltip">Taille totale du paquet ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4 : %1$d octets (En-tête IP — %2$d, En-tête ICMP — %3$d, données — %4$d)</string>
@@ -299,4 +299,6 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
     <string name="notification_desc_waiting_for_resource">Vérification de la disponibilité des ressources</string>
     <string name="title_lang_en">Anglais</string>
     <string name="title_lang_ru">Russe</string>
+    <string name="title_lang_sr">Serbe</string>
+    <string name="title_lang_am">Arménien</string>
 </resources>
