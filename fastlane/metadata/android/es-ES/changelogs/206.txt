@@ -1,0 +1,3 @@
+Hotfix: Corregido el botón iniciar en el modo de lista compacto
+Nuevo: Buscar en la lista de aplicaciones
+Cambiado: Devuelve el formato antiguo de archivo cuando exporta

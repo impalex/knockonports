@@ -1,0 +1,3 @@
+• Nuevo idioma: Chino simplificado
+• El retardo predeterminado entre paquetes es de 500 ms
+• Corrección de errores

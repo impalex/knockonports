@@ -1,0 +1,3 @@
+• Ajustes menores de interfaz.
+• Añadido un botón alternador (toggle) para cambiar la vista de las secuencias entre compacta y detallada.
+• Implementado control de accesos a la aplicación (biometría, PIN, etc.).

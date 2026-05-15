@@ -1,0 +1,2 @@
+• Corrección de errores y mejoras de estabilidad.
+• Nueva opción para establecer el tamaño del payload UDP por separado de su contenido.

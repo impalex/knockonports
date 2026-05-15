@@ -1,0 +1,4 @@
+• Mejoras en el modo Edge-to-edge.
+• Temas personalizados: elige cualquier color base para generar tu propio tema.
+• Se agregó un modo negro puro para pantallas AMOLED (compatible con temas personalizados).
+• Configura colores personalizados para los nombres de secuencia según el estado de disponibilidad de recursos.

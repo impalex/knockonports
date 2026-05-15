@@ -1,0 +1,8 @@
+• Posibilidad de configurar el tamaño del paquete ICMP teniendo en cuenta la cabecera IP
+• Configuración del tamaño de la cabecera IP en la red
+• Para los paquetes ICMP, se puede ver información detallada sobre su formato
+• Se han añadido validadores al editor de secuencias
+• Vuelve el modo vertical
+• Ligero rediseño del editor de secuencias
+• Compatibilidad con iconos adaptativos (Android 8.0+)
+• Compatibilidad con dispositivos con un tamaño de página de memoria de 16 KB

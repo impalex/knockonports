@@ -1,0 +1,3 @@
+Monitorización de recursos. Vincula secuencias a recursos externos (ping, puerto, URL) con comprobaciones automáticas de disponibilidad. Si el recurso sigue sin estar disponible tras un intento fallido, la app lo reintentará (configurable).
+Grupos de secuencias. Organiza las configuraciones en grupos para una mejor gestión.
+Compatibilidad de borde a borde para una visualización fluida en dispositivos con diseño de pantalla completa.
