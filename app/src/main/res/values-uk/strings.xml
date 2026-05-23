@@ -159,4 +159,82 @@
     <string name="log_error_empty_sequence">Пуста послідовність \'%s\'</string>
     <string name="log_error_unknown">Невідома помилка: %s</string>
     <string name="log_sequence_saved">Збережено послідовність \'%s\'</string>
+    <string name="log_sequence_deleted">Видалити послідовність \'%s\'</string>
+    <string name="log_export">Експортувати до %1$s (%2$s послідовностей)</string>
+    <string name="log_import">Імпортувати з %1$s(%2$s)</string>
+    <string name="log_error_export">Експортувати до%1$s :%2$s</string>
+    <string name="log_error_import">Імпортувати з %1$s: %2$s</string>
+    <string name="text_error_general">Помилка: %s</string>
+    <string name="text_error_empty_value">Значення пусте</string>
+    <string name="text_error_invalid_range">Значення має бути між %1$d та %2$d</string>
+    <string name="text_error_number_only">Значення має бути цифровим</string>
+    <string name="title_settings_enable_custom_ip_hdr">Власний розмір заголовка IP</string>
+    <string name="text_settings_enable_custom_ip_hdr">Зазначте розмір заголовка IP вашої мережі</string>
+    <string name="title_settings_ip4_hdr_size">Розмір заголовка IPv4</string>
+    <string name="text_settings_ip4_hdr_size">%d байт</string>
+    <string name="title_settings_resource_check_interval">Інтервал перевірки ресурсу</string>
+    <plurals name="text_settings_resource_check_interval">
+        <item quantity="one">%d секунда</item>
+        <item quantity="few">%d секунди</item>
+        <item quantity="many">%d секунд</item>
+        <item quantity="other">%d секунд</item>
+    </plurals>
+    <string name="title_custom_ip4hdr_alert">Увага!</string>
+    <string name="text_custom_ip4hdr_alert"><![CDATA[
+⚠️ <b>Продовжуйте з обережністю!</b><br><br>
+Це налаштування дозволяє вам вказати розмір заголовка IP що використовується у <i>вашій мережі</i>.<br><br>
+<b>Важливе зауваження:</b><br><br>
+• <b>Це НЕ модифікує реальний розмір заголовка</b> — це лише інформує додаток про конфігурацію вашої мережі.<br>
+• Неправильна конфігурація <b>може</b> викликали неправильну поведінку додатка.<br>
+• Змінюйте це <b>лише якщо ви впевнені</b> що ваша мережа використовує не стандартний розмір заголовка IP (наприклад власні VPN, застарілі системи).<br><br>
+Для більшості користувачів: <b>не змінюйте ця налаштування</b>.
+    ]]></string>
+    <string name="action_understand">Я розумію</string>
+    <string name="title_icmp_size_tooltip">Загальний розмір ICMP пакета</string>
+    <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d байт (заголовок IP — %2$d, заголовок ICMP — %3$d, дані — %4$d)</string>
+    <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d байт (заголовок IP — %2$d, заголовок ICMP — %3$d, дані — %4$d)</string>
+    <string name="title_settings_discord">Сервер Discord</string>
+    <string name="text_settings_discord">Місце, де я вдаю що працюю.</string>
+    <string name="field_group">Група</string>
+    <string name="field_url">URL</string>
+    <string name="title_beta_alert">Бета версія</string>
+    <string name="text_beta_alert">Ця бета версія додає можливість зв\'язати послідовність з зовнішнім ресурсом. Якщо потрібно, додаток може моніторити доступність цього ресурса. Я буду вдячний за відгуки, пропозиції та будь-які повідомлення про звільнення баги. Відгуки приймаються на GitHub, електронною поштою або в Discord. Усі контакти можна знайти в секції \"Про додаток\".</string>
+    <string name="title_header_sequence_packet_cfg">Пакети</string>
+    <string name="title_header_sequence_post_knock">Дії після простукування</string>
+    <string name="title_header_sequence_access_check">Пов\'язані ресурси</string>"
+    <string name="title_check_access_enable">Перевірка доступу</string>
+    <string name="text_check_access_enable">Періодична перевірка доступності оборонного ресурса.</string>
+    <string name="type_check_access_url">URL</string>
+    <string name="type_check_access_port">Порт</string>
+    <string name="type_check_access_ping">Пінг</string>
+    <string name="title_check_access_timeout">Тайм-аут</string>
+    <plurals name="text_check_access_timeout">
+        <item quantity="one">%d секунда</item>
+        <item quantity="few">%d секунди</item>
+        <item quantity="many">%d секунд</item>
+        <item quantity="other">%d секунд</item>
+    </plurals>
+    <string name="title_check_access_post_knock">Повторити простукування</string>
+    <string name="text_check_access_post_knock">Повторити, якщо ресурс не стає доступним після простукування.</string>
+    <string name="title_check_access_retries">Максимум повторів</string>
+    <plurals name="text_check_access_retries">
+        <item quantity="one">%d раз</item>
+        <item quantity="few">%d рази</item>
+        <item quantity="many">%d разів</item>
+        <item quantity="other">%d разів</item>
+    </plurals>
+    <string name="text_error_unknown">Невідома помилка</string>
+    <string name="text_error_http_code">Помилка HTTP: %d</string>
+    <string name="text_error_no_response">Немає відповіді</string>
+    <string name="text_resource_available">Доступно</string>
+    <string name="text_resource_checking">Перевірка…</string>
+    <string name="title_settings_list">Список послідовностей</string>
+    <string name="title_settings_multiline_title">Multi-line заголовок</string>
+    <string name="text_settings_multiline_title">Дозволити розділення заголовків на декілька рядків</string>
+    <string name="title_settings_shorten_title">Скорочений заголовок</string>
+    <string name="type_shorten_start">Початок\n(наприклад «…же довгий текст»)</string>
+    <string name="type_shorten_middle">Середина. \n(наприклад «Дуже ...й текст»</string>
+    <string name="type_shorten_end">Кінець. \n(наприклад «Дуже довгий т...»</string>
+    <string name="title_settings_font_scale">Збільшення шрифта заголовка</string>
+    <string name="title_donate_alert">Підтримати «Knock on Ports»</string>
 </resources>
