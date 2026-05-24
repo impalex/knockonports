@@ -290,6 +290,7 @@
     <string name="action_translate">Открыть Weblate</string>
     <string name="title_lang_sq">Албанский</string>
     <string name="title_lang_am">Армянский</string>
+    <string name="title_lang_uk">Украинский</string>
     <string name="title_help_translate">Помогите нам с переводом!</string>
     <string name="title_screen_translation">Перевод</string>
     <string name="title_settings_translation">Переводы</string>
