@@ -215,7 +215,6 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
     <string name="field_group">Groupe</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Version Bêta</string>
-    <string name="text_beta_alert">Cette version bêta permet de lier une séquence à une ressource externe. L\'application peut surveiller la disponibilité de cette ressource si nécessaire. Vos commentaires, suggestions et signalements de bugs sont les bienvenus. Vous pouvez nous contacter via GitHub, par e-mail ou sur Discord ; toutes les informations de contact se trouvent dans la section « À propos ».</string>
     <string name="title_header_sequence_packet_cfg">Paquets</string>
     <string name="title_header_sequence_post_knock">Actions post-toc</string>
     <string name="title_header_sequence_access_check">Ressource liée</string>"
@@ -252,15 +251,6 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
     <string name="type_shorten_end">À la fin\n(ex. « Très long t… »)</string>
     <string name="title_settings_font_scale">Taille de la police du titre</string>
     <string name="title_donate_alert">Aider « Knock on Ports »</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> est et restera toujours <b>gratuit, open source et privé</b> — sans publicité, sans suivi, sans aucune condition.<br>
-<br>Si cette application vous fait gagner du temps ou résout des tâches complexes, pensez à soutenir son développement.
-<br>Votre contribution permet de :
-<br>→ <b>Reconnaître le travail accompli</b> pendant des années de mises à jour,
-<br>→ <b>Stimuler les innovations futures</b> pour des besoins technologiques spécifiques,
-<br>→ <b>Préserver l’indépendance</b> et le caractère communautaire du projet.
-<br>
-<br><i>Chaque contribution compte, même un simple café</i> ☕.
-<br><i>Merci de votre confiance !</i>]]></string>
     <string name="action_not_now">Pas Maintenant</string>
     <string name="action_support">Aider au développement</string>
     <string name="title_settings_app_lock">Verrouillage d\'application</string>

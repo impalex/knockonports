@@ -189,7 +189,6 @@
     <string name="field_group">分组管理</string>
     <string name="field_url">URL 地址</string>
     <string name="title_beta_alert">测试版</string>
-    <string name="text_beta_alert">此测试版新增序列关联外部资源功能，应用可在必要时自动检测该资源的可用状态。欢迎您通过 GitHub、邮件或 Discord 提交反馈、建议或 Bug 报告，具体联系方式请见\"关于\"页面。</string>
     <string name="title_header_sequence_packet_cfg">数据包设置</string>
     <string name="title_header_sequence_post_knock">敲门后自动操作</string>
     <string name="title_header_sequence_access_check">链接的资源</string>"
@@ -222,15 +221,6 @@
     <string name="type_shorten_end">结尾省略\n（如 «很长…»）</string>
     <string name="title_settings_font_scale">标题字体大小</string>
     <string name="title_donate_alert">支持 «Knock on Ports»</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> 始终坚持 <b>免费、开源、保护隐私</b> 的理念 — 无广告、不追踪、无任何附加条件。<br>
-<br>如果本应用为您节省了时间或解决了棘手问题，欢迎考虑支持开发者。
-<br>您的支持将用于：
-<br>→ <b>肯定多年持续更新维护的付出</b>，
-<br>→ <b>推动小众技术场景的功能创新</b>，
-<br>→ <b>保持项目独立运营</b>，坚持社区驱动模式。
-<br>
-<br><i>无论多少都是鼓励，哪怕只是一杯咖啡的心意</i> ☕。
-<br><i>感谢您的信任与支持！</i>]]></string>
     <string name="title_settings_app_lock">应用锁</string>
     <string name="text_settings_app_lock_desc">打开应用时需验证身份</string>
     <string name="text_settings_app_lock_not_available_desc">启用此功能前，请先在您的设备上设置屏幕锁。</string>

@@ -5,7 +5,6 @@ Fonctionnalités principales :
 • Flexibilité du protocole : Créez des séquences avec des paquets UDP, TCP ou ICMP. Paramétrez finement les ports de destination, le délai entre paquets, le TTL, le nombre de sauts maximum et le contenu des paquets,
 • Automatisation et intégration : Exécutez automatiquement des applications (par ex. des clients SSH) ou ouvrez une URL après envoi de la séquence de "Tocs". Gère l'intégration d'autres outils via le support des schémas d'URI pour une automatisation avancée,
 • Entièrement compatible avec IPv4 et IPv6,
-• Support pour Wear OS : Exécutez les séquences de "Tocs" directement depuis votre montre connectée,
 • Accès rapide : Utilisez des raccourcis ou un widget pour exécution immédiate des séquences configurées,
 • Personnalisation : Ajustez l'interface avec les thèmes de couleur dynamique (Android 12 et ultérieurs), accentuations personnalisées et mode clair/sombre. Inclus la possibilités d'augmenter les contrastes,
 • Gestion des configurations : Importez et exportez vos séquences de "Tocs" pour sauvegarde et restauration,

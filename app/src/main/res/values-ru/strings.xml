@@ -203,7 +203,6 @@
     <string name="field_group">Группа</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Бета-версия</string>
-    <string name="text_beta_alert">В эту бета-версию добавлена возможность связать последовательность с внешним ресурсом. При необходимости приложение может отслеживать доступность этого ресурса. Буду благодарен за фидбэк, пожелания и найденные баги. Фидбэк принимается на GitHub, емайл или Discord - все контакты можно найти в разделе «О приложении».</string>
     <string name="title_header_sequence_packet_cfg">Пакеты</string>
     <string name="title_header_sequence_post_knock">Действия после стука</string>
     <string name="title_header_sequence_access_check">Связь с ресурсом</string>
@@ -246,15 +245,6 @@
     <string name="type_shorten_end">Конец\n(например, «Очень длинный т…»)</string>
     <string name="title_settings_font_scale">Размер шрифта заголовка</string>
     <string name="title_donate_alert">Поддержать «Knock on Ports»</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> — <b>бесплатное, open-source приложение без рекламы и слежки</b>. Так будет всегда.<br>
-<br>Если этот инструмент экономит ваше время или решает сложные задачи — поддержите его развитие.
-<br>Ваша помощь:
-<br>→ <b>Оценит годы усилий</b> по поддержке и улучшениям,
-<br>→ <b>Поддержит создание уникальных функций</b> для узких технических задач,
-<br>→ <b>Сохранит проект независимым</b> и открытым для всех.
-<br>
-<br><i>Любая сумма мотивирует — даже на пару пельменей разработчику.</i> ☺️
-<br><i>Спасибо, что доверяете моему инструменту!</i>]]></string>
     <string name="action_not_now">Не сейчас</string>
     <string name="action_support">Поддержать проект</string>
     <string name="title_settings_app_lock">Блокировка приложения</string>

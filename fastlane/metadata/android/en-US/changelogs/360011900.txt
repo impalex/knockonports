@@ -1,0 +1,2 @@
+• New language localization: Spanish (credit to @Arquero)
+• Update app theme (fix #37)

@@ -5,7 +5,6 @@ Wichtigste Merkmale:
 • Protokollflexibilität: Erstellen Sie Sequenzen mit UDP-, TCP- oder ICMP-Paketen. Passen Sie Parameter wie Zielports, Verzögerungen zwischen den Paketen, TTL, Hop-Limit und Paket-Nutzdaten an.
 • Automatisierung & Integration: Starten Sie Anwendungen (z. B. SSH-Clients) automatisch oder öffnen Sie URLs nach einem erfolgreichen Knock. Unterstützt die Integration mit anderen Tools über ein benutzerdefiniertes URI-Schema für erweiterte Automatisierung.
 • Dual-Stack-Unterstützung: Vollständige Kompatibilität mit IPv4- und IPv6-Netzwerken.
-• Wear OS-Unterstützung: Führen Sie Ihre Knock-Sequenzen direkt von Ihrer Smartwatch aus.
 • Schnellzugriff: Nutzen Sie Verknüpfungen auf dem Startbildschirm und ein Widget zur sofortigen Ausführung konfigurierter Sequenzen.
 • Anpassung: Passen Sie die Benutzeroberfläche mit dynamischen Farbthemen (Android 12+), benutzerdefinierten Akzenten und Hell-/Dunkel-Modi an. Enthält Optionen für verbesserten Kontrast.
 • Konfigurationsverwaltung: Exportieren und importieren Sie Ihre Knock-Sequenzen zur Sicherung oder Übertragung.

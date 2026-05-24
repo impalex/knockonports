@@ -20,5 +20,4 @@ sealed interface UiOverlay {
     data class ConfirmDelete(val id: Long, val name: String) : UiOverlay
     data class Automate(val id: Long) : UiOverlay
     data object Review : UiOverlay
-    data object Beta : UiOverlay
 }

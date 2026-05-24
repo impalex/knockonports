@@ -68,16 +68,16 @@ platform :android do
       package_name: 'me.impa.knockonports',
       aab_paths: ["app/build/outputs/bundle/googleRelease/app-google-release.aab"]
     )
-    supply(
-	  metadata_path: "fastlane/metadata_upload",
-      skip_upload_images: 'true',
-      skip_upload_screenshots: 'true',
-	  skip_upload_metadata: 'true',
-	  skip_upload_changelogs: 'true',
-      track: 'wear:production',
-      package_name: 'me.impa.knockonports',
-      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
-    )
+#    supply(
+#	  metadata_path: "fastlane/metadata_upload",
+#      skip_upload_images: 'true',
+#      skip_upload_screenshots: 'true',
+#	  skip_upload_metadata: 'true',
+#	  skip_upload_changelogs: 'true',
+#      track: 'wear:production',
+#      package_name: 'me.impa.knockonports',
+#      aab_paths: ["wear/build/outputs/bundle/release/wear-release.aab"]
+#    )
   end
 
   desc "Submit a new Beta Build to the Google Play"

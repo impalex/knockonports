@@ -192,7 +192,6 @@
     <string name="field_group">Խումբ</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Բետա տարբերակ</string>
-    <string name="text_beta_alert">Այս բետա տարբերակը հնարավորություն է տալիս հաջորդականությունը կապել արտաքին ռեսուրսի հետ։ Անհրաժեշտության դեպքում հավելվածը կարող է վերահսկել այս ռեսուրսի հասանելիությունը։ Ես շնորհակալ կլինեմ արձագանքի, առաջարկների և հայտնաբերված ցանկացած սխալի համար։ Կարծիքներն ընդունվում են GitHub-ում, էլ. փոստով կամ Discord-ում. բոլոր կոնտակտները կարելի է գտնել «Մեր մասին» բաժնում։</string>
     <string name="title_header_sequence_packet_cfg">Փաթեթներ</string>
     <string name="title_header_sequence_post_knock">Գործողություններ թակոծից հետո</string>
     <string name="title_header_sequence_access_check">Կապակցված ռեսուրս</string>"
@@ -227,7 +226,6 @@
     <string name="type_shorten_end">Վերջ\n(օրինակ. «Շատ երկար տ…»)</string>
     <string name="title_settings_font_scale">Վերնագրի տառատեսակի չափը</string>
     <string name="title_donate_alert">Աջակցել «Knock on Ports»֊ին</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports֊ը</b> եղել է և միշտ կմնա <b>անվճար, բաց կոդով, և սեփական</b> —առանց գովազդ, հետևում և առանց գաղտնի պայմանների .<br>\n<br>Եթե այս հավելվածը խնայում է ձեր ժամանակը կամ օգնում է լուծել բարդ խնդիրներ, կարող եք աջակցել դրա հետագա զարգացմանը։\n<br>Ձեր ներդրումն օգնում է՝\n<br>→ <b>Գնահատել այն ջանքերը</b> որոնք ներդրվել են տարիների թարմացումների հետևում,\n<br>→ <b>Խթանել նորարարությունները</b> նեղ տեխնիկական կարիքների համար,\n<br>→ <b>Նախագիծը պահել անկախ</b> և համայնքի կողմից առաջնորդվող։\n<br>\n<br><i>Ցանկացած աջակցություն մոտիվացնում է, նույնիսկ եթե դա պարզապես մի գավաթ սուրճ է</i> ☕։\n<br><i>Շնորհակալություն այս գործիքին վստահելու համար:</i>]]></string>
     <string name="action_not_now">Հիմա չէ</string>
     <string name="action_support">Աջակցել զարգացմանը</string>
     <string name="title_settings_app_lock">Հավելվածի կողպում</string>

@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.map
-import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.DEFAULT_CHECK_PERIOD
 import me.impa.knockonports.constants.DEFAULT_TITLE_FONT_SCALE
 import me.impa.knockonports.constants.MIN_IP4_HEADER_SIZE
@@ -77,8 +76,6 @@ interface SettingsDataStore {
     suspend fun setDoNotAskForReviewFlag()
     val doNotAskNotification: Flow<Boolean>
     suspend fun setDoNotAskForNotificationsFlag()
-    val betaMessageState: Flow<String?>
-    suspend fun setCurrentBetaMessageRead()
     val showKitty: Flow<Boolean>
     suspend fun hideKitty()
     // endregion Miscellaneous settings
@@ -230,16 +227,6 @@ class SettingsDataStoreImpl(@ApplicationContext val context: Context) : Settings
     override suspend fun setDoNotAskForNotificationsFlag() {
         context.dataStore.edit { preferences ->
             preferences[doNotAskNotificationKey] = true
-        }
-    }
-
-    override val betaMessageState = context.dataStore.data
-        .distinctUntilChangedBy { it[betaMessageStateKey] }
-        .map { preferences -> preferences[betaMessageStateKey] }
-
-    override suspend fun setCurrentBetaMessageRead() {
-        context.dataStore.edit { preferences ->
-            preferences[betaMessageStateKey] = CURRENT_BETA_TEST_MESSAGE
         }
     }
 

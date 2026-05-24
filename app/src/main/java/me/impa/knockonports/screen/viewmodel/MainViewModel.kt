@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import me.impa.knockonports.BuildConfig
-import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.KEEP_LAST_LOG_ENTRY_COUNT
 import me.impa.knockonports.constants.REVIEW_KNOCKS_REQUIRED
 import me.impa.knockonports.data.KnocksRepository
@@ -120,7 +119,6 @@ class MainViewModel @Inject constructor(
 
             is UiEvent.Export -> exportSequences(event.uri)
             is UiEvent.Import -> importSequences(event.uri)
-            is UiEvent.ConfirmBetaMessage -> viewModelScope.launch { confirmBetaMessage() }
             is UiEvent.ToggleListMode -> viewModelScope.launch {
                 settingsDataStore.setDetailedListView(!state.value.detailedList)
             }
@@ -318,11 +316,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun confirmBetaMessage() {
-        settingsDataStore.setCurrentBetaMessageRead()
-        _overlay.update { null }
-    }
-
     private fun startSequenceCollection() {
         Timber.d("Start collecting sequences")
         repository.getSequences()
@@ -400,13 +393,7 @@ class MainViewModel @Inject constructor(
             repository.cleanupLogEntries(KEEP_LAST_LOG_ENTRY_COUNT)
         }
         viewModelScope.launch {
-            when {
-                BuildConfig.VERSION_NAME.contains("beta") && CURRENT_BETA_TEST_MESSAGE.isNotEmpty()
-                        && settingsDataStore.betaMessageState.first() != CURRENT_BETA_TEST_MESSAGE ->
-                    _overlay.update { UiOverlay.Beta }
-
-                else -> checkReviewRequest()
-            }
+            checkReviewRequest()
             if (settingsDataStore.showKitty.first())
                 _state.update { it.copy(showKitty = true) }
         }

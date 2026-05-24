@@ -36,7 +36,6 @@ sealed interface UiEvent {
     data object DisableNotificationRequest : UiEvent
     data class Export(val uri: Uri) : UiEvent
     data class Import(val uri: Uri) : UiEvent
-    data object ConfirmBetaMessage : UiEvent
     data object ToggleListMode : UiEvent
     data object HideKitty : UiEvent
 }

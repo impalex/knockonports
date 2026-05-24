@@ -25,6 +25,7 @@
         <item>\@r4263</item>
         <item>\@renaud38</item>
         <item>\@PazikLend</item>
+        <item>\@Arquero</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
         <item>https://hosted.weblate.org/user/Acide-Burn/</item>
@@ -35,6 +36,7 @@
         <item>https://hosted.weblate.org/user/r4263/</item>
         <item>https://hosted.weblate.org/user/renaud38/</item>
         <item>https://hosted.weblate.org/user/PazikLend/</item>
+        <item>https://hosted.weblate.org/user/Arquero/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
@@ -244,7 +246,6 @@ For most users: <b>do not change this setting</b>.
     <string name="field_group">Group</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Beta Version</string>
-    <string name="text_beta_alert">This beta version adds the ability to link a sequence to an external resource. If necessary, the application can monitor the availability of this resource. I will be grateful for feedback, suggestions and any bugs found. Feedback is accepted on GitHub, email or Discord - all contacts can be found in the “About” section.</string>
     <string name="title_header_sequence_packet_cfg">Packets</string>
     <string name="title_header_sequence_post_knock">Post-knock Actions</string>
     <string name="title_header_sequence_access_check">Linked Resource</string>"
@@ -279,15 +280,6 @@ For most users: <b>do not change this setting</b>.
     <string name="type_shorten_end">End\n(eg. «Very long t…»)</string>
     <string name="title_settings_font_scale">Title Font Scale</string>
     <string name="title_donate_alert">Support «Knock on Ports»</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> is and always will be <b>free, open-source, and private</b> — no ads, no tracking, no strings attached.<br>
-<br>If this app saves you time or solves complex tasks, consider supporting its development.
-<br>Your contribution helps:
-<br>→ <b>Acknowledge the effort</b> behind years of updates,
-<br>→ <b>Fuel future innovations</b> for niche tech needs,
-<br>→ <b>Keep the project independent</b> and community-driven.
-<br>
-<br><i>Every bit motivates, even if it’s just for coffee</i> ☕.
-<br><i>Thank you for trusting this tool!</i>]]></string>
     <string name="action_not_now">Not Now</string>
     <string name="action_support">Support Development</string>
     <string name="title_settings_app_lock">App Lock</string>

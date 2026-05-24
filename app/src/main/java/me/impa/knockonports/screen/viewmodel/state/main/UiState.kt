@@ -16,6 +16,7 @@
 
 package me.impa.knockonports.screen.viewmodel.state.main
 
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -26,6 +27,7 @@ import me.impa.knockonports.data.type.TitleOverflowType
 import me.impa.knockonports.service.resource.ResourceState
 import me.impa.knockonports.service.wear.WearConnectionStatus
 
+@Stable
 data class UiState(
     val sequences: ImmutableMap<String, ImmutableList<Sequence>> = persistentMapOf(),
     val resourceState: ImmutableMap<Long, ResourceState> = persistentMapOf(),

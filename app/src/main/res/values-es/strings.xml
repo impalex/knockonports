@@ -195,7 +195,6 @@ Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
     <string name="field_group">Grupo</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Versión beta</string>
-    <string name="text_beta_alert">Esta versión beta añade la capacidad de vincular una secuencia a un recurso externo. Si es necesario, la aplicación puede supervisar la disponibilidad de este recurso. Te agradeceré la opinión, sugerencias e información sobre cualquier fallo que encuentres. Me lo puedes dejar en GitHub, enviar por correo electrónico o Discord- más detalles en la sección “Acerca”.</string>
     <string name="title_header_sequence_packet_cfg">Paquetes</string>
     <string name="title_header_sequence_post_knock">Acciones post-knock</string>
     <string name="title_header_sequence_access_check">Recursos relacionados</string>"
@@ -257,7 +256,6 @@ Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
     <string name="text_settings_developer_page">Otras aplicaciones que he hecho. Algunas a propósito.</string>
     <string name="field_payload_size">Tamaño del payload</string>
     <string name="text_auto">Auto</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> es y siempre será <b>gratis, de código abierto, y centrada en la privacidad</b> — sin anuncios, ni rastreo, sin nada oculto.<br>\n<br>Si esta app te ahorra tiempo o te soluciona tareas difíciles considera apoyar su desarrollo.\n<br>Tu contribución ayuda:\n<br>→ <b>Reconociendo el esfuerzo</b> detrás de años de actualizaciones,\n<br>→ <b>Es el combustible de futuras mejoras</b> para cubrir necesidades técnicas de nicho,\n<br>→ <b>Mantiene el proyecto independiente</b> y dirigido por la comunidad.\n<br>\n<br><i>Toda piedra hace margen, incluso aunque sólo sea un café</i> ☕.\n<br><i>Gracias por confiar en esta herramienta!</i>]]></string>
     <string name="text_tooltip_udp_payload">El tamaño total del paquete incluye el encabezado IP (20–60 bytes), el encabezado UDP (8 bytes), y el tamaño del payload especificado.</string>
     <string name="action_wear_companion">Wear OS App</string>
     <string name="title_screen_wear">Estado de Wear OS Companion App</string>

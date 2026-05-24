@@ -192,7 +192,6 @@ Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     <string name="field_group">Gruppe</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Beta Version</string>
-    <string name="text_beta_alert">Diese Beta-Version bietet nun die Möglichkeit, eine Sequenz mit einer externen Ressource zu verknüpfen. Bei Bedarf kann die Anwendung die Verfügbarkeit dieser Ressource überwachen. Ich freue mich über Feedback, Vorschläge und Hinweise auf gefundene Fehler. Feedback kann über GitHub, per E-Mail oder auf Discord gegeben werden – alle Kontaktdaten finden Sie im Abschnitt „Über“.</string>
     <string name="title_header_sequence_packet_cfg">Pakete</string>
     <string name="title_header_sequence_post_knock">Post-knock Actions</string>
     <string name="title_header_sequence_access_check">Verlinkte Ressource</string>"
@@ -227,15 +226,6 @@ Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     <string name="type_shorten_end">Ende\n(z. B. „Sehr langes t…“)</string>
     <string name="title_settings_font_scale">Schriftgröße der Überschrift</string>
     <string name="title_donate_alert">«Knock on Ports» unterstützen</string>
-    <string name="text_donate_alert"><![CDATA[<b>„Knock on Ports"</b> ist und bleibt <b>kostenlos, Open Source und privat</b> – keine Werbung, kein Tracking, keine versteckten Bedingungen.<br>
-<br>Wenn diese App dir Zeit spart oder komplexe Aufgaben löst, erwäge bitte, ihre Entwicklung zu unterstützen.
-<br>Dein Beitrag hilft dabei:
-<br>→ <b>den Aufwand anzuerkennen</b>, der hinter jahrelangen Updates steckt,
-<br>→ <b>zukünftige Innovationen voranzutreiben</b> für Nischenanforderungen im Tech-Bereich,
-<br>→ <b>das Projekt unabhängig zu halten</b> und von der Community getragen.
-<br>
-<br><i>Jeder noch so kleine Beitrag motiviert, selbst wenn er nur für einen Kaffee reicht</i> ☕.
-<br><i>Vielen Dank für Ihr Vertrauen in dieses Tool!</i>]]></string>
     <string name="action_not_now">Nicht jetzt</string>
     <string name="action_support">Entwicklung unterstützen</string>
     <string name="title_settings_app_lock">App-Sperre</string>

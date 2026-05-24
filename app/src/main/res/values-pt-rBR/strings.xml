@@ -194,7 +194,6 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="field_group">Grupo</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Versão beta</string>
-    <string name="text_beta_alert">Esta versão beta adiciona a habilidade de vincular uma sequência à um recurso externo. Se necessário, a aplicação pode monitorar a disponibilidade deste recurso. Eu serei grato por feedbacks, sugestões e quaisquer bugs encontrados. Feedbacks são aceitos no GitHub, email ou Discord - todos os contatos podem ser encontrados na sessão \"Sobre\".</string>
     <string name="title_header_sequence_packet_cfg">Pacotes</string>
     <string name="title_header_sequence_post_knock">Ações pós-disparo</string>
     <string name="title_header_sequence_access_check">Recurso vinculado</string>"
@@ -231,7 +230,6 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="type_shorten_end">Fim\n(ex: «Muito longo…»)</string>
     <string name="title_settings_font_scale">Escala da fonte do título</string>
     <string name="title_donate_alert">Apoie «Knock on Ports»</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> é e sempre será <b>grátis, código aberto e privado</b> — sem anúncios, sem rastreamento, sem linhas presas.<br>\n<br>Se este app lhe salva tempo ou resolve tarefas complexas, considere apoiar o seu desenvolvimento.\n<br>Sua contribuição ajuda:\n<br>→ <b>Reconhecer o esforço</b> por tras de anos de atualizações,\n<br>→ <b>Alimentar anos de inovações</b> para necessidades de tecnologia nichadas,\n<br>→ <b>Manter o projeto independente</b> e impulsionado pela comunidade.\n<br>\n<br><i>Cada pedacinho motiva, mesmo que seja apenas para um café</i> ☕.\n<br><i>Obrigado por confiar nesta ferramenta!</i>]]></string>
     <string name="action_not_now">Agora não</string>
     <string name="action_support">Apoie o desenvolvimento</string>
     <string name="title_settings_app_lock">Trava do aplicativo</string>

@@ -5,7 +5,6 @@ Características principales:
 • Flexibilidad de protocolo: Crea secuencias con paquetes UDP, TCP o ICMP. Ajusta parámetros como puertos de destino, retrasos entre paquetes, TTL, límite de saltos y datos de payload.
 • Automatización e integración: Ejecuta aplicaciones automáticamente (por ejemplo, clientes SSH) o abre URLs tras un knock exitoso. Admite la integración con otras herramientas mediante un esquema URI personalizado para una automatización avanzada.
 • Compatibilidad dual: Compatibilidad total con redes IPv4 e IPv6.
-• Compatibilidad con Wear OS: Ejecuta tus secuencias de knock directamente desde tu smartwatch.
 • Acceso rápido: Utiliza los accesos directos en la pantalla de inicio y/o un widget para la ejecución inmediata de las secuencias configuradas. 
 • Personalización: Ajusta la interfaz con temas de color dinámicos (Android 12 o superior), resaltados personalizados y modos claro/oscuro. Incluye opciones para mejorar el contraste.
 • Gestión de la configuración: Exporta e importa tus secuencias de knock para crear copias de seguridad o transferirlas.

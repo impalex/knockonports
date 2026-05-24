@@ -198,7 +198,6 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="field_group">Skupina</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Beta verze</string>
-    <string name="text_beta_alert">Tato beta verze přidává možnost propojit sekvenci s externím zdrojem. V případě potřeby může aplikace sledovat dostupnost tohoto zdroje. Budu vděčný za zpětnou vazbu, návrhy a jakékoli nalezené chyby. Zpětná vazba je přijímána na GitHubu, e-mailem nebo Discordu - všechny kontakty naleznete v sekci „O aplikaci“.</string>
     <string name="title_header_sequence_packet_cfg">Pakety</string>
     <string name="title_header_sequence_post_knock">Akce po zaklepání</string>
     <string name="title_header_sequence_access_check">Propojený zdroj</string>"
@@ -237,15 +236,6 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="type_shorten_end">Konec\n(např. «Velmi dlouhý t…»)</string>
     <string name="title_settings_font_scale">Měřítko písma názvu</string>
     <string name="title_donate_alert">Podpořit «Knock on Ports»</string>
-    <string name="text_donate_alert"><![CDATA[<b>Knock on Ports</b> je a vždy bude <b>zdarma, open-source a soukromý</b> — žádné reklamy, žádný tracking, žádné nitky připojeny.<br>
-<br>Pokud tato aplikace šetří tvůj čas nebo řeší komplexní úlohy, zvaž podporu jejího vývoje.
-<br>Tvůj příspěvek pomáhá:
-<br>→ <b>Ocenit úsilí</b> za roky updatů,
-<br>→ <b>Pohánět budoucí inovace</b> pro potřeby specializovaných technologií,
-<br>→ <b>Udržet projekt nezávislý</b> a řízený komunitou.
-<br>
-<br><i>Každá maličkost motivuje, i když je to jen na kávu</i> ☕.
-<br><i>Děkujeme, že důvěřujete tomuto nástroji!</i>]]></string>
     <string name="action_not_now">Nyní ne</string>
     <string name="action_support">Podpořit vývoj</string>
     <string name="title_settings_app_lock">Zámek aplikace</string>

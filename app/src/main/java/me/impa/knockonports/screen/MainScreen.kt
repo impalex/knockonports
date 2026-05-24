@@ -78,7 +78,6 @@ import me.impa.knockonports.navigation.SettingsRoute
 import me.impa.knockonports.navigation.TranslateRoute
 import me.impa.knockonports.screen.component.common.LocalAppEventBus
 import me.impa.knockonports.screen.component.common.RegisterAppBar
-import me.impa.knockonports.screen.component.main.BetaAlert
 import me.impa.knockonports.screen.component.main.DeleteSequenceAlert
 import me.impa.knockonports.screen.component.main.IntegrationAlert
 import me.impa.knockonports.screen.component.main.MainScreenActions
@@ -119,7 +118,7 @@ fun MainScreen(
 
     RegisterAppBar<MainRoute>(title = stringResource(R.string.app_name), showBackButton = false) {
         MainScreenActions(
-            state.isRuLangAvailable, state.detailedList,
+            state.detailedList,
             isWearAvailable = state.wearStatus !is WearConnectionStatus.NotAvailable,
         ) { action ->
             when (action) {
@@ -205,9 +204,11 @@ fun MainScreenContent(
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = safeBottomContentPadding(),
-            modifier = modifier.then(Modifier
-                .weight(1f)
-                .fillMaxWidth()), state = listState
+            modifier = modifier.then(
+                Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ), state = listState
         ) {
             val firstGroup = state.sequences.keys.firstOrNull()
             state.sequences.forEach { (group, sequences) ->
@@ -267,25 +268,31 @@ fun TranslateCard(onEvent: (UiEvent) -> Unit) {
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        Row(modifier = Modifier
-            .padding(16.dp)
-            .height(IntrinsicSize.Min)) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .height(IntrinsicSize.Min)
+        ) {
             Image(
                 painterResource(R.drawable.kitty),
                 contentDescription = null,
                 modifier = Modifier.size(128.dp)
             )
-            Column(modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight()) {
-                Text(text = stringResource(R.string.text_kitty_help),
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Text(
+                    text = stringResource(R.string.text_kitty_help),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center)
+                    textAlign = TextAlign.Center
+                )
                 Spacer(modifier = Modifier.weight(1f))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Spacer(modifier = Modifier.weight(1f))
-                    OutlinedButton(onClick = { onEvent(UiEvent.HideKitty)}) {
+                    OutlinedButton(onClick = { onEvent(UiEvent.HideKitty) }) {
                         Text(text = stringResource(R.string.action_close))
                     }
                     Button(onClick = {
@@ -328,7 +335,6 @@ fun ShowOverlay(overlay: UiOverlay, onEvent: (UiEvent) -> Unit) {
             }
         )
 
-        UiOverlay.Beta -> BetaAlert(onDismiss = { onEvent(UiEvent.ConfirmBetaMessage) })
     }
 }
 

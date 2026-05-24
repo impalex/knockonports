@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,16 +33,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import me.impa.knockonports.BuildConfig
 import me.impa.knockonports.R
-import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.TAG_MAIN_DOTS_BUTTON
 import me.impa.knockonports.constants.TAG_SETTINGS_MENU_ITEM
 import me.impa.knockonports.extension.debounced
@@ -51,28 +47,12 @@ import me.impa.knockonports.screen.viewmodel.state.main.MainBarEvent
 
 @Composable
 fun MainScreenActions(
-    isRuLangAvailable: Boolean,
     isDetailedView: Boolean,
     isWearAvailable: Boolean,
     onAction: (MainBarEvent) -> Unit = {}
 ) {
     var showMenu by remember { mutableStateOf(false) }
     Row {
-        if (BuildConfig.VERSION_NAME.contains("beta") && CURRENT_BETA_TEST_MESSAGE.isNotEmpty()) {
-            var showBetaAlert by rememberSaveable { mutableStateOf(false) }
-            if (showBetaAlert)
-                BetaAlert { showBetaAlert = false }
-            IconButton(
-                onClick = debounced({ showBetaAlert = true })
-            ) {
-                Icon(painterResource(R.drawable.bug_report_icon), contentDescription = null)
-            }
-        }
-        /*
-        Just... whatever...
-        if (isRuLangAvailable) {
-            DonateButton()
-        }*/
         IconButton(onClick = debounced({ onAction(MainBarEvent.ToggleListMode) })) {
             if (isDetailedView) {
                 Icon(painterResource(R.drawable.view_list), contentDescription = null)
@@ -130,21 +110,10 @@ fun MainScreenActions(
 
 }
 
-@Composable
-fun DonateButton() {
-    var showDonateDialog by rememberSaveable { mutableStateOf(false) }
-    if (showDonateDialog) {
-        DonateAlert { showDonateDialog = false }
-    }
-    IconButton(onClick = debounced({ showDonateDialog = true })) {
-        Icon(Icons.Default.Favorite, contentDescription = null)
-    }
-}
-
 @Preview
 @Composable
 fun PreviewMainScreenActions() {
     Row {
-        MainScreenActions(isRuLangAvailable = true, isWearAvailable = true, isDetailedView = true)
+        MainScreenActions(isWearAvailable = true, isDetailedView = true)
     }
 }
