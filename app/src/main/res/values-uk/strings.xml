@@ -198,7 +198,6 @@
     <string name="field_group">Група</string>
     <string name="field_url">URL</string>
     <string name="title_beta_alert">Бета версія</string>
-    <string name="text_beta_alert">Ця бета версія додає можливість зв\'язати послідовність з зовнішнім ресурсом. Якщо потрібно, додаток може моніторити доступність цього ресурса. Я буду вдячний за відгуки, пропозиції та будь-які повідомлення про звільнення баги. Відгуки приймаються на GitHub, електронною поштою або в Discord. Усі контакти можна знайти в секції \"Про додаток\".</string>
     <string name="title_header_sequence_packet_cfg">Пакети</string>
     <string name="title_header_sequence_post_knock">Дії після простукування</string>
     <string name="title_header_sequence_access_check">Пов\'язані ресурси</string>"
