@@ -232,8 +232,8 @@
     <string name="text_settings_multiline_title">Дозволити розділення заголовків на декілька рядків</string>
     <string name="title_settings_shorten_title">Скорочений заголовок</string>
     <string name="type_shorten_start">Початок\n(наприклад «…же довгий текст»)</string>
-    <string name="type_shorten_middle">Середина. \n(наприклад «Дуже ...й текст»</string>
-    <string name="type_shorten_end">Кінець. \n(наприклад «Дуже довгий т...»</string>
+    <string name="type_shorten_middle">Середина \n(наприклад «Дуже …й текст»</string>
+    <string name="type_shorten_end">Кінець \n(наприклад «Дуже довгий т…»</string>
     <string name="title_settings_font_scale">Збільшення шрифта заголовка</string>
     <string name="title_donate_alert">Підтримати «Knock on Ports»</string>
     <string name="action_not_now">Не зараз</string>
@@ -296,4 +296,5 @@
     <string name="text_special_thanks">Особливі подяки за внесок у розробку:</string>
     <string name="text_kitty_help">Допоможіть нам перекласти додаток!</string>
     <string name="action_how">Як?</string>
+    <string name="title_lang_uk">Українська</string>
 </resources>
