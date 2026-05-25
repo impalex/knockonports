@@ -1,0 +1,2 @@
+• Neue Sprachlokalisierung (Dank an@Arquero
+• App Design angepasst (fix #37)
