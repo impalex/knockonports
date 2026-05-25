@@ -1,0 +1,3 @@
+• Podpora Wear OS (pouze verze GMS)
+• Rozšířené informace o postupu v oznámeních
+• Opravy chyb

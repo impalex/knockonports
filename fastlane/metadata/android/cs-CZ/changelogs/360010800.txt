@@ -1,0 +1,2 @@
+• Nová jazyková lokalizace: Čeština (díky @michal-volf)
+• Nová jazyková lokalizace: Portugalština (Brazílie) (díky @r4263)

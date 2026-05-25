@@ -1,0 +1,2 @@
+• Nová jazyková lokalizace: španělština (díky @Arquero)
+• Aktualizace motivu aplikace (oprava č. 37)

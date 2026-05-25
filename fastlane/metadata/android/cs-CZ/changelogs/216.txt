@@ -1,0 +1,3 @@
+Monitorování zdrojů. Propojte sekvence s externími zdroji (ping, port, URL) s automatickými kontrolami dostupnosti. Pokud zdroj po kliknutí zůstane nedostupný, aplikace se o to pokusí znovu (konfigurovatelné).
+Skupiny sekvencí. Uspořádejte konfigurace do skupin pro lepší správu.
+Podpora zobrazení od okraje k okraji pro bezproblémové zobrazení na zařízeních s celoobrazovkovým designem.

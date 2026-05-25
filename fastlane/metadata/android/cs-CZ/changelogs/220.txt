@@ -1,0 +1,3 @@
+• Drobné úpravy rozhraní.
+• Přidáno přepínací tlačítko pro přepínání seznamu sekvencí mezi kompaktním a podrobným zobrazením.
+• Implementováno uzamčení aplikace pomocí ověřování zařízení (biometrické údaje, PIN atd.).

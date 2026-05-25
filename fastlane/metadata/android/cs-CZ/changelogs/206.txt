@@ -1,0 +1,3 @@
+Oprava: Opraveno tlačítko Start v režimu kompaktního seznamu
+Novinka: Hledat v seznamu aplikací
+Změněno: Při exportu byl vrácen starý formát názvu souboru

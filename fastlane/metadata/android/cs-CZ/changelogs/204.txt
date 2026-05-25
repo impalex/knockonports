@@ -1,0 +1,7 @@
+• Kompletní přepracování: Přepsáno pro stabilitu, vyžaduje Android 7.0+.
+• UI/UX: Kompaktní seznam sekvencí, dynamická témata (Android 12+), přizpůsobení barev/kontrastu.
+• Automatizace: URI spouštění (nahrazuje Tasker), akce URI po klepání (např. otevření aplikací/webu).
+• Sekvence: Duplikace jedním klepnutím.
+• Řízení paketů: Určení zdrojových portů UDP, konfigurace limitu TTL/Hop pro všechny pakety.
+• Nový Widget
+• Detekce IP adresy: Aktualizovaná nastavení – zkontrolujte, pokud používáte.

@@ -1,0 +1,3 @@
+• Nová jazyková lokalizace: Zjednodušená čínština
+• Výchozí zpoždění mezi pakety je nastaveno na 500 ms
+• Opravy chyb

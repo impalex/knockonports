@@ -1,0 +1,4 @@
+• Vylepšení od okraje k okraji.
+• Vlastní motivy: vyberte si libovolnou základní barvu pro generování vlastního motivu.
+• Přidán čistě černý režim pro obrazovky AMOLED (funguje s vlastními motivy).
+• Nastavte vlastní barvy pro názvy sekvencí na základě dostupnosti zdrojů.

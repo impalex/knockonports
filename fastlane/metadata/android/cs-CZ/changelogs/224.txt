@@ -1,0 +1,2 @@
+• Opravy chyb a vylepšení stability.
+• Nová možnost nastavit velikost datové části UDP odděleně od jejího obsahu.

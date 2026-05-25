@@ -1,0 +1,8 @@
+• Možnost nastavit velikost ICMP paketu s ohledem na IP hlavičku
+• Konfigurace velikosti IP hlavičky v síti
+• U ICMP paketů si můžete prohlédnout podrobné informace o jejich formátu
+• Přidány validátory v editoru sekvencí
+• Režim na výšku je zpět
+• Malý redesign editoru sekvencí
+• Podpora adaptivních ikon (Android 8.0+)
+• Podpora zařízení s velikostí stránky paměti 16KB
