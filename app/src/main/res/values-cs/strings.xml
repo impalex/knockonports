@@ -294,4 +294,7 @@ Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
     <string name="title_lang_pl">Polsky</string>
     <string name="title_lang_sq">Albánsky</string>
     <string name="title_lang_de">Německy</string>
+    <string name="title_lang_sr">Srbsky</string>
+    <string name="title_lang_am">Arménsky</string>
+    <string name="title_lang_uk">Ukrajinsky</string>
 </resources>
