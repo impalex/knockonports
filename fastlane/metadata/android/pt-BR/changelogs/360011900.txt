@@ -1,0 +1,2 @@
+• Novo idioma adicionado: Espanhol (creditos para @Arquero)
+• Atualização de tema do app (fix #37)
