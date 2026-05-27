@@ -1,0 +1,3 @@
+• Apoio para à Wear OS
+• Informação de progresso estendida em notificações
+• Correções de bugs

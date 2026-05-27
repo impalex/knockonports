@@ -1,0 +1,4 @@
+• Melhorias de ponta-a-ponta.
+• Temas personalizados: escolha qualquer cor como base para gerar o seu próprio tema.
+• Adicionado o modo de preto verdadeiro para ecrãs AMOLED (funciona com temas customizados).
+• Defina cores personalizadas para nomes de sequência com base no estado de disponibilidade do recurso.

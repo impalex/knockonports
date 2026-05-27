@@ -1,0 +1,2 @@
+• Correção de bugs e melhorias de estabilidade.
+• Nova opção para configurar tamanho da carga UDP separadamente do seu conteúdo.

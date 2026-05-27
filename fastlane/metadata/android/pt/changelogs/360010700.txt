@@ -1,0 +1,3 @@
+• Novo idioma: Chinês simplificado
+• O tempo entre pacotes padrão foi definido para 500 ms
+• Correções de bugs

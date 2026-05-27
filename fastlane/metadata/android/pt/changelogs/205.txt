@@ -1,0 +1,1 @@
+Hotfix: Ajuste de ações de importação/exportação
