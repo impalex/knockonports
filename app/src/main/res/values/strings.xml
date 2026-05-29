@@ -26,6 +26,8 @@
         <item>\@renaud38</item>
         <item>\@PazikLend</item>
         <item>\@Arquero</item>
+        <item>\@ssantos</item>
+        <item>\@varrkan82</item>
     </string-array>
     <string-array name="translators_profiles" translatable="false">
         <item>https://hosted.weblate.org/user/Acide-Burn/</item>
@@ -37,6 +39,8 @@
         <item>https://hosted.weblate.org/user/renaud38/</item>
         <item>https://hosted.weblate.org/user/PazikLend/</item>
         <item>https://hosted.weblate.org/user/Arquero/</item>
+        <item>https://hosted.weblate.org/user/ssantos/</item>
+        <item>https://hosted.weblate.org/user/varrkan82/</item>
     </string-array>
     <string name="type_protocol_prefer_ipv4">prefer IPv4</string>
     <string name="type_protocol_prefer_ipv6">prefer IPv6</string>
@@ -322,6 +326,7 @@ For most users: <b>do not change this setting</b>.
     <string name="title_lang_zh">Chinese (Simplified)</string>
     <string name="title_lang_cs">Czech</string>
     <string name="title_lang_pt_br">Portuguese (Brazil)</string>
+    <string name="title_lang_pt">Portuguese</string>
     <string name="title_lang_es">Spanish</string>
     <string name="title_lang_fr">French</string>
     <string name="title_lang_it">Italian</string>
