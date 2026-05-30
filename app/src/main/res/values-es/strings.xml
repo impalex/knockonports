@@ -111,7 +111,7 @@
     <string name="title_confirm_knock_alert">¡Knock-knock!</string>
     <string name="text_confirm_knock_alert">¿Quieres ejecutar la secuencia «%s»?</string>
     <string name="channel_name">Knock-knock</string>
-    <string name="channel_description">¿Quién está ahí? ὣ2</string>
+    <string name="channel_description">¿Quién está ahí?</string>
     <string name="notification_title">¡Knock-knock!</string>
     <string name="notification_desc">Knocking en «%s». ¿Hay alguien ahí?</string>
     <string name="notification_desc_attempt">Intento [%1$d/%2$d]:</string>

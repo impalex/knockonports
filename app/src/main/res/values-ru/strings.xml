@@ -152,7 +152,7 @@
     <string name="title_confirm_knock_alert">Тук-тук!</string>
     <string name="text_confirm_knock_alert">Запустить последовательность «%s»?</string>
     <string name="channel_name">Тук-тук</string>
-    <string name="channel_description">Кто там? \u1F632</string>
+    <string name="channel_description">Кто там?</string>
     <string name="notification_title">Тук-тук!</string>
     <string name="notification_desc">Стучу в «%s». Есть кто дома?</string>
     <string name="title_integration_alert">URI для автоматизации</string>

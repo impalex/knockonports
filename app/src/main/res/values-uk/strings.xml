@@ -141,7 +141,7 @@
     <string name="title_confirm_knock_alert">Стук-стук!</string>
     <string name="text_confirm_knock_alert">Хочете виконати послідовність «%s»?</string>
     <string name="channel_name">Стук-стук</string>
-    <string name="channel_description">Хто там? ὣ2</string>
+    <string name="channel_description">Хто там?</string>
     <string name="notification_title">Стук-стук!</string>
     <string name="notification_desc">Стукаємося до «%s». Чи є там хто?</string>
     <string name="notification_desc_attempt">Спроба [%1$d/%2$d]:</string>

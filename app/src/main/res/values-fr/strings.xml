@@ -132,7 +132,7 @@
     <string name="title_confirm_knock_alert">Toc-toc !</string>
     <string name="text_confirm_knock_alert">Voulez-vous exécuter la séquence « %s » ?</string>
     <string name="channel_name">Toc-toc</string>
-    <string name="channel_description">Qui est là ? ὣ2</string>
+    <string name="channel_description">Qui est là ?</string>
     <string name="notification_title">Toc-toc !</string>
     <string name="notification_desc">Toc-toc « %s », il y a quelqu\'un ?</string>
     <string name="notification_desc_attempt">Tentative [%1$d/%2$d] :</string>
