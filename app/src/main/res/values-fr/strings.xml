@@ -291,4 +291,6 @@ Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
     <string name="title_lang_ru">Russe</string>
     <string name="title_lang_sr">Serbe</string>
     <string name="title_lang_am">Arménien</string>
+    <string name="title_lang_pt">Portugais</string>
+    <string name="title_lang_uk">Ukrainien</string>
 </resources>
