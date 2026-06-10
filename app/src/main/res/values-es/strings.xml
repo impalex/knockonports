@@ -185,7 +185,7 @@ Este ajuste te permite especificar el tamaño de la cabecera IP usada en <i>tu r
 • Un mala configuración <b>puede</b> causar que la aplicación se comporte de manera incorrecta.<br>
 • Ajusta esto <b>sólo si estas seguro</b> de que tu red usa cabeceras IP no estandar (p.e., VPNs personalizadas, sistemas antiguos).<br><br>
 Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
-    ]]></string>
+. . . .]]></string>
     <string name="action_understand">Lo entiendo</string>
     <string name="title_icmp_size_tooltip">Tamaño total del paquete ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (Cabecera IP — %2$d, Cabecera ICMP — %3$d, datos — %4$d)</string>
@@ -292,4 +292,5 @@ Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
     <string name="text_special_thanks">Agradecimientos especiales a nuestros colaboradores:</string>
     <string name="text_kitty_help">¡Ayúdanos a traducir la aplicación!</string>
     <string name="action_how">¿Cómo?</string>
+    <string name="title_lang_uk">Ucraniano</string>
 </resources>
