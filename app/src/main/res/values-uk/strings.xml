@@ -4,7 +4,7 @@
     <string name="type_protocol_prefer_ipv6">перевага IPv6</string>
     <string name="type_protocol_only_ipv4">лише IPv4</string>
     <string name="type_protocol_only_ipv6">лише IPv6</string>
-    <string name="type_protocol_both_ipv4_ipv6">обидва IPv4 та IPv6</string>
+    <string name="type_protocol_both_ipv4_ipv6">IPv4 та IPv6</string>
     <string name="action_export">Експорт</string>
     <string name="action_import">Імпорт</string>
     <string name="action_settings">Налаштування</string>
@@ -13,21 +13,21 @@
     <string name="title_screen_log">Лог</string>
     <string name="title_tab_basic_settings">Налаштування</string>
     <string name="title_tab_advanced_settings">Розширені</string>
-    <string name="title_review_request">Подобається %s?</string>"
-    <string name="text_review_request">Якщо у вас є час, я буду вдячний за ваш відгук! Чесні відгуки допомагають мені покращували та розвивати додаток. Дякую що ви є частиною цього процесу!</string>
+    <string name="title_review_request">Подобається %s?</string>
+    <string name="text_review_request">Якщо у вас є час, я буду вдячний за ваш відгук! Чесні відгуки допомагають мені покращувати та розвивати додаток. Дякую, що ви є частиною цього процесу!</string>
     <string name="action_rate_now">Оцінити зараз</string>
     <string name="action_remind_later">Нагадати мені пізніше</string>
     <string name="action_no_thanks">Ні, дякую</string>
-    <string name="text_review_decline">Добре! Якщо ви передумаєте - я чекатиму на вашу думку у будь який час.</string>
+    <string name="text_review_decline">Добре! Якщо ви передумаєте — я чекатиму на вашу думку у будь-який час.</string>
     <string name="field_name">Назва</string>
     <string name="field_host">Хост</string>
     <string name="field_delay">Затримка між пакетами (мс)</string>
     <string name="field_ip_version">Версія IP</string>
     <string name="title_screen_settings">Налаштування</string>
     <string name="list_app_none">Нічого</string>
-    <string name="field_local_port">Використовувати локальний UDP порт</string>
+    <string name="field_local_port">Використовувати локальний UDP-порт</string>
     <string name="message_sequence_saved">«%s» збережено</string>
-    <string name="action_knock">Стукати</string>
+    <string name="action_knock">Стукнути</string>
     <string name="text_unnamed_sequence">(Безіменна послідовність)</string>
     <string name="text_host_not_set">(Хост не задано)</string>
     <string name="text_empty_sequence">(Порожня послідовність)</string>
@@ -43,17 +43,17 @@
     <string name="type_icmp_size_without_headers">лише дані</string>
     <string name="type_icmp_size_with_icmp_header">дані + ICMP заголовок</string>
     <string name="type_icmp_size_all_headers">дані + IP&amp;ICMP заголовки</string>
-    <string name="field_icmp_packet_size">Розмір пакета ICMP включено…</string>
+    <string name="field_icmp_packet_size">Розмір ICMP-пакета включає…</string>
     <string name="field_launch_app">Запустити додаток після простукування</string>
     <string name="field_launch_uri">Відкрити URI після простукування</string>
     <string name="field_search">Шукати</string>
     <string name="action_edit">Редагувати</string>
     <string name="action_delete">Видалити</string>
-    <string name="action_cancel">Відмінити</string>
+    <string name="action_cancel">Скасувати</string>
     <string name="action_create_shortcut">Створити швидкий доступ</string>
     <string name="action_integration">Автоматизація</string>
     <string name="title_delete_sequence">Видалити послідовність?</string>
-    <string name="text_delete_sequence_alert">Ми повністю виділимо послідовність «%s». У тебе не буде можливості її відновити.</string>
+    <string name="text_delete_sequence_alert">Ми повністю видалимо послідовність «%s». Ви не зможете її відновити.</string>
     <string name="message_sequence_deleted">«%s» видалено</string>
     <plurals name="message_sequence_import">
         <item quantity="one">%d послідовність додано</item>
@@ -63,15 +63,15 @@
     </plurals>
     <plurals name="message_sequence_export">
         <item quantity="one">%d послідовність збережено</item>
-        <item quantity="few">%d послідовністі збережено</item>
-        <item quantity="many">%d послідовністей збережено</item>
-        <item quantity="other">%d послідовністей збережено</item>
+        <item quantity="few">%d послідовності збережено</item>
+        <item quantity="many">%d послідовностей збережено</item>
+        <item quantity="other">%d послідовностей збережено</item>
     </plurals>
     <string name="title_settings_general">Загальні</string>
     <string name="title_settings_theme">Тема додатку</string>
     <string name="title_settings_about">Про додаток</string>
     <string name="title_settings_dynamic_theme">Динамічна кольорова тема</string>
-    <string name="text_settings_dynamic_theme">Відповідно до кольорів пристрою - адаптує кольори додатку до вашої системної теми та шпалер</string>
+    <string name="text_settings_dynamic_theme">Відповідно до кольорів вашого пристрою — адаптує кольори додатку до вашої системної теми та шпалер</string>
     <string name="title_settings_dark_light">Режим теми</string>
     <string name="text_settings_system_dark_light">За замовчуванням системи</string>
     <string name="text_settings_dark">Темна</string>
@@ -83,11 +83,11 @@
     <string name="title_settings_custom_theme">Власні кольори теми</string>
     <string name="text_settings_custom_theme">Оберіть основний колір інтерфейсу додатку</string>
     <string name="title_settings_widget_confirmation">Підтвердження віджету</string>
-    <string name="text_settings_widget_confirmation_desc">Вимагати підтвердження коли послідовність запускається з віджета</string>
+    <string name="text_settings_widget_confirmation_desc">Вимагати підтвердження, коли послідовність запускається з віджета</string>
     <string name="title_public_ip_alert">Дозволити виявлення публічного IP?</string>
-    <string name="text_public_ip_alert_1">Ця функція використовує сервіси третіх сторін для виявлення вашої публічної IP адреси.</string>
-    <string name="text_public_ip_alert_2">Якщо увімкнено, запити до зовнішньої служби будуть надсилаються щоразу під час запуску послідовності.</string>
-    <string name="text_public_ip_alert_3">Ця служба не контролюється цим додатком. Чи хочете продовжити?</string>
+    <string name="text_public_ip_alert_1">Ця функція використовує сервіси третіх сторін для виявлення вашої публічної IP-адреси.</string>
+    <string name="text_public_ip_alert_2">Якщо увімкнено, запити до зовнішньої служби надсилатимуться щоразу під час запуску послідовності.</string>
+    <string name="text_public_ip_alert_3">Ця служба не контролюється цим додатком. Чи хочете ви продовжити?</string>
     <string name="title_settings_detailed_list_view">Деталізований перегляд списку</string>
     <string name="text_settings_detailed_list_view">Показувати деталі хоста та послідовності на головному екрані</string>
     <string name="title_settings_detect_ip">Виявляти публічний IP</string>
@@ -98,7 +98,7 @@
     <string name="title_settings_ipv6_lookup_provider">Провайдер пошуку IPv6</string>
     <string name="type_provider_custom">Власний</string>
     <string name="title_custom_service_dialog">Власний сервіс пошуку IP</string>
-    <string name="text_custom_service_dialog">Вкажіть адресу власного сервісу що перетворює вашу публічну адресу на звичайний текст (наприклад <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Вкажіть адресу власного сервісу, що повертає вашу публічну адресу у вигляді тексту (наприклад <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
     <string name="field_custom_ip_provider">URL сервісу</string>
     <string name="text_custom_provider_not_specified">(не зазначено)</string>
     <string name="title_settings_custom_ipv4_provider">Власний провайдер пошуку IPv4</string>
@@ -109,29 +109,29 @@
     <string name="title_settings_report_issue">Повідомити про помилку</string>
     <string name="title_settings_contact_author">Зв\'язатися з розробником</string>
     <string name="title_settings_rate_app">Оцінити додаток</string>
-    <string name="text_settings_rate_app">Будь ласка, не лайтеся занадто сильно!</string>
-    <string name="text_settings_privacy_policy">Розслабтеся, я за вами не слідкую. Навіть якби хотів - я занадто лінивий щоб писати код для цього.</string>
+    <string name="text_settings_rate_app">Будь ласка, не лайтеся надто сильно!</string>
+    <string name="text_settings_privacy_policy">Розслабтеся, я за вами не слідкую. Навіть якби хотів — я занадто лінивий, щоб писати код для цього.</string>
     <string name="text_settings_source_code">Магія Open-source всередині. Увага: може містити сліди коду, написаного під кофеїном.</string>
-    <string name="text_settings_report_issue">Знайшли баг? Е панікуйте, просто залиште його тут. Я (можливо) виправлю це до 3025-го.</string>
+    <string name="text_settings_report_issue">Знайшли баг? Не панікуйте, просто залиште його тут. Я (можливо) виправлю це до 3025 року.</string>
     <string name="text_settings_contact_author">Повідомити про проблему, запропонувати функцію або просто привітатися. 👋</string>
     <string name="text_annoying_version_1">v%1$s: Тепер на %2$d%% менше падінь!*\n*Відповідно до дуже оптимістичних очікувань.</string>
     <string name="text_annoying_version_2">v.%1$s Build 36%2$d: Опір марний. Вас все одно асимілюють.</string>
     <string name="text_annoying_version_3">Версія %s — Тепер у 16-бітному Чудовому режимі!*\n*Загалом може не містити нічого 16-ти бітного.</string>
     <string name="text_annoying_version_4">Реліз %s: Як накофеїнена білка, але дещо стабільніше.</string>
     <string name="text_annoying_version_5">%s: Це цифра. Вона зростає. Радійте.</string>
-    <string name="text_annoying_version_6">v.%s: Все ще не слідкую за вами. Серйозно, підіть перевірте код.</string>
+    <string name="text_annoying_version_6">v.%s: Все ще не слідкую за вами. Серйозно, йдіть перевірте код.</string>
     <string name="text_annoying_version_7">Сезон %1$s Серія %2$d — Той, де ми виправили ту надокучливу річ.</string>
-    <string name="text_annoying_version_8">v%s — зібрано з кофеїном, сльозами та екзистенцвйними сумнівами.</string>
+    <string name="text_annoying_version_8">v%s — зібрано з кофеїном, сльозами та екзистенційними сумнівами.</string>
     <string name="text_annoying_version_9">v%s: Спонсоровано неоплаченою пристрастю та легким зневажанням здорового глузду.</string>
-    <string name="message_error_network_not_avail">Мережа не доступна</string>
-    <string name="message_error_empty_host">Послідовність має пустий хост</string>
+    <string name="message_error_network_not_avail">Мережа недоступна</string>
+    <string name="message_error_empty_host">Послідовність не має хоста</string>
     <string name="message_error_empty_sequence">Послідовність «%s» пуста</string>
-    <string name="message_error_resolve">Неможливо визначити хост «%s»</string>
+    <string name="message_error_resolve">Не вдалося знайти хост «%s»</string>
     <string name="message_error_unknown_host">Невідомий хост «%s»</string>
     <string name="message_error_app_launch">Неможливо запустити «%s»</string>
     <string name="message_knocking_complete">Простукування завершено!</string>
     <string name="message_error_unknown">Невідома помилка: %s</string>
-    <string name="message_start_knocking">Стук-стук-стукаємо на «%s»</string>
+    <string name="message_start_knocking">Простукуємо на «%s»</string>
     <string name="message_clipboard_confirmation">Скопійовано</string>
     <string name="action_yes">Так</string>
     <string name="action_no">Ні</string>
@@ -146,28 +146,28 @@
     <string name="notification_desc">Стукаємося до «%s». Чи є там хто?</string>
     <string name="notification_desc_attempt">Спроба [%1$d/%2$d]:</string>
     <string name="title_integration_alert">URI Автоматизації</string>
-    <string name="text_integration_alert">Скопіювати це посилання для запуску послідовності з додатків автоматизації на кшталтTasker абр Macrodroid. Немає потреби відкривати сам додаток - просто використайте URI.</string>
+    <string name="text_integration_alert">Скопіювати це посилання для запуску послідовності з додатків автоматизації на кшталт Tasker або Macrodroid. Немає потреби відкривати сам додаток — просто використайте URI.</string>
     <string name="title_widget">Список послідовностей</string>
     <string name="title_selector_widget">Селектор послідовностей</string>
     <string name="text_widget_description">Запустити будь-яку послідовність з домашнього екрану</string>
     <string name="text_widget_empty_list">Пустий список послідовностей</string>
     <string name="log_unknown">Невідома подія</string>
     <string name="log_knock">Стукаємо \'%1$s\' [%2$s] (%3$s→%4$s)</string>
-    <string name="log_error_network">Мережеве з\'єднання не доступне</string>
+    <string name="log_error_network">Мережеве з\'єднання недоступне</string>
     <string name="log_error_invalid_host">Послідовність \'%s\': невірний хост</string>
-    <string name="log_error_resolve_host">Не можливо знайти %1$s: %2$s</string>
+    <string name="log_error_resolve_host">Неможливо знайти %1$s: %2$s</string>
     <string name="log_error_empty_sequence">Пуста послідовність \'%s\'</string>
     <string name="log_error_unknown">Невідома помилка: %s</string>
     <string name="log_sequence_saved">Збережено послідовність \'%s\'</string>
-    <string name="log_sequence_deleted">Видалити послідовність \'%s\'</string>
-    <string name="log_export">Експортувати до %1$s (%2$s послідовностей)</string>
-    <string name="log_import">Імпортувати з %1$s(%2$s)</string>
-    <string name="log_error_export">Експортувати до%1$s :%2$s</string>
-    <string name="log_error_import">Імпортувати з %1$s: %2$s</string>
+    <string name="log_sequence_deleted">Видалено послідовність \'%s\'</string>
+    <string name="log_export">Експортовано до %1$s (%2$s послідовностей)</string>
+    <string name="log_import">Імпортовано з %1$s (%2$s послідовностей)</string>
+    <string name="log_error_export">Помилка експорту до %1$s: %2$s</string>
+    <string name="log_error_import">Помилка імпорту з %1$s: %2$s</string>
     <string name="text_error_general">Помилка: %s</string>
     <string name="text_error_empty_value">Значення пусте</string>
     <string name="text_error_invalid_range">Значення має бути між %1$d та %2$d</string>
-    <string name="text_error_number_only">Значення має бути цифровим</string>
+    <string name="text_error_number_only">Значення має бути числовим</string>
     <string name="title_settings_enable_custom_ip_hdr">Власний розмір заголовка IP</string>
     <string name="text_settings_enable_custom_ip_hdr">Зазначте розмір заголовка IP вашої мережі</string>
     <string name="title_settings_ip4_hdr_size">Розмір заголовка IPv4</string>
@@ -182,27 +182,27 @@
     <string name="title_custom_ip4hdr_alert">Увага!</string>
     <string name="text_custom_ip4hdr_alert"><![CDATA[
 ⚠️ <b>Продовжуйте з обережністю!</b><br><br>
-Це налаштування дозволяє вам вказати розмір заголовка IP що використовується у <i>вашій мережі</i>.<br><br>
+Це налаштування дозволяє вам вказати розмір заголовка IP, що використовується у <i>вашій мережі</i>.<br><br>
 <b>Важливе зауваження:</b><br><br>
 • <b>Це НЕ модифікує реальний розмір заголовка</b> — це лише інформує додаток про конфігурацію вашої мережі.<br>
-• Неправильна конфігурація <b>може</b> викликали неправильну поведінку додатка.<br>
-• Змінюйте це <b>лише якщо ви впевнені</b> що ваша мережа використовує не стандартний розмір заголовка IP (наприклад власні VPN, застарілі системи).<br><br>
-Для більшості користувачів: <b>не змінюйте ця налаштування</b>.
-    ]]></string>
+• Неправильна конфігурація <b>може викликати</b> неправильну поведінку додатка.<br>
+• Змінюйте це <b>лише якщо ви впевнені</b>, що ваша мережа використовує нестандартний розмір заголовка IP (наприклад власні VPN, застарілі системи).<br><br>
+Для більшості користувачів: <b>не змінюйте це налаштування</b>.
+]]></string>
     <string name="action_understand">Я розумію</string>
     <string name="title_icmp_size_tooltip">Загальний розмір ICMP пакета</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d байт (заголовок IP — %2$d, заголовок ICMP — %3$d, дані — %4$d)</string>
     <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d байт (заголовок IP — %2$d, заголовок ICMP — %3$d, дані — %4$d)</string>
     <string name="title_settings_discord">Сервер Discord</string>
-    <string name="text_settings_discord">Місце, де я вдаю що працюю.</string>
+    <string name="text_settings_discord">Місце, де я вдаю, що працюю.</string>
     <string name="field_group">Група</string>
     <string name="field_url">Адреса URL</string>
     <string name="title_beta_alert">Бета версія</string>
     <string name="title_header_sequence_packet_cfg">Пакети</string>
     <string name="title_header_sequence_post_knock">Дії після простукування</string>
-    <string name="title_header_sequence_access_check">Пов\'язані ресурси</string>"
+    <string name="title_header_sequence_access_check">Пов\'язані ресурси</string>
     <string name="title_check_access_enable">Перевірка доступу</string>
-    <string name="text_check_access_enable">Періодична перевірка доступності оборонного ресурса.</string>
+    <string name="text_check_access_enable">Періодична перевірка доступності обраного ресурсу.</string>
     <string name="type_check_access_url">Адреса URL</string>
     <string name="type_check_access_port">Порт</string>
     <string name="type_check_access_ping">Пінг</string>
@@ -215,7 +215,7 @@
     </plurals>
     <string name="title_check_access_post_knock">Повторити простукування</string>
     <string name="text_check_access_post_knock">Повторити, якщо ресурс не стає доступним після простукування.</string>
-    <string name="title_check_access_retries">Максимум повторів</string>
+    <string name="title_check_access_retries">Макс. кількість спроб</string>
     <plurals name="text_check_access_retries">
         <item quantity="one">%d раз</item>
         <item quantity="few">%d рази</item>
@@ -228,12 +228,12 @@
     <string name="text_resource_available">Доступно</string>
     <string name="text_resource_checking">Перевірка…</string>
     <string name="title_settings_list">Список послідовностей</string>
-    <string name="title_settings_multiline_title">Multi-line заголовок</string>
+    <string name="title_settings_multiline_title">Багаторядковий заголовок</string>
     <string name="text_settings_multiline_title">Дозволити розділення заголовків на декілька рядків</string>
     <string name="title_settings_shorten_title">Скорочений заголовок</string>
     <string name="type_shorten_start">Початок\n(наприклад «…же довгий текст»)</string>
-    <string name="type_shorten_middle">Середина \n(наприклад «Дуже …й текст»</string>
-    <string name="type_shorten_end">Кінець \n(наприклад «Дуже довгий т…»</string>
+    <string name="type_shorten_middle">Середина\n(наприклад «Дуже …й текст»)</string>
+    <string name="type_shorten_end">Кінець\n(наприклад «Дуже довгий т…»)</string>
     <string name="title_settings_font_scale">Збільшення шрифта заголовка</string>
     <string name="title_donate_alert">Підтримати «Knock on Ports»</string>
     <string name="action_not_now">Не зараз</string>
@@ -244,13 +244,13 @@
     <string name="title_lock_app">Потрібна автентифікація</string>
     <string name="text_lock_app">Автентифікуйтеся для доступу до додатку.</string>
     <string name="title_lock_config">Перевірка безпеки</string>
-    <string name="text_lock_config">Автентифікуйтеся щоб змінити налаштування безпеки додатку.</string>
+    <string name="text_lock_config">Автентифікуйтеся, щоб змінити налаштування безпеки додатку.</string>
     <string name="title_settings_amoled_theme">Темний режим OLED</string>
-    <string name="text_settings_amoled_theme">Використовуйте справжній чорний для темних тем щоб зберегти заряд батареї на OLED/AMOLED дісплеях</string>
+    <string name="text_settings_amoled_theme">Використовуйте справжній чорний для темних тем, щоб зберегти заряд батареї на OLED/AMOLED дисплеях</string>
     <string name="title_settings_title_available_color">Онлайн колір</string>
-    <string name="text_settings_title_available_color">Колір послідовності якщо перевірка ресурсу вдала</string>
+    <string name="text_settings_title_available_color">Колір послідовності, якщо перевірка ресурсу успішна</string>
     <string name="title_settings_title_unavailable_color">Офлайн колір</string>
-    <string name="text_settings_title_unavailable_color">Колір послідовності якщо перевірка ресурсу не вдала</string>
+    <string name="text_settings_title_unavailable_color">Колір послідовності якщо перевірка ресурсу невдала</string>
     <string name="action_default">За замовчуванням</string>
     <string name="action_save">Зберегти</string>
     <string name="action_import_knockd_conf">Імпортувати з knockd.conf</string>
@@ -261,21 +261,21 @@
     <string name="text_settings_developer_page">Інші додатки, які я створив. Деякі навмисно.</string>
     <string name="field_payload_size">Розмір корисного навантаження</string>
     <string name="text_auto">Авто</string>
-    <string name="text_tooltip_udp_payload">Загальний розмір пакета враховуючи загадок IP (20-60 байт), заголовок UDP (8 байт), та вказаний розмір корисного навантаження.</string>
+    <string name="text_tooltip_udp_payload">Загальний розмір пакета враховуючи заголовки IP (20–60 байт), заголовок UDP (8 байт), та вказаний розмір корисного навантаження.</string>
     <string name="action_wear_companion">Додаток для Wear OS</string>
-    <string name="title_screen_wear">Статус компанйона Wear OS</string>
+    <string name="title_screen_wear">Статус компаньона Wear OS</string>
     <string name="title_companion_not_installed">Додаток не встановлено на ваш годинник</string>
-    <string name="text_companion_not_installed">Ми знайшли ваш годинник, але додаток компанйона для Wear OS не встановлено. Встановіть щоб продовжити.</string>
+    <string name="text_companion_not_installed">Ми знайшли ваш годинник, але додаток компаньона для Wear OS не встановлено. Встановіть щоб продовжити.</string>
     <string name="action_companion_open_market">Встановити на годинник</string>
-    <string name="title_companion_lost">Витрачено з\'єднання з годинником</string>
-    <string name="text_companion_lost">З\'єднання з вашим годинником було перервано. Впевніться що годинник поруч та його під\'єднано до телефона.</string>
+    <string name="title_companion_lost">Втратено з\'єднання з годинником</string>
+    <string name="text_companion_lost">З\'єднання з вашим годинником було перервано. Впевніться, що годинник поруч та його під\'єднано до телефона.</string>
     <string name="title_companion_connected">Все налаштовано</string>
-    <string name="text_companion_connected">Додаток на телефонні то годиннику вдало під\'єднано.</string>
+    <string name="text_companion_connected">Додаток на телефоні та годиннику вдало під\'єднано.</string>
     <string name="notification_desc_waiting_for_resource">Перевірка доступності ресурсу</string>
     <string name="title_lang_en">Англійська</string>
     <string name="title_lang_ru">Російська</string>
     <string name="title_lang_de">Німецька</string>
-    <string name="title_lang_zh">Спрощена Китайська</string>
+    <string name="title_lang_zh">Китайська (спрощена)</string>
     <string name="title_lang_cs">Чеська</string>
     <string name="title_lang_pt_br">Португальська (Бразилія)</string>
     <string name="title_lang_es">Іспанська</string>
@@ -284,17 +284,18 @@
     <string name="title_lang_pl">Польська</string>
     <string name="title_lang_sq">Албанська</string>
     <string name="title_lang_sr">Сербська</string>
-    <string name="title_lang_am">Армянська</string>
+    <string name="title_lang_am">Вірменська</string>
     <string name="title_help_translate">Допоможіть нам з перекладом!</string>
-    <string name="text_help_translate">Поки розміщено на Weblate. Ваш внесок допомагає цьому додатку бути доступним всьому світові.</string>
+    <string name="text_help_translate">Цей проєкт розміщено на Weblate. Ваш внесок допомагає цьому додатку бути доступним всьому світові.</string>
     <string name="action_translate">Перейти на Weblate</string>
     <string name="title_screen_translation">Переклад</string>
     <string name="title_settings_translation">Переклади</string>
-    <string name="text_settings_translation">Багатомовна магію подарували вам волонтери, яким, ймовірно, потрібно більше кави. Дізнайтеся, хто допоміг, і додайте свою мову!</string>
+    <string name="text_settings_translation">Багатомовну магію для вас створили волонтери, яким, ймовірно, потрібно більше кави. Дізнайтеся, хто допоміг, і додайте свою мову!</string>
     <string name="title_supported_languages">Підтримувані мови</string>
     <string name="title_our_translators">Наші перекладачі</string>
     <string name="text_special_thanks">Особливі подяки за внесок у розробку:</string>
     <string name="text_kitty_help">Допоможіть нам перекласти додаток!</string>
     <string name="action_how">Як?</string>
     <string name="title_lang_uk">Українська</string>
+    <string name="title_lang_pt">Португальська</string>
 </resources>

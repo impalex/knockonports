@@ -283,6 +283,7 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="text_settings_ip4_hdr_size">%d bytes</string>
     <string name="title_lang_pt_br">Português (Brasil)</string>
     <string name="title_lang_cs">Tcheco</string>
+    <string name="title_lang_pt">Português</string>
     <string name="title_lang_es">Espanhol</string>
     <string name="title_lang_fr">Francês</string>
     <string name="title_lang_it">Italiano</string>
@@ -292,5 +293,4 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="title_lang_sr">Sérvio</string>
     <string name="title_lang_am">Armênio</string>
     <string name="title_lang_uk">Ucrâniano</string>
-    <string name="title_lang_pt">Português</string>
 </resources>

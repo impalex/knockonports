@@ -43,7 +43,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "me.impa.knockonports"
-    compileSdk = 36
+    compileSdk = 37
 
     flavorDimensions += listOf("store")
 
@@ -78,13 +78,13 @@ android {
     defaultConfig {
         applicationId = "me.impa.knockonports"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
 
         val productVersion: Int by rootProject.extra
         val releaseVersion: Int by rootProject.extra
 
         versionCode = requireNotNull(targetSdk) * 1_000_00_00 + productVersion * 1_00_00 + releaseVersion * 1_00
-        versionName = "2.1.9"
+        versionName = "2.1.10"
 
         testInstrumentationRunner = "me.impa.knockonports.HiltTestRunner"
         vectorDrawables {
@@ -165,7 +165,6 @@ kotlin {
     jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.addAll("-Xannotation-default-target=param-property", "-Xexplicit-backing-fields")
     }
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
@@ -216,6 +215,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp(libs.kotlinMetadataJvm)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Glance
@@ -235,7 +235,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.hilt.android.testing)
-    kspAndroidTest(libs.hilt.compiler)
 
     // Compose tests
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -261,6 +260,7 @@ tasks {
         options.compilerArgs.add("-Xlint:deprecation")
     }
     register("generateReleaseChangeLog") {
+        description = "Generate changelog for release version"
         doLast {
             val changeLogFile = File(
                 "$rootDir/fastlane/metadata/android/en-US/changelogs/" +
@@ -281,6 +281,7 @@ tasks {
         }
     }
     register("exportVersionCode") {
+        description = "Export versionCode and versionName to fdroid-version.txt"
         doLast {
             file("fdroid-version.txt").writeText(
                 "versionCode=${android.defaultConfig.versionCode}\n" +

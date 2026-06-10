@@ -20,9 +20,7 @@ if (keystorePropertiesFile?.exists() == true) {
 
 android {
     namespace = "me.impa.knockonports"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 37
 
     if (keystoreProperties.isNotEmpty()) {
         signingConfigs {
@@ -122,7 +120,6 @@ kotlin {
     jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
     composeCompiler {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
@@ -156,6 +153,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp(libs.kotlinMetadataJvm)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Other

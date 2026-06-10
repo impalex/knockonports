@@ -1,0 +1,2 @@
+• New language localization: Ukrainian (credit to @varrkan82)
+• New language localization: Portuguese (credit to @ssantos)

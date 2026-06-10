@@ -273,6 +273,7 @@ Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
     <string name="title_lang_zh">Chino (Simplificado)</string>
     <string name="title_lang_cs">Checo</string>
     <string name="title_lang_pt_br">Portugués (Brasil)</string>
+    <string name="title_lang_pt">Portugués</string>
     <string name="title_lang_es">Español</string>
     <string name="title_lang_fr">Francés</string>
     <string name="title_lang_it">Italiano</string>

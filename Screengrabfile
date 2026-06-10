@@ -7,7 +7,7 @@ app_package_name 'me.impa.knockonports'
 app_apk_path 'app\build\outputs\apk\google\debug\app-google-debug.apk'
 tests_apk_path 'app\build\outputs\apk\androidTest\google\debug\app-google-debug-androidTest.apk'
 
-locales ['en-US', 'ru-RU', 'zh-CN', 'pt-BR', 'cs-CZ', 'de-DE', 'fr-FR', 'hy-AM', 'es-ES']
+locales ['en-US', 'ru-RU', 'zh-CN', 'pt-BR', 'cs-CZ', 'de-DE', 'fr-FR', 'hy-AM', 'es-ES', 'uk', 'pt-PT']
 
 use_timestamp_suffix false
 

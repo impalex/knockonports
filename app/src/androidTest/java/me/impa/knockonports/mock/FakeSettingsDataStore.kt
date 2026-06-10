@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toColorLong
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
-import me.impa.knockonports.constants.CURRENT_BETA_TEST_MESSAGE
 import me.impa.knockonports.constants.DEFAULT_CHECK_PERIOD
 import me.impa.knockonports.data.settings.SettingsDataStore
 import me.impa.knockonports.data.type.TitleOverflowType
@@ -36,7 +35,6 @@ object FakeSettingsDataStore : SettingsDataStore {
     override val doNotAskBefore: Flow<Long> = flowOf(Long.MAX_VALUE)
     override val doNotAskReview: Flow<Boolean> = flowOf(true)
     override val doNotAskNotification: Flow<Boolean> = flowOf(true)
-    override val betaMessageState: Flow<String?> = flowOf(CURRENT_BETA_TEST_MESSAGE)
     override val widgetConfirmation: Flow<Boolean> = flowOf(false)
     override val detectPublicIP: Flow<Boolean> = flowOf(false)
     override val ipv4Service: Flow<String> = flowOf("")
@@ -94,10 +92,6 @@ object FakeSettingsDataStore : SettingsDataStore {
     }
 
     override suspend fun setDoNotAskForNotificationsFlag() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setCurrentBetaMessageRead() {
         TODO("Not yet implemented")
     }
 

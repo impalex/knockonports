@@ -9,9 +9,7 @@ plugins {
 
 android {
     namespace = "me.impa.knockonports.shared"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 24
@@ -48,7 +46,6 @@ kotlin {
     jvmToolchain(21)
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.add("-Xannotation-default-target=param-property")
     }
 }
 
