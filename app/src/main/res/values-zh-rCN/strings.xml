@@ -85,7 +85,7 @@
     <string name="title_settings_ipv6_lookup_provider">IPv6 检测服务提供商</string>
     <string name="type_provider_custom">自定义</string>
     <string name="title_custom_service_dialog">自定义 IP 检测服务地址</string>
-    <string name="text_custom_service_dialog">请输入自定义检测接口地址，该接口需直接返回纯文本格式的公网 IP（例如：https://api.example.com/ip>。</string>
+    <string name="text_custom_service_dialog">请输入自定义检测接口地址，该接口需直接返回纯文本格式的公网 IP（例如：https://api.example.com/ip)。</string>
     <string name="field_custom_ip_provider">服务 URL</string>
     <string name="text_custom_provider_not_specified">（未设置）</string>
     <string name="title_settings_custom_ipv4_provider">自定义 IPv4 检测服务</string>
