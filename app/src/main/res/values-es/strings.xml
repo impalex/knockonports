@@ -177,15 +177,13 @@
         <item quantity="other">%d segundos</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">¡Atención!</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>¡Procede con precaución!</b><br><br>
-Este ajuste te permite especificar el tamaño de la cabecera IP usada en <i>tu red</i>.<br><br>
-<b>Notas importantes:</b><br><br>
-• <b>Esto NO modifica el tamaño real de la cabecera</b> — solo informa a la aplicación de la configuración de tu red.<br>
-• Un mala configuración <b>puede</b> causar que la aplicación se comporte de manera incorrecta.<br>
-• Ajusta esto <b>sólo si estas seguro</b> de que tu red usa cabeceras IP no estandar (p.e., VPNs personalizadas, sistemas antiguos).<br><br>
-Para la mayoría de usuarios: <b>no es necesario cambiar este ajuste</b>.
-. . . .]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>¡Procede con precaución!<![CDATA[</b><br><br>]]>
+Este ajuste te permite especificar el tamaño de la cabecera IP usada en <![CDATA[<i>]]>tu red<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Notas importantes:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Esto NO modifica el tamaño real de la cabecera<![CDATA[</b>]]> — solo informa a la aplicación de la configuración de tu red.<![CDATA[<br>]]>
+• Un mala configuración <![CDATA[<b>puede<![CDATA[</b> causar que la aplicación se comporte de manera incorrecta.<![CDATA[<br>
+• Ajusta esto <![CDATA[<b>]]>sólo si estas seguro<![CDATA[</b>]]> de que tu red usa cabeceras IP no estandar (p.e., VPNs personalizadas, sistemas antiguos).<![CDATA[<br><br>]]>
+Para la mayoría de usuarios: <![CDATA[<b>]]>no es necesario cambiar este ajuste<![CDATA[</b>]]>.</string>
     <string name="action_understand">Lo entiendo</string>
     <string name="title_icmp_size_tooltip">Tamaño total del paquete ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (Cabecera IP — %2$d, Cabecera ICMP — %3$d, datos — %4$d)</string>

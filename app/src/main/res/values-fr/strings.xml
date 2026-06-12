@@ -197,15 +197,13 @@
         <item quantity="other">%d secondes</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Attention !</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>À manipuler avec précaution !</b><br><br>
-Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée sur <i>votre réseau</i>.<br><br>
-<b>Remarques importantes :</b><br><br>
-• <b>Ceci ne modifie PAS la taille réelle de l’en-tête</b> ; cela informe uniquement l’application de la configuration de votre réseau.<br>
-• Une mauvaise configuration <b>peut</b> entraîner un dysfonctionnement de l’application.<br>
-• Modifiez ce paramètre <b>uniquement si vous êtes certain</b> que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).<br><br>
-Pour la plupart des utilisateurs : <b>ne modifiez pas ce paramètre</b>.
-    ]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>À manipuler avec précaution !<![CDATA[</b><br><br>]]>
+Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée sur <![CDATA[<i>]]>votre réseau<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Remarques importantes :<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Ceci ne modifie PAS la taille réelle de l’en-tête<![CDATA[</b>]]> ; cela informe uniquement l’application de la configuration de votre réseau.<![CDATA[<br>]]>
+• Une mauvaise configuration <![CDATA[<b>]]>peut<![CDATA[</b>]]> entraîner un dysfonctionnement de l’application.<![CDATA[<br>]]>
+• Modifiez ce paramètre <![CDATA[<b>]]>uniquement si vous êtes certain<![CDATA[</b>]]> que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).<![CDATA[<br><br>]]>
+Pour la plupart des utilisateurs : <![CDATA[<b>]]>ne modifiez pas ce paramètre<![CDATA[</b>]]>.</string>
     <string name="action_understand">Je comprends</string>
     <string name="title_icmp_size_tooltip">Taille totale du paquet ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4 : %1$d octets (En-tête IP — %2$d, En-tête ICMP — %3$d, données — %4$d)</string>

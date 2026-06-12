@@ -174,17 +174,15 @@
         <item quantity="other">%d Sekunden</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Warnung!</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>Fortsetzen Sie mit Vorsicht!</b><br><br>
-Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in <i>Ihrem Netzwerk</i> verwendet wird.<br><br>
-<b>Wichtige Hinweise:</b><br><br>
-• <b>Dies ändert NICHT die tatsächliche Header-Größe</b> – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.<br>
-• Eine falsche Konfiguration <b>kann</b> dazu führen, dass sich die App nicht korrekt verhält.<br>
-• Passen Sie diese Einstellung nur an, <b>wenn Sie sicher sind</b>, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).<br><br>
-Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
-    ]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Fortsetzen Sie mit Vorsicht!<![CDATA[</b><br><br>]]>
+Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in <![CDATA[<i>]]>Ihrem Netzwerk<![CDATA[</i>]]> verwendet wird.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Wichtige Hinweise:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Dies ändert NICHT die tatsächliche Header-Größe<![CDATA[</b>]]> – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.<![CDATA[<br>]]>
+• Eine falsche Konfiguration <![CDATA[<b>]]>kann<![CDATA[</b>]]> dazu führen, dass sich die App nicht korrekt verhält.<![CDATA[<br>]]>
+• Passen Sie diese Einstellung nur an, <![CDATA[<b>]]>wenn Sie sicher sind<![CDATA[</b>]]>, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).<![CDATA[<br><br>]]>
+Für die meisten Benutzer gilt: <![CDATA[<b>]]>Ändern Sie diese Einstellung nicht.<![CDATA[</b>]]></string>
     <string name="action_understand">Ich verstehe</string>
-    <string name="title_icmp_size_tooltip">ICMP Packet Gesamtgröße</string>
+    <string name="title_icmp_size_tooltip">ICMP Paket Gesamtgröße</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (IP header — %2$d, ICMP header — %3$d, Daten — %4$d)</string>
     <string name="text_icmp_size_ip6_tooltip">• IPv6: %1$d bytes (IP header — %2$d, ICMP header — %3$d, Daten — %4$d)</string>
     <string name="title_settings_discord">Discord Server</string>
@@ -285,7 +283,7 @@ Für die meisten Benutzer gilt: <b>Ändern Sie diese Einstellung nicht.</b>
     <string name="text_special_thanks">Ein besonderer Dank gilt unseren Mitwirkenden:</string>
     <string name="text_kitty_help">Hilf uns, die App zu übersetzen!</string>
     <string name="action_how">Wie?</string>
-    <string name="title_lang_sr">serbisch</string>
-    <string name="title_lang_am">armenisch</string>
-    <string name="title_lang_uk">ukrainisch</string>
+    <string name="title_lang_sr">Serbisch</string>
+    <string name="title_lang_am">Armenisch</string>
+    <string name="title_lang_uk">Ukrainisch</string>
 </resources>

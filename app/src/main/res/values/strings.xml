@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name" translatable="false">Knock on Ports</string>
     <string-array name="translators" translatable="false">
         <item>\@Acide-Burn</item>
@@ -230,16 +230,13 @@
         <item quantity="other">%d seconds</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Warning!</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>Proceed with caution!</b><br><br>
-This setting allows you to specify the IP header size used in <i>your network</i>.<br><br>
-<b>Important notes:</b><br><br>
-• <b>This does NOT modify the actual header size</b> — it only informs the app about your network’s configuration.<br>
-• Misconfiguration <b>may</b> cause the app to behave incorrectly.<br>
-• Adjust this <b>only if you’re certain</b> your network uses non-standard IP headers (e.g., custom VPNs, legacy systems).<br><br>
-For most users: <b>do not change this setting</b>.
-    ]]>
-    </string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Proceed with caution!<![CDATA[</b><br><br>]]>
+This setting allows you to specify the IP header size used in <![CDATA[<i>]]>your network<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Important notes:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>This does NOT modify the actual header size<![CDATA[</b>]]> — it only informs the app about your network’s configuration.<![CDATA[<br>]]>
+• Misconfiguration <![CDATA[<b>]]>may<![CDATA[</b>]]> cause the app to behave incorrectly.<![CDATA[<br>]]>
+• Adjust this <![CDATA[<b>]]>only if you’re certain<![CDATA[</b>]]> your network uses non-standard IP headers (e.g., custom VPNs, legacy systems).<![CDATA[<br><br>]]>
+For most users: <![CDATA[<b>]]>do not change this setting<![CDATA[</b>]]>.</string>
     <string name="action_understand">I Understand</string>
     <string name="title_icmp_size_tooltip">ICMP Packet Total Size</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (IP header — %2$d, ICMP header — %3$d, data — %4$d)</string>

@@ -176,15 +176,13 @@
         <item quantity="other">%d segundos</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Atenção!</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>Prossiga com cuidado!</b><br><br>
-Esta configuração permite você especificar o tamanho do cabeçalho IP usado em <i>sua rede</i>.<br><br>
-<b>Notas importantes:</b><br><br>
-• <b>Isto NÃO modifica o tamanho do cabeçalho atual</b> — apenas informa à aplicação sobre a configuração da sua rede.<br>
-• Más configurações <b>podem</b> gerar inconsistências no comportamento da aplicação.<br>
-• Ajuste esta configuração <b>somente se estiver certeza</b> que sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).<br><br>
-Para a maioria dos usuários: <b>não altere estas configurações</b>.
-    ]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Prossiga com cuidado!<![CDATA[</b><br><br>]]>
+Esta configuração permite você especificar o tamanho do cabeçalho IP usado em <![CDATA[<i>]]>sua rede<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Notas importantes:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Isto NÃO modifica o tamanho do cabeçalho atual<![CDATA[</b>]]> — apenas informa à aplicação sobre a configuração da sua rede.<![CDATA[<br>]]>
+• Más configurações <![CDATA[<b>]]>podem<![CDATA[</b>]]> gerar inconsistências no comportamento da aplicação.<![CDATA[<br>]]>
+• Ajuste esta configuração <![CDATA[<b>]]>somente se estiver certeza<![CDATA[</b>]]> que sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).<![CDATA[<br><br>]]>
+Para a maioria dos usuários: <![CDATA[<b>]]>não altere estas configurações<![CDATA[</b>]]>.</string>
     <string name="action_understand">Eu entendo</string>
     <string name="title_icmp_size_tooltip">Tamanho total do pacote ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (cabeçalho IP — %2$d, cabeçalho ICMP — %3$d, dados — %4$d)</string>
@@ -255,7 +253,7 @@ Para a maioria dos usuários: <b>não altere estas configurações</b>.
     <string name="text_settings_developer_page">Outros aplicativos que desenvolvi. Alguns propositalmente.</string>
     <string name="field_payload_size">Tamanho da carga</string>
     <string name="text_auto">Automático</string>
-    <string name="text_tooltip_udp_payload">O tamanho total do pacote inclui o cabeçalho IP (20-60 bytes), o cabeçalho UDP (8 bytes), e o tamanho da carga especificada.</string>
+    <string name="text_tooltip_udp_payload">O tamanho total do pacote inclui o cabeçalho IP (20–60 bytes), o cabeçalho UDP (8 bytes), e o tamanho da carga especificada.</string>
     <string name="action_wear_companion">Aplicativo Wear OS</string>
     <string name="title_screen_wear">Status da aplicação do Wear OS</string>
     <string name="title_companion_not_installed">Aplicativo não instalado em seu relógio</string>

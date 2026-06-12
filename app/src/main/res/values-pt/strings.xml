@@ -247,7 +247,7 @@
     <string name="text_settings_developer_page">Outras apps que desenvolvi. Alguns propositalmente.</string>
     <string name="field_payload_size">Tamanho da carga</string>
     <string name="text_auto">Automático</string>
-    <string name="text_tooltip_udp_payload">O tamanho total do pacote inclui o cabeçalho IP (20-60 bytes), o cabeçalho UDP (8 bytes) e o tamanho da carga especificada.</string>
+    <string name="text_tooltip_udp_payload">O tamanho total do pacote inclui o cabeçalho IP (20–60 bytes), o cabeçalho UDP (8 bytes) e o tamanho da carga especificada.</string>
     <string name="action_wear_companion">App Wear OS</string>
     <string name="title_screen_wear">Estado da app do Wear OS</string>
     <string name="title_companion_not_installed">App não instalada no seu relógio</string>
@@ -284,13 +284,11 @@
     <string name="text_special_thanks">Agradecimentos especiais aos nossos contribuidores:</string>
     <string name="text_kitty_help">Ajude-nos a traduzir a app!</string>
     <string name="action_how">Como?</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>Prossiga com cuidado!</b><br><br>
-Esta configuração permite-o especificar o tamanho do cabeçalho IP usado na <i>sua rede</i>.<br><br>
-<b>Notas importantes:</b><br><br>
-• <b>Isto NÃO modifica o tamanho do cabeçalho atual</b> — apenas informa à app sobre a configuração da sua rede.<br>
-• Más configurações <b>podem</b> gerar inconsistências no comportamento da app.<br>
-• Ajuste esta configuração <b>somente se estiver certeza</b> que a sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).<br><br>
-Para a maioria dos utilizadores: <b>não altere estas configurações</b>.
-    ]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Prossiga com cuidado!<![CDATA[</b><br><br>]]>
+Esta configuração permite-o especificar o tamanho do cabeçalho IP usado na <![CDATA[<i>]]>sua rede<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Notas importantes:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Isto NÃO modifica o tamanho do cabeçalho atual<![CDATA[</b>]]> — apenas informa à app sobre a configuração da sua rede.<![CDATA[<br>]]>
+• Más configurações <![CDATA[<b>]]>podem<![CDATA[</b>]]> gerar inconsistências no comportamento da app.<![CDATA[<br>]]>
+• Ajuste esta configuração <![CDATA[<b>]]>somente se estiver certeza<![CDATA[</b>]]> que a sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).<![CDATA[<br><br>]]>
+Para a maioria dos utilizadores: <![CDATA[<b>]]>não altere estas configurações<![CDATA[</b>]]>.</string>
 </resources>

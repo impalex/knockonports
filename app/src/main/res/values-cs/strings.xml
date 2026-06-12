@@ -180,15 +180,13 @@
         <item quantity="other">%d vteřin</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Upozornění!</string>
-    <string name="text_custom_ip4hdr_alert"><![CDATA[
-⚠️ <b>Pokračuj opatrně!</b><br><br>
-Toto nastavení ti dovoluje nastavit velikost IP hlavičky v <i>tvé síti</i>.<br><br>
-<b>Důležité poznámky:</b><br><br>
-• <b>Toto NEMĚNÍ aktuální velikost hlavičky</b> — pouze informuje aplikaci o tvém nastavení sítě.<br>
-• Miskonfigurace <b>may</b> způsobí nekorektní chování aplikace.<br>
-• Uprav toto <b>pouze, pokud jsi si jist</b>, že tvá síť používá nestandardní IP hlavičky (e.g., vlastní VPN, staré systémy).<br><br>
-Pro většinu uživatelů: <b>neměňte toto nastavení</b>.
-    ]]></string>
+    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Pokračuj opatrně!<![CDATA[</b><br><br>]]>
+Toto nastavení ti dovoluje nastavit velikost IP hlavičky v <![CDATA[<i>]]>tvé síti<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
+<![CDATA[<b>]]>Důležité poznámky:<![CDATA[</b><br><br>]]>
+• <![CDATA[<b>]]>Toto NEMĚNÍ aktuální velikost hlavičky<![CDATA[</b>]]> — pouze informuje aplikaci o tvém nastavení sítě.<![CDATA[<br>]]>
+• Miskonfigurace <![CDATA[<b>]]>may<![CDATA[</b>]]> způsobí nekorektní chování aplikace.<![CDATA[<br>]]>
+• Uprav toto <![CDATA[<b>]]>pouze, pokud jsi si jist<![CDATA[</b>]]>, že tvá síť používá nestandardní IP hlavičky (e.g., vlastní VPN, staré systémy).<![CDATA[<br><br>]]>
+Pro většinu uživatelů: <![CDATA[<b>]]>neměňte toto nastavení<![CDATA[</b>]]>.</string>
     <string name="action_understand">Rozumím</string>
     <string name="title_icmp_size_tooltip">Celková velikost ICMP paketu</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bajtů (IP hlavička — %2$d, ICMP hlavička — %3$d, data — %4$d)</string>
