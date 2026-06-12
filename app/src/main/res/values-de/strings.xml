@@ -94,7 +94,7 @@
     <string name="title_settings_ipv6_lookup_provider">IPv6 Lookup Provider</string>
     <string name="type_provider_custom">Benutzerdefiniert</string>
     <string name="title_custom_service_dialog">Individueller IP-Abfragedienst</string>
-    <string name="text_custom_service_dialog">Geben Sie einen benutzerdefinierten Endpunkt an, der Ihre öffentliche IP-Adresse als Klartext zurückgibt (e.g., <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Geben Sie einen benutzerdefinierten Endpunkt an, der Ihre öffentliche IP-Adresse als Klartext zurückgibt (e.g., https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">Service URL</string>
     <string name="text_custom_provider_not_specified">(nicht angegeben)</string>
     <string name="title_settings_custom_ipv4_provider">Benutzerdefinierter IPv4-Lookup-Anbieter</string>
@@ -174,7 +174,13 @@
         <item quantity="other">%d Sekunden</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Warnung!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Fortsetzen Sie mit Vorsicht!<![CDATA[</b><br><br>]]> Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in <![CDATA[<i>]]>Ihrem Netzwerk<![CDATA[</i>]]> verwendet wird.<![CDATA[<br><br>]]> <![CDATA[<b>]]>Wichtige Hinweise:<![CDATA[</b><br><br>]]> • <![CDATA[<b>]]>Dies ändert NICHT die tatsächliche Header-Größe<![CDATA[</b>]]> – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.<![CDATA[<br>]]> • Eine falsche Konfiguration <![CDATA[<b>]]>kann<![CDATA[</b>]]> dazu führen, dass sich die App nicht korrekt verhält.<![CDATA[<br>]]> • Passen Sie diese Einstellung nur an, <![CDATA[<b>]]>wenn Sie sicher sind<![CDATA[</b>]]>, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).<![CDATA[<br><br>]]> Für die meisten Benutzer gilt: <![CDATA[<b>]]>Ändern Sie diese Einstellung nicht<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Fortsetzen Sie mit Vorsicht!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Mit dieser Einstellung können Sie die Größe des IP-Headers festlegen, die in &lt;i&gt;Ihrem Netzwerk&lt;/i&gt; verwendet wird.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Wichtige Hinweise:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Dies ändert NICHT die tatsächliche Header-Größe&lt;/b&gt; – es informiert die App lediglich über die Konfiguration Ihres Netzwerks.&lt;br&gt;\n
+• Eine falsche Konfiguration &lt;b&gt;kann&lt;/b&gt; dazu führen, dass sich die App nicht korrekt verhält.&lt;br&gt;\n
+• Passen Sie diese Einstellung nur an, &lt;b&gt;wenn Sie sicher sind&lt;/b&gt;, dass Ihr Netzwerk nicht standardmäßige IP-Header verwendet (z. B. benutzerdefinierte VPNs, Altsysteme).&lt;br&gt;&lt;br&gt;\n
+Für die meisten Benutzer gilt: &lt;b&gt;Ändern Sie diese Einstellung nicht&lt;/b&gt;.</string>
     <string name="action_understand">Ich verstehe</string>
     <string name="title_icmp_size_tooltip">ICMP Paket Gesamtgröße</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (IP header — %2$d, ICMP header — %3$d, Daten — %4$d)</string>

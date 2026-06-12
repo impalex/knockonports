@@ -68,7 +68,7 @@
     <string name="title_settings_ipv6_lookup_provider">Proveedor para IPv6</string>
     <string name="type_provider_custom">Personalizado</string>
     <string name="title_custom_service_dialog">Servicio personalizado</string>
-    <string name="text_custom_service_dialog">Especifique una URL personalizada que devuelva tu dirección IP pública como texto simple (p. e., <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Especifique una URL personalizada que devuelva tu dirección IP pública como texto simple (p. e., https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL del servicio</string>
     <string name="text_custom_provider_not_specified">(sin especificar)</string>
     <string name="title_settings_custom_ipv4_provider">Proveedor de IPv4 personalizado</string>
@@ -177,7 +177,13 @@
         <item quantity="other">%d segundos</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">¡Atención!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>¡Procede con precaución!<![CDATA[</b><br><br>]]> Este ajuste te permite especificar el tamaño de la cabecera IP usada en <![CDATA[<i>]]>tu red<![CDATA[</i>]]>.<![CDATA[<br><br>]]> <![CDATA[<b>]]>Notas importantes:<![CDATA[</b><br><br>]]> • <![CDATA[<b>]]>Esto NO modifica el tamaño real de la cabecera<![CDATA[</b>]]> — solo informa a la aplicación de la configuración de tu red.<![CDATA[<br>]]> • Un mala configuración <![CDATA[<b>puede<![CDATA[</b> causar que la aplicación se comporte de manera incorrecta.<![CDATA[<br>]]>• Ajusta esto <![CDATA[<b>]]>sólo si estas seguro<![CDATA[</b>]]> de que tu red usa cabeceras IP no estandar (p.e., VPNs personalizadas, sistemas antiguos).<![CDATA[<br><br>]]> Para la mayoría de usuarios: <![CDATA[<b>]]>no es necesario cambiar este ajuste<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;¡Procede con precaución!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Este ajuste te permite especificar el tamaño de la cabecera IP usada en &lt;i&gt;tu red&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Notas importantes:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Esto NO modifica el tamaño real de la cabecera&lt;/b&gt; — solo informa a la aplicación de la configuración de tu red.&lt;br&gt;\n
+• Un mala configuración &lt;b&gt;puede&lt;/b&gt; causar que la aplicación se comporte de manera incorrecta.&lt;br&gt;\n
+• Ajusta esto &lt;b&gt;sólo si estas seguro&lt;/b&gt; de que tu red usa cabeceras IP no estandar (p.e., VPNs personalizadas, sistemas antiguos).&lt;br&gt;&lt;br&gt;\n
+Para la mayoría de usuarios: &lt;b&gt;no es necesario cambiar este ajuste&lt;/b&gt;.</string>
     <string name="action_understand">Lo entiendo</string>
     <string name="title_icmp_size_tooltip">Tamaño total del paquete ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (Cabecera IP — %2$d, Cabecera ICMP — %3$d, datos — %4$d)</string>

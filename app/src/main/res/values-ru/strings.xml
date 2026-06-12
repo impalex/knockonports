@@ -110,7 +110,7 @@
     <string name="title_settings_ipv6_lookup_provider">Сервис определения IPv6</string>
     <string name="type_provider_custom">Пользовательский</string>
     <string name="title_custom_service_dialog">Пользовательский сервис определения IP</string>
-    <string name="text_custom_service_dialog">Укажите адрес сервиса, который возвращает ваш внешний IP как текст (например, <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Укажите адрес сервиса, который возвращает ваш внешний IP как текст (например, https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL сервиса</string>
     <string name="text_custom_provider_not_specified">(не указано)</string>
     <string name="title_settings_custom_ipv4_provider">Пользовательский сервис определения IPv4</string>
@@ -184,13 +184,13 @@
     <string name="title_settings_ip4_hdr_size">Размер IPv4 заголовка</string>
     <string name="text_settings_ip4_hdr_size">%d байт</string>
     <string name="title_custom_ip4hdr_alert">Внимание!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Будьте осторожны!<![CDATA[</b><br><br>]]>
-Эта настройка позволяет указать размер IP заголовка, используемого <![CDATA[<i>]]>в вашей сети<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Важно:<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Настройка НЕ модифицирует размер заголовка<![CDATA[</b>]]>, она только сообщает приложению о конфигурации вашей сети.<![CDATA[<br>]]>
-• Неправильная конфигурация <![CDATA[<b>]]>может<![CDATA[</b>]]> привести к некорректному поведению приложения.<![CDATA[<br>]]>
-• Используйте <![CDATA[<b>]]>только если вы уверены<![CDATA[</b>]]>, что ваша сеть использует нестандартные IP заголовки (например, особые VPN, устаревшие сети).<![CDATA[<br><br>]]>
-Для большинства пользователей: <![CDATA[<b>]]>не трогайте эту настройку<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Будьте осторожны!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Эта настройка позволяет указать размер IP заголовка, используемого &lt;i&gt;в вашей сети&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Важно:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Настройка НЕ модифицирует размер заголовка&lt;/b&gt;, она только сообщает приложению о конфигурации вашей сети.&lt;br&gt;\n
+• Неправильная конфигурация &lt;b&gt;может&lt;/b&gt; привести к некорректному поведению приложения.&lt;br&gt;\n
+• Используйте &lt;b&gt;только если вы уверены&lt;/b&gt;, что ваша сеть использует нестандартные IP заголовки (например, особые VPN, устаревшие сети).&lt;br&gt;&lt;br&gt;\n
+Для большинства пользователей: &lt;b&gt;не трогайте эту настройку&lt;/b&gt;.</string>
     <string name="action_understand">Я понимаю</string>
     <string name="title_icmp_size_tooltip">Общий размер ICMP пакета</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d байт (IP заголовок — %2$d, ICMP заголовок — %3$d, данные — %4$d)</string>

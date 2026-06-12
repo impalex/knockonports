@@ -43,7 +43,7 @@ fun CustomServiceDialog(initialValue: String, onDismissRequest: () -> Unit = {},
         text = {
             Column(modifier = Modifier.wrapContentHeight()) {
                 Text(
-                    text = AnnotatedString.fromHtml(stringResource(R.string.text_custom_service_dialog))
+                    text = stringResource(R.string.text_custom_service_dialog)
                 )
                 OutlinedTextField(
                     value = url,

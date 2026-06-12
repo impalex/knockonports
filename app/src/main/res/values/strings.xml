@@ -148,7 +148,7 @@
     <string name="type_provider_icanhazip" translatable="false">icanhazip.com</string>
     <string name="type_provider_custom">Custom</string>
     <string name="title_custom_service_dialog">Custom IP Lookup Service</string>
-    <string name="text_custom_service_dialog">Specify a custom endpoint that returns your public IP address as plain text (e.g., <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Specify a custom endpoint that returns your public IP address as plain text (e.g., https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">Service URL</string>
     <string name="text_custom_provider_not_specified">(not specified)</string>
     <string name="title_settings_custom_ipv4_provider">Custom IPv4 Lookup Provider</string>
@@ -230,13 +230,13 @@
         <item quantity="other">%d seconds</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Warning!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Proceed with caution!<![CDATA[</b><br><br>]]>
-This setting allows you to specify the IP header size used in <![CDATA[<i>]]>your network<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Important notes:<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>This does NOT modify the actual header size<![CDATA[</b>]]> — it only informs the app about your network’s configuration.<![CDATA[<br>]]>
-• Misconfiguration <![CDATA[<b>]]>may<![CDATA[</b>]]> cause the app to behave incorrectly.<![CDATA[<br>]]>
-• Adjust this <![CDATA[<b>]]>only if you’re certain<![CDATA[</b>]]> your network uses non-standard IP headers (e.g., custom VPNs, legacy systems).<![CDATA[<br><br>]]>
-For most users: <![CDATA[<b>]]>do not change this setting<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Proceed with caution!&lt;/b&gt;&lt;/p&gt;&lt;br&gt;\n
+This setting allows you to specify the IP header size used in &lt;i&gt;your network&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Important notes:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;This does NOT modify the actual header size&lt;/b&gt; — it only informs the app about your network’s configuration.&lt;br&gt;\n
+• Misconfiguration &lt;b&gt;may&lt;/b&gt; cause the app to behave incorrectly.&lt;br&gt;\n
+• Adjust this &lt;b&gt;only if you’re certain&lt;/b&gt; your network uses non-standard IP headers (e.g., custom VPNs, legacy systems).&lt;br&gt;&lt;br&gt;\n
+For most users: &lt;b&gt;do not change this setting&lt;/b&gt;.</string>
     <string name="action_understand">I Understand</string>
     <string name="title_icmp_size_tooltip">ICMP Packet Total Size</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (IP header — %2$d, ICMP header — %3$d, data — %4$d)</string>

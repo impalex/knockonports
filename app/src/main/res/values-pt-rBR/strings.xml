@@ -96,7 +96,7 @@
     <string name="title_settings_ipv6_lookup_provider">Provedor de pesquisas IPv6</string>
     <string name="type_provider_custom">Customizado</string>
     <string name="title_custom_service_dialog">Serviço de pesquisa de IP customizado</string>
-    <string name="text_custom_service_dialog">Especifique um caminho que retorne seu endereço de IP público como texto puro (exemplo, <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Especifique um caminho que retorne seu endereço de IP público como texto puro (exemplo, https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL do serviço</string>
     <string name="text_custom_provider_not_specified">(não especificado)</string>
     <string name="title_settings_custom_ipv4_provider">Provedor de pesquisa IPv4 customizado</string>
@@ -176,13 +176,13 @@
         <item quantity="other">%d segundos</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Atenção!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Prossiga com cuidado!<![CDATA[</b><br><br>]]>
-Esta configuração permite você especificar o tamanho do cabeçalho IP usado em <![CDATA[<i>]]>sua rede<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Notas importantes:<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Isto NÃO modifica o tamanho do cabeçalho atual<![CDATA[</b>]]> — apenas informa à aplicação sobre a configuração da sua rede.<![CDATA[<br>]]>
-• Más configurações <![CDATA[<b>]]>podem<![CDATA[</b>]]> gerar inconsistências no comportamento da aplicação.<![CDATA[<br>]]>
-• Ajuste esta configuração <![CDATA[<b>]]>somente se estiver certeza<![CDATA[</b>]]> que sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).<![CDATA[<br><br>]]>
-Para a maioria dos usuários: <![CDATA[<b>]]>não altere estas configurações<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Prossiga com cuidado!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Esta configuração permite você especificar o tamanho do cabeçalho IP usado em &lt;i&gt;sua rede&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Notas importantes:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Isto NÃO modifica o tamanho do cabeçalho atual&lt;/b&gt; — apenas informa à aplicação sobre a configuração da sua rede.&lt;br&gt;\n
+• Más configurações &lt;b&gt;podem&lt;/b&gt; gerar inconsistências no comportamento da aplicação.&lt;br&gt;\n
+• Ajuste esta configuração &lt;b&gt;somente se estiver certeza&lt;/b&gt; que sua rede utiliza cabeçalhos IP fora dos padrões (ex: VPNs personalizadas, sistemas legados).&lt;br&gt;&lt;br&gt;\n
+Para a maioria dos usuários: &lt;b&gt;não altere estas configurações&lt;/b&gt;.</string>
     <string name="action_understand">Eu entendo</string>
     <string name="title_icmp_size_tooltip">Tamanho total do pacote ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bytes (cabeçalho IP — %2$d, cabeçalho ICMP — %3$d, dados — %4$d)</string>

@@ -85,7 +85,7 @@
     <string name="title_settings_ipv6_lookup_provider">IPv6 检测服务提供商</string>
     <string name="type_provider_custom">自定义</string>
     <string name="title_custom_service_dialog">自定义 IP 检测服务地址</string>
-    <string name="text_custom_service_dialog">请输入自定义检测接口地址，该接口需直接返回纯文本格式的公网 IP（例如：<![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>。</string>
+    <string name="text_custom_service_dialog">请输入自定义检测接口地址，该接口需直接返回纯文本格式的公网 IP（例如：https://api.example.com/ip>。</string>
     <string name="field_custom_ip_provider">服务 URL</string>
     <string name="text_custom_provider_not_specified">（未设置）</string>
     <string name="title_settings_custom_ipv4_provider">自定义 IPv4 检测服务</string>
@@ -171,13 +171,13 @@
         <item quantity="other">%d 秒</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">警告！</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>请谨慎操作！<![CDATA[</b><br><br>]]>
-此设置用于指定您当前网络环境中的 IP 头部大小。<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>重要提示：<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>此设置不会修改实际的 IP 头部大小<![CDATA[</b>]]>，仅用于告知应用您网络的配置情况。<![CDATA[<br>]]>
-• 配置错误 <![CDATA[<b>]]>可能<![CDATA[</b>]]> 导致应用运行异常。<![CDATA[<br>]]>
-• 仅当您 <![CDATA[<b>]]>确认<![CDATA[</b>]]> 网络使用了非标准 IP 头部（如自定义 VPN、 legacy 系统等）时才需调整。<![CDATA[<br><br>]]>
-普通用户请<![CDATA[<b>]]>保持默认设置，不要随意更改<![CDATA[</b>]]>。</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;请谨慎操作！&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+此设置用于指定您当前网络环境中的 IP 头部大小。&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;重要提示：&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;此设置不会修改实际的 IP 头部大小&lt;/b&gt;，仅用于告知应用您网络的配置情况。&lt;br&gt;\n
+• 配置错误 &lt;b&gt;可能&lt;/b&gt; 导致应用运行异常。&lt;br&gt;\n
+• 仅当您 &lt;b&gt;确认&lt;/b&gt; 网络使用了非标准 IP 头部（如自定义 VPN、 legacy 系统等）时才需调整。&lt;br&gt;&lt;br&gt;\n
+普通用户请&lt;b&gt;保持默认设置，不要随意更改&lt;/b&gt;。</string>
     <string name="action_understand">我已了解风险</string>
     <string name="title_icmp_size_tooltip">ICMP 数据包总大小</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4：共 %1$d 字节（IP 头部 %2$d 字节，ICMP 头部 %3$d 字节，数据 %4$d 字节）</string>

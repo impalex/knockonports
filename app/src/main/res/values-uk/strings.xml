@@ -98,7 +98,7 @@
     <string name="title_settings_ipv6_lookup_provider">Провайдер пошуку IPv6</string>
     <string name="type_provider_custom">Власний</string>
     <string name="title_custom_service_dialog">Власний сервіс пошуку IP</string>
-    <string name="text_custom_service_dialog">Вкажіть адресу власного сервісу, що повертає вашу публічну адресу у вигляді тексту (наприклад <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Вкажіть адресу власного сервісу, що повертає вашу публічну адресу у вигляді тексту (наприклад https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL сервісу</string>
     <string name="text_custom_provider_not_specified">(не зазначено)</string>
     <string name="title_settings_custom_ipv4_provider">Власний провайдер пошуку IPv4</string>
@@ -180,13 +180,13 @@
         <item quantity="other">%d секунд</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Увага!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Продовжуйте з обережністю!<![CDATA[</b><br><br>]]>
-Це налаштування дозволяє вам вказати розмір заголовка IP, що використовується у <![CDATA[<i>]]>вашій мережі<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Важливе зауваження:<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Це НЕ модифікує реальний розмір заголовка<![CDATA[</b>]]> — це лише інформує додаток про конфігурацію вашої мережі.<![CDATA[<br>]]>
-• Неправильна конфігурація <![CDATA[<b>]]>може викликати<![CDATA[</b>]]> неправильну поведінку додатка.<![CDATA[<br>]]>
-• Змінюйте це <![CDATA[<b>]]>лише якщо ви впевнені<![CDATA[</b>]]>, що ваша мережа використовує нестандартний розмір заголовка IP (наприклад власні VPN, застарілі системи).<![CDATA[<br><br>]]>
-Для більшості користувачів: <![CDATA[<b>]]>не змінюйте це налаштування<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Продовжуйте з обережністю!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Це налаштування дозволяє вам вказати розмір заголовка IP, що використовується у &lt;i&gt;вашій мережі&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Важливе зауваження:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Це НЕ модифікує реальний розмір заголовка&lt;/b&gt; — це лише інформує додаток про конфігурацію вашої мережі.&lt;br&gt;\n
+• Неправильна конфігурація &lt;b&gt;може викликати&lt;/b&gt; неправильну поведінку додатка.&lt;br&gt;\n
+• Змінюйте це &lt;b&gt;лише якщо ви впевнені&lt;/b&gt;, що ваша мережа використовує нестандартний розмір заголовка IP (наприклад власні VPN, застарілі системи).&lt;br&gt;&lt;br&gt;\n
+Для більшості користувачів: &lt;b&gt;не змінюйте це налаштування&lt;/b&gt;.</string>
     <string name="action_understand">Я розумію</string>
     <string name="title_icmp_size_tooltip">Загальний розмір ICMP пакета</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d байт (заголовок IP — %2$d, заголовок ICMP — %3$d, дані — %4$d)</string>

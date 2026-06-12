@@ -94,7 +94,7 @@
     <string name="title_settings_ipv6_lookup_provider">IPv6 որոնման մատակարար</string>
     <string name="type_provider_custom">Հատուկ</string>
     <string name="title_custom_service_dialog">Հատուկ IP որոշման ծառայություն</string>
-    <string name="text_custom_service_dialog">Նշեք ձեր հանրային IP֊ն որպես տեսք վերադարձնող հատուկ վերջնակետ (օրինակ, <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Նշեք ձեր հանրային IP֊ն որպես տեսք վերադարձնող հատուկ վերջնակետ (օրինակ, https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">Ծարայության URL</string>
     <string name="text_custom_provider_not_specified">(չի նշված)</string>
     <string name="title_settings_custom_ipv4_provider">Հատուկ IPv4 որոնման մատակարար</string>
@@ -174,13 +174,13 @@
         <item quantity="other">%d վայրկյան</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Զգուշացում!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Շարունակեք Զգուշությամբ։<![CDATA[</b><br><br>]]>
-Այս կարգավորումը թույլ է տալիս նշել <![CDATA[<i>]]>ձեր ցանցում<![CDATA[</i>]]> օգտագործվող IP վերնագրի չափը։<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Կարևոր նշումներ՝<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Սա չի փոխում վերնագրի իրական չափը<![CDATA[</b>]]>, այլ միայն տեղեկացնում է հավելվածին ձեր ցանցի կարգավորման մասին։<![CDATA[<br>]]>
-• Սխալ կարգավորումը <![CDATA[<b>]]>կարող է<![CDATA[</b>]]> հանգեցնել ծրագրի սխալ աշխատանքի.<![CDATA[<br>]]>
-• Փոփոխեք սա <![CDATA[<b>]]>միայն եթե վստահեք<![CDATA[</b>]]>, որ ձեր համացանցը օգտագործում է ոչստանդարտ IP վերնագրեր (օրինակ, հատուկ VPNs, legacy systems).<![CDATA[<br><br>]]>
-Օգտատերերի մեծամասնության համար՝ <![CDATA[<b>]]>մի փոփոխեք այս կարգավորումը<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Շարունակեք Զգուշությամբ։&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Այս կարգավորումը թույլ է տալիս նշել &lt;i&gt;ձեր ցանցում&lt;/i&gt; օգտագործվող IP վերնագրի չափը։&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Կարևոր նշումներ՝&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Սա չի փոխում վերնագրի իրական չափը&lt;/b&gt;, այլ միայն տեղեկացնում է հավելվածին ձեր ցանցի կարգավորման մասին։&lt;br&gt;\n
+• Սխալ կարգավորումը &lt;b&gt;կարող է&lt;/b&gt; հանգեցնել ծրագրի սխալ աշխատանքի.&lt;br&gt;\n
+• Փոփոխեք սա &lt;b&gt;միայն եթե վստահեք&lt;/b&gt;, որ ձեր համացանցը օգտագործում է ոչստանդարտ IP վերնագրեր (օրինակ, հատուկ VPNs, legacy systems).&lt;br&gt;&lt;br&gt;\n
+Օգտատերերի մեծամասնության համար՝ &lt;b&gt;մի փոփոխեք այս կարգավորումը&lt;/b&gt;.</string>
     <string name="action_understand">Ես հասկանում եմ</string>
     <string name="title_icmp_size_tooltip">ICMP փաթեթի ընդհանուր չափը</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d բայթ (IP վերնագիր — %2$d, ICMP վերնագիր — %3$d, տվյալներ — %4$d)</string>

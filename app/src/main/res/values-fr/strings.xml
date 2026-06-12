@@ -96,7 +96,7 @@
     <string name="title_settings_ipv6_lookup_provider">Service de recherche IPv6</string>
     <string name="type_provider_custom">Personnalisé</string>
     <string name="title_custom_service_dialog">Service de recherche IP personnalisé</string>
-    <string name="text_custom_service_dialog">Spécifier un service personnalisé qui renvoie l\'adresse IP publique en tant que Texte (p.e. <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Spécifier un service personnalisé qui renvoie l\'adresse IP publique en tant que Texte (p.e. https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL du service</string>
     <string name="text_custom_provider_not_specified">(non spécifié)</string>
     <string name="title_settings_custom_ipv4_provider">Service de recherche IPv4 personnalisé</string>
@@ -197,13 +197,13 @@
         <item quantity="other">%d secondes</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Attention !</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>À manipuler avec précaution !<![CDATA[</b><br><br>]]>
-Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée sur <![CDATA[<i>]]>votre réseau<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Remarques importantes :<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Ceci ne modifie PAS la taille réelle de l’en-tête<![CDATA[</b>]]> ; cela informe uniquement l’application de la configuration de votre réseau.<![CDATA[<br>]]>
-• Une mauvaise configuration <![CDATA[<b>]]>peut<![CDATA[</b>]]> entraîner un dysfonctionnement de l’application.<![CDATA[<br>]]>
-• Modifiez ce paramètre <![CDATA[<b>]]>uniquement si vous êtes certain<![CDATA[</b>]]> que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).<![CDATA[<br><br>]]>
-Pour la plupart des utilisateurs : <![CDATA[<b>]]>ne modifiez pas ce paramètre<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;À manipuler avec précaution !&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Ce paramètre vous permet de spécifier la taille de l’en-tête IP utilisée sur &lt;i&gt;votre réseau&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Remarques importantes :&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Ceci ne modifie PAS la taille réelle de l’en-tête&lt;/b&gt; ; cela informe uniquement l’application de la configuration de votre réseau.&lt;br&gt;\n
+• Une mauvaise configuration &lt;b&gt;peut&lt;/b&gt; entraîner un dysfonctionnement de l’application.&lt;br&gt;\n
+• Modifiez ce paramètre &lt;b&gt;uniquement si vous êtes certain&lt;/b&gt; que votre réseau utilise des en-têtes IP non standard (par exemple, VPN personnalisés, systèmes anciens).&lt;br&gt;&lt;br&gt;\n
+Pour la plupart des utilisateurs : &lt;b&gt;ne modifiez pas ce paramètre&lt;/b&gt;.</string>
     <string name="action_understand">Je comprends</string>
     <string name="title_icmp_size_tooltip">Taille totale du paquet ICMP</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4 : %1$d octets (En-tête IP — %2$d, En-tête ICMP — %3$d, données — %4$d)</string>

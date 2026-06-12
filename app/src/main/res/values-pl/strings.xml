@@ -164,7 +164,7 @@
     <string name="title_settings_ipv6_lookup_provider">Dostawca sprawdzania IPv6</string>
     <string name="type_provider_custom">Własny</string>
     <string name="title_custom_service_dialog">Własny dostawca sprawdzania IP</string>
-    <string name="text_custom_service_dialog">Podaj własny punkt dostępu zwracający Twój publiczny adres IP jako czysty tekst (np. <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Podaj własny punkt dostępu zwracający Twój publiczny adres IP jako czysty tekst (np. https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL usługi</string>
     <string name="text_custom_provider_not_specified">(nie podano)</string>
     <string name="title_settings_custom_ipv4_provider">Własny dostawca sprawdzania IPv4</string>

@@ -98,7 +98,7 @@
     <string name="title_settings_ipv6_lookup_provider">Poskytovatel vyhledávání IPv6</string>
     <string name="type_provider_custom">Vlastní</string>
     <string name="title_custom_service_dialog">Vlastní služba na vyhledání IP</string>
-    <string name="text_custom_service_dialog">Zadej vlastní endpoint, který vrací veřejnou IP adresu jako plain text (e.g., <![CDATA[<i>]]>https://api.example.com/ip<![CDATA[</i>]]>).</string>
+    <string name="text_custom_service_dialog">Zadej vlastní endpoint, který vrací veřejnou IP adresu jako plain text (e.g., https://api.example.com/ip).</string>
     <string name="field_custom_ip_provider">URL služby</string>
     <string name="text_custom_provider_not_specified">(nespecifikováno)</string>
     <string name="title_settings_custom_ipv4_provider">Vlastní poskytovatel vyhledávání IPv4</string>
@@ -180,13 +180,13 @@
         <item quantity="other">%d vteřin</item>
     </plurals>
     <string name="title_custom_ip4hdr_alert">Upozornění!</string>
-    <string name="text_custom_ip4hdr_alert">⚠️ <![CDATA[<b>]]>Pokračuj opatrně!<![CDATA[</b><br><br>]]>
-Toto nastavení ti dovoluje nastavit velikost IP hlavičky v <![CDATA[<i>]]>tvé síti<![CDATA[</i>]]>.<![CDATA[<br><br>]]>
-<![CDATA[<b>]]>Důležité poznámky:<![CDATA[</b><br><br>]]>
-• <![CDATA[<b>]]>Toto NEMĚNÍ aktuální velikost hlavičky<![CDATA[</b>]]> — pouze informuje aplikaci o tvém nastavení sítě.<![CDATA[<br>]]>
-• Miskonfigurace <![CDATA[<b>]]>may<![CDATA[</b>]]> způsobí nekorektní chování aplikace.<![CDATA[<br>]]>
-• Uprav toto <![CDATA[<b>]]>pouze, pokud jsi si jist<![CDATA[</b>]]>, že tvá síť používá nestandardní IP hlavičky (e.g., vlastní VPN, staré systémy).<![CDATA[<br><br>]]>
-Pro většinu uživatelů: <![CDATA[<b>]]>neměňte toto nastavení<![CDATA[</b>]]>.</string>
+    <string name="text_custom_ip4hdr_alert">⚠️ &lt;b&gt;Pokračuj opatrně!&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+Toto nastavení ti dovoluje nastavit velikost IP hlavičky v &lt;i&gt;tvé síti&lt;/i&gt;.&lt;br&gt;&lt;br&gt;\n
+&lt;b&gt;Důležité poznámky:&lt;/b&gt;&lt;br&gt;&lt;br&gt;\n
+• &lt;b&gt;Toto NEMĚNÍ aktuální velikost hlavičky&lt;/b&gt; — pouze informuje aplikaci o tvém nastavení sítě.&lt;br&gt;\n
+• Miskonfigurace &lt;b&gt;may&lt;/b&gt; způsobí nekorektní chování aplikace.&lt;br&gt;\n
+• Uprav toto &lt;b&gt;pouze, pokud jsi si jist&lt;/b&gt;, že tvá síť používá nestandardní IP hlavičky (e.g., vlastní VPN, staré systémy).&lt;br&gt;&lt;br&gt;\n
+Pro většinu uživatelů: &lt;b&gt;neměňte toto nastavení&lt;/b&gt;.</string>
     <string name="action_understand">Rozumím</string>
     <string name="title_icmp_size_tooltip">Celková velikost ICMP paketu</string>
     <string name="text_icmp_size_ip4_tooltip">• IPv4: %1$d bajtů (IP hlavička — %2$d, ICMP hlavička — %3$d, data — %4$d)</string>
