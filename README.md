@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> This project is no longer being maintained. Feel free to fork and use it as you wish.
+> Dev is AFK.
+
 ## Description
 
 "Knock on Ports" is a port knocking client compatible with almost all knocking servers. It provides precise control over network interactions with a focus on simplicity and modern Android integration.
